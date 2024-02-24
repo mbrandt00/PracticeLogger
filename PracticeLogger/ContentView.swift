@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(ModelData.self) var modelData
     var body: some View {
         NavigationView {
             VStack {
@@ -15,9 +16,16 @@ struct ContentView: View {
                 Image(systemName: "music.note")
                     .imageScale(.large)
                     .foregroundStyle(.tint).padding()
-                Text("Recent Pieces").font(.headline)
-                
-                Spacer()
+                Text("Recent Practice Sessions").font(.headline)
+                NavigationSplitView {
+                    List(modelData.pieces) { piece in
+                        Text(piece.title)
+                    }
+                } detail: {
+                    Text(
+                        "Select a landmark"
+                    )
+                }
                 NavigationLink(destination: NewPracticeSession()) {
                     Text("Add practice session")
                         .frame(maxWidth: .infinity)
@@ -27,11 +35,13 @@ struct ContentView: View {
                         .cornerRadius(10)
                 }
             }
-            .padding()
+            
+            
         }
+        .padding()
     }
 }
 
 #Preview {
-    ContentView()
+    ContentView().environment(ModelData())
 }

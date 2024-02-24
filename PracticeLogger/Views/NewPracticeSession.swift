@@ -8,9 +8,19 @@
 import SwiftUI
 
 struct NewPracticeSession: View {
+    @State private var pieceName = ""
+    @State private var composer = ""
     var body: some View {
-        Text("Welcome to practice session form page")
+        NavigationView{
+            Form{
+                Section(header: Text("Piece Information")){
+                    TextField("Piece Name", text: $pieceName)
+                    TextField("Composer", text: $composer)
+                }
+            }
+        }
     }
+    
 }
 
 #Preview {

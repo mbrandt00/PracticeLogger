@@ -14,6 +14,10 @@
 		D19E73502B898F9400BB3EC7 /* PracticeLoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E734F2B898F9400BB3EC7 /* PracticeLoggerTests.swift */; };
 		D19E735A2B898F9400BB3EC7 /* PracticeLoggerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E73592B898F9400BB3EC7 /* PracticeLoggerUITests.swift */; };
 		D19E735C2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E735B2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift */; };
+		D19E736C2B89945600BB3EC7 /* NewPracticeSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E736B2B89945600BB3EC7 /* NewPracticeSession.swift */; };
+		D19E73722B89980B00BB3EC7 /* Structs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E73712B89980B00BB3EC7 /* Structs.swift */; };
+		D19E73742B8998F600BB3EC7 /* ModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E73732B8998F600BB3EC7 /* ModelData.swift */; };
+		D19E73762B89997C00BB3EC7 /* pieceData.json in Resources */ = {isa = PBXBuildFile; fileRef = D19E73752B89997C00BB3EC7 /* pieceData.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +48,10 @@
 		D19E73552B898F9400BB3EC7 /* PracticeLoggerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PracticeLoggerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D19E73592B898F9400BB3EC7 /* PracticeLoggerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLoggerUITests.swift; sourceTree = "<group>"; };
 		D19E735B2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLoggerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		D19E736B2B89945600BB3EC7 /* NewPracticeSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPracticeSession.swift; sourceTree = "<group>"; };
+		D19E73712B89980B00BB3EC7 /* Structs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Structs.swift; sourceTree = "<group>"; };
+		D19E73732B8998F600BB3EC7 /* ModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelData.swift; sourceTree = "<group>"; };
+		D19E73752B89997C00BB3EC7 /* pieceData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = pieceData.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,10 +102,13 @@
 		D19E733D2B898F9300BB3EC7 /* PracticeLogger */ = {
 			isa = PBXGroup;
 			children = (
+				D19E736D2B8997D400BB3EC7 /* Models */,
+				D19E73682B89937E00BB3EC7 /* Views */,
 				D19E733E2B898F9300BB3EC7 /* PracticeLoggerApp.swift */,
 				D19E73402B898F9300BB3EC7 /* ContentView.swift */,
 				D19E73422B898F9400BB3EC7 /* Assets.xcassets */,
 				D19E73442B898F9400BB3EC7 /* Preview Content */,
+				D19E73752B89997C00BB3EC7 /* pieceData.json */,
 			);
 			path = PracticeLogger;
 			sourceTree = "<group>";
@@ -125,6 +136,23 @@
 				D19E735B2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift */,
 			);
 			path = PracticeLoggerUITests;
+			sourceTree = "<group>";
+		};
+		D19E73682B89937E00BB3EC7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D19E736B2B89945600BB3EC7 /* NewPracticeSession.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		D19E736D2B8997D400BB3EC7 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D19E73712B89980B00BB3EC7 /* Structs.swift */,
+				D19E73732B8998F600BB3EC7 /* ModelData.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -232,6 +260,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D19E73462B898F9400BB3EC7 /* Preview Assets.xcassets in Resources */,
+				D19E73762B89997C00BB3EC7 /* pieceData.json in Resources */,
 				D19E73432B898F9400BB3EC7 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -257,7 +286,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D19E73722B89980B00BB3EC7 /* Structs.swift in Sources */,
 				D19E73412B898F9300BB3EC7 /* ContentView.swift in Sources */,
+				D19E73742B8998F600BB3EC7 /* ModelData.swift in Sources */,
+				D19E736C2B89945600BB3EC7 /* NewPracticeSession.swift in Sources */,
 				D19E733F2B898F9300BB3EC7 /* PracticeLoggerApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
