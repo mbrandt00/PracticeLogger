@@ -9,13 +9,26 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationView {
+            VStack {
+                Text("Practice Logger").font(.title).padding()
+                Image(systemName: "music.note")
+                    .imageScale(.large)
+                    .foregroundStyle(.tint).padding()
+                Text("Recent Pieces").font(.headline)
+                
+                Spacer()
+                NavigationLink(destination: NewPracticeSession()) {
+                    Text("Add practice session")
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+            }
+            .padding()
         }
-        .padding()
     }
 }
 
