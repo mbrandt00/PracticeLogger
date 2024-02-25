@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D131F16D2B8AE54E002261BC /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F16C2B8AE54E002261BC /* Color.swift */; };
 		D19E733F2B898F9300BB3EC7 /* PracticeLoggerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E733E2B898F9300BB3EC7 /* PracticeLoggerApp.swift */; };
 		D19E73412B898F9300BB3EC7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E73402B898F9300BB3EC7 /* ContentView.swift */; };
 		D19E73432B898F9400BB3EC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D19E73422B898F9400BB3EC7 /* Assets.xcassets */; };
@@ -34,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D131F16C2B8AE54E002261BC /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		D19E733B2B898F9300BB3EC7 /* PracticeLogger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PracticeLogger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D19E733E2B898F9300BB3EC7 /* PracticeLoggerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLoggerApp.swift; sourceTree = "<group>"; };
 		D19E73402B898F9300BB3EC7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -72,6 +74,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D131F16A2B8AE168002261BC /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		D131F16B2B8AE544002261BC /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				D131F16C2B8AE54E002261BC /* Color.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		D19E73322B898F9300BB3EC7 = {
 			isa = PBXGroup;
 			children = (
@@ -95,9 +112,11 @@
 		D19E733D2B898F9300BB3EC7 /* PracticeLogger */ = {
 			isa = PBXGroup;
 			children = (
+				D131F16B2B8AE544002261BC /* Extensions */,
 				D1EA64CD2B8A7E7B00D95E1F /* Info.plist */,
 				D19E733E2B898F9300BB3EC7 /* PracticeLoggerApp.swift */,
 				D19E73402B898F9300BB3EC7 /* ContentView.swift */,
+				D131F16A2B8AE168002261BC /* Views */,
 				D19E73422B898F9400BB3EC7 /* Assets.xcassets */,
 				D19E73442B898F9400BB3EC7 /* Preview Content */,
 			);
@@ -261,6 +280,7 @@
 			files = (
 				D19E73412B898F9300BB3EC7 /* ContentView.swift in Sources */,
 				D19E733F2B898F9300BB3EC7 /* PracticeLoggerApp.swift in Sources */,
+				D131F16D2B8AE54E002261BC /* Color.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
