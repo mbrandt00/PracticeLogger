@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var selectedTab: Tabs = .progress
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Text("Hello")
+            Spacer()
+            CustomTabBar(selectedTab: $selectedTab)
         }
     }
 }
