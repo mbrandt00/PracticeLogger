@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var selectedTab: Tabs = .progress
+    @State var selectedTab: Tabs = .start
     var body: some View {
-        VStack {
-            Text("Hello")
+        VStack() {
+            if selectedTab == .start {
+                Text("on start")
+            }
             Spacer()
             CustomTabBar(selectedTab: $selectedTab)
         }

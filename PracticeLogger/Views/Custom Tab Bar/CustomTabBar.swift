@@ -37,10 +37,10 @@ struct CustomTabBar: View {
                         Image(systemName: "metronome")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 24, height: 24).foregroundColor(selectedTab == .start ? Color.theme.accent : Color.theme.accent)
+                            .frame(width: 24, height: 24).foregroundColor(selectedTab == .start ? Color.theme.accent : Color.theme.gray)
                         Text("Start").font(.headline)
                     }.frame(width: geo.size.width, height: geo.size.height)
-                }.tint(Color.theme.gray)
+                }
             }
             
             Button{
@@ -50,7 +50,6 @@ struct CustomTabBar: View {
             }
         }
         .frame(height:82)
-        .tint(Color.theme.gray)
         
     }
 }
