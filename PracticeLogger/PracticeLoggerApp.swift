@@ -11,7 +11,7 @@ import SwiftUI
 struct PracticeLoggerApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView().navigationBarHidden(true)
         }
     }
 }
