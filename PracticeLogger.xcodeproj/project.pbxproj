@@ -11,6 +11,7 @@
 		D131F1702B8AE8B9002261BC /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F16F2B8AE8B9002261BC /* CustomTabBar.swift */; };
 		D131F1732B8AF42F002261BC /* TabBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F1722B8AF42F002261BC /* TabBarButton.swift */; };
 		D131F17B2B8B090D002261BC /* MetronomeShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F17A2B8B090D002261BC /* MetronomeShape.swift */; };
+		D185FB722B90482E003C7631 /* CreatePiece.swift in Sources */ = {isa = PBXBuildFile; fileRef = D185FB712B90482E003C7631 /* CreatePiece.swift */; };
 		D19E733F2B898F9300BB3EC7 /* PracticeLoggerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E733E2B898F9300BB3EC7 /* PracticeLoggerApp.swift */; };
 		D19E73412B898F9300BB3EC7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E73402B898F9300BB3EC7 /* ContentView.swift */; };
 		D19E73432B898F9400BB3EC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D19E73422B898F9400BB3EC7 /* Assets.xcassets */; };
@@ -47,6 +48,7 @@
 		D131F16F2B8AE8B9002261BC /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		D131F1722B8AF42F002261BC /* TabBarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarButton.swift; sourceTree = "<group>"; };
 		D131F17A2B8B090D002261BC /* MetronomeShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetronomeShape.swift; sourceTree = "<group>"; };
+		D185FB712B90482E003C7631 /* CreatePiece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePiece.swift; sourceTree = "<group>"; };
 		D19E733B2B898F9300BB3EC7 /* PracticeLogger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PracticeLogger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D19E733E2B898F9300BB3EC7 /* PracticeLoggerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLoggerApp.swift; sourceTree = "<group>"; };
 		D19E73402B898F9300BB3EC7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				D131F1712B8AF415002261BC /* Custom Tab Bar */,
+				D185FB712B90482E003C7631 /* CreatePiece.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -326,6 +329,7 @@
 				D131F1702B8AE8B9002261BC /* CustomTabBar.swift in Sources */,
 				D19E73412B898F9300BB3EC7 /* ContentView.swift in Sources */,
 				D19E733F2B898F9300BB3EC7 /* PracticeLoggerApp.swift in Sources */,
+				D185FB722B90482E003C7631 /* CreatePiece.swift in Sources */,
 				D131F1732B8AF42F002261BC /* TabBarButton.swift in Sources */,
 				D131F17B2B8B090D002261BC /* MetronomeShape.swift in Sources */,
 				D131F16D2B8AE54E002261BC /* Color.swift in Sources */,

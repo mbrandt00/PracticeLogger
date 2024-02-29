@@ -18,7 +18,7 @@ struct ContentView: View {
 //                            .overlay(MetronomeFront(), alignment: .bottom)
 //                    }
             if selectedTab == .start {
-//                Text("on start")
+                CreatePiece()
             }
             Spacer()
             CustomTabBar(selectedTab: $selectedTab)
