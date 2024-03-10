@@ -19,7 +19,8 @@ struct CreatePiece: View {
             
             Button(action: {
                 Task {
-                    viewModel.getClassicalPieces(searchTerm)
+                    await viewModel.getClassicalPieces(searchTerm)
+
                 }
             }) {
                 Text("Search")
@@ -32,7 +33,7 @@ struct CreatePiece: View {
             ScrollView {
                 ForEach(viewModel.pieces) { piece in
                     HStack{
-                        Text("HI")
+                        Text(piece.workName)
                     }
                 }
             }

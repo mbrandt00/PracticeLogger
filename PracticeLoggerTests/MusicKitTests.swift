@@ -14,5 +14,11 @@ final class MusicKitTests: XCTestCase {
         XCTAssertEqual(piece.movements.first?.name, "Moderato")
         XCTAssertEqual(piece.composer.name, "Sergei Rachmaninoff")
     }
+    func test_search_piece_from_song_name ()  async throws {
+        let pieces = try await Piece.searchPieceFromSongName(query: "Rachmaninoff Piano concerto 2")
+        XCTAssertGreaterThan(pieces.count, 1)
+        XCTAssertEqual(pieces.first?.movements.first?.name, "Moderato")
+        XCTAssertEqual(pieces.first?.composer.name, "Sergei Rachmaninoff")
+    }
 
 }
