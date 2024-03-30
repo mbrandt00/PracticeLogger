@@ -7,17 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D11990622B9CBC160031E8A0 /* MusicKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11990612B9CBC160031E8A0 /* MusicKitTests.swift */; };
+		D11990652B9CC58D0031E8A0 /* MusicKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D11990642B9CC58D0031E8A0 /* MusicKit.framework */; };
 		D131F16D2B8AE54E002261BC /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F16C2B8AE54E002261BC /* Color.swift */; };
 		D131F1702B8AE8B9002261BC /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F16F2B8AE8B9002261BC /* CustomTabBar.swift */; };
 		D131F1732B8AF42F002261BC /* TabBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F1722B8AF42F002261BC /* TabBarButton.swift */; };
 		D131F17B2B8B090D002261BC /* MetronomeShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F17A2B8B090D002261BC /* MetronomeShape.swift */; };
+		D17C5CA82B9E561300C1CA44 /* NewPieceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17C5CA72B9E561300C1CA44 /* NewPieceRow.swift */; };
+		D185FB722B90482E003C7631 /* CreatePiece.swift in Sources */ = {isa = PBXBuildFile; fileRef = D185FB712B90482E003C7631 /* CreatePiece.swift */; };
+		D188F6662B96CEF4005E0FA2 /* CreatePieceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D188F6652B96CEF4005E0FA2 /* CreatePieceViewModel.swift */; };
 		D19E733F2B898F9300BB3EC7 /* PracticeLoggerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E733E2B898F9300BB3EC7 /* PracticeLoggerApp.swift */; };
 		D19E73412B898F9300BB3EC7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E73402B898F9300BB3EC7 /* ContentView.swift */; };
 		D19E73432B898F9400BB3EC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D19E73422B898F9400BB3EC7 /* Assets.xcassets */; };
 		D19E73462B898F9400BB3EC7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D19E73452B898F9400BB3EC7 /* Preview Assets.xcassets */; };
-		D19E73502B898F9400BB3EC7 /* PracticeLoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E734F2B898F9400BB3EC7 /* PracticeLoggerTests.swift */; };
 		D19E735A2B898F9400BB3EC7 /* PracticeLoggerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E73592B898F9400BB3EC7 /* PracticeLoggerUITests.swift */; };
 		D19E735C2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E735B2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift */; };
+		D1C6B0D82B8BC81300F7B877 /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = D1C6B0D72B8BC81300F7B877 /* Auth */; };
+		D1C6B0DA2B8BC81300F7B877 /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = D1C6B0D92B8BC81300F7B877 /* Functions */; };
+		D1C6B0DC2B8BC81300F7B877 /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = D1C6B0DB2B8BC81300F7B877 /* PostgREST */; };
+		D1C6B0DE2B8BC81300F7B877 /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = D1C6B0DD2B8BC81300F7B877 /* Realtime */; };
+		D1C6B0E02B8BC81300F7B877 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = D1C6B0DF2B8BC81300F7B877 /* Storage */; };
+		D1DF5B5F2BB882CD00FFED0F /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1DF5B5E2BB882CD00FFED0F /* String.swift */; };
+		D1E46FF22B96D52D00228C3F /* Piece.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E46FF12B96D52D00228C3F /* Piece.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,20 +49,26 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D11990612B9CBC160031E8A0 /* MusicKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicKitTests.swift; sourceTree = "<group>"; };
+		D11990642B9CC58D0031E8A0 /* MusicKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MusicKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/MusicKit.framework; sourceTree = DEVELOPER_DIR; };
 		D131F16C2B8AE54E002261BC /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		D131F16F2B8AE8B9002261BC /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		D131F1722B8AF42F002261BC /* TabBarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarButton.swift; sourceTree = "<group>"; };
 		D131F17A2B8B090D002261BC /* MetronomeShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetronomeShape.swift; sourceTree = "<group>"; };
+		D17C5CA72B9E561300C1CA44 /* NewPieceRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPieceRow.swift; sourceTree = "<group>"; usesTabs = 0; };
+		D185FB712B90482E003C7631 /* CreatePiece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePiece.swift; sourceTree = "<group>"; };
+		D188F6652B96CEF4005E0FA2 /* CreatePieceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePieceViewModel.swift; sourceTree = "<group>"; };
 		D19E733B2B898F9300BB3EC7 /* PracticeLogger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PracticeLogger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D19E733E2B898F9300BB3EC7 /* PracticeLoggerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLoggerApp.swift; sourceTree = "<group>"; };
 		D19E73402B898F9300BB3EC7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D19E73422B898F9400BB3EC7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D19E73452B898F9400BB3EC7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D19E734B2B898F9400BB3EC7 /* PracticeLoggerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PracticeLoggerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D19E734F2B898F9400BB3EC7 /* PracticeLoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLoggerTests.swift; sourceTree = "<group>"; };
 		D19E73552B898F9400BB3EC7 /* PracticeLoggerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PracticeLoggerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D19E73592B898F9400BB3EC7 /* PracticeLoggerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLoggerUITests.swift; sourceTree = "<group>"; };
 		D19E735B2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLoggerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		D1DF5B5E2BB882CD00FFED0F /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		D1E46FF12B96D52D00228C3F /* Piece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Piece.swift; sourceTree = "<group>"; };
 		D1EA64CD2B8A7E7B00D95E1F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -60,6 +77,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1C6B0DC2B8BC81300F7B877 /* PostgREST in Frameworks */,
+				D1C6B0DA2B8BC81300F7B877 /* Functions in Frameworks */,
+				D1C6B0D82B8BC81300F7B877 /* Auth in Frameworks */,
+				D1C6B0E02B8BC81300F7B877 /* Storage in Frameworks */,
+				D1C6B0DE2B8BC81300F7B877 /* Realtime in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -67,6 +89,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D11990652B9CC58D0031E8A0 /* MusicKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,10 +103,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D11990632B9CC58C0031E8A0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D11990642B9CC58D0031E8A0 /* MusicKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		D131F16A2B8AE168002261BC /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				D131F1712B8AF415002261BC /* Custom Tab Bar */,
+				D185FB712B90482E003C7631 /* CreatePiece.swift */,
+				D17C5CA72B9E561300C1CA44 /* NewPieceRow.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -92,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				D131F16C2B8AE54E002261BC /* Color.swift */,
+				D1DF5B5E2BB882CD00FFED0F /* String.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -113,6 +147,22 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		D188F6642B96CED4005E0FA2 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				D188F6652B96CEF4005E0FA2 /* CreatePieceViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		D188F6672B96D490005E0FA2 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				D1E46FF12B96D52D00228C3F /* Piece.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
 		D19E73322B898F9300BB3EC7 = {
 			isa = PBXGroup;
 			children = (
@@ -120,6 +170,7 @@
 				D19E734E2B898F9400BB3EC7 /* PracticeLoggerTests */,
 				D19E73582B898F9400BB3EC7 /* PracticeLoggerUITests */,
 				D19E733C2B898F9300BB3EC7 /* Products */,
+				D11990632B9CC58C0031E8A0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -136,6 +187,8 @@
 		D19E733D2B898F9300BB3EC7 /* PracticeLogger */ = {
 			isa = PBXGroup;
 			children = (
+				D188F6672B96D490005E0FA2 /* model */,
+				D188F6642B96CED4005E0FA2 /* ViewModel */,
 				D131F1742B8AFCC8002261BC /* Components */,
 				D131F16B2B8AE544002261BC /* Extensions */,
 				D1EA64CD2B8A7E7B00D95E1F /* Info.plist */,
@@ -159,7 +212,7 @@
 		D19E734E2B898F9400BB3EC7 /* PracticeLoggerTests */ = {
 			isa = PBXGroup;
 			children = (
-				D19E734F2B898F9400BB3EC7 /* PracticeLoggerTests.swift */,
+				D11990612B9CBC160031E8A0 /* MusicKitTests.swift */,
 			);
 			path = PracticeLoggerTests;
 			sourceTree = "<group>";
@@ -189,6 +242,13 @@
 			dependencies = (
 			);
 			name = PracticeLogger;
+			packageProductDependencies = (
+				D1C6B0D72B8BC81300F7B877 /* Auth */,
+				D1C6B0D92B8BC81300F7B877 /* Functions */,
+				D1C6B0DB2B8BC81300F7B877 /* PostgREST */,
+				D1C6B0DD2B8BC81300F7B877 /* Realtime */,
+				D1C6B0DF2B8BC81300F7B877 /* Storage */,
+			);
 			productName = PracticeLogger;
 			productReference = D19E733B2B898F9300BB3EC7 /* PracticeLogger.app */;
 			productType = "com.apple.product-type.application";
@@ -261,6 +321,9 @@
 				Base,
 			);
 			mainGroup = D19E73322B898F9300BB3EC7;
+			packageReferences = (
+				D1C6B0D62B8BC81300F7B877 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			productRefGroup = D19E733C2B898F9300BB3EC7 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -303,9 +366,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D17C5CA82B9E561300C1CA44 /* NewPieceRow.swift in Sources */,
+				D1DF5B5F2BB882CD00FFED0F /* String.swift in Sources */,
 				D131F1702B8AE8B9002261BC /* CustomTabBar.swift in Sources */,
 				D19E73412B898F9300BB3EC7 /* ContentView.swift in Sources */,
 				D19E733F2B898F9300BB3EC7 /* PracticeLoggerApp.swift in Sources */,
+				D188F6662B96CEF4005E0FA2 /* CreatePieceViewModel.swift in Sources */,
+				D185FB722B90482E003C7631 /* CreatePiece.swift in Sources */,
+				D1E46FF22B96D52D00228C3F /* Piece.swift in Sources */,
 				D131F1732B8AF42F002261BC /* TabBarButton.swift in Sources */,
 				D131F17B2B8B090D002261BC /* MetronomeShape.swift in Sources */,
 				D131F16D2B8AE54E002261BC /* Color.swift in Sources */,
@@ -316,7 +384,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D19E73502B898F9400BB3EC7 /* PracticeLoggerTests.swift in Sources */,
+				D11990622B9CBC160031E8A0 /* MusicKitTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -469,6 +537,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PracticeLogger/Preview Content\"";
@@ -478,6 +547,7 @@
 				INFOPLIST_FILE = PracticeLogger/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Practice Logger";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
+				INFOPLIST_KEY_NSAppleMusicUsageDescription = "We want this to access your music data";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -502,6 +572,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PracticeLogger/Preview Content\"";
@@ -511,6 +582,7 @@
 				INFOPLIST_FILE = PracticeLogger/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Practice Logger";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
+				INFOPLIST_KEY_NSAppleMusicUsageDescription = "We want this to access your music data";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -537,6 +609,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				MARKETING_VERSION = 1.0;
@@ -554,13 +627,18 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = PZARYFA5MD;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = michaelbrandt.PracticeLoggerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -642,6 +720,45 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D1C6B0D62B8BC81300F7B877 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase-community/supabase-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D1C6B0D72B8BC81300F7B877 /* Auth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1C6B0D62B8BC81300F7B877 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Auth;
+		};
+		D1C6B0D92B8BC81300F7B877 /* Functions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1C6B0D62B8BC81300F7B877 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Functions;
+		};
+		D1C6B0DB2B8BC81300F7B877 /* PostgREST */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1C6B0D62B8BC81300F7B877 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = PostgREST;
+		};
+		D1C6B0DD2B8BC81300F7B877 /* Realtime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1C6B0D62B8BC81300F7B877 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Realtime;
+		};
+		D1C6B0DF2B8BC81300F7B877 /* Storage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1C6B0D62B8BC81300F7B877 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Storage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D19E73332B898F9300BB3EC7 /* Project object */;
 }
