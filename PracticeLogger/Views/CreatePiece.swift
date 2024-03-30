@@ -16,7 +16,7 @@ struct CreatePiece: View {
                 .padding()
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
-            
+
             Button(action: {
                 Task {
                     await viewModel.getClassicalPieces(searchTerm)
@@ -29,19 +29,16 @@ struct CreatePiece: View {
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
-            
+
             ScrollView {
                 ForEach(viewModel.pieces) { piece in
-                    HStack{
-                        Text(piece.workName)
-                    }
+                    NewPieceRow(piece: piece)
                 }
             }
         }
     }
 }
 
-
-#Preview {
-    CreatePiece()
-}
+// #Preview {
+//    CreatePiece()
+// }

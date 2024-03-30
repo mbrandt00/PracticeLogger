@@ -11,7 +11,7 @@ struct ContentView: View {
     @State var selectedTab: Tabs = .start
     let bpm: Double = 60
     var body: some View {
-        VStack() {
+        VStack {
 //            TimelineView(.periodic(from: .now, by: 60 / bpm)) { timeline in
 //                        MetronomeBack()
 //                            .overlay(MetronomePendulum(bpm: bpm, date: timeline.date))
@@ -27,8 +27,8 @@ struct ContentView: View {
 }
 
 #Preview {
-    NavigationView{
+    NavigationView {
         ContentView().navigationBarHidden(true)
-        
+
     }
 }

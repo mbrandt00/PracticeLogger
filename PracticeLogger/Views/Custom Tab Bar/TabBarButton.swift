@@ -11,15 +11,15 @@ struct TabBarButton: View {
     var imageName: String
     var buttonText: String
     var isActive: Bool
-    
+
     var body: some View {
-        GeometryReader{ geo in
+        GeometryReader { geo in
             if isActive {
                 Rectangle()
                     .frame(width: geo.size.width/2, height: 4)
                     .padding(.leading, geo.size.width/4)
             }
-            
+
             VStack {
                 Image(systemName: imageName)
                     .resizable()

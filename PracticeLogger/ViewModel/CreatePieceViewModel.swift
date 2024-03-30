@@ -10,12 +10,17 @@ import MusicKit
 
 class CreatePieceViewModel: ObservableObject {
     @Published var pieces: [Piece] = []
-    
+
     func getClassicalPieces(_ query: String) async {
-        Task {
-            let result = try await Piece.searchPieceFromSongName(query: query)
-            self.pieces = result
+        do {
+            let fetchedPieces = try await Piece.searchPieceFromSongName(query: query)
+            DispatchQueue.main.async {
+                // Update UI or ViewModel state with fetched pieces
+                self.pieces = fetchedPieces
+            }
+        } catch {
+            // Handle error (e.g., display error message to the user)
+            print("Error fetching pieces: \(error)")
         }
-        
     }
 }

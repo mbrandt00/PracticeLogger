@@ -11,7 +11,7 @@ enum Tabs: Int {
     case progress = 0
     case start = 1
     case profile = 2
-    
+
 }
 
 struct CustomTabBar: View {
@@ -21,18 +21,18 @@ struct CustomTabBar: View {
             .fill(Color.theme.gray)
             .frame(height: 1)
             .opacity(0.3)
-        HStack (alignment: .center, spacing: 4) {
+        HStack(alignment: .center, spacing: 4) {
 
-            Button{
+            Button {
                 selectedTab = .progress
             }label: {
                 TabBarButton(imageName: "chart.xyaxis.line", buttonText: "Progress", isActive: selectedTab == .progress)
             }
-            
-            Button{
+
+            Button {
                 selectedTab = .start
             }label: {
-                GeometryReader{ geo in
+                GeometryReader { geo in
                     VStack {
                         Image(systemName: "metronome")
                             .resizable()
@@ -42,15 +42,15 @@ struct CustomTabBar: View {
                     }.frame(width: geo.size.width, height: geo.size.height)
                 }
             }
-            
-            Button{
+
+            Button {
                 selectedTab = .profile
             }label: {
                 TabBarButton(imageName: "person", buttonText: "Profile", isActive: selectedTab == .profile)
             }
         }
-        .frame(height:82)
-        
+        .frame(height: 82)
+
     }
 }
 
