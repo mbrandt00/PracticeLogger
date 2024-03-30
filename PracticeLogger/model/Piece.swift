@@ -67,7 +67,7 @@ struct Piece: Identifiable {
         if let workName = song.workName {
             if query.containsKeySignature(){
                 if isMatchingKeySignature(query: query, workName: workName){
-                    matching += 3
+                    matchingKeySignatureWeight += 3
                 }
                 total += 3
             }
