@@ -7,7 +7,6 @@
 
 import SwiftUI
 import MusicKit
-
 struct Movement: Identifiable {
     var id = UUID()
     var name: String
@@ -43,8 +42,8 @@ struct Piece: Identifiable {
         result.includeTopResults = true
         let response = try await result.response()
         response.songs.forEach { song in
-            if song.workName != nil && !uniqWorks.keys.contains(song.workName!) && songMatchesQuery(query: query, song: song) {
-                uniqWorks[song.workName!] = song
+            if song.workName != nil && !uniqWorks.keys.contains(song.workName!) && songMatchesQuery(query: query, song: song) && !song.workName!.contains("Live") && !song.workName!.contains("(")
+            {                uniqWorks[song.workName!] = song
             }
         }
         
@@ -83,7 +82,7 @@ struct Piece: Identifiable {
             }
         }
         let confidence = Double(matching) / Double(total)
-        print(song.workName, confidence)
+        //        print(song.workName, confidence)
         return confidence >= 0.85
     }
     
@@ -116,7 +115,6 @@ struct Piece: Identifiable {
         let keyCharacters: Set<Character> = ["A", "B", "C", "D", "E", "F", "G"]
         let tonalities = ["major", "minor"]
         let accidentals = ["flat", "sharp", "♯", "♭", "#", "b" ]
-        var foundKeyCharacter = false
         let words = string.split(separator: " ")
         var parsedQueryKeySignature: Set<String> = []
         if let startIndex = words.firstIndex(where: { word in
@@ -142,10 +140,6 @@ struct Piece: Identifiable {
             }
         }
         return parsedQueryKeySignature
-        
     }
     
-    enum SearchError: Error {
-        case noAlbum
-    }
 }

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import MusicKit
 struct ContentView: View {
     @State var selectedTab: Tabs = .start
     let bpm: Double = 60
