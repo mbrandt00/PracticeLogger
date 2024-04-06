@@ -26,15 +26,6 @@ struct Piece: Identifiable {
     var movements: [Movement]
     
     static func searchPieceFromSongName(query: String)  async throws -> [Piece] {
-        /*
-         cleanse string try to get rid of
-         These kinds of results
-         - 4 : "Piano Concerto No. 4 in G Minor, Op. 40 (1941 3rd Version)"
-         - 5 : "Piano Concerto No. 4 in G Minor, Op. 40 (Live at Kimmel Center, Philadelphia, PA, USA)"
-         - 6 : "8 Etudes, Op. 42
-         Currently returns Tchaikovsky Piano Concerto when searching Rachmaninoff Concerto
-         
-         */
         var pieces: [Piece] = []
         var uniqWorks: [String: Song] = [:]
         var result = MusicCatalogSearchRequest(term: query, types: [Song.self])
@@ -42,10 +33,13 @@ struct Piece: Identifiable {
         result.includeTopResults = true
         let response = try await result.response()
         response.songs.forEach { song in
-            if song.workName != nil && !uniqWorks.keys.contains(song.workName!) && songMatchesQuery(query: query, song: song) && !song.workName!.contains("Live") && !song.workName!.contains("(")
+            if song.workName != nil && !uniqWorks.keys.contains(song.workName!) && songMatchesQuery(query: query, song: song)
             {                uniqWorks[song.workName!] = song
             }
         }
+
+
+        uniqWorks = chooseBestRecords(uniqWorks: uniqWorks)
         
         for (_, song) in uniqWorks {
             let piece = try await createPieceFromSong(song: song)
@@ -58,23 +52,21 @@ struct Piece: Identifiable {
      Checks Composer, Key Signature, and Cataloging information (opus/K/BWV) Information to determine if the piece matches with an 80% confidence score
      */
     static func songMatchesQuery (query: String, song: Song!) -> Bool {
-        // opus/BMV/K/HOB/, compose name key signature boosting...
         let splitQuery = query.split(separator: " ")
-        var matchingKeySignatureWeight = 3
+        let matchingWeight = 10
         var total = splitQuery.count
         var matching = 0
         if let workName = song.workName {
             if query.containsKeySignature(){
                 if isMatchingKeySignature(query: query, workName: workName){
-                    matchingKeySignatureWeight += 3
+                    matching += matchingWeight
                 }
-                total += 3
+                total += matchingWeight
             }
             for word in splitQuery {
-                
                 if query.contains(word) {
                     if String(word).isNumber() {
-                        matching += 3
+                        matching += matchingWeight
                     } else {
                         matching += 1
                     }
@@ -82,7 +74,8 @@ struct Piece: Identifiable {
             }
         }
         let confidence = Double(matching) / Double(total)
-        //        print(song.workName, confidence)
+        print(song?.workName ?? "", confidence)
+        
         return confidence >= 0.85
     }
     
@@ -105,16 +98,22 @@ struct Piece: Identifiable {
     }
     
     static func isMatchingKeySignature(query: String, workName: String) -> Bool {
+        print("tes tkey signature")
+        print(query)
+        print(workName)
         let queryCheck = parseKeySignature(string: query)
+        print("queryCheck", queryCheck)
         let workNameCheck = parseKeySignature(string: workName)
+        print("worknamecheck", workNameCheck)
+        print("resuilt", queryCheck == workNameCheck)
         return queryCheck == workNameCheck
     }
     
     static func parseKeySignature(string: String!) -> Set<String> {
-        // Optional("Piano Concerto No. 1 in B-Flat Minor, Op. 23") Dashes...
-        let keyCharacters: Set<Character> = ["A", "B", "C", "D", "E", "F", "G"]
+        let keyCharacters: Set<Character> = ["a", "b", "c", "d", "e", "f", "g"]
         let tonalities = ["major", "minor"]
         let accidentals = ["flat", "sharp", "♯", "♭", "#", "b" ]
+        let string = string.lowercased()
         let words = string.split(separator: " ")
         var parsedQueryKeySignature: Set<String> = []
         if let startIndex = words.firstIndex(where: { word in
@@ -142,4 +141,62 @@ struct Piece: Identifiable {
         return parsedQueryKeySignature
     }
     
+    static func extractCatalogNumber(from string: String) -> String? {
+        // Define regular expression patterns for different cataloguing types
+        let opPattern = #"Op\. (\d+)"#  // For Op. numbers
+        let kPattern = #"K\. (\d+)"#    // For K. numbers (Mozart)
+        let bwvPattern = #"BWV (\d+)"#  // For BWV numbers (Bach)
+        let dPattern = #"D (\d+)"#      // For D numbers (Schubert)
+
+        // Attempt to match each pattern in the input string
+        let patterns = [opPattern, kPattern, bwvPattern, dPattern]
+        for pattern in patterns {
+            let regex = try! NSRegularExpression(pattern: pattern, options: [])
+            if let match = regex.firstMatch(in: string, options: [], range: NSRange(location: 0, length: string.utf16.count)) {
+                let range = Range(match.range(at: 1), in: string)!
+                return String(string[range])
+            }
+        }
+        return nil
+    }
+    
+    static func chooseBestRecords(uniqWorks: [String: Song]) -> [String: Song] {
+        var workInfoGroupedByCatalogNumber: [String: [(String, Int)]] = [:]
+        var result: [String: Song] = [:]
+
+        // Group work names by catalog number along with their movement counts
+        for (workName, song) in uniqWorks {
+            // Extract catalog number from the work name
+            if let catalogNumber = extractCatalogNumber(from: workName) {
+                // Check if the workName contains "Live" or parentheses
+                if !workName.contains("Live") && !workName.contains("(") {
+                    // Append the work name and movement count to the array corresponding to its catalog number
+                    let workInfoTuple = (workName, song.movementCount ?? 0)
+                    if var workInfoWithCatalogNumber = workInfoGroupedByCatalogNumber[catalogNumber] {
+                        workInfoWithCatalogNumber.append(workInfoTuple)
+                        workInfoGroupedByCatalogNumber[catalogNumber] = workInfoWithCatalogNumber
+                    } else {
+                        workInfoGroupedByCatalogNumber[catalogNumber] = [workInfoTuple]
+                    }
+                }
+            }
+        }
+
+        // Select the record with the maximum movement count for each catalog number
+        for (_, workInfo) in workInfoGroupedByCatalogNumber {
+            // Find the maximum movement count
+            if let maxMovementCount = workInfo.max(by: { $0.1 < $1.1 })?.1 {
+                // Find the record with the maximum movement count
+                if let bestRecord = workInfo.first(where: { $0.1 == maxMovementCount }) {
+                    // Retrieve the corresponding song object from uniqWorks
+                    if let bestSong = uniqWorks[bestRecord.0] {
+                        // Add the best record to the result dictionary
+                        result[bestRecord.0] = bestSong
+                    }
+                }
+            }
+        }
+        
+        return result
+    }
 }
