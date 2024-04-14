@@ -24,6 +24,7 @@ struct Piece: Identifiable {
     var workName: String
     var composer: Composer
     var movements: [Movement]
+    var formattedKeySignature: String?
     
     static func searchPieceFromSongName(query: String)  async throws -> [Piece] {
         var pieces: [Piece] = []
@@ -94,7 +95,7 @@ struct Piece: Identifiable {
                      composer: Composer(name: matchingSongs?.first?.composerName ?? ""),
                      movements: matchingSongs?.map { song in
             Movement(name: song.movementName ?? "", number: song.movementNumber ?? 0, selected: false)
-        } ?? [])
+        } ?? [], formattedKeySignature: workName!.parseKeySignature().formatKeySignature() ?? nil)
     }
     
     static func isMatchingKeySignature(query: String, workName: String) -> Bool {
@@ -121,6 +122,23 @@ struct Piece: Identifiable {
             }
         }
         return nil
+    }
+    
+    func workNameWithoutKeySignature() -> String {
+        let keyCharacters: Set<Character> = ["A", "B", "C", "D", "E", "F", "G"]
+        let tonalities = ["Major", "Minor"]
+        let accidentals = ["Flat", "Sharp", "♯", "♭", "#", "b" ]
+        let words = workName.split(separator: " ")
+
+        let filteredWords = words.filter { word in
+            !keyCharacters.contains(word.first ?? Character("")) &&
+            !tonalities.contains(String(word)) &&
+            !accidentals.contains(String(word)) &&
+            word.lowercased() != "in"
+        }
+        
+        return filteredWords.joined(separator: " ")
+    
     }
     
     static func chooseBestRecords(uniqWorks: [String: Song]) -> [String: Song] {
