@@ -39,6 +39,6 @@ struct CreatePiece: View {
     }
 }
 
-// #Preview {
-//    CreatePiece()
-// }
+ #Preview {
+    CreatePiece()
+ }
