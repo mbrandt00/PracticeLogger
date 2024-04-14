@@ -32,4 +32,10 @@ final class MusicKitTests: XCTestCase {
         XCTAssertEqual(pieces.first?.composer.name, "Sergei Rachmaninoff")
     }
 
+    func testFormatKeySignature(){
+        XCTAssertEqual(Set(["b", "flat", "minor"]).formatKeySignature(), "B♭ Minor")
+        XCTAssertEqual(Set(["c", "sharp", "minor"]).formatKeySignature(), "C♯ Minor")
+        XCTAssertEqual(Set(["c", "major"]).formatKeySignature(), "C Major")
+        XCTAssertEqual(Set(["d", "flat", "minor"]).formatKeySignature(), "D♭ Minor")
+    }
 }

@@ -74,7 +74,7 @@ struct NewPieceRow: View {
 
 
 #Preview {
-    NewPieceRow(piece: Piece(workName: "Chopin Sonata 2", composer: Composer(name: "Frederic Chopin"), movements:
+    NewPieceRow(piece: Piece(workName: "Chopin Sonata 2 in B flat Minor Funeral March", composer: Composer(name: "Frederic Chopin"), movements:
                                 [
                                     Movement(name: "Grave - Doppio movimento", number: 1),
                                     Movement(name: "Scherzo- Piu lento - Tempo 1", number: 2),

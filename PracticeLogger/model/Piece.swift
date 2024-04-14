@@ -29,6 +29,7 @@ struct Piece: Identifiable {
         var pieces: [Piece] = []
         var uniqWorks: [String: Song] = [:]
         var result = MusicCatalogSearchRequest(term: query, types: [Song.self])
+
         result.limit = 25
         result.includeTopResults = true
         let response = try await result.response()
@@ -38,9 +39,8 @@ struct Piece: Identifiable {
             }
         }
 
-
         uniqWorks = chooseBestRecords(uniqWorks: uniqWorks)
-        
+
         for (_, song) in uniqWorks {
             let piece = try await createPieceFromSong(song: song)
             pieces.append(piece)
@@ -76,7 +76,7 @@ struct Piece: Identifiable {
         let confidence = Double(matching) / Double(total)
         print(song?.workName ?? "", confidence)
         
-        return confidence >= 0.85
+        return confidence >= 0.75
     }
     
     static func createPieceFromSong(song: Song) async throws -> Piece {
@@ -98,48 +98,11 @@ struct Piece: Identifiable {
     }
     
     static func isMatchingKeySignature(query: String, workName: String) -> Bool {
-        print("tes tkey signature")
-        print(query)
-        print(workName)
-        let queryCheck = parseKeySignature(string: query)
-        print("queryCheck", queryCheck)
-        let workNameCheck = parseKeySignature(string: workName)
-        print("worknamecheck", workNameCheck)
-        print("resuilt", queryCheck == workNameCheck)
+        let queryCheck = query.parseKeySignature()
+        let workNameCheck = workName.parseKeySignature()
         return queryCheck == workNameCheck
     }
     
-    static func parseKeySignature(string: String!) -> Set<String> {
-        let keyCharacters: Set<Character> = ["a", "b", "c", "d", "e", "f", "g"]
-        let tonalities = ["major", "minor"]
-        let accidentals = ["flat", "sharp", "♯", "♭", "#", "b" ]
-        let string = string.lowercased()
-        let words = string.split(separator: " ")
-        var parsedQueryKeySignature: Set<String> = []
-        if let startIndex = words.firstIndex(where: { word in
-            keyCharacters.contains(word.first ?? Character(""))
-        }) {
-            // Start iterating from the index of the first word containing a key character
-            for wordIndex in startIndex..<words.endIndex {
-                var word = words[wordIndex].lowercased()
-                if word.last == "," {
-                    word.removeLast() // Remove the last character (which is the comma)
-                }
-                if word.contains("-") {
-                    let parts = word.split(separator: "-")
-                    for part in parts {
-                        if keyCharacters.contains(part.first ?? Character("")) || accidentals.contains(String(part)) {
-                            parsedQueryKeySignature.insert(String(part))
-                            
-                        }
-                    }
-                } else if tonalities.contains(String(word)) || keyCharacters.contains(String(word)) || accidentals.contains(String(word)){
-                    parsedQueryKeySignature.insert(String(word))
-                }
-            }
-        }
-        return parsedQueryKeySignature
-    }
     
     static func extractCatalogNumber(from string: String) -> String? {
         // Define regular expression patterns for different cataloguing types
