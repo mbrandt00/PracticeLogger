@@ -15,7 +15,7 @@ struct NewPieceRow: View {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(
-                        piece.formattedKeySignature != nil ? piece.workNameWithoutKeySignature() :  "NO KEY SIGNATURE"
+                        piece.formattedKeySignature != nil ? piece.workNameWithoutKeySignature() :  piece.workName
                     
                     
                     )

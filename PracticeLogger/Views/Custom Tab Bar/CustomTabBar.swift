@@ -50,6 +50,7 @@ struct CustomTabBar: View {
             }
         }
         .frame(height: 82)
+        .ignoresSafeArea(.keyboard, edges: .bottom)
 
     }
 }
