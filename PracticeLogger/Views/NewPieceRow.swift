@@ -14,35 +14,53 @@ struct NewPieceRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Text(piece.workName)
-                    .font(.title3)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(piece.workName)
+                        .font(.title)
+                    Text(piece.composer.name)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
                 
                 Spacer()
                 
                 DisclosureGroup(isExpanded: $isExpanded) {
                 } label: {
-                    HStack {
-                        Text("\(piece.movements.count) movements")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .padding(.horizontal, 10) // Add padding to the label
-                            .background(Color.gray.opacity(0.2)) // Apply the same gray padding
-                            .cornerRadius(6) // Add corner radius for aesthetics
-                            .padding(.leading)
-                    }
+                    
+                    Text("\(piece.movements.count) movements")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .padding(.horizontal, 10)
+                        .background(Color.gray.opacity(0.2))
+                        .cornerRadius(6)
+                        .padding(.leading)
+                    
                 }
             }
+            .padding(.vertical, 8)
             
             if isExpanded {
                 VStack(alignment: .leading, spacing: 10) {
                     ForEach(piece.movements) { movement in
-                        Text(movement.name)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .padding(.leading, 40) // Indent content to match disclosure label
+                        HStack {
+                            Text(movement.number.toRomanNumeral() ?? "")
+                                .font(.caption)
+                                .frame(width: 24, height: 14)
+                                .background(Color.gray.opacity(0.2))
+                                .cornerRadius(6)
+                            
+
+                                Text(movement.name)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                    .padding(.leading)
+                            
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
+                    
                 }
-                .padding(.top, 10) // Add some space between label and content
+                .padding(.top, 5)
             }
         }
         .padding()
@@ -58,26 +76,6 @@ struct NewPieceRow: View {
 #Preview {
     NewPieceRow(piece: Piece(workName: "Chopin Sonata 2", composer: Composer(name: "Frederic Chopin"), movements:
                                 [
-                                    Movement(name: "Grave - Doppio movimento", number: 1),
-                                    Movement(name: "Scherzo- Piu lento - Tempo 1", number: 2),
-                                    Movement(name: "Marche Fuenbre", number: 3),
-                                    Movement(name: "Finale", number: 4),
-                                    Movement(name: "Grave - Doppio movimento", number: 1),
-                                    Movement(name: "Scherzo- Piu lento - Tempo 1", number: 2),
-                                    Movement(name: "Marche Fuenbre", number: 3),
-                                    Movement(name: "Finale", number: 4),
-                                    Movement(name: "Grave - Doppio movimento", number: 1),
-                                    Movement(name: "Scherzo- Piu lento - Tempo 1", number: 2),
-                                    Movement(name: "Marche Fuenbre", number: 3),
-                                    Movement(name: "Finale", number: 4),
-                                    Movement(name: "Grave - Doppio movimento", number: 1),
-                                    Movement(name: "Scherzo- Piu lento - Tempo 1", number: 2),
-                                    Movement(name: "Marche Fuenbre", number: 3),
-                                    Movement(name: "Finale", number: 4),
-                                    Movement(name: "Grave - Doppio movimento", number: 1),
-                                    Movement(name: "Scherzo- Piu lento - Tempo 1", number: 2),
-                                    Movement(name: "Marche Fuenbre", number: 3),
-                                    Movement(name: "Finale", number: 4),
                                     Movement(name: "Grave - Doppio movimento", number: 1),
                                     Movement(name: "Scherzo- Piu lento - Tempo 1", number: 2),
                                     Movement(name: "Marche Fuenbre", number: 3),
