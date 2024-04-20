@@ -58,5 +58,20 @@ extension String {
         return parsedQueryKeySignature
     }
     
+    func formatMovementName() -> String {
+            // Define a pattern to match either a roman numeral or a number followed by a dot and a space
+            let pattern = #"\b(?:[IVXLCDM]+|\d+)\.\s"# // Matches a roman numeral or a number followed by a dot and a space
+            
+            // Attempt to find the first match of the pattern in the string
+            if let range = self.range(of: pattern, options: .regularExpression) {
+                // Get the substring starting after the first occurrence of the match
+                let startIndex = range.upperBound
+                return String(self[startIndex...])
+            }
+            
+            // Return the original string if no match is found
+            return self
+        }
+    
     
 }

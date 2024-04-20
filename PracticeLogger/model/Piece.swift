@@ -12,6 +12,7 @@ struct Movement: Identifiable {
     var name: String
     var number: Int
     var selected: Bool = false
+    var appleMusicId: MusicItemID?
 }
 
 struct Composer: Identifiable {
@@ -34,9 +35,34 @@ struct Piece: Identifiable {
         result.limit = 25
         result.includeTopResults = true
         let response = try await result.response()
+        
         response.songs.forEach { song in
             if song.workName != nil && !uniqWorks.keys.contains(song.workName!) && songMatchesQuery(query: query, song: song)
             {                uniqWorks[song.workName!] = song
+            }
+        }
+        
+        if uniqWorks.isEmpty && !response.songs.isEmpty {
+            print("Work names not found, but songs were")
+            
+            if let firstSong = response.songs.first {
+                do {
+                    let detailedSong = try await firstSong.with([.albums])
+                    if let album = detailedSong.albums?.first {
+                        
+                        // Use guard statement instead of conditional binding
+                        if let albumTrack = try? await album.with([.tracks]){
+                            if let allAlbumTracks = albumTrack.tracks {
+                                return try await createPiecesFromTrack(tracks: Array(allAlbumTracks))
+                            }
+                        }
+                        
+
+
+                        
+                        // Continue with the rest of the code here...
+                    }
+                }
             }
         }
 
@@ -124,6 +150,73 @@ struct Piece: Identifiable {
         return nil
     }
     
+    
+    static func createPiecesFromTrack(tracks: [Track]) async throws -> [Piece] {
+        var pieces: [Piece] = []
+        var currentPieceName: String?
+        var currentPieceMovements: [Movement] = []
+        var movementNumber = 1
+        func extractPieceInfo(from trackTitle: String) -> (String, String)? {
+            // Define a pattern to extract the piece name and movement name
+            let pattern = #"^(.+?):\s*(.+)$"# // Match everything until the first colon followed by everything after the colon and optional space
+            
+            // Attempt to match the pattern in the track title
+            let regex = try! NSRegularExpression(pattern: pattern, options: [])
+            if let match = regex.firstMatch(in: trackTitle, options: [], range: NSRange(location: 0, length: trackTitle.utf16.count)) {
+                let pieceRange = Range(match.range(at: 1), in: trackTitle)!
+                let movementRange = Range(match.range(at: 2), in: trackTitle)!
+                let pieceName = String(trackTitle[pieceRange])
+                let movementName = String(trackTitle[movementRange])
+                return (pieceName, movementName)
+            }
+            
+            return nil
+        }
+        for track in tracks {
+            // Extract piece name and movement name from track title
+            if let (pieceName, movementName) = extractPieceInfo(from: track.title) {
+                // Continue with your existing logic
+                guard case .song(let song) = track else { continue }
+                let composerName = song.composerName ?? ""
+                let appleMusicId = song.id
+                
+                // If the piece name changes, create a new piece
+                if let currentName = currentPieceName, currentName != pieceName {
+                    // Append the current piece to pieces array before creating a new one
+                    if !currentPieceMovements.isEmpty {
+                        let composer = Composer(name: composerName)
+                        let piece = Piece(workName: currentName,
+                                          composer: composer,
+                                          movements: currentPieceMovements)
+                        pieces.append(piece)
+                    }
+                    // Reset movement number for the new piece
+                    movementNumber = 1
+                    currentPieceMovements = []
+                }
+                
+                // Update current piece name and append movement
+                currentPieceName = pieceName
+                let movement = Movement(name: movementName.formatMovementName(), number: movementNumber, appleMusicId: appleMusicId)
+                currentPieceMovements.append(movement)
+                movementNumber += 1 // Increment movement number for the next movement
+            }
+        }
+
+        // Append the last piece to the pieces array
+        if let currentName = currentPieceName {
+            let composer = Composer(name: "") // Provide appropriate composer name
+            let piece = Piece(workName: currentName,
+                              composer: composer,
+                              movements: currentPieceMovements)
+            pieces.append(piece)
+        }
+            
+        
+        return pieces
+    }
+    
+    
     func workNameWithoutKeySignature() -> String {
         let keyCharacters: Set<Character> = ["A", "B", "C", "D", "E", "F", "G"]
         let tonalities = ["Major", "Minor"]
@@ -144,7 +237,7 @@ struct Piece: Identifiable {
     static func chooseBestRecords(uniqWorks: [String: Song]) -> [String: Song] {
         var workInfoGroupedByCatalogNumber: [String: [(String, Int)]] = [:]
         var result: [String: Song] = [:]
-
+        print(result)
         // Group work names by catalog number along with their movement counts
         for (workName, song) in uniqWorks {
             // Extract catalog number from the work name
@@ -160,6 +253,9 @@ struct Piece: Identifiable {
                         workInfoGroupedByCatalogNumber[catalogNumber] = [workInfoTuple]
                     }
                 }
+            }else {
+                print("No catalog matches...")
+                
             }
         }
 
