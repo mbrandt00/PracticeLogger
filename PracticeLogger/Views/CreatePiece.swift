@@ -10,16 +10,22 @@ import MusicKit
 struct CreatePiece: View {
     @State private var searchTerm = ""
     @ObservedObject var viewModel = CreatePieceViewModel()
+    @Binding var isTyping: Bool
+    @FocusState private var searchIsFocused: Bool
     var body: some View {
         VStack {
-            TextField("Search for music", text: $searchTerm)
+            TextField("Search for music", text: $searchTerm, onEditingChanged: { editing in
+                isTyping = editing
+            })
                 .padding()
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
+                .focused($searchIsFocused)
 
             Button(action: {
                 Task {
                     await viewModel.getClassicalPieces(searchTerm)
+                    searchIsFocused = false
 
                 }
             }) {
@@ -39,6 +45,6 @@ struct CreatePiece: View {
     }
 }
 
- #Preview {
-    CreatePiece()
- }
+// #Preview {
+//    CreatePiece()
+// }
