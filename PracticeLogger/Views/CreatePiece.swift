@@ -11,31 +11,46 @@ struct CreatePiece: View {
     @State private var searchTerm = ""
     @ObservedObject var viewModel = CreatePieceViewModel()
     @Binding var isTyping: Bool
+    @State private var isLoading = false
     @FocusState private var searchIsFocused: Bool
+    
     var body: some View {
         VStack {
-            TextField("Search for music", text: $searchTerm, onEditingChanged: { editing in
-                isTyping = editing
-            })
-                .padding()
+            HStack {
+                TextField("Enter a piece", text: $searchTerm, onEditingChanged: { editing in
+                    isTyping = editing
+                },  onCommit: {
+                    Task {
+                        await performSearch()
+                    }
+                })
+                .padding(10)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
                 .focused($searchIsFocused)
-
-            Button(action: {
-                Task {
-                    await viewModel.getClassicalPieces(searchTerm)
-                    searchIsFocused = false
-
+                
+                Button(action: {
+                    Task {
+                        await performSearch()
+                    }
+                }) {
+                    Text("Search")
+                        .padding(10)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        
                 }
-            }) {
-                Text("Search")
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+                .padding(.trailing, 10) // Add padding to the button
+                .padding(.leading, 5) // Adjust the leading padding of the button
             }
-
+            .padding(5)
+            if isLoading {
+                ProgressView()
+                    .padding(4)
+                    .background(Color.white)
+                    .cornerRadius(6)
+                    .offset(x: 0, y: -2) 
+            }
             ScrollView {
                 ForEach(viewModel.pieces) { piece in
                     NewPieceRow(piece: piece)
@@ -43,8 +58,14 @@ struct CreatePiece: View {
             }
         }
     }
+    
+    func performSearch() async {
+        isLoading = true
+        await viewModel.getClassicalPieces(searchTerm)
+        isLoading = false
+        searchIsFocused = false
+    }
 }
-
-// #Preview {
-//    CreatePiece()
-// }
+ #Preview {
+     CreatePiece(isTyping: .constant(false))
+ }
