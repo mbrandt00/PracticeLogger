@@ -73,7 +73,6 @@
 		D19E73592B898F9400BB3EC7 /* PracticeLoggerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLoggerUITests.swift; sourceTree = "<group>"; };
 		D19E735B2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLoggerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		D1AC00D52BD46BC80019FA0F /* PieceEdit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceEdit.swift; sourceTree = "<group>"; };
-		D1C2BEB32BDCD97400E8E39F /* swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = swiftlint.yml; sourceTree = "<group>"; };
 		D1DF5B5E2BB882CD00FFED0F /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		D1E46FF12B96D52D00228C3F /* Piece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Piece.swift; sourceTree = "<group>"; };
 		D1EA64CD2B8A7E7B00D95E1F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -197,7 +196,6 @@
 		D19E733D2B898F9300BB3EC7 /* PracticeLogger */ = {
 			isa = PBXGroup;
 			children = (
-				D1C2BEB32BDCD97400E8E39F /* swiftlint.yml */,
 				D188F6672B96D490005E0FA2 /* model */,
 				D188F6642B96CED4005E0FA2 /* ViewModel */,
 				D131F1742B8AFCC8002261BC /* Components */,
