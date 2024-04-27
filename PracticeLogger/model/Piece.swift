@@ -20,13 +20,19 @@ struct Composer: Identifiable {
     var id = UUID()
 }
 
-struct Piece: Identifiable {
+struct Piece: Identifiable, Hashable, Equatable {
     var id = UUID()
     var workName: String
     var composer: Composer
     var movements: [Movement]
     var formattedKeySignature: String?
-    
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    static func ==(lhs: Piece, rhs: Piece) -> Bool {
+        return lhs.workName == rhs.workName && lhs.movements.count == lhs.movements.count
+    }
     static func searchPieceFromSongName(query: String)  async throws -> [Piece] {
         var pieces: [Piece] = []
         var uniqWorks: [String: Song] = [:]
@@ -35,31 +41,31 @@ struct Piece: Identifiable {
         result.limit = 25
         result.includeTopResults = true
         let response = try await result.response()
-        
+
         response.songs.forEach { song in
             if song.workName != nil && !uniqWorks.keys.contains(song.workName!) && songMatchesQuery(query: query, song: song)
             {                uniqWorks[song.workName!] = song
             }
         }
-        
+
         if uniqWorks.isEmpty && !response.songs.isEmpty {
             print("Work names not found, but songs were")
-            
+
             if let firstSong = response.songs.first {
                 do {
                     let detailedSong = try await firstSong.with([.albums])
                     if let album = detailedSong.albums?.first {
-                        
+
                         // Use guard statement instead of conditional binding
                         if let albumTrack = try? await album.with([.tracks]){
                             if let allAlbumTracks = albumTrack.tracks {
                                 return try await createPiecesFromTrack(tracks: Array(allAlbumTracks))
                             }
                         }
-                        
 
 
-                        
+
+
                         // Continue with the rest of the code here...
                     }
                 }
@@ -74,7 +80,7 @@ struct Piece: Identifiable {
         }
         return pieces
     }
-    
+
     /**
      Checks Composer, Key Signature, and Cataloging information (opus/K/BWV) Information to determine if the piece matches with an 80% confidence score
      */
@@ -102,12 +108,12 @@ struct Piece: Identifiable {
         }
         let confidence = Double(matching) / Double(total)
         print(song?.workName ?? "", confidence)
-        
+
         return confidence >= 0.75
     }
-    
+
     static func createPieceFromSong(song: Song) async throws -> Piece {
-        
+
         let workName = song.workName
         let songAlbum = try await song.with(.albums)
         let withTracks = try await songAlbum.albums?.first?.with(.tracks)
@@ -116,21 +122,21 @@ struct Piece: Identifiable {
             guard case .song(let song) = track else { return nil }
             return song
         }
-        
+
         return Piece(workName: matchingSongs?.first?.workName ?? "",
                      composer: Composer(name: matchingSongs?.first?.composerName ?? ""),
                      movements: matchingSongs?.map { song in
             Movement(name: song.movementName ?? "", number: song.movementNumber ?? 0, selected: false)
         } ?? [], formattedKeySignature: workName!.parseKeySignature().formatKeySignature() ?? nil)
     }
-    
+
     static func isMatchingKeySignature(query: String, workName: String) -> Bool {
         let queryCheck = query.parseKeySignature()
         let workNameCheck = workName.parseKeySignature()
         return queryCheck == workNameCheck
     }
-    
-    
+
+
     static func extractCatalogNumber(from string: String) -> String? {
         // Define regular expression patterns for different cataloguing types
         let opPattern = #"Op\. (\d+)"#  // For Op. numbers
@@ -149,8 +155,8 @@ struct Piece: Identifiable {
         }
         return nil
     }
-    
-    
+
+
     static func createPiecesFromTrack(tracks: [Track]) async throws -> [Piece] {
         var pieces: [Piece] = []
         var currentPieceName: String?
@@ -159,7 +165,7 @@ struct Piece: Identifiable {
         func extractPieceInfo(from trackTitle: String) -> (String, String)? {
             // Define a pattern to extract the piece name and movement name
             let pattern = #"^(.+?):\s*(.+)$"# // Match everything until the first colon followed by everything after the colon and optional space
-            
+
             // Attempt to match the pattern in the track title
             let regex = try! NSRegularExpression(pattern: pattern, options: [])
             if let match = regex.firstMatch(in: trackTitle, options: [], range: NSRange(location: 0, length: trackTitle.utf16.count)) {
@@ -169,7 +175,7 @@ struct Piece: Identifiable {
                 let movementName = String(trackTitle[movementRange])
                 return (pieceName, movementName)
             }
-            
+
             return nil
         }
         for track in tracks {
@@ -179,7 +185,7 @@ struct Piece: Identifiable {
                 guard case .song(let song) = track else { continue }
                 let composerName = song.composerName ?? ""
                 let appleMusicId = song.id
-                
+
                 // If the piece name changes, create a new piece
                 if let currentName = currentPieceName, currentName != pieceName {
                     // Append the current piece to pieces array before creating a new one
@@ -194,7 +200,7 @@ struct Piece: Identifiable {
                     movementNumber = 1
                     currentPieceMovements = []
                 }
-                
+
                 // Update current piece name and append movement
                 currentPieceName = pieceName
                 let movement = Movement(name: movementName.formatMovementName(), number: movementNumber, appleMusicId: appleMusicId)
@@ -211,12 +217,12 @@ struct Piece: Identifiable {
                               movements: currentPieceMovements)
             pieces.append(piece)
         }
-            
-        
+
+
         return pieces
     }
-    
-    
+
+
     func workNameWithoutKeySignature() -> String {
         let keyCharacters: Set<Character> = ["A", "B", "C", "D", "E", "F", "G"]
         let tonalities = ["Major", "Minor"]
@@ -229,11 +235,11 @@ struct Piece: Identifiable {
             !accidentals.contains(String(word)) &&
             word.lowercased() != "in"
         }
-        
+
         return filteredWords.joined(separator: " ")
-    
+
     }
-    
+
     static func chooseBestRecords(uniqWorks: [String: Song]) -> [String: Song] {
         var workInfoGroupedByCatalogNumber: [String: [(String, Int)]] = [:]
         var result: [String: Song] = [:]
@@ -255,7 +261,7 @@ struct Piece: Identifiable {
                 }
             }else {
                 print("No catalog matches...")
-                
+
             }
         }
 
@@ -273,7 +279,7 @@ struct Piece: Identifiable {
                 }
             }
         }
-        
+
         return result
     }
 }
