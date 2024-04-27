@@ -43,8 +43,7 @@ struct Piece: Identifiable, Hashable, Equatable {
         let response = try await result.response()
 
         response.songs.forEach { song in
-            if song.workName != nil && !uniqWorks.keys.contains(song.workName!) && songMatchesQuery(query: query, song: song)
-            {                uniqWorks[song.workName!] = song
+            if song.workName != nil && !uniqWorks.keys.contains(song.workName!) && songMatchesQuery(query: query, song: song) {                uniqWorks[song.workName!] = song
             }
         }
 
@@ -57,14 +56,11 @@ struct Piece: Identifiable, Hashable, Equatable {
                     if let album = detailedSong.albums?.first {
 
                         // Use guard statement instead of conditional binding
-                        if let albumTrack = try? await album.with([.tracks]){
+                        if let albumTrack = try? await album.with([.tracks]) {
                             if let allAlbumTracks = albumTrack.tracks {
                                 return try await createPiecesFromTrack(tracks: Array(allAlbumTracks))
                             }
                         }
-
-
-
 
                         // Continue with the rest of the code here...
                     }
@@ -90,8 +86,8 @@ struct Piece: Identifiable, Hashable, Equatable {
         var total = splitQuery.count
         var matching = 0
         if let workName = song.workName {
-            if query.containsKeySignature(){
-                if isMatchingKeySignature(query: query, workName: workName){
+            if query.containsKeySignature() {
+                if isMatchingKeySignature(query: query, workName: workName) {
                     matching += matchingWeight
                 }
                 total += matchingWeight
@@ -136,7 +132,6 @@ struct Piece: Identifiable, Hashable, Equatable {
         return queryCheck == workNameCheck
     }
 
-
     static func extractCatalogNumber(from string: String) -> String? {
         // Define regular expression patterns for different cataloguing types
         let opPattern = #"Op\. (\d+)"#  // For Op. numbers
@@ -155,7 +150,6 @@ struct Piece: Identifiable, Hashable, Equatable {
         }
         return nil
     }
-
 
     static func createPiecesFromTrack(tracks: [Track]) async throws -> [Piece] {
         var pieces: [Piece] = []
@@ -218,10 +212,8 @@ struct Piece: Identifiable, Hashable, Equatable {
             pieces.append(piece)
         }
 
-
         return pieces
     }
-
 
     func workNameWithoutKeySignature() -> String {
         let keyCharacters: Set<Character> = ["A", "B", "C", "D", "E", "F", "G"]
@@ -259,7 +251,7 @@ struct Piece: Identifiable, Hashable, Equatable {
                         workInfoGroupedByCatalogNumber[catalogNumber] = [workInfoTuple]
                     }
                 }
-            }else {
+            } else {
                 print("No catalog matches...")
 
             }

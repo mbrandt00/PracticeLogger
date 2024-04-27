@@ -13,13 +13,13 @@ struct CreatePiece: View {
     @Binding var isTyping: Bool
     @State private var isLoading = false
     @FocusState private var searchIsFocused: Bool
-    
+
     var body: some View {
         VStack {
             HStack {
                 TextField("Enter a piece", text: $searchTerm, onEditingChanged: { editing in
                     isTyping = editing
-                },  onCommit: {
+                }, onCommit: {
                     Task {
                         await performSearch()
                     }
@@ -27,7 +27,7 @@ struct CreatePiece: View {
                 .padding(10)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .focused($searchIsFocused)
-                
+
                 Button(action: {
                     Task {
                         await performSearch()
@@ -38,7 +38,7 @@ struct CreatePiece: View {
                         .background(Color.blue)
                         .foregroundColor(.white)
                         .cornerRadius(10)
-                        
+
                 }
                 .padding(.trailing, 10) // Add padding to the button
                 .padding(.leading, 5) // Adjust the leading padding of the button
@@ -49,7 +49,7 @@ struct CreatePiece: View {
                     .padding(4)
                     .background(Color.white)
                     .cornerRadius(6)
-                    .offset(x: 0, y: -2) 
+                    .offset(x: 0, y: -2)
             }
             ScrollView {
                 ForEach(viewModel.pieces) { piece in
@@ -58,7 +58,7 @@ struct CreatePiece: View {
             }
         }
     }
-    
+
     func performSearch() async {
         isLoading = true
         await viewModel.getClassicalPieces(searchTerm)

@@ -24,13 +24,13 @@ struct CustomTabBar: View {
                 .frame(height: 1)
                 .opacity(0.3)
             HStack(alignment: .center, spacing: 4) {
-                
+
                 Button {
                     selectedTab = .progress
                 }label: {
                     TabBarButton(imageName: "chart.xyaxis.line", buttonText: "Progress", isActive: selectedTab == .progress)
                 }
-                
+
                 Button {
                     selectedTab = .start
                 }label: {
@@ -44,7 +44,7 @@ struct CustomTabBar: View {
                         }.frame(width: geo.size.width, height: geo.size.height)
                     }
                 }
-                
+
                 Button {
                     selectedTab = .profile
                 }label: {

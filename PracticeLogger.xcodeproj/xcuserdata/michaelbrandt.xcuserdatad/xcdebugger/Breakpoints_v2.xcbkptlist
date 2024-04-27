@@ -16,8 +16,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "134"
             endingLineNumber = "134"
-            landmarkName = "isMatchingKeySignature(query:workName:)"
-            landmarkType = "7">
+            landmarkName = "Piece"
+            landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -80,7 +80,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "238"
             endingLineNumber = "238"
-            landmarkName = "workNameWithoutKeySignature()"
+            landmarkName = "chooseBestRecords(uniqWorks:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -176,7 +176,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "221"
             endingLineNumber = "221"
-            landmarkName = "createPiecesFromTrack(tracks:)"
+            landmarkName = "workNameWithoutKeySignature()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

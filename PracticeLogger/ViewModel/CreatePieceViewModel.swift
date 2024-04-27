@@ -22,12 +22,11 @@ class CreatePieceViewModel: ObservableObject {
                 do {
                     let fetchedPieces = try await Piece.searchPieceFromSongName(query: query)
                     DispatchQueue.main.async {
-                        
+
                         self.pieces = fetchedPieces
                     }
-                    
-                }
-                catch {
+
+                } catch {
                     logger.error("Error fetching pieces: Error")
                     print("Error fetching pieces: \(error)")
                 }

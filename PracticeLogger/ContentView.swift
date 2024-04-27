@@ -24,7 +24,7 @@ struct ContentView: View {
 
 #Preview {
     NavigationView {
-        ContentView() //.navigationBarHidden(true)
+        ContentView() // .navigationBarHidden(true)
 
     }
 }

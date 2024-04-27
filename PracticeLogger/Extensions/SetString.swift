@@ -14,9 +14,9 @@ extension Set where Element == String {
         let flatSymbols = ["♭", "flat", "b"]
         let sharpSymbols = ["♯", "#", "sharp"]
         let accidentals = ["flat", "sharp", "#", "b" ]
-        
+
         let elementsArray = Array(self)
-        
+
         switch elementsArray.count {
         case 2:
             if let keyElement = elementsArray.first(where: { keyCharacters.contains($0.first!) }),
@@ -28,7 +28,7 @@ extension Set where Element == String {
             if let tonalityValueIndex = elementsArray.firstIndex(where: { tonalities.contains($0.lowercased()) }) {
                 var keyCharacter = ""
                 var accidental = ""
-                
+
                 for word in elementsArray {
                     if word == "b" || flatSymbols.contains(word) {
                         // Handle flats
@@ -40,7 +40,7 @@ extension Set where Element == String {
                         accidental = word
                     }
                 }
-                
+
                 let tonalityValue = elementsArray[tonalityValueIndex].capitalized
                 if accidental == flatSymbols[0] {
                     return "\(keyCharacter)\(flatSymbols[0]) \(tonalityValue)"

@@ -13,13 +13,11 @@ struct NewPieceRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
 
-
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(
                         //                        piece.formattedKeySignature != nil ? piece.workNameWithoutKeySignature() :  piece.workName
                         piece.workName
-
 
                     )
                     .font(.title3)
@@ -38,7 +36,6 @@ struct NewPieceRow: View {
                         .background(Color.gray.opacity(0.2))
                         .cornerRadius(6)
 
-
                 }
             }
 
@@ -50,7 +47,6 @@ struct NewPieceRow: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
-
 
             }
         }
@@ -65,7 +61,6 @@ struct NewPieceRow: View {
                             .frame(width: 24, height: 14)
                             .background(Color.gray.opacity(0.2))
                             .cornerRadius(6)
-
 
                         Text(movement.name)
                             .font(.caption)
@@ -83,13 +78,7 @@ struct NewPieceRow: View {
     }
 }
 
-
-
-
-
-
-
-//#Preview {
+// #Preview {
 //    NewPieceRow(piece: Piece(workName: "Sonata 2 in B flat Minor Funeral March", composer: Composer(name: "Frederic Chopin"), movements:
 //                                [
 //                                    Movement(name: "Grave - Doppio movimento", number: 1),
@@ -98,4 +87,4 @@ struct NewPieceRow: View {
 //                                    Movement(name: "Finale", number: 4)
 //                                ], formattedKeySignature: "B♭ Minor")).previewLayout(.sizeThatFits)
 //
-//}
+// }
