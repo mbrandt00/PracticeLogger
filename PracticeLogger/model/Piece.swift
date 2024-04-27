@@ -150,8 +150,8 @@ struct Piece: Identifiable, Hashable, Equatable {
         }
         return nil
     }
-    
-    func submitPiece () async{
+
+    func submitPiece () async {
         print("Submitted")
     }
 

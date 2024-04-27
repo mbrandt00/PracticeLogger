@@ -34,7 +34,6 @@ struct NewPieceRow: View {
     }
 }
 
-
 #Preview {
     NewPieceRow(piece: Piece(workName: "Sonata 2 in B flat Minor Funeral March An even longer impossibly long title blah blah", composer: Composer(name: "Frederic Chopin"), movements:
                                 [
@@ -43,5 +42,5 @@ struct NewPieceRow: View {
                                     Movement(name: "Marche Fuenbre", number: 3),
                                     Movement(name: "Finale", number: 4)
                                 ], formattedKeySignature: "B♭ Minor")).previewLayout(.sizeThatFits)
-    
+
 }

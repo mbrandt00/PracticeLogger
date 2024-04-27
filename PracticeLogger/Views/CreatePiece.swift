@@ -50,8 +50,7 @@ struct CreatePiece: View {
                     .cornerRadius(6)
                     .offset(x: 0, y: -2)
             }
-            
-            
+
             NavigationStack {
                 ScrollView {
                     LazyVStack {
@@ -62,11 +61,11 @@ struct CreatePiece: View {
                         }
                     }
                 }
-                .navigationDestination(for: Piece.self){ piece in
+                .navigationDestination(for: Piece.self) { piece in
                     PieceEdit(piece: piece)
                 }
                 .navigationTitle(viewModel.pieces.isEmpty ? "" : "Piece Results")
-            
+
             }
         }
     }

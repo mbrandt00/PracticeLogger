@@ -33,16 +33,16 @@ struct PieceEdit: View {
                 Task {
                     await piece.submitPiece()
                 }
-            }){
+            }) {
                 Text("Create")
             }.buttonStyle(.bordered)
                 .foregroundColor(.black)
                 .padding(3)
 
         }
-        
+
         .padding(.horizontal, 10)    }
-    
+
 }
 
 #Preview {
