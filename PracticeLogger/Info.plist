@@ -2,11 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>INIntentsSupported</key>
+	<array>
+		<string>Intent</string>
+	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>Use Apple Music to get piece information</string>
-	<key>UIRequiresFullScreen</key>
-	<true/>
+	<key>SUPABASE_KEY</key>
+	<string>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF0c3h5Y3FsY3ducm9kYXlqamxjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDg4ODgxMDgsImV4cCI6MjAyNDQ2NDEwOH0.Uw3PWNpP7pBKF8xuYCyrLEpR3chCJi7ON3j_AgWAAsc</string>
+	<key>SUPABASE_URL</key>
+	<string>https://qtsxycqlcwnrodayjjlc.supabase.co</string>
 </dict>
 </plist>

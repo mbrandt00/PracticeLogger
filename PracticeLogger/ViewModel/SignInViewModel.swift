@@ -1,0 +1,19 @@
+//
+//  SignInViewModel.swift
+//  PracticeLogger
+//
+//  Created by Michael Brandt on 4/27/24.
+//
+
+import Foundation
+
+class SignInViewModel: ObservableObject {
+    func signInWithApple(idToken: String) async throws {
+        try await Database.shared.client.auth.signInWithIdToken(
+            credentials: .init(
+                provider: .apple,
+                idToken: idToken
+            )
+        )
+    }
+}

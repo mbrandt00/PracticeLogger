@@ -26,11 +26,17 @@
 		D19E735C2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E735B2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift */; };
 		D1AC00D62BD46BC80019FA0F /* PieceEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1AC00D52BD46BC80019FA0F /* PieceEdit.swift */; };
 		D1C2BEB52BDCE22600E8E39F /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C2BEB42BDCE22600E8E39F /* Tag.swift */; };
+		D1C2BEB72BDD612F00E8E39F /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C2BEB62BDD612F00E8E39F /* SignIn.swift */; };
+		D1C2BEB92BDD61A800E8E39F /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C2BEB82BDD61A800E8E39F /* SignInViewModel.swift */; };
+		D1C2BEBD2BDD63A200E8E39F /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = D1C2BEBC2BDD63A200E8E39F /* Supabase */; };
+		D1C2BEC22BDD76A300E8E39F /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C2BEC12BDD76A300E8E39F /* Database.swift */; };
+		D1C2BEC42BDD7A9100E8E39F /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C2BEC32BDD7A9100E8E39F /* Profile.swift */; };
 		D1C6B0D82B8BC81300F7B877 /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = D1C6B0D72B8BC81300F7B877 /* Auth */; };
 		D1C6B0DA2B8BC81300F7B877 /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = D1C6B0D92B8BC81300F7B877 /* Functions */; };
 		D1C6B0DC2B8BC81300F7B877 /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = D1C6B0DB2B8BC81300F7B877 /* PostgREST */; };
 		D1C6B0DE2B8BC81300F7B877 /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = D1C6B0DD2B8BC81300F7B877 /* Realtime */; };
 		D1C6B0E02B8BC81300F7B877 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = D1C6B0DF2B8BC81300F7B877 /* Storage */; };
+		D1D6548E2BDDB9BE008D4868 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D6548D2BDDB9BE008D4868 /* ProfileViewModel.swift */; };
 		D1DF5B5F2BB882CD00FFED0F /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1DF5B5E2BB882CD00FFED0F /* String.swift */; };
 		D1E46FF22B96D52D00228C3F /* Piece.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E46FF12B96D52D00228C3F /* Piece.swift */; };
 /* End PBXBuildFile section */
@@ -75,6 +81,12 @@
 		D19E735B2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLoggerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		D1AC00D52BD46BC80019FA0F /* PieceEdit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceEdit.swift; sourceTree = "<group>"; };
 		D1C2BEB42BDCE22600E8E39F /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
+		D1C2BEB62BDD612F00E8E39F /* SignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
+		D1C2BEB82BDD61A800E8E39F /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
+		D1C2BEC02BDD687E00E8E39F /* PracticeLogger.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PracticeLogger.entitlements; sourceTree = "<group>"; };
+		D1C2BEC12BDD76A300E8E39F /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
+		D1C2BEC32BDD7A9100E8E39F /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		D1D6548D2BDDB9BE008D4868 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		D1DF5B5E2BB882CD00FFED0F /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		D1E46FF12B96D52D00228C3F /* Piece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Piece.swift; sourceTree = "<group>"; };
 		D1EA64CD2B8A7E7B00D95E1F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -87,6 +99,7 @@
 			files = (
 				D1C6B0DC2B8BC81300F7B877 /* PostgREST in Frameworks */,
 				D1C6B0DA2B8BC81300F7B877 /* Functions in Frameworks */,
+				D1C2BEBD2BDD63A200E8E39F /* Supabase in Frameworks */,
 				D1C6B0D82B8BC81300F7B877 /* Auth in Frameworks */,
 				D1C6B0E02B8BC81300F7B877 /* Storage in Frameworks */,
 				D1C6B0DE2B8BC81300F7B877 /* Realtime in Frameworks */,
@@ -126,7 +139,8 @@
 				D185FB712B90482E003C7631 /* CreatePiece.swift */,
 				D17C5CA72B9E561300C1CA44 /* NewPieceRow.swift */,
 				D1AC00D52BD46BC80019FA0F /* PieceEdit.swift */,
-				D1C2BEB42BDCE22600E8E39F /* Tag.swift */,
+				D1C2BEB62BDD612F00E8E39F /* SignIn.swift */,
+				D1C2BEC32BDD7A9100E8E39F /* Profile.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -154,6 +168,7 @@
 		D131F1742B8AFCC8002261BC /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				D1C2BEB42BDCE22600E8E39F /* Tag.swift */,
 				D131F17A2B8B090D002261BC /* MetronomeShape.swift */,
 			);
 			path = Components;
@@ -163,6 +178,8 @@
 			isa = PBXGroup;
 			children = (
 				D188F6652B96CEF4005E0FA2 /* CreatePieceViewModel.swift */,
+				D1C2BEB82BDD61A800E8E39F /* SignInViewModel.swift */,
+				D1D6548D2BDDB9BE008D4868 /* ProfileViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -171,6 +188,7 @@
 			isa = PBXGroup;
 			children = (
 				D1E46FF12B96D52D00228C3F /* Piece.swift */,
+				D1C2BEC12BDD76A300E8E39F /* Database.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -199,6 +217,7 @@
 		D19E733D2B898F9300BB3EC7 /* PracticeLogger */ = {
 			isa = PBXGroup;
 			children = (
+				D1C2BEC02BDD687E00E8E39F /* PracticeLogger.entitlements */,
 				D188F6672B96D490005E0FA2 /* model */,
 				D188F6642B96CED4005E0FA2 /* ViewModel */,
 				D131F1742B8AFCC8002261BC /* Components */,
@@ -245,10 +264,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D19E735F2B898F9400BB3EC7 /* Build configuration list for PBXNativeTarget "PracticeLogger" */;
 			buildPhases = (
+				D15756CF2BDDC3760091D47C /* Source variables */,
 				D19E73372B898F9300BB3EC7 /* Sources */,
 				D19E73382B898F9300BB3EC7 /* Frameworks */,
 				D19E73392B898F9300BB3EC7 /* Resources */,
 				D1C2BEB22BDCD91400E8E39F /* ShellScript */,
+				D15756D02BDDC3AD0091D47C /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -261,6 +282,7 @@
 				D1C6B0DB2B8BC81300F7B877 /* PostgREST */,
 				D1C6B0DD2B8BC81300F7B877 /* Realtime */,
 				D1C6B0DF2B8BC81300F7B877 /* Storage */,
+				D1C2BEBC2BDD63A200E8E39F /* Supabase */,
 			);
 			productName = PracticeLogger;
 			productReference = D19E733B2B898F9300BB3EC7 /* PracticeLogger.app */;
@@ -375,6 +397,41 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		D15756CF2BDDC3760091D47C /* Source variables */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Source variables";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/sh\n\necho \"Stage: PRE-Xcode Build is activated .... \"\necho \"REFRESH\"\n# for future reference\n# https://developer.apple.com/documentation/xcode/environment-variable-reference\n\ncd ../PracticeLogger/\n\nplutil -replace SUPABASE_URL -string $SUPABASE_URL Info.plist\nplutil -replace SUPABASE_KEY -string $SUPABASE_KEY Info.plist\n\nplutil -p Info.plist\n\necho \"Stage: PRE-Xcode Build is DONE .... \"\n\nexit 0\n";
+		};
+		D15756D02BDDC3AD0091D47C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n";
+		};
 		D1C2BEB22BDCD91400E8E39F /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -390,7 +447,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\n# Adds support for Apple Silicon brew directory\n# export PATH=\"$PATH:/opt/homebrew/bin\"\n\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "\n# Adds support for Apple Silicon brew directory\n# export PATH=\"$PATH:/opt/homebrew/bin\"\n\nif which swiftlint >/dev/null; then\n  swiftlint --fix\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -408,12 +465,17 @@
 				D1AC00D62BD46BC80019FA0F /* PieceEdit.swift in Sources */,
 				D19E733F2B898F9300BB3EC7 /* PracticeLoggerApp.swift in Sources */,
 				D188F6662B96CEF4005E0FA2 /* CreatePieceViewModel.swift in Sources */,
+				D1C2BEB92BDD61A800E8E39F /* SignInViewModel.swift in Sources */,
 				D185FB722B90482E003C7631 /* CreatePiece.swift in Sources */,
 				D1E46FF22B96D52D00228C3F /* Piece.swift in Sources */,
 				D131F1732B8AF42F002261BC /* TabBarButton.swift in Sources */,
+				D1C2BEC22BDD76A300E8E39F /* Database.swift in Sources */,
+				D1D6548E2BDDB9BE008D4868 /* ProfileViewModel.swift in Sources */,
 				D1C2BEB52BDCE22600E8E39F /* Tag.swift in Sources */,
 				D131F17B2B8B090D002261BC /* MetronomeShape.swift in Sources */,
+				D1C2BEC42BDD7A9100E8E39F /* Profile.swift in Sources */,
 				D131F16D2B8AE54E002261BC /* Color.swift in Sources */,
+				D1C2BEB72BDD612F00E8E39F /* SignIn.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -487,7 +549,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -550,7 +612,8 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -575,6 +638,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = PracticeLogger/PracticeLogger.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PracticeLogger/Preview Content\"";
@@ -584,10 +648,11 @@
 				INFOPLIST_FILE = PracticeLogger/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Practice Logger";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
-				INFOPLIST_KEY_NSAppleMusicUsageDescription = "We want this to access your music data";
+				INFOPLIST_KEY_NSAppleMusicUsageDescription = "Use Apple Music to get piece information";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -610,6 +675,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = PracticeLogger/PracticeLogger.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PracticeLogger/Preview Content\"";
@@ -619,10 +685,11 @@
 				INFOPLIST_FILE = PracticeLogger/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Practice Logger";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
-				INFOPLIST_KEY_NSAppleMusicUsageDescription = "We want this to access your music data";
+				INFOPLIST_KEY_NSAppleMusicUsageDescription = "Use Apple Music to get piece information";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -770,6 +837,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		D1C2BEBC2BDD63A200E8E39F /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1C6B0D62B8BC81300F7B877 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
 		D1C6B0D72B8BC81300F7B877 /* Auth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D1C6B0D62B8BC81300F7B877 /* XCRemoteSwiftPackageReference "supabase-swift" */;

@@ -73,6 +73,18 @@
             ReferencedContainer = "container:PracticeLogger.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "SUPABASE_KEY"
+            value = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF0c3h5Y3FsY3ducm9kYXlqamxjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDg4ODgxMDgsImV4cCI6MjAyNDQ2NDEwOH0.Uw3PWNpP7pBKF8xuYCyrLEpR3chCJi7ON3j_AgWAAsc"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "SUPABASE_URL"
+            value = "https://qtsxycqlcwnrodayjjlc.supabase.co"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -95,7 +107,7 @@
       buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

@@ -152,7 +152,7 @@ struct Piece: Identifiable, Hashable, Equatable {
     }
 
     func submitPiece () async {
-        print("Submitted")
+            print("Submitted")
     }
 
     static func createPiecesFromTrack(tracks: [Track]) async throws -> [Piece] {

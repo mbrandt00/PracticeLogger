@@ -7,17 +7,41 @@
 
 import SwiftUI
 import MusicKit
+//import Supabase
 struct ContentView: View {
     @State var selectedTab: Tabs = .start
     @State var isTyping: Bool = false
     let bpm: Double = 60
+    @State var isSignedIn: Bool = false
+
+//    @MainActor @State private var user: User?
+
     var body: some View {
         VStack {
-            if selectedTab == .start {
-                CreatePiece(isTyping: $isTyping)
+            if isSignedIn {
+
+                if selectedTab == .start {
+                    CreatePiece(isTyping: $isTyping)
+                }
+                if selectedTab == .profile {
+                    Profile(isSignedIn: $isSignedIn)
+                }
+
+                Spacer()
+                CustomTabBar(selectedTab: $selectedTab, isTyping: $isTyping).navigationBarHidden(true)
+            } else {
+                SignIn(isSignedIn: $isSignedIn)
             }
-            Spacer()
-            CustomTabBar(selectedTab: $selectedTab, isTyping: $isTyping).navigationBarHidden(true)
+        }
+        .onAppear {
+            Task {
+                do {
+//                    let user = try await viewModel.getUser()
+                    isSignedIn = true
+                } catch {
+                    isSignedIn = false
+                }
+            }
         }
     }
 }
