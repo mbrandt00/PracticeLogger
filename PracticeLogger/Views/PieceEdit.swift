@@ -11,6 +11,8 @@ struct PieceEdit: View {
     let piece: Piece
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
+            Text(piece.workName)
+                .font(.title)
             ForEach(piece.movements) { movement in
                 HStack {
                     Text(movement.number.toRomanNumeral() ?? "")
@@ -27,9 +29,20 @@ struct PieceEdit: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
+            Button(action: {
+                Task {
+                    await piece.submitPiece()
+                }
+            }){
+                Text("Create")
+            }.buttonStyle(.bordered)
+                .foregroundColor(.black)
+                .padding(3)
 
         }
+        
         .padding(.horizontal, 10)    }
+    
 }
 
 #Preview {

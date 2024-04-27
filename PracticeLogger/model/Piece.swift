@@ -150,6 +150,10 @@ struct Piece: Identifiable, Hashable, Equatable {
         }
         return nil
     }
+    
+    func submitPiece () async{
+        print("Submitted")
+    }
 
     static func createPiecesFromTrack(tracks: [Track]) async throws -> [Piece] {
         var pieces: [Piece] = []
