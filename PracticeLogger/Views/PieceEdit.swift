@@ -10,8 +10,26 @@ import SwiftUI
 struct PieceEdit: View {
     let piece: Piece
     var body: some View {
-        Text(piece.workName)
-    }
+        VStack(alignment: .leading, spacing: 10) {
+            ForEach(piece.movements) { movement in
+                HStack {
+                    Text(movement.number.toRomanNumeral() ?? "")
+                        .font(.caption)
+                        .frame(width: 24, height: 14)
+                        .background(Color.gray.opacity(0.2))
+                        .cornerRadius(6)
+
+                    Text(movement.name)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .padding(.leading)
+
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+
+        }
+        .padding(.horizontal, 10)    }
 }
 
 #Preview {
