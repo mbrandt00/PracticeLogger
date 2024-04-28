@@ -43,7 +43,8 @@ struct Piece: Identifiable, Hashable, Equatable {
         let response = try await result.response()
 
         response.songs.forEach { song in
-            if song.workName != nil && !uniqWorks.keys.contains(song.workName!) && songMatchesQuery(query: query, song: song) {                uniqWorks[song.workName!] = song
+            if song.workName != nil && !uniqWorks.keys.contains(song.workName!) && songMatchesQuery(query: query, song: song) {
+                uniqWorks[song.workName!] = song
             }
         }
 
@@ -152,7 +153,7 @@ struct Piece: Identifiable, Hashable, Equatable {
     }
 
     func submitPiece () async {
-            print("Submitted")
+        print("Submitted")
     }
 
     static func createPiecesFromTrack(tracks: [Track]) async throws -> [Piece] {
