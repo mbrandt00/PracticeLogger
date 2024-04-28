@@ -268,7 +268,7 @@
 				D19E73372B898F9300BB3EC7 /* Sources */,
 				D19E73382B898F9300BB3EC7 /* Frameworks */,
 				D19E73392B898F9300BB3EC7 /* Resources */,
-				D1C2BEB22BDCD91400E8E39F /* ShellScript */,
+				D1C2BEB22BDCD91400E8E39F /* Swift lint */,
 			);
 			buildRules = (
 			);
@@ -398,6 +398,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		D15756CF2BDDC3760091D47C /* Source variables */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 12;
 			files = (
 			);
@@ -414,8 +415,9 @@
 			shellPath = /bin/sh;
 			shellScript = "#!/bin/sh\n\necho \"Stage: PRE-Xcode Build is activated .... \"\necho \"REFRESH\"\n# for future reference\n# https://developer.apple.com/documentation/xcode/environment-variable-reference\n\ncd ../PracticeLogger/\n\nplutil -replace SUPABASE_URL -string $SUPABASE_URL Info.plist\nplutil -replace SUPABASE_KEY -string $SUPABASE_KEY Info.plist\n\nplutil -p Info.plist\n\necho \"Stage: PRE-Xcode Build is DONE .... \"\n\nexit 0\n";
 		};
-		D1C2BEB22BDCD91400E8E39F /* ShellScript */ = {
+		D1C2BEB22BDCD91400E8E39F /* Swift lint */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -423,6 +425,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Swift lint";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -498,6 +501,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -561,6 +565,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -618,6 +623,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = PracticeLogger/PracticeLogger.entitlements;
@@ -655,6 +661,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = PracticeLogger/PracticeLogger.entitlements;
