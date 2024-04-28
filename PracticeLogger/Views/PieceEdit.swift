@@ -29,20 +29,21 @@ struct PieceEdit: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
+        }
+        .padding(.horizontal, 10)
+        VStack {
             Button(action: {
                 Task {
                     await piece.submitPiece()
                 }
-            }) {
+            }, label: {
                 Text("Create")
-            }.buttonStyle(.bordered)
-                .foregroundColor(.black)
-                .padding(3)
-
+            })
+            .buttonStyle(.bordered)
+            .foregroundColor(.black)
+            .padding(3)
         }
-
-        .padding(.horizontal, 10)    }
-
+    }
 }
 
 #Preview {

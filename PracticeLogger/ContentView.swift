@@ -15,8 +15,6 @@ struct ContentView: View {
     var body: some View {
         VStack {
             if isSignedIn {
-                
-
                 if selectedTab == .start {
                     CreatePiece(isTyping: $isTyping)
                 }

@@ -32,13 +32,13 @@ struct CreatePiece: View {
                     Task {
                         await performSearch()
                     }
-                }) {
+                }, label: {
                     Text("Search")
                         .padding(10)
                         .background(Color.blue)
-                        .foregroundColor(.white)                         .cornerRadius(10)
-
-                }
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                })
                 .padding(.trailing, 10) // Add padding to the button
                 .padding(.leading, 5) // Adjust the leading padding of the button
             }

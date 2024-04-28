@@ -269,7 +269,6 @@
 				D19E73382B898F9300BB3EC7 /* Frameworks */,
 				D19E73392B898F9300BB3EC7 /* Resources */,
 				D1C2BEB22BDCD91400E8E39F /* ShellScript */,
-				D15756D02BDDC3AD0091D47C /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -415,23 +414,6 @@
 			shellPath = /bin/sh;
 			shellScript = "#!/bin/sh\n\necho \"Stage: PRE-Xcode Build is activated .... \"\necho \"REFRESH\"\n# for future reference\n# https://developer.apple.com/documentation/xcode/environment-variable-reference\n\ncd ../PracticeLogger/\n\nplutil -replace SUPABASE_URL -string $SUPABASE_URL Info.plist\nplutil -replace SUPABASE_KEY -string $SUPABASE_KEY Info.plist\n\nplutil -p Info.plist\n\necho \"Stage: PRE-Xcode Build is DONE .... \"\n\nexit 0\n";
 		};
-		D15756D02BDDC3AD0091D47C /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n";
-		};
 		D1C2BEB22BDCD91400E8E39F /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -447,7 +429,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\n# Adds support for Apple Silicon brew directory\n# export PATH=\"$PATH:/opt/homebrew/bin\"\n\nif which swiftlint >/dev/null; then\n  swiftlint --fix\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "if [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

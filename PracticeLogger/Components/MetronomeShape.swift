@@ -59,7 +59,7 @@ struct RoundedTrapezoid: Shape {
             path.closeSubpath()
         }
     }
-
+    // swiftlint:disable large_tuple
     func decodeCornerSize() -> (CGSize, CGSize, CGSize, CGSize) {
         if cornerSizes.count == 1 {
             // If only one corner size is provided, use it for all corners
@@ -76,6 +76,7 @@ struct RoundedTrapezoid: Shape {
             return (.zero, .zero, .zero, .zero)
         }
     }
+    // swiftlint:enable large_tuple
 }
 
 struct MetronomeBack: View {
