@@ -413,7 +413,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\necho \"Stage: PRE-Xcode Build is activated .... \"\necho \"REFRESH\"\n# for future reference\n# https://developer.apple.com/documentation/xcode/environment-variable-reference\n\ncd ../PracticeLogger/\n\nplutil -replace SUPABASE_URL -string $SUPABASE_URL Info.plist\nplutil -replace SUPABASE_KEY -string $SUPABASE_KEY Info.plist\n\nplutil -p Info.plist\n\necho \"Stage: PRE-Xcode Build is DONE .... \"\n\nexit 0\n";
+			shellScript = "#!/bin/sh\n\necho \"Stage: PRE-Xcode Build is activated .... \"\necho \"REFRESH\"\n\n# Make sure .env file exists\nif [ -f .env ]; then\n    source .env\nfi\nSUPABASE_URL=\"$SUPABASE_URL\"\nSUPABASE_KEY=\"$SUPABASE_KEY\"\necho $SUPABASE_URL >> $HOME/Desktop/test.txt\necho \"SUPABASE_URL $SUPABASE_URL\"\necho \"SUPABASE_KEY $SUPABASE_KEY\"\npwd \ncd PracticeLogger\n# Replace the values in Info.plist with the environment variable values\nplutil -replace SUPABASE_URL -string \"$SUPABASE_URL\" Info.plist\nplutil -replace SUPABASE_KEY -string \"$SUPABASE_KEY\" Info.plist\n\n# Verify the changes\nplutil -p Info.plist\n\necho \"Stage: PRE-Xcode Build is DONE .... \"\n\nexit 0\n";
 		};
 		D1C2BEB22BDCD91400E8E39F /* Swift lint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -649,8 +649,12 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				"OTHER_SWIFT_FLAGS[arch=*]" = "";
 				PRODUCT_BUNDLE_IDENTIFIER = michaelbrandt.PracticeLogger;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPABASE_KEY = "${SUPABASE_KEY}";
+				SUPABASE_URL = "${SUPABASE_URL}";
+				"SUPABASE_URL[arch=*]" = "${SUPABASE_URL}";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -689,6 +693,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = michaelbrandt.PracticeLogger;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPABASE_KEY = "${SUPABASE_KEY}";
+				SUPABASE_URL = "${SUPABASE_URL}";
+				"SUPABASE_URL[arch=*]" = "${SUPABASE_URL}";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

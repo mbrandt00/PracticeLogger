@@ -16,4 +16,7 @@ class SignInViewModel: ObservableObject {
             )
         )
     }
+    func signInWithEmail() async throws {
+        try await Database.shared.client.auth.signIn(email: "test@yahoo.com", password: "password")
+    }
 }

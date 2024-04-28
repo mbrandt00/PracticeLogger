@@ -14,30 +14,45 @@ struct SignIn: View {
     @ObservedObject var viewModel = SignInViewModel()
 
     var body: some View {
-        SignInWithAppleButton { request in
-            request.requestedScopes = [.email, .fullName]
-        } onCompletion: { result in
-            Task {
-                do {
-                    guard let credential = try result.get().credential as? ASAuthorizationAppleIDCredential
-                    else {
-                        return
-                    }
+        VStack {
+            SignInWithAppleButton { request in
+                request.requestedScopes = [.email, .fullName]
+            } onCompletion: { result in
+                Task {
+                    do {
+                        guard let credential = try result.get().credential as? ASAuthorizationAppleIDCredential
+                        else {
+                            return
+                        }
 
-                    guard let idToken = credential.identityToken
-                        .flatMap({ String(data: $0, encoding: .utf8) })
-                    else {
-                        return
-                    }
+                        guard let idToken = credential.identityToken
+                            .flatMap({ String(data: $0, encoding: .utf8) })
+                        else {
+                            return
+                        }
 
-                    try await viewModel.signInWithApple(idToken: idToken)
-                    isSignedIn = true
-                } catch {
-                    dump(error)
+                        try await viewModel.signInWithApple(idToken: idToken)
+                        isSignedIn = true
+                    } catch {
+                        dump(error)
+                    }
                 }
             }
+            .fixedSize()
+            #if DEBUG
+            Button("Sign in with Email") {
+                Task {
+                    do {
+                        try await viewModel.signInWithEmail()
+                        isSignedIn = true
+                    } catch {
+                        // Handle any errors if sign-in fails
+                        print("Error signing in with email:", error)
+                    }
+                }
+            }
+            #endif
         }
-        .fixedSize()
     }
 }
 
