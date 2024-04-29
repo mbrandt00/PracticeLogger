@@ -7,7 +7,7 @@
 
 import SwiftUI
 import MusicKit
-struct Movement: Identifiable {
+struct Movement: Identifiable, Encodable {
     var id = UUID()
     var name: String
     var number: Int
@@ -15,12 +15,12 @@ struct Movement: Identifiable {
     var appleMusicId: MusicItemID?
 }
 
-struct Composer: Identifiable {
+struct Composer: Identifiable, Encodable {
     var name: String
     var id = UUID()
 }
 
-struct Piece: Identifiable, Hashable, Equatable {
+struct Piece: Identifiable, Hashable, Equatable, Encodable {
     var id = UUID()
     var workName: String
     var composer: Composer

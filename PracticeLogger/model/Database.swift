@@ -14,6 +14,16 @@ class Database: ObservableObject {
     static let shared = Database()
     @Published var isLoggedIn: Bool = false
 
+    func getCurrentUser() async throws -> User {
+        do {
+            let user = try await client.auth.user()
+            return user
+        } catch {
+            // Handle any errors
+            throw error
+        }
+    }
+    
     private init() {
         guard let supabaseUrlString = Bundle.main.infoDictionary?["SUPABASE_URL"] as? String,
               let supabaseUrl = URL(string: supabaseUrlString),
