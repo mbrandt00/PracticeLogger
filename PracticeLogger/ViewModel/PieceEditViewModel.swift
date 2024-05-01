@@ -16,7 +16,7 @@ class PieceEditViewModel: ObservableObject {
                 "work_name": piece.workName,
                 "user_id": currentUserID.uuidString
             ])
-            
+
             // Execute the insert query asynchronously
             let response = try await query.execute()
             print(response)

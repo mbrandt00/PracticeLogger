@@ -23,7 +23,7 @@ class Database: ObservableObject {
             throw error
         }
     }
-    
+
     private init() {
         guard let supabaseUrlString = Bundle.main.infoDictionary?["SUPABASE_URL"] as? String,
               let supabaseUrl = URL(string: supabaseUrlString),

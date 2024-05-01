@@ -35,7 +35,7 @@ struct PieceEdit: View {
         VStack {
             Button(action: {
                 Task {
-                    try  await viewModel.insertPiece(piece:piece)
+                    try  await viewModel.insertPiece(piece: piece)
                 }
             }, label: {
                 Text("Create")
