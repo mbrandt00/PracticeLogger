@@ -9,7 +9,7 @@ import Foundation
 
 class SignInViewModel: ObservableObject {
     func signInWithApple(idToken: String) async throws {
-        try await Database.shared.client.auth.signInWithIdToken(
+        try await Database.client.auth.signInWithIdToken(
             credentials: .init(
                 provider: .apple,
                 idToken: idToken
@@ -17,6 +17,6 @@ class SignInViewModel: ObservableObject {
         )
     }
     func signInWithEmail() async throws {
-        try await Database.shared.client.auth.signIn(email: "test@yahoo.com", password: "password")
+        try await Database.client.auth.signIn(email: "test@yahoo.com", password: "password")
     }
 }
