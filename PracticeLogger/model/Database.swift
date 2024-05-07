@@ -33,12 +33,19 @@ class Database: ObservableObject {
 
     static func createPiece(piece: Piece) async throws -> DbPiece {
         do {
-            let currentUserID = try await getCurrentUser().id.uuidString
+            let currentUserID = try await String(getCurrentUser().id.uuidString)
+            let composer: DbComposer = try await client
+                .rpc("find_or_create_composer", params: ["name": piece.composer.name])
+                .execute()
+                .value
+            print(composer)
 
             let insertedPiece: DbPiece = try await client.from("pieces")
                 .insert([
                     "workname": piece.workName,
-                    "userid": currentUserID
+                    "userid": currentUserID,
+                    "composerid": String(composer.id)
+
                 ]).select().single().execute().value
             print(insertedPiece)
 
@@ -66,6 +73,7 @@ struct DbPiece: Codable {
     let id: Int
     let workName: String?
     let userId: UUID?
+    let composerId: Int?
 }
 
 struct DbPieceMovement: Codable {
@@ -73,4 +81,9 @@ struct DbPieceMovement: Codable {
   let name: String
   let number: Int
   let pieceId: Int?
+}
+
+struct DbComposer: Codable {
+  let id: Int
+  let name: String
 }

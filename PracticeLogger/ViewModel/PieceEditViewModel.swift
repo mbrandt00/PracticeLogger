@@ -8,9 +8,9 @@
 import Foundation
 import Supabase
 class PieceEditViewModel: ObservableObject {
-    func insertPiece(piece: Piece) async throws {
+    func insertPiece(piece: Piece) async throws -> DbPiece {
         do {
-            let dbPiece = try await Database.createPiece(piece: piece)
+            return  try await Database.createPiece(piece: piece)
         } catch {
             // Handle any errors
             throw error
