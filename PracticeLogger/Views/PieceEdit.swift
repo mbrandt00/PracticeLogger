@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PieceEdit: View {
     let piece: Piece
+    @ObservedObject var viewModel = PieceEditViewModel()
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(piece.workName)
@@ -34,7 +35,7 @@ struct PieceEdit: View {
         VStack {
             Button(action: {
                 Task {
-                    await piece.submitPiece()
+                    try await viewModel.insertPiece(piece: piece)
                 }
             }, label: {
                 Text("Create")
