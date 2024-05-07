@@ -18,7 +18,7 @@ class Database: ObservableObject {
 
         return SupabaseClient(supabaseURL: supabaseUrl, supabaseKey: supabaseKey)
     }()
-    
+
     @Published var isLoggedIn: Bool = false
 
     static func getCurrentUser() async throws -> User {
@@ -30,46 +30,47 @@ class Database: ObservableObject {
             throw error
         }
     }
-    
+
     static func createPiece(piece: Piece) async throws -> DbPiece {
         do {
-            let currentUser = try await getCurrentUser()
             let currentUserID = try await getCurrentUser().id.uuidString
-            
+
             let insertedPiece: DbPiece = try await client.from("pieces")
                 .insert([
-                    "workName": piece.workName,
-                    "userId": currentUserID
+                    "workname": piece.workName,
+                    "userid": currentUserID
                 ]).select().single().execute().value
-            
+            print(insertedPiece)
+
             let newPieceId = insertedPiece.id
             for movement in piece.movements {
                 print(movement)
-                var dbMovement: DbPieceMovement = try await client
+                let dbMovement: DbPieceMovement = try await client
                     .from("movements")
                     .insert([
-                        "movement_name": movement.name,
-                        "movement_number": String(movement.number),
-                        "piece_id": String(newPieceId)
+                        "name": movement.name,
+                        "number": String(movement.number),
+                        "pieceid": String(newPieceId)
                     ]).select().single().execute().value
                 print("new db movement", dbMovement)
             }
             return insertedPiece
         } catch {
+            print(error)
             throw error
         }
     }
 }
 
 struct DbPiece: Codable {
-  let id: Int
-  let work_name: String
-  let user_id: UUID
+    let id: Int
+    let workName: String?
+    let userId: UUID?
 }
 
 struct DbPieceMovement: Codable {
   let id: Int
-  let movement_name: String
-  let movement_number: Int
-  let piece_id: Int
+  let name: String
+  let number: Int
+  let pieceId: Int?
 }

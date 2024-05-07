@@ -17,4 +17,3 @@ class PieceEditViewModel: ObservableObject {
         }
     }
 }
-
