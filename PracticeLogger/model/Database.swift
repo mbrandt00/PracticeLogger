@@ -87,3 +87,6 @@ struct DbComposer: Codable {
   let id: Int
   let name: String
 }
+
+// use as a when or as an inseret?
+// how to make queries efficient in Database.swift?
