@@ -15,6 +15,8 @@
 		D131F17B2B8B090D002261BC /* MetronomeShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F17A2B8B090D002261BC /* MetronomeShape.swift */; };
 		D13D0EDA2BCC2FA1006B2683 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13D0ED92BCC2FA1006B2683 /* Int.swift */; };
 		D13D0EDC2BCC4B23006B2683 /* SetString.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13D0EDB2BCC4B23006B2683 /* SetString.swift */; };
+		D15C882F2BF05E5000AAC950 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = D15C882E2BF05E5000AAC950 /* AlertToast */; };
+		D15C88312BF063B900AAC950 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15C88302BF063B900AAC950 /* Error.swift */; };
 		D17C5CA82B9E561300C1CA44 /* NewPieceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17C5CA72B9E561300C1CA44 /* NewPieceRow.swift */; };
 		D185AC152BDF3B7E007F398D /* PieceEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D185AC142BDF3B7E007F398D /* PieceEditViewModel.swift */; };
 		D185FB722B90482E003C7631 /* CreatePiece.swift in Sources */ = {isa = PBXBuildFile; fileRef = D185FB712B90482E003C7631 /* CreatePiece.swift */; };
@@ -68,6 +70,7 @@
 		D131F17A2B8B090D002261BC /* MetronomeShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetronomeShape.swift; sourceTree = "<group>"; };
 		D13D0ED92BCC2FA1006B2683 /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		D13D0EDB2BCC4B23006B2683 /* SetString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetString.swift; sourceTree = "<group>"; };
+		D15C88302BF063B900AAC950 /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		D17C5CA72B9E561300C1CA44 /* NewPieceRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPieceRow.swift; sourceTree = "<group>"; usesTabs = 0; };
 		D185AC142BDF3B7E007F398D /* PieceEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceEditViewModel.swift; sourceTree = "<group>"; };
 		D185FB712B90482E003C7631 /* CreatePiece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePiece.swift; sourceTree = "<group>"; };
@@ -100,6 +103,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D1C6B0DC2B8BC81300F7B877 /* PostgREST in Frameworks */,
+				D15C882F2BF05E5000AAC950 /* AlertToast in Frameworks */,
 				D1C6B0DA2B8BC81300F7B877 /* Functions in Frameworks */,
 				D1C2BEBD2BDD63A200E8E39F /* Supabase in Frameworks */,
 				D1C6B0D82B8BC81300F7B877 /* Auth in Frameworks */,
@@ -192,6 +196,7 @@
 			children = (
 				D1E46FF12B96D52D00228C3F /* Piece.swift */,
 				D1C2BEC12BDD76A300E8E39F /* Database.swift */,
+				D15C88302BF063B900AAC950 /* Error.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -285,6 +290,7 @@
 				D1C6B0DD2B8BC81300F7B877 /* Realtime */,
 				D1C6B0DF2B8BC81300F7B877 /* Storage */,
 				D1C2BEBC2BDD63A200E8E39F /* Supabase */,
+				D15C882E2BF05E5000AAC950 /* AlertToast */,
 			);
 			productName = PracticeLogger;
 			productReference = D19E733B2B898F9300BB3EC7 /* PracticeLogger.app */;
@@ -360,6 +366,7 @@
 			mainGroup = D19E73322B898F9300BB3EC7;
 			packageReferences = (
 				D1C6B0D62B8BC81300F7B877 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+				D15C882D2BF05E5000AAC950 /* XCRemoteSwiftPackageReference "AlertToast" */,
 			);
 			productRefGroup = D19E733C2B898F9300BB3EC7 /* Products */;
 			projectDirPath = "";
@@ -458,6 +465,7 @@
 				D185FB722B90482E003C7631 /* CreatePiece.swift in Sources */,
 				D1E46FF22B96D52D00228C3F /* Piece.swift in Sources */,
 				D131F1732B8AF42F002261BC /* TabBarButton.swift in Sources */,
+				D15C88312BF063B900AAC950 /* Error.swift in Sources */,
 				D1C2BEC22BDD76A300E8E39F /* Database.swift in Sources */,
 				D1D6548E2BDDB9BE008D4868 /* ProfileViewModel.swift in Sources */,
 				D1C2BEB52BDCE22600E8E39F /* Tag.swift in Sources */,
@@ -826,6 +834,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		D15C882D2BF05E5000AAC950 /* XCRemoteSwiftPackageReference "AlertToast" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/elai950/AlertToast";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.9;
+			};
+		};
 		D1C6B0D62B8BC81300F7B877 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/supabase-community/supabase-swift.git";
@@ -837,6 +853,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		D15C882E2BF05E5000AAC950 /* AlertToast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D15C882D2BF05E5000AAC950 /* XCRemoteSwiftPackageReference "AlertToast" */;
+			productName = AlertToast;
+		};
 		D1C2BEBC2BDD63A200E8E39F /* Supabase */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D1C6B0D62B8BC81300F7B877 /* XCRemoteSwiftPackageReference "supabase-swift" */;
