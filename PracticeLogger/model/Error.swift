@@ -9,3 +9,7 @@ import Foundation
 enum SupabaseError: Error {
     case pieceAlreadyExists
 }
+
+enum AuthError: Error {
+    case signInAppleNotEnabled
+}
