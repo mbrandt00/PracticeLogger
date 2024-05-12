@@ -31,7 +31,7 @@ class Database: ObservableObject {
         }
     }
 
-    static func createPiece(piece: Piece) async throws -> DbPiece {
+    static func createPiece(piece: Piece) async throws -> DbPiece? {
         do {
             let currentUserID = try await String(getCurrentUser().id.uuidString)
             let composer: DbComposer = try await client
@@ -62,9 +62,13 @@ class Database: ObservableObject {
                 print("new db movement", dbMovement)
             }
             return insertedPiece
-        } catch {
+        } catch let error as PostgrestError {
             print(error)
-            throw error
+            
+            if error.message.contains("pieces_opus_unique") {
+                throw SupabaseError.pieceAlreadyExists
+            }
+            return nil
         }
     }
 }
@@ -87,3 +91,7 @@ struct DbComposer: Codable {
   let id: Int
   let name: String
 }
+
+
+// use as a when or as an inseret?
+// how to make queries efficient in Database.swift?

@@ -6,12 +6,17 @@
 //
 
 import SwiftUI
-
+import AlertToast
 struct PieceEdit: View {
     let piece: Piece
     @ObservedObject var viewModel = PieceEditViewModel()
+    @State private var showToast: Bool = false
+    @State private var errorMessage: String = ""
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack {
+            VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 10) {
             Text(piece.workName)
                 .font(.title)
             ForEach(piece.movements) { movement in
@@ -32,20 +37,44 @@ struct PieceEdit: View {
             }
         }
         .padding(.horizontal, 10)
-        VStack {
-            Button(action: {
-                Task {
-                    try await viewModel.insertPiece(piece: piece)
-                }
-            }, label: {
-                Text("Create")
-            })
-            .buttonStyle(.bordered)
-            .foregroundColor(.black)
-            .padding(3)
+                // Your existing code for displaying piece details
+            }
+            .padding(.horizontal, 10)
+            VStack {
+                Button(action: {
+                    Task {
+                        do {
+                            try await viewModel.insertPiece(piece: piece)
+                        } catch {
+                            // Handle the error and show the error message in a toast
+                            if let supabaseError = error as? SupabaseError {
+                                switch supabaseError {
+                                case .pieceAlreadyExists:
+                                    errorMessage = "You have already added this piece"
+                                // Add more cases as needed
+                                }
+                            } else {
+                                errorMessage = "An unexpected error occurred."
+                            }
+                            showToast = true
+                        }
+                    }
+                }, label: {
+                    Text("Create")
+                })
+                .buttonStyle(.bordered)
+                .foregroundColor(.black)
+                .padding(3)
+            }
+        }
+        // Show the alert toast when showErrorToast is true
+        .toast(isPresenting: $showToast){
+
+            AlertToast(displayMode: .hud, type: .error(.red), title: errorMessage)
         }
     }
 }
+
 
 #Preview {
     PieceEdit(piece: Piece(workName: "Sonata 2 in B flat Minor Funeral March", composer: Composer(name: "Frederic Chopin"), movements:
