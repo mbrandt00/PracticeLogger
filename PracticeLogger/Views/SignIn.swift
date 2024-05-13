@@ -48,7 +48,7 @@ struct SignIn: View {
                 }
             }
             .fixedSize()
-            
+
             #if DEBUG
             Button("Sign in with Email") {
                 Task {

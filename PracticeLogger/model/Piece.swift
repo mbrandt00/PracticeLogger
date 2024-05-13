@@ -7,12 +7,19 @@
 
 import SwiftUI
 import MusicKit
-struct Movement: Identifiable, Encodable {
-    var id = UUID()
-    var name: String
+class Movement: Identifiable, ObservableObject {
+    let id = UUID() // Consider making it a constant
+    @Published var name: String
     var number: Int
     var selected: Bool = false
     var appleMusicId: MusicItemID?
+
+    init(name: String, number: Int, selected: Bool = false, appleMusicId: MusicItemID? = nil) {
+        self.name = name
+        self.number = number
+        self.selected = selected
+        self.appleMusicId = appleMusicId
+    }
 }
 
 struct Composer: Identifiable, Encodable {
@@ -20,12 +27,19 @@ struct Composer: Identifiable, Encodable {
     var id = UUID()
 }
 
-struct Piece: Identifiable, Hashable, Equatable, Encodable {
-    var id = UUID()
-    var workName: String
+class Piece: ObservableObject, Identifiable, Hashable {
+    let id = UUID() // Make id a constant
+    @Published var workName: String
     var composer: Composer
-    var movements: [Movement]
+    @Published var movements: [Movement]
     var formattedKeySignature: String?
+
+    init(workName: String, composer: Composer, movements: [Movement], formattedKeySignature: String? = nil) {
+        self.workName = workName
+        self.composer = composer
+        self.movements = movements
+        self.formattedKeySignature = formattedKeySignature
+    }
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
@@ -229,7 +243,7 @@ struct Piece: Identifiable, Hashable, Equatable, Encodable {
         return Piece(workName: matchingSongs?.first?.workName ?? "",
                      composer: Composer(name: matchingSongs?.first?.composerName ?? ""),
                      movements: matchingSongs?.map { song in
-            Movement(name: song.movementName ?? "", number: song.movementNumber ?? 0, selected: false)
+            Movement(name: song.movementName ?? "", number: song.movementNumber ?? 0)
         } ?? [], formattedKeySignature: workName!.parseKeySignature().formatKeySignature() ?? nil)
     }
 

@@ -8,75 +8,76 @@
 import SwiftUI
 import AlertToast
 struct PieceEdit: View {
-    var piece: Piece
-    @ObservedObject var viewModel = PieceEditViewModel()
+    @State var piece: Piece
+    @ObservedObject var viewModel: PieceEditViewModel
     @State private var showToast: Bool = false
     @State private var errorMessage: String = ""
-
+//    var onUpdateMovementName: (Int, String) -> Void
+    init(piece: Piece) {
+        self._piece = State(initialValue: piece)
+        self.viewModel = PieceEditViewModel(piece: piece)
+    }
     var body: some View {
         VStack {
             Text(piece.workName)
                 .font(.title)
-            List {
-                Section(header: Text("Movements").font(.headline).foregroundColor(.secondary)) {
+//            NavigationStack {
+                List {
                     ForEach(piece.movements.indices, id: \.self) { index in
-                        var movement = piece.movements[index]
-                        HStack {
-                            Text(movement.number.toRomanNumeral() ?? "")
-                                .font(.caption)
-                                .frame(width: 24, height: 14)
-                                .foregroundColor(.secondary)
-                            TextField("", text: Binding(
-                                get: {
-                                    movement.name
-                                },
-                                set: { newValue, _ in // Ignore the transaction parameter
-                                    if let index = piece.movements.firstIndex(where: { $0.id == movement.id }) {
-                                        movement.name = newValue
-                                    }
-                                }
-                            ))
-                            .font(.subheadline)
-                        }
-                        .padding(.vertical, 4)
-                    }
-                    
+                        MovementEditRow(
+                            movement: piece.movements[index],
+                            onUpdateMovementName: { newName in
+                                viewModel.updateMovementName(at: index, newName: newName)
+                                                    }
+                        )
+
+                    }.onMove(perform: viewModel.move)
                 }
-                .listRowBackground(Color.clear)
-                .padding(.vertical, 3)
-            }
-            .background(Color(UIColor.systemGroupedBackground))
-        
-                    Button(action: {
-                        Task {
-                            do {
-                                let dbPiece = try await viewModel.insertPiece(piece: piece)
-                                print(dbPiece)
-                            } catch {
-                                if let supabaseError = error as? SupabaseError {
-                                    switch supabaseError {
-                                    case .pieceAlreadyExists:
-                                        errorMessage = "You have already added this piece"
-                                        // Add more cases as needed
-                                    }
-                                } else {
-                                    errorMessage = "An unexpected error occurred."
+
+//            }
+                Button(action: {
+                    Task {
+                        do {
+                            let dbPiece = try await viewModel.insertPiece(piece: piece)
+                        } catch {
+                            if let supabaseError = error as? SupabaseError {
+                                print(supabaseError)
+                                switch supabaseError {
+                                case .pieceAlreadyExists:
+                                    errorMessage = "You have already added this piece"
+                                    // Add more cases as needed
                                 }
-                                showToast = true
+                            } else {
+                                errorMessage = "An unexpected error occurred."
                             }
+                            showToast = true
                         }
-                    }, label: {
-                        Text("Create")
-                    })
-                    .buttonStyle(.bordered)
-                    .foregroundColor(.black)
-                    .padding(3)
-            Spacer()
+                    }
+                }, label: {
+                    Text("Create")
+                })
+                .buttonStyle(.bordered)
+                .foregroundColor(.black)
+                .padding(3)
+                Spacer()
+            }
+            .toast(isPresenting: $showToast) {
+                AlertToast(type: .error(.red), title: errorMessage)
+            }
+
         }
-        .toast(isPresenting: $showToast) {
-            AlertToast(displayMode: .hud, type: .error(.red), title: errorMessage)
+    private func move(from source: IndexSet, to destination: Int) {
+        piece.movements.move(fromOffsets: source, toOffset: destination)
+        var newMovements: [Movement] = []
+        for (index, movement) in piece.movements.enumerated() {
+            var movement = movement
+            movement.number = index + 1
+            newMovements.append(movement)
         }
+        piece.movements = newMovements
+        print(piece.movements.map {($0.name, $0.number)})
     }
+
 }
 
 #Preview {

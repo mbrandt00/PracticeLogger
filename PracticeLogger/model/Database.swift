@@ -51,7 +51,6 @@ class Database: ObservableObject {
 
             let newPieceId = insertedPiece.id
             for movement in piece.movements {
-                print(movement)
                 let dbMovement: DbPieceMovement = try await client
                     .from("movements")
                     .insert([
@@ -59,12 +58,9 @@ class Database: ObservableObject {
                         "number": String(movement.number),
                         "pieceid": String(newPieceId)
                     ]).select().single().execute().value
-                print("new db movement", dbMovement)
             }
             return insertedPiece
         } catch let error as PostgrestError {
-            print(error)
-            
             if error.message.contains("pieces_opus_unique") {
                 throw SupabaseError.pieceAlreadyExists
             }
@@ -91,7 +87,6 @@ struct DbComposer: Codable {
   let id: Int
   let name: String
 }
-
 
 // use as a when or as an inseret?
 // how to make queries efficient in Database.swift?
