@@ -51,7 +51,7 @@ class Database: ObservableObject {
 
             let newPieceId = insertedPiece.id
             for movement in piece.movements {
-                let dbMovement: DbPieceMovement = try await client
+                try await client
                     .from("movements")
                     .insert([
                         "name": movement.name,

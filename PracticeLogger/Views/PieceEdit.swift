@@ -13,7 +13,6 @@ struct PieceEdit: View {
     @State private var showToast: Bool = false
     @State private var errorMessage: String = ""
     @State private var duplicatePiece: DbPiece?
-//    var onUpdateMovementName: (Int, String) -> Void
     init(piece: Piece) {
         self._piece = State(initialValue: piece)
         self.viewModel = PieceEditViewModel(piece: piece)
@@ -31,73 +30,59 @@ struct PieceEdit: View {
             Text(piece.workName)
                 .font(.title)
 
-                List {
-                    ForEach(piece.movements.indices, id: \.self) { index in
-                        MovementEditRow(
-                            movement: piece.movements[index],
-                            onUpdateMovementName: { newName in
-                                viewModel.updateMovementName(at: index, newName: newName)
-                            }
-                        )
-
-                    }.onMove(perform: viewModel.move)
-                }
-                Button(action: {
-                    Task {
-                        do {
-                            let dbPiece = try await viewModel.insertPiece(piece: piece)
-                            print(dbPiece)
-                        } catch {
-                            if let supabaseError = error as? SupabaseError {
-                                print(supabaseError)
-                                switch supabaseError {
-                                case .pieceAlreadyExists:
-                                    errorMessage = "You have already added this piece"
-                                    // Add more cases as needed
-                                }
-                            } else {
-                                errorMessage = "An unexpected error occurred."
-                            }
-                            showToast = true
+            List {
+                ForEach(piece.movements.indices, id: \.self) { index in
+                    MovementEditRow(
+                        movement: piece.movements[index],
+                        onUpdateMovementName: { newName in
+                            viewModel.updateMovementName(at: index, newName: newName)
                         }
-                    }
-                }, label: {
-                    Text("Create")
-                })
-                .buttonStyle(.bordered)
-                .foregroundColor(.black)
-                .padding(3)
-                Spacer()
+                    )
+
+                }.onMove(perform: viewModel.move)
             }
-            .toast(isPresenting: $showToast) {
-                AlertToast(type: .error(.red), title: errorMessage)
-            }
-            .onAppear {
+            Button(action: {
                 Task {
                     do {
-                        let piece = try await viewModel.addMetadata(to: piece)
-                        if let piece = piece, let dbPiece = await viewModel.isDuplicate(piece: piece) {
-                            duplicatePiece = dbPiece
-                        }
+                        let dbPiece = try await viewModel.insertPiece(piece: piece)
+                        print(dbPiece)
                     } catch {
-                        // Handle error
-                        print(error)
+                        if let supabaseError = error as? SupabaseError {
+                            print(supabaseError)
+                            switch supabaseError {
+                            case .pieceAlreadyExists:
+                                errorMessage = "You have already added this piece"
+                            }
+                        } else {
+                            errorMessage = "An unexpected error occurred."
+                        }
+                        showToast = true
                     }
                 }
-            }
-    }
-    private func move(from source: IndexSet, to destination: Int) {
-        piece.movements.move(fromOffsets: source, toOffset: destination)
-        var newMovements: [Movement] = []
-        for (index, movement) in piece.movements.enumerated() {
-            let movement = movement
-            movement.number = index + 1
-            newMovements.append(movement)
+            }, label: {
+                Text("Create")
+            })
+            .buttonStyle(.bordered)
+            .foregroundColor(.black)
+            .padding(3)
+            Spacer()
         }
-        piece.movements = newMovements
-        print(piece.movements.map {($0.name, $0.number)})
+        .toast(isPresenting: $showToast) {
+            AlertToast(type: .error(.red), title: errorMessage)
+        }
+        .onAppear {
+            Task {
+                do {
+                    let piece = try await viewModel.addMetadata(to: piece)
+                    if let piece = piece, let dbPiece = await viewModel.isDuplicate(piece: piece) {
+                        duplicatePiece = dbPiece
+                    }
+                } catch {
+                    print(error)
+                }
+            }
+        }
     }
-
 }
 
 #Preview {

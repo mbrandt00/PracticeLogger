@@ -28,7 +28,7 @@ class PieceEditViewModel: ObservableObject {
 
     func move(from source: IndexSet, to destination: Int) {
         piece.movements.move(fromOffsets: source, toOffset: destination)
-        for (index, _) in piece.movements.enumerated() {
+        for (index) in piece.movements.indices {
             piece.movements[index].number = index + 1
         }
         self.piece = piece
@@ -58,15 +58,14 @@ class PieceEditViewModel: ObservableObject {
 
     func isDuplicate(piece: Piece) async -> DbPiece? {
         do {
-            guard let opusNumber = piece.opusNumber,
-                  let opusType = piece.opusType else {
+            guard let opusNumber = piece.opusNumber, let opusType = piece.opusType else {
                 return nil
             }
 
             let currentUserID = try await String(Database.getCurrentUser().id.uuidString)
 
             // Attempt to decode the response
-            let response: DbPiece = try await Database.client.rpc("find_duplicate_piece", params: ["opus_number": String(opusNumber), "opus_type": piece.opusType?.rawValue, "user_id": currentUserID, "composer_name": piece.composer.name ]).execute().value
+            let response: DbPiece = try await Database.client.rpc("find_duplicate_piece", params: ["opus_number": String(opusNumber), "opus_type": opusType.rawValue, "user_id": currentUserID, "composer_name": piece.composer.name ]).execute().value
 
             return response
         } catch {
