@@ -21,6 +21,9 @@ class Movement: Identifiable, ObservableObject {
         self.appleMusicId = appleMusicId
     }
 }
+enum OpusType: String, Decodable {
+    case Op, K, BWV, D, L, WoO, B, Wq, CPEB, VB, DD, H, WD, WAB, T, FMW, EG, S, TH
+}
 
 struct Composer: Identifiable, Encodable {
     var name: String
@@ -32,12 +35,15 @@ class Piece: ObservableObject, Identifiable, Hashable {
     @Published var workName: String
     var composer: Composer
     @Published var movements: [Movement]
+    @Published var opusType: OpusType?
+    @Published var opusNumber: Int?
     var formattedKeySignature: String?
 
-    init(workName: String, composer: Composer, movements: [Movement], formattedKeySignature: String? = nil) {
+    init(workName: String, composer: Composer, movements: [Movement], formattedKeySignature: String? = nil, opusType: OpusType? = nil, opusNumber: Int? = nil) {
         self.workName = workName
         self.composer = composer
         self.movements = movements
+
         self.formattedKeySignature = formattedKeySignature
     }
 

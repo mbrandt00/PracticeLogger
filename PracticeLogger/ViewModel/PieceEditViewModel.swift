@@ -25,7 +25,7 @@ class PieceEditViewModel: ObservableObject {
             throw error
         }
     }
-    
+
     func move(from source: IndexSet, to destination: Int) {
         piece.movements.move(fromOffsets: source, toOffset: destination)
         for (index, _) in piece.movements.enumerated() {
@@ -33,14 +33,69 @@ class PieceEditViewModel: ObservableObject {
         }
         self.piece = piece
     }
-    
+
     func updateMovementName(at index: Int, newName: String) {
         guard index < piece.movements.count else { return } // Ensure index is within bounds
         piece.movements[index].name = newName
 
     }
+
+    func addMetadata(to piece: Piece) async throws -> Piece? {
+        do {
+            if let response: OpusInformation = try await Database.client.rpc("parse_opus_information", params: ["work_name": piece.workName]).execute().value {
+                piece.opusNumber =  response.opus_number
+                piece.opusType = response.opus_type
+                return piece
+            } else {
+                // If RPC call succeeds but does not provide a valid OpusInformation
+                return piece
+            }
+        } catch {
+            print("Error getting piece information:", error)
+            return nil
+        }
+    }
+
+    func isDuplicate(piece: Piece) async -> DbPiece? {
+        do {
+            guard let opusNumber = piece.opusNumber,
+                  let opusType = piece.opusType else {
+                return nil
+            }
+
+            let currentUserID = try await String(Database.getCurrentUser().id.uuidString)
+
+            // Attempt to decode the response
+            let response: DbPiece = try await Database.client.rpc("find_duplicate_piece", params: ["opus_number": String(opusNumber), "opus_type": piece.opusType?.rawValue, "user_id": currentUserID, "composer_name": piece.composer.name ]).execute().value
+
+            return response
+        } catch {
+            // Handle errors
+            switch error {
+            case let decodingError as DecodingError:
+                // Check if the error is of type valueNotFound
+                if case DecodingError.valueNotFound(_, _) = decodingError {
+                    // Return nil if no value was found
+                    return nil
+                } else {
+                    // Handle other decoding errors
+                    print("Decoding error:", decodingError)
+                    return nil
+                }
+            default:
+                // Handle other types of errors
+                print("Error in isDuplicate function:", error)
+                return nil
+            }
+        }
+    }
 }
 
 enum InsertionError: Error {
     case pieceCreationFailed
+}
+
+struct OpusInformation: Decodable {
+var opus_type: OpusType
+var opus_number: Int
 }

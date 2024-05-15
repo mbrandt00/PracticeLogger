@@ -12,33 +12,41 @@ struct PieceEdit: View {
     @ObservedObject var viewModel: PieceEditViewModel
     @State private var showToast: Bool = false
     @State private var errorMessage: String = ""
+    @State private var duplicatePiece: DbPiece?
 //    var onUpdateMovementName: (Int, String) -> Void
     init(piece: Piece) {
         self._piece = State(initialValue: piece)
         self.viewModel = PieceEditViewModel(piece: piece)
     }
     var body: some View {
+
         VStack {
+            if let duplicatePiece = duplicatePiece {
+                // Render UI elements for the duplicate piece
+                Text("Duplicate Piece Found:")
+                    .font(.headline)
+                Text("ID: \(duplicatePiece.id)")
+                // Add more UI elements as needed
+            }
             Text(piece.workName)
                 .font(.title)
-//            NavigationStack {
+
                 List {
                     ForEach(piece.movements.indices, id: \.self) { index in
                         MovementEditRow(
                             movement: piece.movements[index],
                             onUpdateMovementName: { newName in
                                 viewModel.updateMovementName(at: index, newName: newName)
-                                                    }
+                            }
                         )
 
                     }.onMove(perform: viewModel.move)
                 }
-
-//            }
                 Button(action: {
                     Task {
                         do {
                             let dbPiece = try await viewModel.insertPiece(piece: piece)
+                            print(dbPiece)
                         } catch {
                             if let supabaseError = error as? SupabaseError {
                                 print(supabaseError)
@@ -64,13 +72,25 @@ struct PieceEdit: View {
             .toast(isPresenting: $showToast) {
                 AlertToast(type: .error(.red), title: errorMessage)
             }
-
-        }
+            .onAppear {
+                Task {
+                    do {
+                        let piece = try await viewModel.addMetadata(to: piece)
+                        if let piece = piece, let dbPiece = await viewModel.isDuplicate(piece: piece) {
+                            duplicatePiece = dbPiece
+                        }
+                    } catch {
+                        // Handle error
+                        print(error)
+                    }
+                }
+            }
+    }
     private func move(from source: IndexSet, to destination: Int) {
         piece.movements.move(fromOffsets: source, toOffset: destination)
         var newMovements: [Movement] = []
         for (index, movement) in piece.movements.enumerated() {
-            var movement = movement
+            let movement = movement
             movement.number = index + 1
             newMovements.append(movement)
         }
