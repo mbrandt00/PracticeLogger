@@ -21,11 +21,10 @@ struct PieceEdit: View {
 
         VStack {
             if let duplicatePiece = duplicatePiece {
-                // Render UI elements for the duplicate piece
+                // Improve UI
                 Text("Duplicate Piece Found:")
                     .font(.headline)
                 Text("ID: \(duplicatePiece.id)")
-                // Add more UI elements as needed
             }
             Text(piece.workName)
                 .font(.title)
@@ -73,10 +72,12 @@ struct PieceEdit: View {
         .onAppear {
             Task {
                 do {
-                    let piece = try await viewModel.addMetadata(to: piece)
-                    if let piece = piece, let dbPiece = await viewModel.isDuplicate(piece: piece) {
-                        duplicatePiece = dbPiece
-                    }
+                    let updatedPiece = try await viewModel.addMetadata(to: piece)
+                    let dbPiece = try await viewModel.isDuplicate(piece: piece)
+                    
+                    self.piece = updatedPiece ?? piece
+                    self.duplicatePiece =  dbPiece
+                    await print(dbPiece)
                 } catch {
                     print(error)
                 }

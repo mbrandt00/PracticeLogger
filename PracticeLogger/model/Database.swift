@@ -44,8 +44,9 @@ class Database: ObservableObject {
                 .insert([
                     "workname": piece.workName,
                     "userid": currentUserID,
-                    "composerid": String(composer.id)
-
+                    "composerid": String(composer.id),
+                    "opus_type": piece.opusType?.rawValue ?? nil,
+                    "opus_number": String(piece.opusNumber!)
                 ]).select().single().execute().value
             print(insertedPiece)
 

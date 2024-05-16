@@ -42,21 +42,23 @@ class PieceEditViewModel: ObservableObject {
 
     func addMetadata(to piece: Piece) async throws -> Piece? {
         do {
-            if let response: OpusInformation = try await Database.client.rpc("parse_opus_information", params: ["work_name": piece.workName]).execute().value {
+            if let response: MetadaInformation = try await Database.client.rpc("parse_opus_information", params: ["work_name": piece.workName]).execute().value {
                 piece.opusNumber =  response.opus_number
                 piece.opusType = response.opus_type
-                return piece
-            } else {
-                // If RPC call succeeds but does not provide a valid OpusInformation
-                return piece
             }
+            return piece
+//            if let response: OpusInformation = try await Database.client.rpc("parse_piece_format", params: ["work_name": piece.workName]).execute().value {
+//                print(response)
+//                return piece
+//            }
         } catch {
             print("Error getting piece information:", error)
             return nil
         }
+        return nil
     }
 
-    func isDuplicate(piece: Piece) async -> DbPiece? {
+    func isDuplicate(piece: Piece) async throws -> DbPiece? {
         do {
             guard let opusNumber = piece.opusNumber, let opusType = piece.opusType else {
                 return nil
@@ -66,7 +68,7 @@ class PieceEditViewModel: ObservableObject {
 
             // Attempt to decode the response
             let response: DbPiece = try await Database.client.rpc("find_duplicate_piece", params: ["opus_number": String(opusNumber), "opus_type": opusType.rawValue, "user_id": currentUserID, "composer_name": piece.composer.name ]).execute().value
-
+            
             return response
         } catch {
             // Handle errors
@@ -94,7 +96,12 @@ enum InsertionError: Error {
     case pieceCreationFailed
 }
 
-struct OpusInformation: Decodable {
-var opus_type: OpusType
-var opus_number: Int
+struct MetadaInformation: Decodable {
+    var opus_type: OpusType
+    var opus_number: Int
+}
+
+struct PieceFormat: Decodable {
+    var opus_type: OpusType
+    var opus_number: Int
 }
