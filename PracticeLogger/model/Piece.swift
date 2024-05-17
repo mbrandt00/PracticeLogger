@@ -17,12 +17,83 @@ class Movement: Identifiable, ObservableObject {
     init(name: String, number: Int, selected: Bool = false, appleMusicId: MusicItemID? = nil) {
         self.name = name
         self.number = number
-        self.selected = selected
         self.appleMusicId = appleMusicId
     }
 }
 enum OpusType: String, Decodable {
     case Op, K, BWV, D, L, WoO, B, Wq, CPEB, VB, DD, H, WD, WAB, T, FMW, EG, S, TH
+}
+
+enum PieceFormat: String, Decodable {
+    case bagatelle = "Bagatelle"
+    case ballade = "Ballade"
+    case canon = "Canon"
+    case caprice = "Caprice"
+    case chorale = "Chorale"
+    case concerto = "Concerto"
+    case dance = "Dance"
+    case etude = "Etude"
+    case fantasy = "Fantasy"
+    case fugue = "Fugue"
+    case gavotte = "Gavotte"
+    case gigue = "Gigue"
+    case impromptu = "Impromptu"
+    case intermezzo = "Intermezzo"
+    case lied = "Lied"
+    case march = "March"
+    case mazurka = "Mazurka"
+    case mass = "Mass"
+    case minuet = "Minuet"
+    case nocturne = "Nocturne"
+    case overture = "Overture"
+    case opera = "Opera"
+    case oratorio = "Oratorio"
+    case pastiche = "Pastiche"
+    case prelude = "Prelude"
+    case polonaise = "Polonaise"
+    case rhapsody = "Rhapsody"
+    case requiem = "Requiem"
+    case rondo = "Rondo"
+    case sarabande = "Sarabande"
+    case scherzo = "Scherzo"
+    case serenade = "Serenade"
+    case sonata = "Sonata"
+    case stringQuartet = "String Quartet"
+    case suite = "Suite"
+    case symphony = "Symphony"
+    case tarantella = "Tarantella"
+    case toccata = "Toccata"
+    case variations = "Variations"
+    case waltz = "Waltz"
+}
+
+enum KeySignatureType: String, Decodable {
+    case c = "C"
+    case cSharp = "C#"
+    case cFlat = "Cb"
+    case d = "D"
+    case dSharp = "D#"
+    case dFlat = "Db"
+    case e = "E"
+    case eSharp = "E#"
+    case eFlat = "Eb"
+    case f = "F"
+    case fSharp = "F#"
+    case fFlat = "Fb"
+    case g = "G"
+    case gSharp = "G#"
+    case gFlat = "Gb"
+    case a = "A"
+    case aSharp = "A#"
+    case aFlat = "Ab"
+    case b = "B"
+    case bSharp = "B#"
+    case bFlat = "Bb"
+}
+
+enum KeySignatureTonality: String, Decodable {
+    case major = "Major"
+    case minor = "Minor"
 }
 
 struct Composer: Identifiable, Encodable {
@@ -37,15 +108,30 @@ class Piece: ObservableObject, Identifiable, Hashable {
     @Published var movements: [Movement]
     @Published var opusType: OpusType?
     @Published var opusNumber: Int?
-    var formattedKeySignature: String?
+    var format: PieceFormat?
+    var keySignatureType: KeySignatureType?
+    var keySignatureTonality: KeySignatureTonality?
 
-    init(workName: String, composer: Composer, movements: [Movement], formattedKeySignature: String? = nil, opusType: OpusType? = nil, opusNumber: Int? = nil) {
-        self.workName = workName
-        self.composer = composer
-        self.movements = movements
-
-        self.formattedKeySignature = formattedKeySignature
-    }
+    init(
+            workName: String,
+            composer: Composer,
+            movements: [Movement],
+            formattedKeySignature: String? = nil,
+            opusType: OpusType? = nil,
+            opusNumber: Int? = nil,
+            format: PieceFormat? = nil,
+            keySignatureTonality: KeySignatureTonality? = nil,
+            keySignatureType: KeySignatureType? = nil
+        ) {
+            self.workName = workName
+            self.composer = composer
+            self.movements = movements
+            self.format = format
+            self.keySignatureTonality = keySignatureTonality
+            self.keySignatureType = keySignatureType
+            self.opusType = opusType
+            self.opusNumber = opusNumber
+        }
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)

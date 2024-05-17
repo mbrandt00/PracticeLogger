@@ -42,20 +42,20 @@ class PieceEditViewModel: ObservableObject {
 
     func addMetadata(to piece: Piece) async throws -> Piece? {
         do {
-            if let response: MetadaInformation = try await Database.client.rpc("parse_opus_information", params: ["work_name": piece.workName]).execute().value {
+
+            if let response: MetadataInformation = try await Database.client.rpc("parse_piece_metadata", params: ["work_name": piece.workName]).select().single().execute().value {
                 piece.opusNumber =  response.opus_number
                 piece.opusType = response.opus_type
+                piece.keySignatureType = response.key_signature_type
+                piece.keySignatureTonality = response.key_signature_tonality
+                piece.format = response.piece_format
             }
+            dump(piece)
             return piece
-//            if let response: OpusInformation = try await Database.client.rpc("parse_piece_format", params: ["work_name": piece.workName]).execute().value {
-//                print(response)
-//                return piece
-//            }
         } catch {
             print("Error getting piece information:", error)
             return nil
         }
-        return nil
     }
 
     func isDuplicate(piece: Piece) async throws -> DbPiece? {
@@ -68,7 +68,7 @@ class PieceEditViewModel: ObservableObject {
 
             // Attempt to decode the response
             let response: DbPiece = try await Database.client.rpc("find_duplicate_piece", params: ["opus_number": String(opusNumber), "opus_type": opusType.rawValue, "user_id": currentUserID, "composer_name": piece.composer.name ]).execute().value
-            
+
             return response
         } catch {
             // Handle errors
@@ -96,12 +96,10 @@ enum InsertionError: Error {
     case pieceCreationFailed
 }
 
-struct MetadaInformation: Decodable {
-    var opus_type: OpusType
-    var opus_number: Int
-}
-
-struct PieceFormat: Decodable {
-    var opus_type: OpusType
-    var opus_number: Int
+struct MetadataInformation: Decodable {
+    var opus_number: Int?
+    var opus_type: OpusType?
+    var piece_format: PieceFormat?
+    var key_signature_type: KeySignatureType?
+    var key_signature_tonality: KeySignatureTonality?
 }

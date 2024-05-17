@@ -23,9 +23,6 @@ struct NewPieceRow: View {
                 }
                 Spacer()
                 VStack(alignment: .trailing, spacing: 10) {
-                    if let keySignature = piece.formattedKeySignature {
-                        Tag(keySignature)
-                    }
                     Tag("\(piece.movements.count) movements")
                 }
             }

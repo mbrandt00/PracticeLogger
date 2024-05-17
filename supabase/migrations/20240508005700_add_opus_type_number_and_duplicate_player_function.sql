@@ -25,24 +25,32 @@ DECLARE
     found_key key_signature_type;
 BEGIN
     key_info := NULL;
+    work_name := LOWER(work_name);
 
     -- Find the key signature
     found_key := (
         SELECT CASE
-            WHEN lower(work_name) LIKE '%c#%' OR lower(work_name) LIKE '%c sharp%' THEN 'C#'
-            WHEN lower(work_name) LIKE '%c-flat%' OR lower(work_name) LIKE '%c flat%' THEN 'Cb'
-            WHEN lower(work_name) LIKE '%d#%' OR lower(work_name) LIKE '%d sharp%' THEN 'D#'
-            WHEN lower(work_name) LIKE '%d-flat%' OR lower(work_name) LIKE '%d flat%' THEN 'Db'
-            WHEN lower(work_name) LIKE '%e#%' OR lower(work_name) LIKE '%e sharp%' THEN 'E#'
-            WHEN lower(work_name) LIKE '%e-flat%' OR lower(work_name) LIKE '%e flat%' THEN 'Eb'
-            WHEN lower(work_name) LIKE '%f#%' OR lower(work_name) LIKE '%f sharp%' THEN 'F#'
-            WHEN lower(work_name) LIKE '%f-flat%' OR lower(work_name) LIKE '%f flat%' THEN 'Fb'
-            WHEN lower(work_name) LIKE '%g#%' OR lower(work_name) LIKE '%g sharp%' THEN 'G#'
-            WHEN lower(work_name) LIKE '%g-flat%' OR lower(work_name) LIKE '%g flat%' THEN 'Gb'
-            WHEN lower(work_name) LIKE '%a#%' OR lower(work_name) LIKE '%a sharp%' THEN 'A#'
-            WHEN lower(work_name) LIKE '%a-flat%' OR lower(work_name) LIKE '%a flat%' THEN 'Ab'
-            WHEN lower(work_name) LIKE '%b#%' OR lower(work_name) LIKE '%b sharp%' THEN 'B#'
-            WHEN lower(work_name) LIKE '%b-flat%' OR lower(work_name) LIKE '%b flat%' THEN 'Bb'
+            WHEN work_name LIKE '%c#%' OR work_name LIKE '%c sharp%' THEN 'C#'
+            WHEN work_name LIKE '%c-flat%' OR work_name LIKE '%c flat%' THEN 'Cb'
+            WHEN work_name LIKE '% c %' THEN 'C'
+            WHEN work_name LIKE '%d#%' OR work_name LIKE '%d sharp%' THEN 'D#'
+            WHEN work_name LIKE '%d-flat%' OR work_name LIKE '%d flat%' THEN 'Db'
+            WHEN work_name LIKE '% d %' THEN 'D'
+            WHEN work_name LIKE '%e#%' OR work_name LIKE '%e sharp%' THEN 'E#'
+            WHEN work_name LIKE '%e-flat%' OR work_name LIKE '%e flat%' THEN 'Eb'
+            WHEN work_name LIKE '% e %' THEN 'E'
+            WHEN work_name LIKE '%f#%' OR work_name LIKE '%f sharp%' THEN 'F#'
+            WHEN work_name LIKE '%f-flat%' OR work_name LIKE '%f flat%' THEN 'Fb'
+            WHEN work_name LIKE '% f %' THEN 'F'
+            WHEN work_name LIKE '%g#%' OR work_name LIKE '%g sharp%' THEN 'G#'
+            WHEN work_name LIKE '%g-flat%' OR work_name LIKE '%g flat%' THEN 'Gb'
+            WHEN work_name LIKE '% g %' THEN 'G'
+            WHEN work_name LIKE '%a#%' OR work_name LIKE '%a sharp%' THEN 'A#'
+            WHEN work_name LIKE '%a-flat%' OR work_name LIKE '%a flat%' THEN 'Ab'
+            WHEN work_name LIKE '% a %' THEN 'A'
+            WHEN work_name LIKE '%b#%' OR work_name LIKE '%b sharp%' THEN 'B#'
+            WHEN work_name LIKE '%b-flat%' OR work_name LIKE '%b flat%' THEN 'Bb'
+            WHEN work_name LIKE '% b %' THEN 'B'
             ELSE NULL
         END
     );
@@ -51,7 +59,7 @@ BEGIN
     key_info.key := found_key;
 
     -- Determine the tonality
-    IF lower(work_name) LIKE '%minor%' THEN
+    IF work_name LIKE '%minor%' THEN
         key_info.tonality := 'Minor';
     ELSE
         key_info.tonality := 'Major';
