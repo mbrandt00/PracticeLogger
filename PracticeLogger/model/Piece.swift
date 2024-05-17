@@ -20,8 +20,14 @@ class Movement: Identifiable, ObservableObject {
         self.appleMusicId = appleMusicId
     }
 }
-enum OpusType: String, Decodable {
-    case Op, K, BWV, D, L, WoO, B, Wq, CPEB, VB, DD, H, WD, WAB, T, FMW, EG, S, TH
+enum OpusType: String, Decodable, CaseIterable {
+    case B, BWV, CPEB, D, DD, EG, FMW, H, K, L, Op, S, T, TH, VB, WAB, WD, WoO, Wq
+
+    static var allCases: [OpusType] {
+        return [
+            .B, .BWV, .CPEB, .D, .DD, .EG, .FMW, .H, .K, .L, .Op, .S, .T, .TH, .VB, .WAB, .WD, .WoO, .Wq
+        ]
+    }
 }
 
 enum PieceFormat: String, Decodable {

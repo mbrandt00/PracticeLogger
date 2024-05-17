@@ -30,16 +30,56 @@ struct PieceEdit: View {
                 .font(.title)
 
             List {
-                ForEach(piece.movements.indices, id: \.self) { index in
-                    MovementEditRow(
-                        movement: piece.movements[index],
-                        onUpdateMovementName: { newName in
-                            viewModel.updateMovementName(at: index, newName: newName)
-                        }
-                    )
+                Section(header: Text("Movements")) {
+                    ForEach(piece.movements.indices, id: \.self) { index in
+                        MovementEditRow(
+                            movement: piece.movements[index],
+                            onUpdateMovementName: { newName in
+                                viewModel.updateMovementName(at: index, newName: newName)
+                            }
+                        )
 
-                }.onMove(perform: viewModel.move)
+                    }.onMove(perform: viewModel.move)
+                }
+
+                Section(header: Text("Catalogue Information")) {
+                    Picker("Identifier", selection: Binding(
+                        get: {
+                            piece.opusType?.rawValue ?? ""
+                        },
+                        set: { newValue in
+                            if let newOpusType = OpusType(rawValue: newValue) {
+                                piece.opusType = newOpusType
+                            }
+                        }
+                    )) {
+                        ForEach(OpusType.allCases, id: \.self) { opusType in
+                            Text(opusType.rawValue).tag(opusType.rawValue)
+                        }
+                    }
+                    HStack {
+                        Text("Number")
+                        Spacer()
+                        TextField("", value: Binding(
+                            get: {
+                                if let opusNumber = piece.opusNumber {
+                                    return String(opusNumber)
+                                } else {
+                                    return ""
+                                }
+                            },
+                            set: { newValue in
+                                piece.opusNumber = newValue.isEmpty ? nil : Int(newValue)
+                            }
+                        ), formatter: NumberFormatter())
+                        .frame(width: 30) // Adjust the width as needed
+                        .multilineTextAlignment(.trailing)
+                        .textFieldStyle(PlainTextFieldStyle())
+                        .keyboardType(.numberPad)
+                    }
+                }
             }
+
             Button(action: {
                 Task {
                     do {
@@ -74,7 +114,7 @@ struct PieceEdit: View {
                 do {
                     let updatedPiece = try await viewModel.addMetadata(to: piece)
                     let dbPiece = try await viewModel.isDuplicate(piece: piece)
-                    
+                    print("UPDATED PIECE", updatedPiece)
                     self.piece = updatedPiece ?? piece
                     self.duplicatePiece =  dbPiece
                     await print(dbPiece)
