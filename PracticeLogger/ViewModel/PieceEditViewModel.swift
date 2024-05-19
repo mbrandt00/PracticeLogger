@@ -12,17 +12,18 @@ class PieceEditViewModel: ObservableObject {
     init(piece: Piece) {
         self.piece = piece
     }
-    func insertPiece(piece: Piece) async throws -> DbPiece {
+    func insertPiece(piece: Piece) async throws {
         do {
             // Attempt to create the piece
-            if let createdPiece = try await Database.createPiece(piece: piece) {
-                return createdPiece
-            } else {
-                throw InsertionError.pieceCreationFailed
-            }
-        } catch {
-            // Handle any other errors
-            throw error
+            try await Database.createPiece(piece: piece) // {
+            //                print("YAY")
+            //            } else {
+            //                throw InsertionError.pieceCreationFailed
+            //            }
+            //        } catch {
+            //            // Handle any other errors
+            //            throw error
+            //        }
         }
     }
 
@@ -44,11 +45,12 @@ class PieceEditViewModel: ObservableObject {
         do {
 
             if let response: MetadataInformation = try await Database.client.rpc("parse_piece_metadata", params: ["work_name": piece.workName]).select().single().execute().value {
-                piece.opusNumber =  response.opus_number
-                piece.opusType = response.opus_type
-                piece.keySignatureType = response.key_signature_type
-                piece.keySignatureTonality = response.key_signature_tonality
-                piece.format = response.piece_format
+                dump(response)
+                piece.catalogue_number =  response.catalogue_number
+                piece.catalogue_type = response.catalogue_type
+                piece.key_signature = response.key_signature
+                piece.tonality = response.tonality
+                piece.format = response.format
             }
             dump(piece)
             return piece
@@ -58,38 +60,38 @@ class PieceEditViewModel: ObservableObject {
         }
     }
 
-    func isDuplicate(piece: Piece) async throws -> DbPiece? {
-        do {
-            guard let opusNumber = piece.opusNumber, let opusType = piece.opusType else {
-                return nil
-            }
-
-            let currentUserID = try await String(Database.getCurrentUser().id.uuidString)
-
-            // Attempt to decode the response
-            let response: DbPiece = try await Database.client.rpc("find_duplicate_piece", params: ["opus_number": String(opusNumber), "opus_type": opusType.rawValue, "user_id": currentUserID, "composer_name": piece.composer.name ]).execute().value
-
-            return response
-        } catch {
-            // Handle errors
-            switch error {
-            case let decodingError as DecodingError:
-                // Check if the error is of type valueNotFound
-                if case DecodingError.valueNotFound(_, _) = decodingError {
-                    // Return nil if no value was found
-                    return nil
-                } else {
-                    // Handle other decoding errors
-                    print("Decoding error:", decodingError)
-                    return nil
-                }
-            default:
-                // Handle other types of errors
-                print("Error in isDuplicate function:", error)
-                return nil
-            }
-        }
-    }
+//    func isDuplicate(piece: Piece) async throws -> Piece? {
+//        do {
+//            guard let catalogue_number = piece.catalogue_number, let catalogue_type = piece.catalogue_type else {
+//                return nil
+//            }
+//
+//            let currentUserID = try await String(Database.getCurrentUser().id.uuidString)
+//
+//            // Attempt to decode the response
+//            let response: Piece = try await Database.client.rpc("find_duplicate_piece", params: ["catalogue_number": String(catalogue_number), "catalogue_type": catalogue_type.rawValue, "user_id": currentUserID, "composer_name": piece.composer.name ]).execute().value
+//            dump(response)
+//            return response
+//        } catch {
+//            // Handle errors
+//            switch error {
+//            case let decodingError as DecodingError:
+//                // Check if the error is of type valueNotFound
+//                if case DecodingError.valueNotFound(_, _) = decodingError {
+//                    // Return nil if no value was found
+//                    return nil
+//                } else {
+//                    // Handle other decoding errors
+//                    print("Decoding error:", decodingError)
+//                    return nil
+//                }
+//            default:
+//                // Handle other types of errors
+//                print("Error in isDuplicate function:", error)
+//                return nil
+//            }
+//        }
+//    }
 }
 
 enum InsertionError: Error {
@@ -97,9 +99,9 @@ enum InsertionError: Error {
 }
 
 struct MetadataInformation: Decodable {
-    var opus_number: Int?
-    var opus_type: OpusType?
-    var piece_format: PieceFormat?
-    var key_signature_type: KeySignatureType?
-    var key_signature_tonality: KeySignatureTonality?
+    var catalogue_number: Int?
+    var catalogue_type: CatalogueType?
+    var format: Format?
+    var key_signature: KeySignatureType?
+    var tonality: KeySignatureTonality?
 }

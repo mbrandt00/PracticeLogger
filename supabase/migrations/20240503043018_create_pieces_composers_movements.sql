@@ -4,20 +4,20 @@ CREATE TABLE IF NOT EXISTS composers (
 );
 
 CREATE TABLE IF NOT EXISTS pieces (
-    id BIGSERIAL PRIMARY KEY,
-    workName varchar(255) NOT NULL,
-    composerId BIGINT,
-    userId UUID NOT NULL,
-    FOREIGN KEY (userId) REFERENCES auth.users(id),
-    FOREIGN KEY (composerId) REFERENCES composers(id)
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    work_name varchar(255) NOT NULL,
+    composer_id BIGINT,
+    user_id UUID NOT NULL DEFAULT auth.uid(),
+    FOREIGN KEY (user_id) REFERENCES auth.users(id),
+    FOREIGN KEY (composer_id) REFERENCES composers(id)
 );
 
 CREATE TABLE IF NOT EXISTS movements (
     id BIGSERIAL PRIMARY KEY,
-    pieceId BIGINT NOT NULL,
+    piece_id UUID NOT NULL,
     name varchar(255),
     number INT,
-    FOREIGN KEY (pieceId) REFERENCES pieces(id)
+    FOREIGN KEY (piece_id) REFERENCES pieces(id)
 );
 
 -- Enable RLS

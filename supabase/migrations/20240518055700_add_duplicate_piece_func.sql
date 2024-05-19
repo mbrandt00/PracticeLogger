@@ -1,6 +1,6 @@
 CREATE OR REPLACE FUNCTION find_duplicate_piece(
-    opus_number INT,
-    opus_type opus_type,
+    catalogue_number INT,
+    catalogue_type catalogue_type,
     user_id UUID,
     composer_name TEXT
 ) RETURNS pieces AS $$
@@ -15,10 +15,10 @@ BEGIN
     SELECT *
     INTO matching_piece
     FROM pieces
-    WHERE pieces.opus_number = $1
-        AND pieces.opus_type = $2
-        AND pieces.userId = $3
-        AND pieces.composerId = composer_id
+    WHERE pieces.catalogue_number = $1
+        AND pieces.catalogue_type = $2
+        AND pieces.user_id = $3
+        AND pieces.composer_id = composer_id
     LIMIT 1;
 
     RETURN matching_piece;

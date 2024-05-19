@@ -7,137 +7,64 @@
 
 import SwiftUI
 import MusicKit
-class Movement: Identifiable, ObservableObject {
-    let id = UUID() // Consider making it a constant
-    @Published var name: String
-    var number: Int
-    var selected: Bool = false
-    var appleMusicId: MusicItemID?
 
-    init(name: String, number: Int, selected: Bool = false, appleMusicId: MusicItemID? = nil) {
-        self.name = name
-        self.number = number
-        self.appleMusicId = appleMusicId
-    }
-}
-enum OpusType: String, Decodable, CaseIterable {
-    case B, BWV, CPEB, D, DD, EG, FMW, H, K, L, Op, S, T, TH, VB, WAB, WD, WoO, Wq
+class Piece: ObservableObject, Identifiable, Hashable, Encodable {
+  let id = UUID()
+  @Published var workName: String
+  var composer: Composer
+  @Published var movements: [Movement]
+  @Published var catalogue_type: CatalogueType?
+  @Published var catalogue_number: Int?
+  var format: Format?
+  var key_signature: KeySignatureType?
+  var tonality: KeySignatureTonality?
 
-    static var allCases: [OpusType] {
-        return [
-            .B, .BWV, .CPEB, .D, .DD, .EG, .FMW, .H, .K, .L, .Op, .S, .T, .TH, .VB, .WAB, .WD, .WoO, .Wq
-        ]
-    }
-}
+  init(
+    workName: String,
+    composer: Composer,
+    movements: [Movement],
+    formattedKeySignature: String? = nil,
+    catalogue_type: CatalogueType? = nil,
+    catalogue_number: Int? = nil,
+    format: Format? = nil,
+    tonality: KeySignatureTonality? = nil,
+    key_signature: KeySignatureType? = nil
+  ) {
+    self.workName = workName
+    self.composer = composer
+    self.movements = movements
+    self.format = format
+    self.tonality = tonality
+    self.key_signature = key_signature
+    self.catalogue_type = catalogue_type
+    self.catalogue_number = catalogue_number
+  }
 
-enum PieceFormat: String, Decodable {
-    case bagatelle = "Bagatelle"
-    case ballade = "Ballade"
-    case canon = "Canon"
-    case caprice = "Caprice"
-    case chorale = "Chorale"
-    case concerto = "Concerto"
-    case dance = "Dance"
-    case etude = "Etude"
-    case fantasy = "Fantasy"
-    case fugue = "Fugue"
-    case gavotte = "Gavotte"
-    case gigue = "Gigue"
-    case impromptu = "Impromptu"
-    case intermezzo = "Intermezzo"
-    case lied = "Lied"
-    case march = "March"
-    case mazurka = "Mazurka"
-    case mass = "Mass"
-    case minuet = "Minuet"
-    case nocturne = "Nocturne"
-    case overture = "Overture"
-    case opera = "Opera"
-    case oratorio = "Oratorio"
-    case pastiche = "Pastiche"
-    case prelude = "Prelude"
-    case polonaise = "Polonaise"
-    case rhapsody = "Rhapsody"
-    case requiem = "Requiem"
-    case rondo = "Rondo"
-    case sarabande = "Sarabande"
-    case scherzo = "Scherzo"
-    case serenade = "Serenade"
-    case sonata = "Sonata"
-    case stringQuartet = "String Quartet"
-    case suite = "Suite"
-    case symphony = "Symphony"
-    case tarantella = "Tarantella"
-    case toccata = "Toccata"
-    case variations = "Variations"
-    case waltz = "Waltz"
-}
+  enum CodingKeys: String, CodingKey {
+    case id
+    case workName = "work_name"
+    case composer_id
+//    case movements
+    case catalogue_type
+    case catalogue_number
+    case format
+    case key_signature
+    case tonality
+  }
 
-enum KeySignatureType: String, Decodable {
-    case c = "C"
-    case cSharp = "C#"
-    case cFlat = "Cb"
-    case d = "D"
-    case dSharp = "D#"
-    case dFlat = "Db"
-    case e = "E"
-    case eSharp = "E#"
-    case eFlat = "Eb"
-    case f = "F"
-    case fSharp = "F#"
-    case fFlat = "Fb"
-    case g = "G"
-    case gSharp = "G#"
-    case gFlat = "Gb"
-    case a = "A"
-    case aSharp = "A#"
-    case aFlat = "Ab"
-    case b = "B"
-    case bSharp = "B#"
-    case bFlat = "Bb"
-}
+  func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(id, forKey: .id)
+    try container.encode(workName, forKey: .workName)
+    try container.encode(composer.id, forKey: .composer_id)
+//    try container.encode(movements, forKey: .movements)
+    try container.encodeIfPresent(catalogue_type, forKey: .catalogue_type)
+    try container.encodeIfPresent(catalogue_number, forKey: .catalogue_number)
+    try container.encodeIfPresent(format, forKey: .format)
+    try container.encodeIfPresent(key_signature, forKey: .key_signature)
+    try container.encodeIfPresent(tonality, forKey: .tonality)
 
-enum KeySignatureTonality: String, Decodable {
-    case major = "Major"
-    case minor = "Minor"
-}
-
-struct Composer: Identifiable, Encodable {
-    var name: String
-    var id = UUID()
-}
-
-class Piece: ObservableObject, Identifiable, Hashable {
-    let id = UUID() // Make id a constant
-    @Published var workName: String
-    var composer: Composer
-    @Published var movements: [Movement]
-    @Published var opusType: OpusType?
-    @Published var opusNumber: Int?
-    var format: PieceFormat?
-    var keySignatureType: KeySignatureType?
-    var keySignatureTonality: KeySignatureTonality?
-
-    init(
-            workName: String,
-            composer: Composer,
-            movements: [Movement],
-            formattedKeySignature: String? = nil,
-            opusType: OpusType? = nil,
-            opusNumber: Int? = nil,
-            format: PieceFormat? = nil,
-            keySignatureTonality: KeySignatureTonality? = nil,
-            keySignatureType: KeySignatureType? = nil
-        ) {
-            self.workName = workName
-            self.composer = composer
-            self.movements = movements
-            self.format = format
-            self.keySignatureTonality = keySignatureTonality
-            self.keySignatureType = keySignatureType
-            self.opusType = opusType
-            self.opusNumber = opusNumber
-        }
+  }
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
@@ -214,7 +141,6 @@ class Piece: ObservableObject, Identifiable, Hashable {
     static func chooseBestRecords(uniqWorks: [String: Song]) -> [String: Song] {
         var workInfoGroupedByCatalogNumber: [String: [(String, Int)]] = [:]
         var result: [String: Song] = [:]
-        print(result)
         // Group work names by catalog number along with their movement counts
         for (workName, song) in uniqWorks {
             // Extract catalog number from the work name
@@ -371,26 +297,86 @@ class Piece: ObservableObject, Identifiable, Hashable {
         }
         return nil
     }
+}
 
-        func submitPiece () async {
-            print("Submitted")
-        }
+enum CatalogueType: String, Decodable, CaseIterable, Encodable {
+    case B, BWV, CPEB, D, DD, EG, FMW, H, K, L, Op, S, T, TH, VB, WAB, WD, WoO, Wq
 
-        //    func workNameWithoutKeySignature() -> String {
-        //        let keyCharacters: Set<Character> = ["A", "B", "C", "D", "E", "F", "G"]
-        //        let tonalities = ["Major", "Minor"]
-        //        let accidentals = ["Flat", "Sharp", "♯", "♭", "#", "b" ]
-        //        let words = workName.split(separator: " ")
-        //
-        //        let filteredWords = words.filter { word in
-        //            !keyCharacters.contains(word.first ?? Character("")) &&
-        //            !tonalities.contains(String(word)) &&
-        //            !accidentals.contains(String(word)) &&
-        //            word.lowercased() != "in"
-        //        }
-        //
-        //        return filteredWords.joined(separator: " ")
-        //
-        //    }
+    static var allCases: [CatalogueType] {
+        return [
+            .B, .BWV, .CPEB, .D, .DD, .EG, .FMW, .H, .K, .L, .Op, .S, .T, .TH, .VB, .WAB, .WD, .WoO, .Wq
+        ]
+    }
+}
 
+enum Format: String, Decodable, Encodable {
+    case bagatelle = "Bagatelle"
+    case ballade = "Ballade"
+    case canon = "Canon"
+    case caprice = "Caprice"
+    case chorale = "Chorale"
+    case concerto = "Concerto"
+    case dance = "Dance"
+    case etude = "Etude"
+    case fantasy = "Fantasy"
+    case fugue = "Fugue"
+    case gavotte = "Gavotte"
+    case gigue = "Gigue"
+    case impromptu = "Impromptu"
+    case intermezzo = "Intermezzo"
+    case lied = "Lied"
+    case march = "March"
+    case mazurka = "Mazurka"
+    case mass = "Mass"
+    case minuet = "Minuet"
+    case nocturne = "Nocturne"
+    case overture = "Overture"
+    case opera = "Opera"
+    case oratorio = "Oratorio"
+    case pastiche = "Pastiche"
+    case prelude = "Prelude"
+    case polonaise = "Polonaise"
+    case rhapsody = "Rhapsody"
+    case requiem = "Requiem"
+    case rondo = "Rondo"
+    case sarabande = "Sarabande"
+    case scherzo = "Scherzo"
+    case serenade = "Serenade"
+    case sonata = "Sonata"
+    case stringQuartet = "String Quartet"
+    case suite = "Suite"
+    case symphony = "Symphony"
+    case tarantella = "Tarantella"
+    case toccata = "Toccata"
+    case variations = "Variations"
+    case waltz = "Waltz"
+}
+
+enum KeySignatureType: String, Decodable, Encodable {
+    case c = "C"
+    case cSharp = "C#"
+    case cFlat = "Cb"
+    case d = "D"
+    case dSharp = "D#"
+    case dFlat = "Db"
+    case e = "E"
+    case eSharp = "E#"
+    case eFlat = "Eb"
+    case f = "F"
+    case fSharp = "F#"
+    case fFlat = "Fb"
+    case g = "G"
+    case gSharp = "G#"
+    case gFlat = "Gb"
+    case a = "A"
+    case aSharp = "A#"
+    case aFlat = "Ab"
+    case b = "B"
+    case bSharp = "B#"
+    case bFlat = "Bb"
+}
+
+enum KeySignatureTonality: String, Decodable, Encodable {
+    case major = "Major"
+    case minor = "Minor"
 }
