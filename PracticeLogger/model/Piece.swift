@@ -8,63 +8,75 @@
 import SwiftUI
 import MusicKit
 
-class Piece: ObservableObject, Identifiable, Hashable, Encodable {
-  let id = UUID()
-  @Published var workName: String
-  var composer: Composer
-  @Published var movements: [Movement]
-  @Published var catalogue_type: CatalogueType?
-  @Published var catalogue_number: Int?
-  var format: Format?
-  var key_signature: KeySignatureType?
-  var tonality: KeySignatureTonality?
+class Piece: ObservableObject, Identifiable, Hashable, Codable {
+    let id: UUID
+    @Published var workName: String
+    var composer: Composer
+    @Published var movements: [Movement]
+    @Published var catalogue_type: CatalogueType?
+    @Published var catalogue_number: Int?
+    var format: Format?
+    var key_signature: KeySignatureType?
+    var tonality: KeySignatureTonality?
 
-  init(
-    workName: String,
-    composer: Composer,
-    movements: [Movement],
-    formattedKeySignature: String? = nil,
-    catalogue_type: CatalogueType? = nil,
-    catalogue_number: Int? = nil,
-    format: Format? = nil,
-    tonality: KeySignatureTonality? = nil,
-    key_signature: KeySignatureType? = nil
-  ) {
-    self.workName = workName
-    self.composer = composer
-    self.movements = movements
-    self.format = format
-    self.tonality = tonality
-    self.key_signature = key_signature
-    self.catalogue_type = catalogue_type
-    self.catalogue_number = catalogue_number
-  }
+    init(
+        workName: String,
+        composer: Composer,
+        movements: [Movement],
+        formattedKeySignature: String? = nil,
+        catalogue_type: CatalogueType? = nil,
+        catalogue_number: Int? = nil,
+        format: Format? = nil,
+        tonality: KeySignatureTonality? = nil,
+        key_signature: KeySignatureType? = nil
+    ) {
+        self.id = UUID()
+        self.workName = workName
+        self.composer = composer
+        self.movements = movements
+        self.format = format
+        self.tonality = tonality
+        self.key_signature = key_signature
+        self.catalogue_type = catalogue_type
+        self.catalogue_number = catalogue_number
+    }
 
-  enum CodingKeys: String, CodingKey {
-    case id
-    case workName = "work_name"
-    case composer_id
-//    case movements
-    case catalogue_type
-    case catalogue_number
-    case format
-    case key_signature
-    case tonality
-  }
+    enum CodingKeys: String, CodingKey {
+        case id
+        case workName = "work_name"
+        case composer_id
+        // case movements
+        case catalogue_type
+        case catalogue_number
+        case format
+        case key_signature
+        case tonality
+    }
 
-  func encode(to encoder: Encoder) throws {
-    var container = encoder.container(keyedBy: CodingKeys.self)
-    try container.encode(id, forKey: .id)
-    try container.encode(workName, forKey: .workName)
-    try container.encode(composer.id, forKey: .composer_id)
-//    try container.encode(movements, forKey: .movements)
-    try container.encodeIfPresent(catalogue_type, forKey: .catalogue_type)
-    try container.encodeIfPresent(catalogue_number, forKey: .catalogue_number)
-    try container.encodeIfPresent(format, forKey: .format)
-    try container.encodeIfPresent(key_signature, forKey: .key_signature)
-    try container.encodeIfPresent(tonality, forKey: .tonality)
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(workName, forKey: .workName)
+        try container.encode(composer.id, forKey: .composer_id)        // try container.encode(movements, forKey: .movements)
+        try container.encodeIfPresent(catalogue_type, forKey: .catalogue_type)
+        try container.encodeIfPresent(catalogue_number, forKey: .catalogue_number)
+        try container.encodeIfPresent(format, forKey: .format)
+        try container.encodeIfPresent(key_signature, forKey: .key_signature)
+        try container.encodeIfPresent(tonality, forKey: .tonality)
+    }
 
-  }
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        workName = try container.decode(String.self, forKey: .workName)
+        composer = Composer.init(name: "NEW COMPOSER")
+        movements = []
+        catalogue_type = try container.decodeIfPresent(CatalogueType.self, forKey: .catalogue_type)
+        catalogue_number = try container.decodeIfPresent(Int.self, forKey: .catalogue_number)
+        format = try container.decodeIfPresent(Format.self, forKey: .format)
+        key_signature = try container.decodeIfPresent(KeySignatureType.self, forKey: .key_signature)
+        tonality = try container.decodeIfPresent(KeySignatureTonality.self, forKey: .tonality)
+    }
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)

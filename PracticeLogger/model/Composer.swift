@@ -6,7 +6,7 @@
 //
 
 import Foundation
-struct Composer: Identifiable, Encodable {
+struct Composer: Identifiable, Codable {
     var name: String
     var id = Int()
 }

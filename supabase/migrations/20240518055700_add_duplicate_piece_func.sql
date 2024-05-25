@@ -6,10 +6,10 @@ CREATE OR REPLACE FUNCTION find_duplicate_piece(
 ) RETURNS pieces AS $$
 DECLARE
     matching_piece pieces;
-    composer_id INT;
+    found_composer_id INT;
 BEGIN
     -- Find or create the composer record
-    SELECT id INTO composer_id FROM find_or_create_composer(composer_name);
+    SELECT id INTO found_composer_id FROM find_or_create_composer(composer_name);
 
     -- Find the matching piece
     SELECT *
@@ -18,7 +18,7 @@ BEGIN
     WHERE pieces.catalogue_number = $1
         AND pieces.catalogue_type = $2
         AND pieces.user_id = $3
-        AND pieces.composer_id = composer_id
+        AND pieces.composer_id = found_composer_id
     LIMIT 1;
 
     RETURN matching_piece;

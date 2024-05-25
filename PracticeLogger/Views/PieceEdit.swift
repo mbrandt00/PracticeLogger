@@ -86,7 +86,6 @@ struct PieceEdit: View {
                 Task {
                     do {
                         let dbPiece = try await viewModel.insertPiece(piece: piece)
-                        print(dbPiece)
                     } catch {
                         if let supabaseError = error as? SupabaseError {
                             print(supabaseError)
@@ -116,11 +115,10 @@ struct PieceEdit: View {
             Task {
                 do {
                     let updatedPiece = try await viewModel.addMetadata(to: piece)
-//                    let dbPiece = try await viewModel.isDuplicate(piece: piece)
-                    print("UPDATED PIECE", updatedPiece)
+                    let dbPiece = try await viewModel.isDuplicate(piece: piece)
                     self.piece = updatedPiece ?? piece
-//                    self.duplicatePiece = dbPiece
-//                    await print(dbPiece)
+                    self.duplicatePiece = dbPiece
+
                 } catch {
                     print(error)
                 }
