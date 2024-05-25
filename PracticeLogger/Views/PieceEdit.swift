@@ -46,14 +46,14 @@ struct PieceEdit: View {
                 Section(header: Text("Catalogue Information")) {
                     Picker("Identifier", selection: Binding(
                         get: {
-                            piece.catalogue_type?.rawValue ?? ""
+                            print("CATALOGUETYPE", piece.catalogue_type)
+                            return piece.catalogue_type?.rawValue ?? ""
                         },
                         set: { newValue in
-                            if let new_catalogue_type = CatalogueType(rawValue: newValue) {
-                                piece.catalogue_type = new_catalogue_type
-                            }
+                            piece.catalogue_type = CatalogueType(rawValue: newValue)
                         }
                     )) {
+                        Text("").tag("")
                         ForEach(CatalogueType.allCases, id: \.self) { catalogue_type in
                             Text(catalogue_type.rawValue).tag(catalogue_type.rawValue)
                         }
@@ -62,7 +62,7 @@ struct PieceEdit: View {
                     HStack {
                         Text("Number")
                         Spacer()
-                        TextField("", value: Binding(
+                        TextField("", text: Binding(
                             get: {
                                 if let catalogue_number = piece.catalogue_number {
                                     return String(catalogue_number)
@@ -72,9 +72,9 @@ struct PieceEdit: View {
                             },
                             set: { newValue in
                                 piece.catalogue_number = newValue.isEmpty ? nil : Int(newValue)
-                            }
-                        ), formatter: NumberFormatter())
-                        .frame(width: 30) // Adjust the width as needed
+                            })
+                        )
+                        .frame(width: 200) // Adjust the width as needed
                         .multilineTextAlignment(.trailing)
                         .textFieldStyle(PlainTextFieldStyle())
                         .keyboardType(.numberPad)
@@ -86,6 +86,7 @@ struct PieceEdit: View {
                 Task {
                     do {
                         let dbPiece = try await viewModel.insertPiece(piece: piece)
+
                     } catch {
                         if let supabaseError = error as? SupabaseError {
                             print(supabaseError)
@@ -116,6 +117,7 @@ struct PieceEdit: View {
                 do {
                     let updatedPiece = try await viewModel.addMetadata(to: piece)
                     let dbPiece = try await viewModel.isDuplicate(piece: piece)
+                    dump(updatedPiece!)
                     self.piece = updatedPiece ?? piece
                     self.duplicatePiece = dbPiece
 
@@ -134,5 +136,17 @@ struct PieceEdit: View {
                                         Movement(name: "Marche Fuenbre", number: 3),
                                         Movement(name: "Finale", number: 4)
                                     ], formattedKeySignature: "B♭ Minor"))
+    }
+}
+
+struct PieceEdit_Previews: PreviewProvider {
+    static var previews: some View {
+        PieceEdit(piece: Piece(workName: "Sonata 2 in B flat Minor Funeral March", composer: Composer(name: "Frederic Chopin"), movements:
+                                [
+                                    Movement(name: "Grave - Doppio movimento", number: 1),
+                                    Movement(name: "Scherzo- Piu lento - Tempo 1", number: 2),
+                                    Movement(name: "Marche Funebre", number: 3),
+                                    Movement(name: "Finale", number: 4)
+                                ], formattedKeySignature: "B♭ Minor", catalogue_type: CatalogueType.Op, catalogue_number: 35))
     }
 }
