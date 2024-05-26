@@ -15,6 +15,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
     @Published var movements: [Movement]
     @Published var catalogue_type: CatalogueType?
     @Published var catalogue_number: Int?
+    @Published var nickname: String?
     var format: Format?
     var key_signature: KeySignatureType?
     var tonality: KeySignatureTonality?
@@ -27,6 +28,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         catalogue_type: CatalogueType? = nil,
         catalogue_number: Int? = nil,
         format: Format? = nil,
+        nickname: String? = nil,
         tonality: KeySignatureTonality? = nil,
         key_signature: KeySignatureType? = nil
     ) {
@@ -44,8 +46,8 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
     enum CodingKeys: String, CodingKey {
         case id
         case workName = "work_name"
+        case nickname
         case composer_id
-        // case movements
         case catalogue_type
         case catalogue_number
         case format
@@ -57,8 +59,9 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(workName, forKey: .workName)
-        try container.encode(composer.id, forKey: .composer_id)        // try container.encode(movements, forKey: .movements)
+        try container.encode(composer.id, forKey: .composer_id)
         try container.encodeIfPresent(catalogue_type, forKey: .catalogue_type)
+        try container.encodeIfPresent(nickname, forKey: .nickname)
         try container.encodeIfPresent(catalogue_number, forKey: .catalogue_number)
         try container.encodeIfPresent(format, forKey: .format)
         try container.encodeIfPresent(key_signature, forKey: .key_signature)
@@ -76,6 +79,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         format = try container.decodeIfPresent(Format.self, forKey: .format)
         key_signature = try container.decodeIfPresent(KeySignatureType.self, forKey: .key_signature)
         tonality = try container.decodeIfPresent(KeySignatureTonality.self, forKey: .tonality)
+        nickname = try container.decodeIfPresent(String.self, forKey: .nickname)
     }
 
     func hash(into hasher: inout Hasher) {
@@ -321,7 +325,7 @@ enum CatalogueType: String, Decodable, CaseIterable, Encodable {
     }
 }
 
-enum Format: String, Decodable, Encodable {
+enum Format: String, Decodable, Encodable, CaseIterable {
     case bagatelle = "Bagatelle"
     case ballade = "Ballade"
     case canon = "Canon"
@@ -364,31 +368,47 @@ enum Format: String, Decodable, Encodable {
     case waltz = "Waltz"
 }
 
-enum KeySignatureType: String, Decodable, Encodable {
+enum KeySignatureType: String, Decodable, Encodable, CaseIterable {
     case c = "C"
-    case cSharp = "C#"
-    case cFlat = "Cb"
+    case cSharp = "C♯"
+    case cFlat = "C♭"
     case d = "D"
-    case dSharp = "D#"
-    case dFlat = "Db"
+    case dSharp = "D♯"
+    case dFlat = "D♭"
     case e = "E"
-    case eSharp = "E#"
-    case eFlat = "Eb"
+    case eSharp = "E♯"
+    case eFlat = "E♭"
     case f = "F"
-    case fSharp = "F#"
-    case fFlat = "Fb"
+    case fSharp = "F♯"
+    case fFlat = "F♭"
     case g = "G"
-    case gSharp = "G#"
-    case gFlat = "Gb"
+    case gSharp = "G♯"
+    case gFlat = "G♭"
     case a = "A"
-    case aSharp = "A#"
-    case aFlat = "Ab"
+    case aSharp = "A♯"
+    case aFlat = "A♭"
     case b = "B"
-    case bSharp = "B#"
-    case bFlat = "Bb"
+    case bSharp = "B♯"
+    case bFlat = "B♭"
+
+    static var allCases: [KeySignatureType] {
+        return [
+            .c, .cSharp, .cFlat,
+            .d, .dSharp, .dFlat,
+            .e, .eSharp, .eFlat,
+            .f, .fSharp, .fFlat,
+            .g, .gSharp, .gFlat,
+            .a, .aSharp, .aFlat,
+            .b, .bSharp, .bFlat
+        ]
+    }
 }
 
-enum KeySignatureTonality: String, Decodable, Encodable {
+enum KeySignatureTonality: String, Decodable, Encodable, CaseIterable {
     case major = "Major"
     case minor = "Minor"
+
+    static var allCases: [KeySignatureTonality] {
+        return [.major, .minor]
+    }
 }

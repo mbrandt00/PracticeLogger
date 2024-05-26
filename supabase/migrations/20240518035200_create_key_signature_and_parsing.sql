@@ -1,11 +1,11 @@
 CREATE TYPE key_signature_type AS ENUM (
-    'C', 'C#', 'Cb',
-    'D', 'D#', 'Db',
-    'E', 'E#', 'Eb',
-    'F', 'F#', 'Fb',
-    'G', 'G#', 'Gb',
-    'A', 'A#', 'Ab',
-    'B', 'B#', 'Bb'
+    'C', 'C♯', 'C♭',
+    'D', 'D♯', 'D♭',
+    'E', 'E♯', 'E♭',
+    'F', 'F♯', 'F♭',
+    'G', 'G♯', 'G♭',
+    'A', 'A♯', 'A♭',
+    'B', 'B♯', 'B♭'
 );
 
 CREATE TYPE key_signature_tonality AS ENUM (
@@ -29,26 +29,26 @@ BEGIN
     -- Find the key signature
     found_key := (
         SELECT CASE
-            WHEN work_name LIKE '%c#%' OR work_name LIKE '%c sharp%' THEN 'C#'
-            WHEN work_name LIKE '%c-flat%' OR work_name LIKE '%c flat%' THEN 'Cb'
+            WHEN work_name LIKE '%c#%' OR work_name LIKE '%c sharp%' THEN 'C♯'
+            WHEN work_name LIKE '%c-flat%' OR work_name LIKE '%c flat%' THEN 'C♭'
             WHEN work_name LIKE '% c %' THEN 'C'
-            WHEN work_name LIKE '%d#%' OR work_name LIKE '%d sharp%' THEN 'D#'
-            WHEN work_name LIKE '%d-flat%' OR work_name LIKE '%d flat%' THEN 'Db'
+            WHEN work_name LIKE '%d#%' OR work_name LIKE '%d sharp%' THEN 'D♯'
+            WHEN work_name LIKE '%d-flat%' OR work_name LIKE '%d flat%' THEN 'D♭'
             WHEN work_name LIKE '% d %' THEN 'D'
-            WHEN work_name LIKE '%e#%' OR work_name LIKE '%e sharp%' THEN 'E#'
-            WHEN work_name LIKE '%e-flat%' OR work_name LIKE '%e flat%' THEN 'Eb'
+            WHEN work_name LIKE '%e#%' OR work_name LIKE '%e sharp%' THEN 'E♯'
+            WHEN work_name LIKE '%e-flat%' OR work_name LIKE '%e flat%' THEN 'E♭'
             WHEN work_name LIKE '% e %' THEN 'E'
-            WHEN work_name LIKE '%f#%' OR work_name LIKE '%f sharp%' THEN 'F#'
-            WHEN work_name LIKE '%f-flat%' OR work_name LIKE '%f flat%' THEN 'Fb'
+            WHEN work_name LIKE '%f#%' OR work_name LIKE '%f sharp%' THEN 'F♯'
+            WHEN work_name LIKE '%f-flat%' OR work_name LIKE '%f flat%' THEN 'F♭'
             WHEN work_name LIKE '% f %' THEN 'F'
-            WHEN work_name LIKE '%g#%' OR work_name LIKE '%g sharp%' THEN 'G#'
-            WHEN work_name LIKE '%g-flat%' OR work_name LIKE '%g flat%' THEN 'Gb'
+            WHEN work_name LIKE '%g#%' OR work_name LIKE '%g sharp%' THEN 'G♯'
+            WHEN work_name LIKE '%g-flat%' OR work_name LIKE '%g flat%' THEN 'G♭'
             WHEN work_name LIKE '% g %' THEN 'G'
-            WHEN work_name LIKE '%a#%' OR work_name LIKE '%a sharp%' THEN 'A#'
-            WHEN work_name LIKE '%a-flat%' OR work_name LIKE '%a flat%' THEN 'Ab'
+            WHEN work_name LIKE '%a#%' OR work_name LIKE '%a sharp%' THEN 'A♯'
+            WHEN work_name LIKE '%a-flat%' OR work_name LIKE '%a flat%' THEN 'A♭'
             WHEN work_name LIKE '% a %' THEN 'A'
-            WHEN work_name LIKE '%b#%' OR work_name LIKE '%b sharp%' THEN 'B#'
-            WHEN work_name LIKE '%b-flat%' OR work_name LIKE '%b flat%' THEN 'Bb'
+            WHEN work_name LIKE '%b#%' OR work_name LIKE '%b sharp%' THEN 'B♯'
+            WHEN work_name LIKE '%b-flat%' OR work_name LIKE '%b flat%' THEN 'B♭'
             WHEN work_name LIKE '% b %' THEN 'B'
             ELSE NULL
         END
