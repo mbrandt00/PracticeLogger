@@ -325,7 +325,7 @@ enum CatalogueType: String, Decodable, CaseIterable, Encodable {
     }
 }
 
-enum Format: String, Decodable, Encodable {
+enum Format: String, Decodable, Encodable, CaseIterable {
     case bagatelle = "Bagatelle"
     case ballade = "Ballade"
     case canon = "Canon"
@@ -407,7 +407,7 @@ enum KeySignatureType: String, Decodable, Encodable, CaseIterable {
 enum KeySignatureTonality: String, Decodable, Encodable, CaseIterable {
     case major = "Major"
     case minor = "Minor"
-    
+
     static var allCases: [KeySignatureTonality] {
         return [.major, .minor]
     }

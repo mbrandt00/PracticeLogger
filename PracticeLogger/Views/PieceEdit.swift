@@ -75,7 +75,7 @@ struct PieceEdit: View {
                         .textFieldStyle(PlainTextFieldStyle())
                         .keyboardType(.numberPad)
                     }
-                    
+
                     VStack {
                         HStack {
                             Picker("Key Signature", selection: Binding(
@@ -92,7 +92,7 @@ struct PieceEdit: View {
                                 }
                             }
                         }
-                        
+
                         HStack {
                             Picker("Tonality", selection: Binding(
                                 get: {
@@ -108,9 +108,21 @@ struct PieceEdit: View {
                             }
                             .pickerStyle(.segmented)
                         }
-                        
                     }
 
+                    Picker("Format", selection: Binding(
+                        get: {
+                            viewModel.piece.format?.rawValue ?? ""
+                        },
+                        set: { newValue in
+                            viewModel.piece.format = Format(rawValue: newValue)
+                        }
+                    )) {
+                        Text("").tag("")
+                        ForEach(Format.allCases, id: \.self) { format in
+                            Text(format.rawValue).tag(format.rawValue)
+                        }
+                    }
                     HStack {
                         Text("Nickname")
                         Spacer()
@@ -130,32 +142,6 @@ struct PieceEdit: View {
                         .multilineTextAlignment(.trailing)
                     }
                 }
-              Button(action: {
-                    Task {
-                        do {
-                            let dbPiece = try await viewModel.insertPiece(piece: viewModel.piece)
-                        } catch {
-                            if let supabaseError = error as? SupabaseError {
-                                print(supabaseError)
-                                switch supabaseError {
-                                case .pieceAlreadyExists:
-                                    errorMessage = "You have already added this piece"
-                                }
-                            } else {
-                                errorMessage = "An unexpected error occurred."
-                            }
-                            showToast = true
-                        }
-                    }
-                }, label: {
-                    Text("Create")
-                })
-                .buttonStyle(.bordered)
-                .foregroundColor(.black)
-                .padding(3)
-
-                Spacer()
-            }
             .toast(isPresenting: $showToast) {
                 AlertToast(type: .error(.red), title: errorMessage)
             }
@@ -171,6 +157,30 @@ struct PieceEdit: View {
                     }
                 }
             }
+        }
+            Button(action: {
+                Task {
+                    do {
+                        let dbPiece = try await viewModel.insertPiece(piece: viewModel.piece)
+                    } catch {
+                        if let supabaseError = error as? SupabaseError {
+                            print(supabaseError)
+                            switch supabaseError {
+                            case .pieceAlreadyExists:
+                                errorMessage = "You have already added this piece"
+                            }
+                        } else {
+                            errorMessage = "An unexpected error occurred."
+                        }
+                        showToast = true
+                    }
+                }
+            }, label: {
+                Text("Create")
+            })
+            .buttonStyle(.bordered)
+            .foregroundColor(.black)
+            .padding(5)
         }
     }
 }
