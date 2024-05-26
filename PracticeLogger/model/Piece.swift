@@ -15,6 +15,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
     @Published var movements: [Movement]
     @Published var catalogue_type: CatalogueType?
     @Published var catalogue_number: Int?
+    @Published var nickname: String?
     var format: Format?
     var key_signature: KeySignatureType?
     var tonality: KeySignatureTonality?
@@ -27,6 +28,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         catalogue_type: CatalogueType? = nil,
         catalogue_number: Int? = nil,
         format: Format? = nil,
+        nickname: String? = nil,
         tonality: KeySignatureTonality? = nil,
         key_signature: KeySignatureType? = nil
     ) {
@@ -44,8 +46,8 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
     enum CodingKeys: String, CodingKey {
         case id
         case workName = "work_name"
+        case nickname
         case composer_id
-        // case movements
         case catalogue_type
         case catalogue_number
         case format
@@ -57,8 +59,9 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(workName, forKey: .workName)
-        try container.encode(composer.id, forKey: .composer_id)        // try container.encode(movements, forKey: .movements)
+        try container.encode(composer.id, forKey: .composer_id)
         try container.encodeIfPresent(catalogue_type, forKey: .catalogue_type)
+        try container.encodeIfPresent(nickname, forKey: .nickname)
         try container.encodeIfPresent(catalogue_number, forKey: .catalogue_number)
         try container.encodeIfPresent(format, forKey: .format)
         try container.encodeIfPresent(key_signature, forKey: .key_signature)
@@ -76,6 +79,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         format = try container.decodeIfPresent(Format.self, forKey: .format)
         key_signature = try container.decodeIfPresent(KeySignatureType.self, forKey: .key_signature)
         tonality = try container.decodeIfPresent(KeySignatureTonality.self, forKey: .tonality)
+        nickname = try container.decodeIfPresent(String.self, forKey: .nickname)
     }
 
     func hash(into hasher: inout Hasher) {

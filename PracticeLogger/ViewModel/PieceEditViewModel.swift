@@ -72,6 +72,7 @@ class PieceEditViewModel: ObservableObject {
                 piece.key_signature = response.key_signature
                 piece.tonality = response.tonality
                 piece.format = response.format
+                piece.nickname = response.nickname
             }
 
             return piece
@@ -98,24 +99,18 @@ class PieceEditViewModel: ObservableObject {
             case let decodingError as DecodingError:
                 // Check if the error is of type valueNotFound
                 if case DecodingError.valueNotFound(_, _) = decodingError {
-                    // Return nil if no value was found
                     return nil
                 } else {
-                    // Handle other decoding errors
                     print("Decoding error:", decodingError)
                     return nil
                 }
             default:
-                // Handle other types of errors
+
                 print("Error in isDuplicate function:", error)
                 return nil
             }
         }
     }
-}
-
-enum InsertionError: Error {
-    case pieceCreationFailed
 }
 
 struct MetadataInformation: Decodable {
@@ -124,4 +119,5 @@ struct MetadataInformation: Decodable {
     var format: Format?
     var key_signature: KeySignatureType?
     var tonality: KeySignatureTonality?
+    var nickname: String?
 }
