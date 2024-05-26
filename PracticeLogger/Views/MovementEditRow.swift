@@ -10,6 +10,8 @@ import SwiftUI
 struct MovementEditRow: View {
     var movement: Movement
     var onUpdateMovementName: (String) -> Void
+    @Binding var isTyping: Bool
+
     var body: some View {
         HStack {
             Text(movement.number.toRomanNumeral() ?? "")
@@ -20,11 +22,12 @@ struct MovementEditRow: View {
                 get: {
                     movement.name
                 },
-                set: { newValue, _ in // Ignore the transaction parameter
+                set: { newValue, _ in
                     onUpdateMovementName(newValue)
-
                 }
-            ))
+            ), onEditingChanged: { editing in
+                self.isTyping = editing
+            })
             .font(.subheadline)
         }
         .padding(.vertical, 4)
@@ -34,6 +37,7 @@ struct MovementEditRow: View {
 #Preview {
     MovementEditRow(
         movement: Movement(name: "Grave - Doppio movimento", number: 1),
-        onUpdateMovementName: { _ in }
+        onUpdateMovementName: { _ in },
+        isTyping: .constant(false)
     )
 }

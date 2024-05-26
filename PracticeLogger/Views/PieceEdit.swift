@@ -12,10 +12,12 @@ struct PieceEdit: View {
     @State private var showToast: Bool = false
     @State private var errorMessage: String = ""
     @State private var duplicatePiece: Piece?
+    @Binding var isTyping: Bool
 
-    init(piece: Piece) {
-        _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
-    }
+    init(piece: Piece, isTyping: Binding<Bool>) {
+          _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
+          self._isTyping = isTyping
+      }
 
     var body: some View {
         VStack {
@@ -34,7 +36,8 @@ struct PieceEdit: View {
                             movement: viewModel.piece.movements[index],
                             onUpdateMovementName: { newName in
                                 viewModel.updateMovementName(at: index, newName: newName)
-                            }
+                            },
+                            isTyping: $isTyping
                         )
                     }
                     .onMove(perform: viewModel.move)
@@ -68,8 +71,10 @@ struct PieceEdit: View {
                             },
                             set: { newValue in
                                 viewModel.piece.catalogue_number = newValue.isEmpty ? nil : Int(newValue)
-                            })
-                        )
+                            }
+                        ), onEditingChanged: { isEditing in
+                            isTyping = isEditing
+                        })
                         .frame(width: 200)
                         .multilineTextAlignment(.trailing)
                         .textFieldStyle(PlainTextFieldStyle())
@@ -136,8 +141,10 @@ struct PieceEdit: View {
                             },
                             set: { newValue in
                                 viewModel.piece.nickname = newValue.isEmpty ? nil : newValue
-                            })
-                        )
+                            }
+                        ), onEditingChanged: { isEditing in
+                            isTyping = isEditing
+                        })
                         .frame(width: 200)
                         .multilineTextAlignment(.trailing)
                     }
@@ -192,6 +199,6 @@ struct PieceEdit_Previews: PreviewProvider {
             Movement(name: "Scherzo- Piu lento - Tempo 1", number: 2),
             Movement(name: "Marche Funebre", number: 3),
             Movement(name: "Finale", number: 4)
-        ], formattedKeySignature: "Bb Minor", catalogue_type: CatalogueType.Op, catalogue_number: 35, nickname: "Funeral March", tonality: KeySignatureTonality.minor, key_signature: KeySignatureType.bFlat))
+        ], formattedKeySignature: "Bb Minor", catalogue_type: CatalogueType.Op, catalogue_number: 35, nickname: "Funeral March", tonality: KeySignatureTonality.minor, key_signature: KeySignatureType.bFlat), isTyping: .constant(false))
     }
 }

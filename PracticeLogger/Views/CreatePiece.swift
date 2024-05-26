@@ -62,7 +62,7 @@ struct CreatePiece: View {
                     }
                 }
                 .navigationDestination(for: Piece.self) { piece in
-                    PieceEdit(piece: piece)
+                    PieceEdit(piece: piece, isTyping: $isTyping)
                 }
                 .navigationTitle(viewModel.pieces.isEmpty ? "" : "Piece Results")
 
