@@ -75,6 +75,42 @@ struct PieceEdit: View {
                         .textFieldStyle(PlainTextFieldStyle())
                         .keyboardType(.numberPad)
                     }
+                    
+                    VStack {
+                        HStack {
+                            Picker("Key Signature", selection: Binding(
+                                get: {
+                                    viewModel.piece.key_signature?.rawValue ?? ""
+                                },
+                                set: { newValue in
+                                    viewModel.piece.key_signature = KeySignatureType(rawValue: newValue)
+                                }
+                            )) {
+                                Text("").tag("")
+                                ForEach(KeySignatureType.allCases, id: \.self) { keySignatureType in
+                                    Text(keySignatureType.rawValue).tag(keySignatureType.rawValue)
+                                }
+                            }
+                        }
+                        
+                        HStack {
+                            Picker("Tonality", selection: Binding(
+                                get: {
+                                    viewModel.piece.tonality?.rawValue ?? ""
+                                },
+                                set: { newValue in
+                                    viewModel.piece.tonality = KeySignatureTonality(rawValue: newValue)
+                                }
+                            )) {
+                                ForEach(KeySignatureTonality.allCases, id: \.self) { tonality in
+                                    Text(tonality.rawValue).tag(tonality.rawValue)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                        }
+                        
+                    }
+
                     HStack {
                         Text("Nickname")
                         Spacer()
@@ -128,7 +164,6 @@ struct PieceEdit: View {
                     do {
                         let updatedPiece = try await viewModel.addMetadata(to: viewModel.piece)
                         let dbPiece = try await viewModel.isDuplicate(piece: viewModel.piece)
-                        dump(updatedPiece!)
                         viewModel.piece = updatedPiece ?? viewModel.piece
                         self.duplicatePiece = dbPiece
                     } catch {
@@ -147,6 +182,6 @@ struct PieceEdit_Previews: PreviewProvider {
             Movement(name: "Scherzo- Piu lento - Tempo 1", number: 2),
             Movement(name: "Marche Funebre", number: 3),
             Movement(name: "Finale", number: 4)
-        ], formattedKeySignature: "B♭ Minor", catalogue_type: CatalogueType.Op, catalogue_number: 35, nickname: "Funeral March"))
+        ], formattedKeySignature: "Bb Minor", catalogue_type: CatalogueType.Op, catalogue_number: 35, nickname: "Funeral March", tonality: KeySignatureTonality.minor, key_signature: KeySignatureType.bFlat))
     }
 }

@@ -368,31 +368,47 @@ enum Format: String, Decodable, Encodable {
     case waltz = "Waltz"
 }
 
-enum KeySignatureType: String, Decodable, Encodable {
+enum KeySignatureType: String, Decodable, Encodable, CaseIterable {
     case c = "C"
-    case cSharp = "C#"
-    case cFlat = "Cb"
+    case cSharp = "C♯"
+    case cFlat = "C♭"
     case d = "D"
-    case dSharp = "D#"
-    case dFlat = "Db"
+    case dSharp = "D♯"
+    case dFlat = "D♭"
     case e = "E"
-    case eSharp = "E#"
-    case eFlat = "Eb"
+    case eSharp = "E♯"
+    case eFlat = "E♭"
     case f = "F"
-    case fSharp = "F#"
-    case fFlat = "Fb"
+    case fSharp = "F♯"
+    case fFlat = "F♭"
     case g = "G"
-    case gSharp = "G#"
-    case gFlat = "Gb"
+    case gSharp = "G♯"
+    case gFlat = "G♭"
     case a = "A"
-    case aSharp = "A#"
-    case aFlat = "Ab"
+    case aSharp = "A♯"
+    case aFlat = "A♭"
     case b = "B"
-    case bSharp = "B#"
-    case bFlat = "Bb"
+    case bSharp = "B♯"
+    case bFlat = "B♭"
+
+    static var allCases: [KeySignatureType] {
+        return [
+            .c, .cSharp, .cFlat,
+            .d, .dSharp, .dFlat,
+            .e, .eSharp, .eFlat,
+            .f, .fSharp, .fFlat,
+            .g, .gSharp, .gFlat,
+            .a, .aSharp, .aFlat,
+            .b, .bSharp, .bFlat
+        ]
+    }
 }
 
-enum KeySignatureTonality: String, Decodable, Encodable {
+enum KeySignatureTonality: String, Decodable, Encodable, CaseIterable {
     case major = "Major"
     case minor = "Minor"
+    
+    static var allCases: [KeySignatureTonality] {
+        return [.major, .minor]
+    }
 }
