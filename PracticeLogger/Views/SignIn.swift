@@ -50,7 +50,7 @@ struct SignIn: View {
             .fixedSize()
 
             #if DEBUG
-            Button("Sign in with Email") {
+            Button("Test Account") {
                 Task {
                     do {
                         try await viewModel.signInWithEmail()
