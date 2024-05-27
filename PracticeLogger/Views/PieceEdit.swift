@@ -21,15 +21,14 @@ struct PieceEdit: View {
 
     var body: some View {
         VStack {
-            if let duplicatePiece = duplicatePiece {
-                Text("Duplicate Piece Found:")
-                    .font(.headline)
-                Text("ID: \(duplicatePiece.id)")
-            }
-            Text(viewModel.piece.workName)
-                .font(.title)
 
             Form {
+                Text(viewModel.piece.workName)
+                    .font(.title)
+                if duplicatePiece != nil {
+                    Text("Duplicate Piece Found!")
+                        .font(.subheadline)
+                }
                 Section(header: Text("Movements")) {
                     ForEach(viewModel.piece.movements.indices, id: \.self) { index in
                         MovementEditRow(
@@ -149,26 +148,27 @@ struct PieceEdit: View {
                         .multilineTextAlignment(.trailing)
                     }
                 }
-            .toast(isPresenting: $showToast) {
-                AlertToast(type: .error(.red), title: errorMessage)
-            }
-            .onAppear {
-                Task {
-                    do {
-                        let updatedPiece = try await viewModel.addMetadata(to: viewModel.piece)
-                        let dbPiece = try await viewModel.isDuplicate(piece: viewModel.piece)
-                        viewModel.piece = updatedPiece ?? viewModel.piece
-                        self.duplicatePiece = dbPiece
-                    } catch {
-                        print(error)
+                .onAppear {
+                    Task {
+                        do {
+                            self.duplicatePiece = try await viewModel.isDuplicate(piece: viewModel.piece)
+                        } catch {
+                            print(error)
+                        }
                     }
                 }
             }
+            .toast(isPresenting: $showToast) {
+                AlertToast(type: .error(.red), title: errorMessage)
+            }
         }
-            Button(action: {
+
+        .navigationBarItems(
+            trailing: Button(action: {
                 Task {
                     do {
-                        let dbPiece = try await viewModel.insertPiece(piece: viewModel.piece)
+                        try await viewModel.insertPiece(piece: viewModel.piece)
+                        // toast success/redirect
                     } catch {
                         if let supabaseError = error as? SupabaseError {
                             print(supabaseError)
@@ -182,13 +182,14 @@ struct PieceEdit: View {
                         showToast = true
                     }
                 }
-            }, label: {
+            }) {
                 Text("Create")
-            })
-            .buttonStyle(.bordered)
-            .foregroundColor(.black)
-            .padding(5)
-        }
+            }
+        )
+        .buttonStyle(.bordered)
+        .foregroundColor(.black)
+        .padding(5)
+
     }
 }
 
