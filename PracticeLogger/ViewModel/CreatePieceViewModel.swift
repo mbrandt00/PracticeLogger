@@ -11,12 +11,12 @@ import OSLog
 let logger = Logger()
 class CreatePieceViewModel: ObservableObject {
     @Published var pieces: [Piece] = []
+    @Published var searchTerm: String = ""
 
     func getClassicalPieces(_ query: String) async {
         do {
             logger.info("Requesting music auth")
             let status = await MusicAuthorization.request()
-            print(status)
             switch status {
             case .authorized:
                 do {

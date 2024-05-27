@@ -62,26 +62,6 @@ class PieceEditViewModel: ObservableObject {
 
     }
 
-    func addMetadata(to piece: Piece) async throws -> Piece? {
-        do {
-
-            if let response: MetadataInformation = try await Database.client.rpc("parse_piece_metadata", params: ["work_name": piece.workName]).select().single().execute().value {
-
-                piece.catalogue_number =  response.catalogue_number
-                piece.catalogue_type = response.catalogue_type
-                piece.key_signature = response.key_signature
-                piece.tonality = response.tonality
-                piece.format = response.format
-                piece.nickname = response.nickname
-            }
-
-            return piece
-        } catch {
-            print("Error getting piece information:", error)
-            return nil
-        }
-    }
-
     func isDuplicate(piece: Piece) async throws -> Piece? {
         do {
             guard let catalogue_number = piece.catalogue_number, let catalogue_type = piece.catalogue_type else {

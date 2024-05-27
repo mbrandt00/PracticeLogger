@@ -152,23 +152,11 @@ struct PieceEdit: View {
             .toast(isPresenting: $showToast) {
                 AlertToast(type: .error(.red), title: errorMessage)
             }
-            .onAppear {
-                Task {
-                    do {
-                        let updatedPiece = try await viewModel.addMetadata(to: viewModel.piece)
-                        let dbPiece = try await viewModel.isDuplicate(piece: viewModel.piece)
-                        viewModel.piece = updatedPiece ?? viewModel.piece
-                        self.duplicatePiece = dbPiece
-                    } catch {
-                        print(error)
-                    }
-                }
-            }
         }
             Button(action: {
                 Task {
                     do {
-                        let dbPiece = try await viewModel.insertPiece(piece: viewModel.piece)
+                        try await viewModel.insertPiece(piece: viewModel.piece)
                     } catch {
                         if let supabaseError = error as? SupabaseError {
                             print(supabaseError)

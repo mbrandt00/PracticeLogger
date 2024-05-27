@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		D11990622B9CBC160031E8A0 /* MusicKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11990612B9CBC160031E8A0 /* MusicKitTests.swift */; };
 		D11990652B9CC58D0031E8A0 /* MusicKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D11990642B9CC58D0031E8A0 /* MusicKit.framework */; };
+		D12EE5672C04E8B10024F288 /* NewPieceRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12EE5662C04E8B10024F288 /* NewPieceRowViewModel.swift */; };
 		D131F16D2B8AE54E002261BC /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F16C2B8AE54E002261BC /* Color.swift */; };
 		D131F1702B8AE8B9002261BC /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F16F2B8AE8B9002261BC /* CustomTabBar.swift */; };
 		D131F1732B8AF42F002261BC /* TabBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F1722B8AF42F002261BC /* TabBarButton.swift */; };
@@ -67,6 +68,7 @@
 /* Begin PBXFileReference section */
 		D11990612B9CBC160031E8A0 /* MusicKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicKitTests.swift; sourceTree = "<group>"; };
 		D11990642B9CC58D0031E8A0 /* MusicKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MusicKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/MusicKit.framework; sourceTree = DEVELOPER_DIR; };
+		D12EE5662C04E8B10024F288 /* NewPieceRowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPieceRowViewModel.swift; sourceTree = "<group>"; };
 		D131F16C2B8AE54E002261BC /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		D131F16F2B8AE8B9002261BC /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		D131F1722B8AF42F002261BC /* TabBarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarButton.swift; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 				D1C2BEB82BDD61A800E8E39F /* SignInViewModel.swift */,
 				D1D6548D2BDDB9BE008D4868 /* ProfileViewModel.swift */,
 				D185AC142BDF3B7E007F398D /* PieceEditViewModel.swift */,
+				D12EE5662C04E8B10024F288 /* NewPieceRowViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -473,6 +476,7 @@
 				D131F1702B8AE8B9002261BC /* CustomTabBar.swift in Sources */,
 				D13D0EDA2BCC2FA1006B2683 /* Int.swift in Sources */,
 				D19E73412B898F9300BB3EC7 /* ContentView.swift in Sources */,
+				D12EE5672C04E8B10024F288 /* NewPieceRowViewModel.swift in Sources */,
 				D13D0EDC2BCC4B23006B2683 /* SetString.swift in Sources */,
 				D1AC00D62BD46BC80019FA0F /* PieceEdit.swift in Sources */,
 				D19E733F2B898F9300BB3EC7 /* PracticeLoggerApp.swift in Sources */,
