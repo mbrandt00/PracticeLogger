@@ -21,15 +21,14 @@ struct PieceEdit: View {
 
     var body: some View {
         VStack {
-            if let duplicatePiece = duplicatePiece {
-                Text("Duplicate Piece Found:")
-                    .font(.headline)
-                Text("ID: \(duplicatePiece.id)")
-            }
-            Text(viewModel.piece.workName)
-                .font(.title)
-
+            
             Form {
+                Text(viewModel.piece.workName)
+                    .font(.title)
+                if duplicatePiece != nil {
+                    Text("Duplicate Piece Found!")
+                        .font(.subheadline)
+                }
                 Section(header: Text("Movements")) {
                     ForEach(viewModel.piece.movements.indices, id: \.self) { index in
                         MovementEditRow(
@@ -42,7 +41,7 @@ struct PieceEdit: View {
                     }
                     .onMove(perform: viewModel.move)
                 }
-
+                
                 Section(header: Text("Catalogue Information")) {
                     Picker("Identifier", selection: Binding(
                         get: {
@@ -57,7 +56,7 @@ struct PieceEdit: View {
                             Text(catalogue_type.rawValue).tag(catalogue_type.rawValue)
                         }
                     }
-
+                    
                     HStack {
                         Text("Number")
                         Spacer()
@@ -80,7 +79,7 @@ struct PieceEdit: View {
                         .textFieldStyle(PlainTextFieldStyle())
                         .keyboardType(.numberPad)
                     }
-
+                    
                     VStack {
                         HStack {
                             Picker("Key Signature", selection: Binding(
@@ -97,7 +96,7 @@ struct PieceEdit: View {
                                 }
                             }
                         }
-
+                        
                         HStack {
                             Picker("Tonality", selection: Binding(
                                 get: {
@@ -114,7 +113,7 @@ struct PieceEdit: View {
                             .pickerStyle(.segmented)
                         }
                     }
-
+                    
                     Picker("Format", selection: Binding(
                         get: {
                             viewModel.piece.format?.rawValue ?? ""
@@ -149,37 +148,50 @@ struct PieceEdit: View {
                         .multilineTextAlignment(.trailing)
                     }
                 }
+                .onAppear {
+                    Task {
+                        do {
+                            self.duplicatePiece = try await viewModel.isDuplicate(piece: viewModel.piece)
+                        } catch {
+                            print(error)
+                        }
+                    }
+                }
+            }
             .toast(isPresenting: $showToast) {
                 AlertToast(type: .error(.red), title: errorMessage)
             }
         }
-            Button(action: {
-                Task {
-                    do {
-                        try await viewModel.insertPiece(piece: viewModel.piece)
-                        // toast success/redirect
-                    } catch {
-                        if let supabaseError = error as? SupabaseError {
-                            print(supabaseError)
-                            switch supabaseError {
-                            case .pieceAlreadyExists:
-                                errorMessage = "You have already added this piece"
-                            }
-                        } else {
-                            errorMessage = "An unexpected error occurred."
+        
+        .navigationBarItems(trailing:
+                                Button(action: {
+            Task {
+                do {
+                    try await viewModel.insertPiece(piece: viewModel.piece)
+                    // toast success/redirect
+                } catch {
+                    if let supabaseError = error as? SupabaseError {
+                        print(supabaseError)
+                        switch supabaseError {
+                        case .pieceAlreadyExists:
+                            errorMessage = "You have already added this piece"
                         }
-                        showToast = true
+                    } else {
+                        errorMessage = "An unexpected error occurred."
                     }
+                    showToast = true
                 }
-            }, label: {
-                Text("Create")
-            })
+            }
+        }) {
+            Text("Create")
+        }
             .buttonStyle(.bordered)
             .foregroundColor(.black)
             .padding(5)
-        }
+        )
     }
-}
+    }
+
 
 struct PieceEdit_Previews: PreviewProvider {
     static var previews: some View {
