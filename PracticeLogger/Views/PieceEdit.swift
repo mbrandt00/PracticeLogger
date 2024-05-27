@@ -157,6 +157,7 @@ struct PieceEdit: View {
                 Task {
                     do {
                         try await viewModel.insertPiece(piece: viewModel.piece)
+                        // toast success/redirect
                     } catch {
                         if let supabaseError = error as? SupabaseError {
                             print(supabaseError)

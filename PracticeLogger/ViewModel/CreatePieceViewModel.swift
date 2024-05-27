@@ -7,11 +7,28 @@
 
 import Foundation
 import MusicKit
+import Combine
 import OSLog
+
 let logger = Logger()
+
 class CreatePieceViewModel: ObservableObject {
     @Published var pieces: [Piece] = []
     @Published var searchTerm: String = ""
+
+    private var cancellables: Set<AnyCancellable> = []
+
+    init() {
+        $searchTerm
+            .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
+            .removeDuplicates()
+            .sink { searchTerm in
+                Task {
+                    await self.getClassicalPieces(searchTerm)
+                }
+            }
+            .store(in: &cancellables)
+    }
 
     func getClassicalPieces(_ query: String) async {
         do {
@@ -22,12 +39,10 @@ class CreatePieceViewModel: ObservableObject {
                 do {
                     let fetchedPieces = try await Piece.searchPieceFromSongName(query: query)
                     DispatchQueue.main.async {
-
                         self.pieces = fetchedPieces
                     }
-
                 } catch {
-                    logger.error("Error fetching pieces: Error")
+                    logger.error("Error fetching pieces: \(error)")
                     print("Error fetching pieces: \(error)")
                 }
             case .denied:

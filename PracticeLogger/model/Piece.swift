@@ -192,7 +192,6 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
                 }
             }
         }
-
         return result
     }
     static func searchPieceFromSongName(query: String)  async throws -> [Piece] {
@@ -210,6 +209,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
             }
         }
 
+        print("uniqWork count \(uniqWorks.count)")
         if uniqWorks.isEmpty && !response.songs.isEmpty {
             print("Work names not found, but songs were")
 
@@ -225,29 +225,52 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
                             }
                         }
 
-                        // Continue with the rest of the code here...
                     }
                 }
             }
         }
-
         uniqWorks = chooseBestRecords(uniqWorks: uniqWorks)
 
         for (_, song) in uniqWorks {
             let piece = try await createPieceFromSong(song: song)
             pieces.append(piece)
         }
+        print("pieces count \(pieces.count)")
+
         return pieces
     }
 
     /**
      Checks Composer, Key Signature, and Cataloging information (opus/K/BWV) Information to determine if the piece matches with an 80% confidence score
      */
-    static func songMatchesQuery (query: String, song: Song!) -> Bool {
+    static func songMatchesQuery(query: String, song: Song?) -> Bool {
+        guard let song = song else {
+            return false
+        }
+
         let splitQuery = query.split(separator: " ")
         let matchingWeight = 10
         var total = splitQuery.count
         var matching = 0
+
+        // Check if composer name matches
+        if query.containsComposerName() {
+            // Ensure song has a composer name and that it matches the query
+            if let composerName = song.composerName {
+                // Check if any part of the query is contained in the composer name
+                if splitQuery.contains(where: { composerName.localizedCaseInsensitiveContains($0) }) {
+                    matching += matchingWeight
+                } else {
+                    // composer does not match
+                    return false
+                }
+            } else {
+                return false
+            }
+            total += matchingWeight
+        }
+
+        // Check if work name matches
         if let workName = song.workName {
             if query.containsKeySignature() {
                 if isMatchingKeySignature(query: query, workName: workName) {
@@ -263,10 +286,11 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
                 }
             }
         }
-        let confidence = Double(matching) / Double(total)
-        print(song?.workName ?? "", confidence)
 
-        return confidence >= 0.75
+        let confidence = Double(matching) / Double(total)
+        print(song.workName ?? "", confidence)
+
+        return confidence >= 0.90
     }
 
     static func createPieceFromSong(song: Song) async throws -> Piece {

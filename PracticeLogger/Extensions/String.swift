@@ -12,6 +12,11 @@ extension String {
         return Double(self) != nil
     }
 
+    func containsComposerName() -> Bool {
+        let composers = staticComposers.map { $0.lowercased() }
+        return composers.contains { self.localizedCaseInsensitiveContains($0) }
+    }
+
     func containsKeySignature() -> Bool {
         let tonalities = ["major", "minor"]
         let keys = ["a", "b", "c", "d", "e", "f", "g"]

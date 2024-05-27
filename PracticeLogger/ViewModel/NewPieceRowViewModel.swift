@@ -18,15 +18,14 @@ class NewPieceRowViewModel: ObservableObject {
     func addMetadata(to piece: Piece) async throws -> Piece? {
         do {
             if let response: MetadataInformation = try await Database.client.rpc("parse_piece_metadata", params: ["work_name": piece.workName]).select().single().execute().value {
-                
-                var updatedPiece = piece
+
+                let updatedPiece = piece
                 updatedPiece.catalogue_number = response.catalogue_number
                 updatedPiece.catalogue_type = response.catalogue_type
                 updatedPiece.key_signature = response.key_signature
                 updatedPiece.tonality = response.tonality
                 updatedPiece.format = response.format
                 updatedPiece.nickname = response.nickname
-
 
                 self.piece = updatedPiece
                 return updatedPiece
