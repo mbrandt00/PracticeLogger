@@ -37,7 +37,7 @@ class PracticeSessionViewModel: ObservableObject {
             case .movement(let movement):
                 // Handle Movement
                 print("Starting session with movement: \(movement)")
-            
+
             }
         return nil
     }
