@@ -59,7 +59,14 @@ class CreatePieceViewModel: ObservableObject {
     }
 
     func getUserPieces() async throws -> [Piece] {
-        let pieces: [Piece] = try await Database.client.from("pieces").select("*").eq("user_id", value: try Database.getCurrentUser().id).execute().value
+
+        let pieces: [Piece] = try await Database.client
+            .from("pieces")
+            .select("*, movements(*)")
+            .eq("user_id", value: try Database.getCurrentUser().id)
+            .order("created_at", ascending: false)
+            .execute()
+            .value
 
         DispatchQueue.main.async {
             self.userPieces = pieces

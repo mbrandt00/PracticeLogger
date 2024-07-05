@@ -12,8 +12,11 @@ struct CreatePiece: View {
     @ObservedObject var viewModel = CreatePieceViewModel()
     @Binding var isTyping: Bool
     @State private var isLoading = false
-
+//    @EnvironmentObject private var psm: PracticeSessionManager
     var body: some View {
+//        VStack {
+//            Text("Active Session Piece ID: \(psm.activeSession?.piece?.workName)")
+//        };
         NavigationView {
             VStack {
                 // Always show the search field
@@ -34,12 +37,12 @@ struct CreatePiece: View {
                 // Conditionally display content based on searchTerm
                 if viewModel.searchTerm.isEmpty {
                     VStack(alignment: .leading) {
-                        Text("Current Repertoire")
+                        Text("Repetoire")
                             .font(.headline)
                             .padding([.leading, .top])
 
                         List(viewModel.userPieces) { piece in
-                            Text(piece.workName)
+                            RepertoireRow(piece: piece, isTyping: $isTyping)
                         }
                         .listStyle(PlainListStyle())
                     }
