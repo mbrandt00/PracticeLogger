@@ -23,7 +23,6 @@ class PracticeSessionManager: ObservableObject {
                 let channel = Database.client.realtimeV2.channel("public:practice_sessions")
                 let userID = try await Database.getCurrentUser().id
 
-
                 let changeStream =  channel.postgresChange(
                     AnyAction.self,
                     schema: "public",

@@ -17,9 +17,9 @@ struct PieceShow: View {
             Task {
                 try await viewModel.startSession(record: .piece(piece))
             }
-        }) {
+        }, label: {
             Image(systemName: "play.circle.fill")
-        }
+        })
     }
 }
 

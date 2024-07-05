@@ -11,7 +11,6 @@ class PracticeSession: ObservableObject, Identifiable, Codable {
     let id: UUID
     @Published var start_time: Date
     @Published var end_time: Date?
-
     @Published var piece: Piece? // Piece object
     var pieceId: UUID? // ID to fetch Piece
     @Published var movement: Movement?
@@ -34,7 +33,6 @@ class PracticeSession: ObservableObject, Identifiable, Codable {
         self.end_time = nil
         self.movement = nil
     }
-
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
@@ -63,18 +61,13 @@ class PracticeSession: ObservableObject, Identifiable, Codable {
                 }
             }
         }
-
-        // Handle decoding from action.record["new"] directly
-
     }
 
-    // Helper method to assign fetched piece
     private func assignFetchedPiece(_ fetchedPiece: Piece) {
         // Mutate self.piece inside a main queue async block
         self.piece = fetchedPiece
     }
 
-    // Encode PracticeSession to encoder
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
