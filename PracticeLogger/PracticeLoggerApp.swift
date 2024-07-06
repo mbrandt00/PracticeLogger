@@ -9,9 +9,10 @@ import SwiftUI
 
 @main
 struct PracticeLoggerApp: App {
+
     var body: some Scene {
         WindowGroup {
-            ContentView().navigationBarHidden(true)
+            ContentView()
         }
     }
 }

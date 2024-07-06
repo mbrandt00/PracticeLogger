@@ -167,7 +167,7 @@ struct PieceEdit: View {
             trailing: Button(action: {
                 Task {
                     do {
-                        try await viewModel.insertPiece(piece: viewModel.piece)
+                        _ = try await viewModel.insertPiece(piece: viewModel.piece)
                         // toast success/redirect
                     } catch {
                         if let supabaseError = error as? SupabaseError {
@@ -182,9 +182,9 @@ struct PieceEdit: View {
                         showToast = true
                     }
                 }
-            }) {
+            }, label: {
                 Text("Create")
-            }
+            })
         )
         .buttonStyle(.bordered)
         .foregroundColor(.black)

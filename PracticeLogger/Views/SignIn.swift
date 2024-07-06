@@ -57,7 +57,7 @@ struct SignIn: View {
                         isSignedIn = true
                     } catch {
                         showToast = true
-                        errorMessage = error.localizedDescription // Corrected assigning error message
+                        errorMessage = error.localizedDescription
                     }
                 }
             }
