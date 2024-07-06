@@ -5,8 +5,9 @@
     //  Created by Michael Brandt on 2/23/24.
     //
 
-    import SwiftUI
-    import MusicKit
+import SwiftUI
+import MusicKit
+
 struct ContentView: View {
     @State var selectedTab: Tabs = .start
     @State var isTyping: Bool = false
@@ -20,18 +21,17 @@ struct ContentView: View {
             if isSignedIn {
                 if let manager = practiceSessionManager {
                     VStack {
-                        if selectedTab == .start {
-                            CreatePiece(isTyping: $isTyping)
-                                .environmentObject(manager)
-                        }
-                        if selectedTab == .profile {
-                            Profile(isSignedIn: $isSignedIn)
-                                .environmentObject(manager)
-                        }
+                                switch selectedTab {
+                                case .progress:
+                                    ProgressView()
+                                case .start:
+                                    CreatePiece(isTyping: $isTyping)
+                                case .profile:
+                                    Profile(isSignedIn: $isSignedIn) .environmentObject(manager)
+                                }
 
                         Spacer()
                         CustomTabBar(selectedTab: $selectedTab, isTyping: $isTyping)
-                            .navigationBarHidden(true)
                     }
                 } else {
                     // This case is just to handle the moment right after login before the manager is set
@@ -52,9 +52,8 @@ struct ContentView: View {
     }
 }
 
-    #Preview {
-        NavigationView {
-            ContentView() // .navigationBarHidden(true)
-
-        }
+#Preview {
+    NavigationView {
+        ContentView() // .navigationBarHidden(true)
     }
+}
