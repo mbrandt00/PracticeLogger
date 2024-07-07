@@ -23,7 +23,7 @@ struct NewPieceRow: View {
                     Text(viewModel.piece.workName)
                         .font(.title3)
                         .multilineTextAlignment(.leading)
-                    Text(viewModel.piece.composer.name)
+                    Text(viewModel.piece.composer?.name ?? "No Composer")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }

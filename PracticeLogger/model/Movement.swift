@@ -12,17 +12,13 @@ class Movement: Identifiable, ObservableObject, Codable {
     let id: Int
     @Published var name: String
     var number: Int
-    var selected: Bool
-    var appleMusicId: MusicItemID?
     var piece: Piece?
     var pieceId: UUID?
 
-    init(id: Int = Int.random(in: 1...Int.max), name: String, number: Int, selected: Bool = false, appleMusicId: MusicItemID? = nil, piece: Piece? = nil, pieceId: UUID? = nil) {
+    init(id: Int = Int.random(in: 1...Int.max), name: String, number: Int, piece: Piece? = nil, pieceId: UUID? = nil) {
         self.id = id
         self.name = name
         self.number = number
-        self.selected = selected
-        self.appleMusicId = appleMusicId
         self.piece = piece
         self.pieceId = pieceId
     }
@@ -31,8 +27,6 @@ class Movement: Identifiable, ObservableObject, Codable {
         case id
         case name
         case number
-        case selected
-        case appleMusicId = "apple_music_id"
         case pieceId = "piece_id"
     }
 
@@ -48,8 +42,6 @@ class Movement: Identifiable, ObservableObject, Codable {
         id = try container.decode(Int.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
         number = try container.decode(Int.self, forKey: .number)
-        selected = try container.decode(Bool.self, forKey: .selected)
-        appleMusicId = try container.decodeIfPresent(MusicItemID.self, forKey: .appleMusicId)
         pieceId = try container.decodeIfPresent(UUID.self, forKey: .pieceId)
     }
 }

@@ -12,6 +12,7 @@ class PracticeSession: ObservableObject, Identifiable, Codable {
     @Published var start_time: Date
     @Published var end_time: Date?
     @Published var piece: Piece? // Piece object
+    @Published var composer: Composer?
     var pieceId: UUID? // ID to fetch Piece
     @Published var movement: Movement?
 
@@ -41,6 +42,7 @@ class PracticeSession: ObservableObject, Identifiable, Codable {
         pieceId = try container.decodeIfPresent(UUID.self, forKey: .pieceId)
         movement = try container.decodeIfPresent(Movement.self, forKey: .movementId)
         piece = nil // Initialize piece as nil
+        composer = nil
 
         // Fetch piece if pieceId is present
         if let p_id = pieceId {

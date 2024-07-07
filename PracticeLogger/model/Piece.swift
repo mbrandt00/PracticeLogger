@@ -11,7 +11,7 @@ import MusicKit
 class Piece: ObservableObject, Identifiable, Hashable, Codable {
     let id: UUID
     @Published var workName: String
-    var composer: Composer
+    var composer: Composer?
     @Published var movements: [Movement]
     @Published var catalogue_type: CatalogueType?
     @Published var catalogue_number: Int?
@@ -23,7 +23,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
     init(
         workName: String,
         composer: Composer,
-        movements: [Movement],
+        movements: [Movement]?,
         formattedKeySignature: String? = nil,
         catalogue_type: CatalogueType? = nil,
         catalogue_number: Int? = nil,
@@ -35,7 +35,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         self.id = UUID()
         self.workName = workName
         self.composer = composer
-        self.movements = movements
+        self.movements = movements ?? []
         self.format = format
         self.tonality = tonality
         self.key_signature = key_signature
@@ -47,7 +47,9 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         case id
         case workName = "work_name"
         case nickname
+        case movements
         case composer_id
+        case composer
         case catalogue_type
         case catalogue_number
         case format
@@ -59,7 +61,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(workName, forKey: .workName)
-        try container.encode(composer.id, forKey: .composer_id)
+        try container.encodeIfPresent(composer?.id, forKey: .composer_id)
         try container.encodeIfPresent(catalogue_type, forKey: .catalogue_type)
         try container.encodeIfPresent(nickname, forKey: .nickname)
         try container.encodeIfPresent(catalogue_number, forKey: .catalogue_number)
@@ -72,7 +74,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
         workName = try container.decode(String.self, forKey: .workName)
-        composer = Composer.init(name: "NEW COMPOSER")
+        composer = nil
         movements = []
         catalogue_type = try container.decodeIfPresent(CatalogueType.self, forKey: .catalogue_type)
         catalogue_number = try container.decodeIfPresent(Int.self, forKey: .catalogue_number)
@@ -136,7 +138,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
 
                 // Update current piece name and append movement
                 currentPieceName = pieceName
-                let movement = Movement(name: movementName.formatMovementName(), number: movementNumber, appleMusicId: appleMusicId)
+                let movement = Movement(name: movementName.formatMovementName(), number: movementNumber)
                 currentPieceMovements.append(movement)
                 movementNumber += 1 // Increment movement number for the next movement
             }
