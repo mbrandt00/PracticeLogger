@@ -5,7 +5,9 @@ CREATE TABLE IF NOT EXISTS practice_sessions (
     piece_id UUID,
     movement_id BIGINT,
     user_id UUID NOT NULL DEFAULT auth.uid(),
-    FOREIGN KEY (user_id) REFERENCES auth.users(id)
+    FOREIGN KEY (user_id) REFERENCES auth.users(id),
+    FOREIGN KEY (movement_id) REFERENCES movements(id),
+    FOREIGN KEY (piece_id) REFERENCES pieces(id)
 );
 
 

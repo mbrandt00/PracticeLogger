@@ -51,15 +51,15 @@ class PracticeSessionManager: ObservableObject {
                                 .execute()
                                 .value
                             practiceSession.piece = mapToModels(response: piece)
-//
-                            activeSession = practiceSession
+                            DispatchQueue.main.async {
+                                self.activeSession = practiceSession
+                            }
                         }
                     case .update(let action):
                         print("Updated: \(action.oldRecord) with \(action.record)")
                     default:
                         print("An unregistered enum case was encountered")
                     }
-
                 }
             } catch {
                 print("Error in subscribeToPracticeSessions: \(error)")
@@ -67,6 +67,7 @@ class PracticeSessionManager: ObservableObject {
         }
     }
 }
+// TODO: move to Databse model
 struct SupabasePieceResponse: Codable {
     let id: UUID
     let workName: String
