@@ -341,6 +341,94 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
     }
 }
 
+/**
+ Maps a single SupabasePieceResponse to a Piece model.
+
+ This function converts a single SupabasePieceResponse object into a Piece object,
+ including its associated Composer and Movement objects.
+
+ - Parameter response: The SupabasePieceResponse object to be converted.
+ - Returns: A Piece object with all its associated movements and composer details.
+ */
+func mapResponseToFullPiece(response: SupabasePieceResponse) -> Piece {
+    let pieceId = response.id.uuidString
+
+    let composer = Composer(
+        name: response.composer.name,
+        id: response.composer.id
+    )
+    let piece = Piece(
+        workName: response.workName,
+        composer: composer,
+        movements: [],
+        catalogue_type: CatalogueType(rawValue: response.catalogueType ?? ""),
+        catalogue_number: response.catalogueNumber ?? 0,
+        format: Format(rawValue: response.format ?? ""),
+        nickname: response.nickname ?? "",
+        tonality: KeySignatureTonality(rawValue: response.tonality ?? ""),
+        key_signature: KeySignatureType(rawValue: response.keySignature ?? "")
+    )
+
+    for movementResponse in response.movements {
+        let movement = Movement(
+            id: movementResponse.id,
+            name: movementResponse.name ?? "",
+            number: movementResponse.number ?? 0,
+            piece: piece,
+            pieceId: movementResponse.pieceId
+        )
+        piece.movements.append(movement)
+    }
+    return piece
+}
+
+/**
+ Maps a single SupabasePieceResponse to a Piece.
+
+ - Parameter response: The SupabasePieceResponse object to be converted.
+ - Returns: A Piece object with all associated movements and composer details.
+ */
+func mapResponseToFullPiece(response: [SupabasePieceResponse]) -> [Piece] {
+    var pieceDictionary: [UUID: Piece] = [:]
+    var pieces: [Piece] = []
+
+    for r in response {
+        let pieceId = r.id
+        let composer = Composer(
+            name: r.composer.name,
+            id: r.composer.id
+        )
+        if pieceDictionary[pieceId] == nil {
+            let piece = Piece(
+                workName: r.workName,
+                composer: composer,
+                movements: [],
+                catalogue_type: CatalogueType(rawValue: r.catalogueType ?? ""),
+                catalogue_number: r.catalogueNumber ?? 0,
+                format: Format(rawValue: r.format ?? ""),
+                nickname: r.nickname ?? "",
+                tonality: KeySignatureTonality(rawValue: r.tonality ?? ""),
+                key_signature: KeySignatureType(rawValue: r.keySignature ?? "")
+            )
+            pieceDictionary[pieceId] = piece
+            pieces.append(piece)
+        }
+
+        for movementResponse in r.movements {
+            let movement = Movement(
+                id: movementResponse.id,
+                name: movementResponse.name ?? "",
+                number: movementResponse.number ?? 0,
+                piece: pieceDictionary[pieceId],
+                pieceId: movementResponse.pieceId
+            )
+            pieceDictionary[pieceId]?.movements.append(movement)
+        }
+    }
+
+    return pieces
+}
+
 enum CatalogueType: String, Decodable, CaseIterable, Encodable {
     case B, BWV, CPEB, D, DD, EG, FMW, H, K, L, Op, S, T, TH, VB, WAB, WD, WoO, Wq
 
