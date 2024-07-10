@@ -13,6 +13,7 @@ struct PieceShow: View {
     @ObservedObject var viewModel = PracticeSessionViewModel()
     var body: some View {
         Text(piece.workName)
+        Text(piece.id.uuidString)
         Button(action: {
             Task {
                 try await viewModel.startSession(record: .piece(piece))

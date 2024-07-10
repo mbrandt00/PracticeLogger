@@ -21,6 +21,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
     var tonality: KeySignatureTonality?
 
     init(
+        id: UUID = UUID(),
         workName: String,
         composer: Composer,
         movements: [Movement]?,
@@ -32,7 +33,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         tonality: KeySignatureTonality? = nil,
         key_signature: KeySignatureType? = nil
     ) {
-        self.id = UUID()
+        self.id = id
         self.workName = workName
         self.composer = composer
         self.movements = movements ?? []
@@ -351,13 +352,14 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
  - Returns: A Piece object with all its associated movements and composer details.
  */
 func mapResponseToFullPiece(response: SupabasePieceResponse) -> Piece {
-    let pieceId = response.id.uuidString
+    let pieceId = response.id
 
     let composer = Composer(
         name: response.composer.name,
         id: response.composer.id
     )
     let piece = Piece(
+        id: pieceId,
         workName: response.workName,
         composer: composer,
         movements: [],
@@ -400,6 +402,7 @@ func mapResponseToFullPiece(response: [SupabasePieceResponse]) -> [Piece] {
         )
         if pieceDictionary[pieceId] == nil {
             let piece = Piece(
+                id: pieceId,
                 workName: r.workName,
                 composer: composer,
                 movements: [],
@@ -422,6 +425,7 @@ func mapResponseToFullPiece(response: [SupabasePieceResponse]) -> [Piece] {
                 piece: pieceDictionary[pieceId],
                 pieceId: movementResponse.pieceId
             )
+            
             pieceDictionary[pieceId]?.movements.append(movement)
         }
     }
