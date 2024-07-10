@@ -70,7 +70,7 @@ struct SupabasePieceResponse: Codable {
 struct MovementResponse: Codable {
     let id: Int
     let name: String?
-    let number: Int?
+    let number: Int
     let pieceId: UUID
 
     enum CodingKeys: String, CodingKey {

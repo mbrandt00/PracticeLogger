@@ -385,7 +385,7 @@ func mapResponseToFullPiece(response: SupabasePieceResponse) -> Piece {
 }
 
 /**
- Maps a single SupabasePieceResponse to a Piece.
+ Maps an array of SupabasePieceResponse to a Piece.
 
  - Parameter response: The SupabasePieceResponse object to be converted.
  - Returns: A Piece object with all associated movements and composer details.
@@ -425,7 +425,7 @@ func mapResponseToFullPiece(response: [SupabasePieceResponse]) -> [Piece] {
                 piece: pieceDictionary[pieceId],
                 pieceId: movementResponse.pieceId
             )
-            
+
             pieceDictionary[pieceId]?.movements.append(movement)
         }
     }

@@ -16,7 +16,7 @@ struct Profile: View {
     var body: some View {
         VStack {
             if let activeSession = practiceSessionManager.activeSession {
-                            Text("Active session: \(activeSession.start_time)")
+                            Text("Active session: \(activeSession.startTime)")
                         } else {
                             Text("No active session")
                         }

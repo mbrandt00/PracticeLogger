@@ -13,33 +13,44 @@ class PracticeSessionViewModel: ObservableObject {
 
     func startSession(record: Record) async throws -> PracticeSession? {
         switch record {
-            case .piece(let piece):
+        case .piece(let piece):
             print("Starting session with piece: \(piece)")
+            let practice_session = PracticeSession(start_time: Date.now, piece: piece)
             do {
-                let practice_session = PracticeSession(start_time: Date.now, piece: piece)
-
-                let insertedPracticeSessions: PracticeSession = try await Database.client.from("practice_sessions")
+                let insertedPracticeSession: PracticeSession = try await Database.client.from("practice_sessions")
                     .insert(practice_session)
                     .select()
                     .single()
                     .execute()
                     .value
-                print(insertedPracticeSessions)
-                return PracticeSession(start_time: Date.now, piece: piece)
+                print("Inserted session:", insertedPracticeSession)
+                return insertedPracticeSession
             } catch let error as PostgrestError {
                 print("INSERT ERROR", error)
-
                 if error.message.contains("pieces_catalogue_unique") {
                     throw SupabaseError.pieceAlreadyExists
+                } else {
+                    throw error // Rethrow other PostgrestErrors
                 }
-
             }
-            case .movement(let movement):
-                // Handle Movement
-                print("Starting session with movement: \(movement)")
 
+        case .movement(let movement):
+            print("Starting session with movement: \(movement)")
+            let practice_session = PracticeSession(start_time: Date.now, movement: movement)
+            do {
+                let insertedPracticeSession: PracticeSession = try await Database.client.from("practice_sessions")
+                    .insert(practice_session)
+                    .select()
+                    .single()
+                    .execute()
+                    .value
+                print("Inserted session:", insertedPracticeSession)
+                return insertedPracticeSession
+            } catch let error as PostgrestError {
+                print("INSERT ERROR", error)
+                throw error // Rethrow PostgrestError for movements
             }
-        return nil
+        }
     }
 }
 

@@ -8,7 +8,8 @@
 import Foundation
 import MusicKit
 
-class Movement: Identifiable, ObservableObject, Codable {
+class Movement: Identifiable, ObservableObject, Codable, Hashable {
+
     let id: Int
     @Published var name: String
     var number: Int
@@ -22,6 +23,17 @@ class Movement: Identifiable, ObservableObject, Codable {
         self.piece = piece
         self.pieceId = pieceId
     }
+
+    static func == (lhs: Movement, rhs: Movement) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(id)
+        hasher.combine(piece)
+        hasher.combine(pieceId)
+      }
 
     private enum CodingKeys: String, CodingKey {
         case id

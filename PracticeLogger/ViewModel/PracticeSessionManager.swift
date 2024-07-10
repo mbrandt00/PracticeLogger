@@ -42,18 +42,32 @@ class PracticeSessionManager: ObservableObject {
                         print("Deleted: \(action.oldRecord)")
                     case .insert(let insertion):
                         let practiceSession = try insertion.decodeRecord(decoder: decoder) as PracticeSession
-                        if practiceSession.pieceId != nil {
-                            let piece: SupabasePieceResponse = try await Database.client
-                                .from("pieces")
-                                .select("*, movements!inner(*), composer:composers!inner(id, name)")
-                                .eq("id", value: practiceSession.pieceId)
-                                .single()
-                                .execute()
-                                .value
-                            practiceSession.piece = mapResponseToFullPiece(response: piece)
-                            DispatchQueue.main.async {
-                                self.activeSession = practiceSession
+                        let piece: SupabasePieceResponse = try await Database.client
+                            .from("pieces")
+                            .select("*, movements!inner(*), composer:composers!inner(id, name)")
+                            .eq("id", value: practiceSession.pieceId)
+                            .single()
+                            .execute()
+                            .value
+                        practiceSession.piece = mapResponseToFullPiece(response: piece)
+                        if let movementId = practiceSession.movementId {
+                            let selectedMovementResponse = piece.movements.first { $0.id == movementId }
+                            if let selectedMovementResponse = selectedMovementResponse {
+                                let selectedMovement = Movement(
+                                    id: selectedMovementResponse.id,
+                                    name: selectedMovementResponse.name ?? "",
+                                    number: selectedMovementResponse.number ?? 0,
+                                    piece: practiceSession.piece,
+                                    pieceId: selectedMovementResponse.pieceId
+                                )
+                                practiceSession.movement = selectedMovement
+                            } else {
+                                // Handle case where no matching movement is found
+                                print("No matching movement found for id \(movementId)")
                             }
+                        }
+                        DispatchQueue.main.async {
+                            self.activeSession = practiceSession
                         }
                     case .update(let action):
                         print("Updated: \(action.oldRecord) with \(action.record)")

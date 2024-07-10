@@ -161,7 +161,7 @@ struct MusicInfo: View {
     }
 
     private func updateElapsedTime() {
-        let elapsedTimeInterval = Date().timeIntervalSince(activeSession.start_time)
+        let elapsedTimeInterval = Date().timeIntervalSince(activeSession.startTime)
         let hours = Int(elapsedTimeInterval) / 3600
         let minutes = (Int(elapsedTimeInterval) % 3600) / 60
         let seconds = Int(elapsedTimeInterval) % 60
