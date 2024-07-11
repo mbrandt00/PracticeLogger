@@ -5,7 +5,9 @@ CREATE TABLE IF NOT EXISTS practice_sessions (
     piece_id UUID,
     movement_id BIGINT,
     user_id UUID NOT NULL DEFAULT auth.uid(),
-    FOREIGN KEY (user_id) REFERENCES auth.users(id)
+    FOREIGN KEY (user_id) REFERENCES auth.users(id),
+    FOREIGN KEY (movement_id) REFERENCES movements(id),
+    FOREIGN KEY (piece_id) REFERENCES pieces(id)
 );
 
 
@@ -22,6 +24,18 @@ CREATE POLICY auth_read_practice_sessions ON practice_sessions
   FOR SELECT
   TO authenticated
   USING (true);
+
+CREATE POLICY auth_update_practice_sessions
+    ON practice_sessions
+    FOR UPDATE
+    TO authenticated
+    USING (user_id = auth.uid());
+
+CREATE POLICY auth_delete_practice_sessions
+    ON practice_sessions
+    FOR DELETE
+    TO authenticated
+    USING (user_id = auth.uid());
 
 -- realtime 
 alter

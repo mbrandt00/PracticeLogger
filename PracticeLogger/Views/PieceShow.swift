@@ -8,21 +8,55 @@
 import SwiftUI
 
 struct PieceShow: View {
-
     var piece: Piece
     @ObservedObject var viewModel = PracticeSessionViewModel()
+
     var body: some View {
-        Text(piece.workName)
-        Button(action: {
-            Task {
-                try await viewModel.startSession(record: .piece(piece))
+
+        VStack(alignment: .leading, spacing: 20) {
+            HStack {
+                Text(piece.workName)
+                    .font(.title)
+                    .fontWeight(.bold)
+
+                Spacer()
+
+                Button(action: {
+                    Task {
+                        try await viewModel.startSession(record: .piece(piece))
+                    }
+                }) {
+                    Image(systemName: "play.circle.fill")
+                        .font(.title)
+                        .foregroundColor(.blue)
+                }
+
             }
-        }, label: {
-            Image(systemName: "play.circle.fill")
-        })
+
+            ForEach(piece.movements, id: \.self) { movement in
+                HStack {
+                    Text(movement.name)
+                        .font(.body)
+
+                    Spacer()
+
+                    Button(action: {
+                        Task {
+                            try await viewModel.startSession(record: .movement(movement))
+                        }
+                    }) {
+                        Image(systemName: "play.circle.fill")
+                            .foregroundColor(.blue)
+                    }
+                }
+                .padding(.vertical, 5)
+            }
+        }
+        .padding(20)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .background(Color(UIColor.systemBackground))
     }
 }
-
 #Preview {
     PieceShow(piece: Piece(workName: "Sonata 2 in B flat Minor Funeral March", composer: Composer(name: "Frederic Chopin"), movements: [
         Movement(name: "Grave - Doppio movimento", number: 1),

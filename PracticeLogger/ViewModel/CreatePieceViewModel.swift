@@ -59,14 +59,14 @@ class CreatePieceViewModel: ObservableObject {
     }
 
     func getUserPieces() async throws -> [Piece] {
-
-        let pieces: [Piece] = try await Database.client
+        let response: [SupabasePieceResponse] = try await Database.client
             .from("pieces")
-            .select("*, movements(*)")
-            .eq("user_id", value: try Database.getCurrentUser().id)
+            .select("*, movements!inner(*), composer:composers!inner(id, name)")
+            .eq("user_id", value: Database.getCurrentUser().id)
             .order("created_at", ascending: false)
             .execute()
             .value
+        let pieces = mapResponseToFullPiece(response: response)
 
         DispatchQueue.main.async {
             self.userPieces = pieces

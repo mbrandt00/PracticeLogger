@@ -12,7 +12,9 @@ struct ContentView: View {
     @State var selectedTab: Tabs = .start
     @State var isTyping: Bool = false
     @State var isSignedIn: Bool = false
+    @State var isExpanded: Bool = false
     @State var practiceSessionManager: PracticeSessionManager?
+    @Namespace private var animation
 
     let bpm: Double = 60
 
@@ -20,6 +22,11 @@ struct ContentView: View {
         VStack {
             if isSignedIn {
                 if let manager = practiceSessionManager {
+                    if isExpanded && manager.activeSession != nil {
+                        ExpandedBottomSheet(animation: animation, activeSession: manager.activeSession!, expandedSheet: $isExpanded)
+                            .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
+                    } else {
+
                     VStack {
                                 switch selectedTab {
                                 case .progress:
@@ -31,7 +38,8 @@ struct ContentView: View {
                                 }
 
                         Spacer()
-                        CustomTabBar(selectedTab: $selectedTab, isTyping: $isTyping)
+                        CustomTabBar(selectedTab: $selectedTab, isTyping: $isTyping, expandedSheet: $isExpanded, animation: animation).environmentObject(manager)
+                    }
                     }
                 } else {
                     // This case is just to handle the moment right after login before the manager is set

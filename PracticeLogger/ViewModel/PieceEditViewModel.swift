@@ -16,11 +16,11 @@ class PieceEditViewModel: ObservableObject {
     func insertPiece(piece: Piece) async throws -> Piece? {
         do {
             let composer: Composer = try await Database.client
-                .rpc("find_or_create_composer", params: ["name": piece.composer.name])
+                .rpc("find_or_create_composer", params: ["name": piece.composer?.name])
                 .execute()
                 .value
 
-            piece.composer.id = composer.id
+            piece.composer?.id = composer.id
 
             let insertedPiece: Piece = try await Database.client.from("pieces")
                 .insert(piece)
@@ -70,7 +70,7 @@ class PieceEditViewModel: ObservableObject {
 
             let currentUserID = try await String(Database.getCurrentUser().id.uuidString)
 
-            let response: Piece = try await Database.client.rpc("find_duplicate_piece", params: ["catalogue_number": String(catalogue_number), "catalogue_type": catalogue_type.rawValue, "user_id": currentUserID, "composer_name": piece.composer.name ]).execute().value
+            let response: Piece = try await Database.client.rpc("find_duplicate_piece", params: ["catalogue_number": String(catalogue_number), "catalogue_type": catalogue_type.rawValue, "user_id": currentUserID, "composer_name": piece.composer?.name ]).execute().value
 
             return response
         } catch {

@@ -13,6 +13,10 @@ struct RepertoireRow: View {
     var body: some View {
         NavigationLink(destination: PieceShow(piece: piece)) {
             Text(piece.workName)
+            if let composerName = piece.composer?.name {
+                Text(composerName)
+                    .font(.caption)
+            }
         }
         .padding()
     }

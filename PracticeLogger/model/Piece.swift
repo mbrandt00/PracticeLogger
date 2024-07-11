@@ -11,7 +11,7 @@ import MusicKit
 class Piece: ObservableObject, Identifiable, Hashable, Codable {
     let id: UUID
     @Published var workName: String
-    var composer: Composer
+    var composer: Composer?
     @Published var movements: [Movement]
     @Published var catalogue_type: CatalogueType?
     @Published var catalogue_number: Int?
@@ -21,9 +21,10 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
     var tonality: KeySignatureTonality?
 
     init(
+        id: UUID = UUID(),
         workName: String,
         composer: Composer,
-        movements: [Movement],
+        movements: [Movement]?,
         formattedKeySignature: String? = nil,
         catalogue_type: CatalogueType? = nil,
         catalogue_number: Int? = nil,
@@ -32,10 +33,10 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         tonality: KeySignatureTonality? = nil,
         key_signature: KeySignatureType? = nil
     ) {
-        self.id = UUID()
+        self.id = id
         self.workName = workName
         self.composer = composer
-        self.movements = movements
+        self.movements = movements ?? []
         self.format = format
         self.tonality = tonality
         self.key_signature = key_signature
@@ -47,7 +48,9 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         case id
         case workName = "work_name"
         case nickname
+        case movements
         case composer_id
+        case composer
         case catalogue_type
         case catalogue_number
         case format
@@ -59,7 +62,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(workName, forKey: .workName)
-        try container.encode(composer.id, forKey: .composer_id)
+        try container.encodeIfPresent(composer?.id, forKey: .composer_id)
         try container.encodeIfPresent(catalogue_type, forKey: .catalogue_type)
         try container.encodeIfPresent(nickname, forKey: .nickname)
         try container.encodeIfPresent(catalogue_number, forKey: .catalogue_number)
@@ -72,7 +75,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
         workName = try container.decode(String.self, forKey: .workName)
-        composer = Composer.init(name: "NEW COMPOSER")
+        composer = nil
         movements = []
         catalogue_type = try container.decodeIfPresent(CatalogueType.self, forKey: .catalogue_type)
         catalogue_number = try container.decodeIfPresent(Int.self, forKey: .catalogue_number)
@@ -136,7 +139,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
 
                 // Update current piece name and append movement
                 currentPieceName = pieceName
-                let movement = Movement(name: movementName.formatMovementName(), number: movementNumber, appleMusicId: appleMusicId)
+                let movement = Movement(name: movementName.formatMovementName(), number: movementNumber)
                 currentPieceMovements.append(movement)
                 movementNumber += 1 // Increment movement number for the next movement
             }
@@ -337,6 +340,97 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         }
         return nil
     }
+}
+
+/**
+ Maps a single SupabasePieceResponse to a Piece model.
+
+ This function converts a single SupabasePieceResponse object into a Piece object,
+ including its associated Composer and Movement objects.
+
+ - Parameter response: The SupabasePieceResponse object to be converted.
+ - Returns: A Piece object with all its associated movements and composer details.
+ */
+func mapResponseToFullPiece(response: SupabasePieceResponse) -> Piece {
+    let pieceId = response.id
+
+    let composer = Composer(
+        name: response.composer.name,
+        id: response.composer.id
+    )
+    let piece = Piece(
+        id: pieceId,
+        workName: response.workName,
+        composer: composer,
+        movements: [],
+        catalogue_type: CatalogueType(rawValue: response.catalogueType ?? ""),
+        catalogue_number: response.catalogueNumber ?? 0,
+        format: Format(rawValue: response.format ?? ""),
+        nickname: response.nickname ?? "",
+        tonality: KeySignatureTonality(rawValue: response.tonality ?? ""),
+        key_signature: KeySignatureType(rawValue: response.keySignature ?? "")
+    )
+
+    for movementResponse in response.movements {
+        let movement = Movement(
+            id: movementResponse.id,
+            name: movementResponse.name ?? "",
+            number: movementResponse.number ?? 0,
+            piece: piece,
+            pieceId: movementResponse.pieceId
+        )
+        piece.movements.append(movement)
+    }
+    return piece
+}
+
+/**
+ Maps an array of SupabasePieceResponse to a Piece.
+
+ - Parameter response: The SupabasePieceResponse object to be converted.
+ - Returns: A Piece object with all associated movements and composer details.
+ */
+func mapResponseToFullPiece(response: [SupabasePieceResponse]) -> [Piece] {
+    var pieceDictionary: [UUID: Piece] = [:]
+    var pieces: [Piece] = []
+
+    for r in response {
+        let pieceId = r.id
+        let composer = Composer(
+            name: r.composer.name,
+            id: r.composer.id
+        )
+        if pieceDictionary[pieceId] == nil {
+            let piece = Piece(
+                id: pieceId,
+                workName: r.workName,
+                composer: composer,
+                movements: [],
+                catalogue_type: CatalogueType(rawValue: r.catalogueType ?? ""),
+                catalogue_number: r.catalogueNumber ?? 0,
+                format: Format(rawValue: r.format ?? ""),
+                nickname: r.nickname ?? "",
+                tonality: KeySignatureTonality(rawValue: r.tonality ?? ""),
+                key_signature: KeySignatureType(rawValue: r.keySignature ?? "")
+            )
+            pieceDictionary[pieceId] = piece
+            pieces.append(piece)
+        }
+
+        for movementResponse in r.movements {
+            let movement = Movement(
+                id: movementResponse.id,
+                name: movementResponse.name ?? "",
+                number: movementResponse.number ?? 0,
+                piece: pieceDictionary[pieceId],
+                pieceId: movementResponse.pieceId
+            )
+
+            pieceDictionary[pieceId]?.movements.append(movement)
+        }
+    }
+
+    return pieces
 }
 
 enum CatalogueType: String, Decodable, CaseIterable, Encodable {

@@ -12,20 +12,13 @@ struct CreatePiece: View {
     @ObservedObject var viewModel = CreatePieceViewModel()
     @Binding var isTyping: Bool
     @State private var isLoading = false
-//    @EnvironmentObject private var psm: PracticeSessionManager
     var body: some View {
-//        VStack {
-//            Text("Active Session Piece ID: \(psm.activeSession?.piece?.workName)")
-//        };
         NavigationView {
             VStack {
-                // Always show the search field
                 TextField("Search", text: $viewModel.searchTerm)
                     .padding()
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .autocorrectionDisabled(true)
-
-                // Show loading indicator if needed
                 if isLoading {
                     ProgressView()
                         .padding(4)
