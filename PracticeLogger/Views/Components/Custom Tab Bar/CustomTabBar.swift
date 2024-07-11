@@ -47,14 +47,16 @@ struct CustomTabBar: View {
 
                 .safeAreaInset(edge: .bottom) {
                     if let activeSession = practiceSessionManager.activeSession {
-                        CustomBottomSheet(animation: animation, expandedSheet: $expandedSheet, activeSession: activeSession)
-                    }
-                }
+                                       CustomBottomSheet(animation: animation, expandedSheet: $expandedSheet, activeSession: activeSession)
+                                           .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .move(edge: .bottom).combined(with: .opacity)))
+                                           .animation(.easeInOut(duration: 0.3), value: practiceSessionManager.activeSession)
+                                   }
+                            }
 
                 .frame(height: 100)
                 .toolbarBackground(.ultraThickMaterial, for: .tabBar)
                 .toolbar(expandedSheet ? .hidden : .visible, for: .tabBar)
-            }
+            }.animation(.easeInOut, value: practiceSessionManager.activeSession)
         }
     /// Custom Bottom Sheet
 
@@ -96,7 +98,7 @@ struct CustomBottomSheet: View {
 
 struct MusicInfo: View {
     @Binding var expandedSheet: Bool
-    var activeSession: PracticeSession
+    @ObservedObject var activeSession: PracticeSession
     var animation: Namespace.ID
     @State private var elapsedTime: String = "00:00"
 
@@ -135,11 +137,13 @@ struct MusicInfo: View {
 
             // Right side: Stop button
             Button(action: {
-
-            }) {
-                Image(systemName: "stop.fill")
-                    .font(.title2)
-            }
+                            Task {
+                                await activeSession.stopSession()
+                            }
+                        }) {
+                            Image(systemName: "stop.fill")
+                                .font(.title2)
+                        }
             .padding(.trailing, 20)
         }
         .foregroundColor(.black)

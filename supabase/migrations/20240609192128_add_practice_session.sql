@@ -25,6 +25,18 @@ CREATE POLICY auth_read_practice_sessions ON practice_sessions
   TO authenticated
   USING (true);
 
+CREATE POLICY auth_update_practice_sessions
+    ON practice_sessions
+    FOR UPDATE
+    TO authenticated
+    USING (user_id = auth.uid());
+
+CREATE POLICY auth_delete_practice_sessions
+    ON practice_sessions
+    FOR DELETE
+    TO authenticated
+    USING (user_id = auth.uid());
+
 -- realtime 
 alter
   publication supabase_realtime add table practice_sessions;

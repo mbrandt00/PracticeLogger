@@ -71,6 +71,9 @@ class PracticeSessionManager: ObservableObject {
                         }
                     case .update(let action):
                         print("Updated: \(action.oldRecord) with \(action.record)")
+                        DispatchQueue.main.async {
+                            self.activeSession = nil
+                        }
                     default:
                         print("An unregistered enum case was encountered")
                     }

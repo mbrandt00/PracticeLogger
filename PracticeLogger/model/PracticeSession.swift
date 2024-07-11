@@ -7,7 +7,8 @@
 
 import Foundation
 
-class PracticeSession: ObservableObject, Identifiable, Codable {
+class PracticeSession: ObservableObject, Identifiable, Codable, Equatable {
+
     let id: UUID
     @Published var startTime: Date
     @Published var endTime: Date?
@@ -60,5 +61,22 @@ class PracticeSession: ObservableObject, Identifiable, Codable {
         try container.encodeIfPresent(endTime, forKey: .endTime)
         try container.encodeIfPresent(piece?.id, forKey: .pieceId)
         try container.encodeIfPresent(movement?.id, forKey: .movementId)
+    }
+
+    static func == (lhs: PracticeSession, rhs: PracticeSession) -> Bool {
+        return lhs.id == rhs.id
+    }
+
+    func stopSession() async {
+        print("IN STOP SESSION")
+        do {
+            let response = try await Database.client
+                        .from("practice_sessions")
+                        .update(["end_time": Date()])
+                        .eq("id", value: id)
+                        .execute()
+        } catch {
+            print("Error updating end_time: \(error)")
+        }
     }
 }
