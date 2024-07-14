@@ -25,13 +25,9 @@ struct PieceShow: View {
                         try await viewModel.startSession(record: .piece(piece))
                     }
                 }) {
-                    if viewModel.isLoading {
-                        ProgressView()
-                    } else {
-                        Image(systemName: "play.circle.fill")
-                            .font(.title)
-                            .foregroundColor(Color.accentColor)
-                    }
+                    Image(systemName: "play.circle.fill")
+                        .font(.title)
+                        .foregroundColor(Color.accentColor)
                 }
                 .disabled(viewModel.isLoading)
             }
@@ -48,12 +44,10 @@ struct PieceShow: View {
                             try await viewModel.startSession(record: .movement(movement))
                         }
                     }) {
-                        if viewModel.isLoading {
-                            ProgressView()
-                        } else {
-                            Image(systemName: "play.circle.fill")
-                                .foregroundColor(Color.accentColor)
-                        }
+
+                        Image(systemName: "play.circle.fill")
+                            .foregroundColor(Color.accentColor)
+
                     }
                     .disabled(viewModel.isLoading)
                 }

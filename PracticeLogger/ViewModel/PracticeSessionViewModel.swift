@@ -8,9 +8,6 @@
 import Foundation
 import Supabase
 class PracticeSessionViewModel: ObservableObject {
-    @Published var isLoading = false
-    @Published var loadingRecord: Record?
-
     func startSession(record: Record) async throws -> PracticeSession? {
         DispatchQueue.main.async {
             self.isLoading = true
