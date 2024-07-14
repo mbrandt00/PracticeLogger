@@ -29,7 +29,6 @@ struct PieceShow: View {
                         .font(.title)
                         .foregroundColor(Color.accentColor)
                 }
-                .disabled(viewModel.isLoading)
             }
 
             ForEach(piece.movements, id: \.self) { movement in
@@ -48,7 +47,6 @@ struct PieceShow: View {
                         Image(systemName: "play.circle.fill")
                             .foregroundColor(Color.accentColor)
                     }
-                    .disabled(viewModel.isLoading)
                 }
                 .padding(.vertical, 5)
             }
