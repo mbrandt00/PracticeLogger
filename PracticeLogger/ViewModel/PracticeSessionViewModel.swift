@@ -8,10 +8,22 @@
 import Foundation
 import Supabase
 class PracticeSessionViewModel: ObservableObject {
-    @Published var session: PracticeSession?
-    @Published var piece: Piece?
+    @Published var isLoading = false
+    @Published var loadingRecord: Record?
 
     func startSession(record: Record) async throws -> PracticeSession? {
+        DispatchQueue.main.async {
+            self.isLoading = true
+            self.loadingRecord = record
+        }
+
+        defer {
+            DispatchQueue.main.async {
+                self.isLoading = false
+                self.loadingRecord = nil
+            }
+        }
+
         switch record {
         case .piece(let piece):
             print("Starting session with piece: \(piece)")

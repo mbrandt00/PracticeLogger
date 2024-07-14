@@ -12,7 +12,6 @@ struct PieceShow: View {
     @ObservedObject var viewModel = PracticeSessionViewModel()
 
     var body: some View {
-
         VStack(alignment: .leading, spacing: 20) {
             HStack {
                 Text(piece.workName)
@@ -26,11 +25,15 @@ struct PieceShow: View {
                         try await viewModel.startSession(record: .piece(piece))
                     }
                 }) {
-                    Image(systemName: "play.circle.fill")
-                        .font(.title)
-                        .foregroundColor(.blue)
+                    if viewModel.isLoading {
+                        ProgressView()
+                    } else {
+                        Image(systemName: "play.circle.fill")
+                            .font(.title)
+                            .foregroundColor(Color.accentColor)
+                    }
                 }
-
+                .disabled(viewModel.isLoading)
             }
 
             ForEach(piece.movements, id: \.self) { movement in
@@ -45,9 +48,14 @@ struct PieceShow: View {
                             try await viewModel.startSession(record: .movement(movement))
                         }
                     }) {
-                        Image(systemName: "play.circle.fill")
-                            .foregroundColor(.blue)
+                        if viewModel.isLoading {
+                            ProgressView()
+                        } else {
+                            Image(systemName: "play.circle.fill")
+                                .foregroundColor(Color.accentColor)
+                        }
                     }
+                    .disabled(viewModel.isLoading)
                 }
                 .padding(.vertical, 5)
             }
