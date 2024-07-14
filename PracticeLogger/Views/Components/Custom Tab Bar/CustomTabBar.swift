@@ -98,6 +98,7 @@ struct MusicInfo: View {
     @ObservedObject var activeSession: PracticeSession
     var animation: Namespace.ID
     @State private var elapsedTime: String = "00:00"
+    @State private var isStoppingSession = false
 
     var body: some View {
         HStack(spacing: 0) {
@@ -156,7 +157,9 @@ struct MusicInfo: View {
             // Right side: Stop button
             Button(action: {
                             Task {
+                                isStoppingSession = true
                                 await activeSession.stopSession()
+                                isStoppingSession = false
                             }
                         }) {
                             Image(systemName: "stop.fill")
@@ -164,6 +167,7 @@ struct MusicInfo: View {
                                 .foregroundColor(Color.primary)
                         }
             .padding(.trailing, 20)
+            .disabled(isStoppingSession)
         }
         .padding(.horizontal)
         .frame(height: 70)
