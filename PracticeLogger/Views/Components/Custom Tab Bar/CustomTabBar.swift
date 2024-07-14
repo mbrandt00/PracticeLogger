@@ -43,7 +43,6 @@ struct CustomTabBar: View {
                         }
                         .tag(Tabs.profile)
                 }
-//                .tint(.accentColor)
 
                 .safeAreaInset(edge: .bottom) {
                     if let activeSession = practiceSessionManager.activeSession {
@@ -58,8 +57,6 @@ struct CustomTabBar: View {
                 .toolbar(expandedSheet ? .hidden : .visible, for: .tabBar)
             }.animation(.easeInOut, value: practiceSessionManager.activeSession)
         }
-    /// Custom Bottom Sheet
-
     }
 struct CustomBottomSheet: View {
     var animation: Namespace.ID
@@ -88,7 +85,7 @@ struct CustomBottomSheet: View {
         /// Seperator
         .overlay(alignment: .bottom, content: {
             Rectangle()
-                .fill(.gray.opacity(0.2))
+                .fill(Color.primary.opacity(0.2))
                 .frame(height: 2)
         })
         /// 49: Default Tab Bar Height
@@ -107,9 +104,10 @@ struct MusicInfo: View {
             // Left side: Timer
             ZStack {
                 if !expandedSheet {
-                    GeometryReader { _ in
+                    GeometryReader { geometry in
                         Text(elapsedTime)
-                            .font(.caption) // Use .caption for smaller text
+                            .font(.caption)
+                            .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
                     }
                     .matchedGeometryEffect(id: "Artwork", in: animation)
                 }
@@ -118,20 +116,40 @@ struct MusicInfo: View {
 
             // Middle side: Composer name, Work name, Movement
             VStack(alignment: .leading, spacing: 5) {
-                Text("Composer: \(activeSession.piece?.composer?.name ?? "No composer")")
-                    .font(.headline)
-                    .foregroundColor(.black)
 
-                Text("Work: \(activeSession.piece?.workName ?? "")")
-                    .fontWeight(.semibold)
-                    .lineLimit(1)
-                    .foregroundColor(.black)
+                if let composerName = activeSession.piece?.composer?.name {
+                    Text(composerName)
+                        .font(.system(size: 10))
+                        .foregroundColor(Color.secondary)
 
-                Text("Movement: \(activeSession.movement?.name ?? "")")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                    .lineLimit(1)
+                }
+
+                if let workName = activeSession.piece?.workName {
+                    Text(workName)
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .lineLimit(2)
+                        .foregroundColor(Color.primary)
+
+                }
+
+                if let movementName = activeSession.movement?.name {
+                    if let movementNumber = activeSession.movement?.number {
+                        HStack {
+                            Text(movementNumber.toRomanNumeral() ?? "")
+                            Text(movementName)
+                        }
+                        .foregroundColor(Color.secondary)
+                        .lineLimit(1)
+                    } else {
+                        Text(movementName)
+                            .font(.caption2)
+                            .foregroundColor(Color.secondary)
+                            .lineLimit(1)
+                    }
+                }
             }
+            .font(.system(size: 12, design: .serif))
             .padding(.horizontal, 15)
             .frame(maxWidth: .infinity)
 
@@ -143,12 +161,11 @@ struct MusicInfo: View {
                         }) {
                             Image(systemName: "stop.fill")
                                 .font(.title2)
+                                .foregroundColor(Color.primary)
                         }
             .padding(.trailing, 20)
         }
-        .foregroundColor(.black)
         .padding(.horizontal)
-        .padding(.bottom, 5)
         .frame(height: 70)
         .contentShape(Rectangle())
         .onTapGesture {
@@ -177,6 +194,21 @@ struct MusicInfo: View {
         }
     }
 }
+
 #Preview {
-    ContentView(isSignedIn: true).preferredColorScheme(.dark)
+    @Namespace var animation
+    return CustomTabBar(selectedTab: .constant(.start), isTyping: .constant(false), expandedSheet: .constant(false), animation: animation).environmentObject(PracticeSessionManager()).preferredColorScheme(.dark)
+}
+#Preview {
+    let manager = PracticeSessionManager()
+    let piece = Piece(workName: "Sonata 2 in B flat Minor Funeral March", composer: Composer(name: "Frederic Chopin"), movements: [
+        Movement(name: "Grave - Doppio movimento", number: 1),
+        Movement(name: "Scherzo- Piu lento - Tempo 1", number: 2),
+        Movement(name: "Marche Funebre", number: 3),
+        Movement(name: "Finale", number: 4)
+    ], formattedKeySignature: "Bb Minor", catalogue_type: CatalogueType.Op, catalogue_number: 35, nickname: "Funeral March", tonality: KeySignatureTonality.minor, key_signature: KeySignatureType.bFlat)
+
+    manager.activeSession = PracticeSession(start_time: Date(), movement: Movement(name: "Grave - Doppio movimento", number: 1, piece: piece))
+    @Namespace var animation
+    return CustomTabBar(selectedTab: .constant(.start), isTyping: .constant(false), expandedSheet: .constant(false), animation: animation).environmentObject(manager).preferredColorScheme(.dark)
 }
