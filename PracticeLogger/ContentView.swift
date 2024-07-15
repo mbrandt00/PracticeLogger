@@ -17,7 +17,6 @@ struct ContentView: View {
     @Namespace private var animation
 
     let bpm: Double = 60
-
     var body: some View {
         VStack {
             if isSignedIn {
