@@ -120,7 +120,6 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
                 // Continue with your existing logic
                 guard case .song(let song) = track else { continue }
                 let composerName = song.composerName ?? ""
-                let appleMusicId = song.id
 
                 // If the piece name changes, create a new piece
                 if let currentName = currentPieceName, currentName != pieceName {
@@ -375,7 +374,7 @@ func mapResponseToFullPiece(response: SupabasePieceResponse) -> Piece {
         let movement = Movement(
             id: movementResponse.id,
             name: movementResponse.name ?? "",
-            number: movementResponse.number ?? 0,
+            number: movementResponse.number,
             piece: piece,
             pieceId: movementResponse.pieceId
         )
@@ -421,7 +420,7 @@ func mapResponseToFullPiece(response: [SupabasePieceResponse]) -> [Piece] {
             let movement = Movement(
                 id: movementResponse.id,
                 name: movementResponse.name ?? "",
-                number: movementResponse.number ?? 0,
+                number: movementResponse.number,
                 piece: pieceDictionary[pieceId],
                 pieceId: movementResponse.pieceId
             )
