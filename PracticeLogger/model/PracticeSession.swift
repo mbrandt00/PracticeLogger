@@ -28,8 +28,8 @@ class PracticeSession: ObservableObject, Identifiable, Codable, Equatable {
     }
 
     // Initialize PracticeSession from decoder
-    init(start_time: Date, piece: Piece? = nil, movement: Movement? = nil) {
-        self.id = UUID()
+    init(start_time: Date, piece: Piece? = nil, movement: Movement? = nil, id: UUID = UUID()) {
+        self.id = id
         self.startTime = start_time
         self.endTime = nil
         self.movement = movement
@@ -79,4 +79,21 @@ class PracticeSession: ObservableObject, Identifiable, Codable, Equatable {
             print("Error updating end_time: \(error)")
         }
     }
+}
+
+struct PracticeSessionResponse: Decodable {
+    var endTime: Date?
+    var startTime: Date?
+    var id: String?
+    var movementId: Int?
+    var userId: String?
+    var durationSeconds: String?
+    enum CodingKeys: String, CodingKey {
+        case endTime = "end_time"
+        case startTime = "start_time"
+        case movementId = "movement_id"
+        case userId = "user_id"
+        case durationSeconds = "duration_seconds"
+    }
+
 }
