@@ -15,6 +15,7 @@ struct ContentView: View {
     @State var isExpanded: Bool = false
     @State var practiceSessionManager: PracticeSessionManager?
     @Namespace private var animation
+
     let bpm: Double = 60
     var body: some View {
         VStack {

@@ -63,16 +63,18 @@ class PracticeSessionManager: ObservableObject {
                         movement: Movement(
                             id: selectedMovement.id,
                             name: selectedMovement.name ?? "",
-                            number: selectedMovement.number ?? 0,
+                            number: selectedMovement.number,
                             piece: mappedPiece,
                             pieceId: selectedMovement.pieceId
-                        )
+                        ),
+                        id: response.id
                     )
                 } else {
                     // Initialize without movement details if movementId is nil
                     practiceSession = PracticeSession(
                         start_time: response.startTime!,
-                        piece: mappedPiece
+                        piece: mappedPiece,
+                        id: response.id
                     )
                 }
 
@@ -126,7 +128,7 @@ class PracticeSessionManager: ObservableObject {
                                 let selectedMovement = Movement(
                                     id: selectedMovementResponse.id,
                                     name: selectedMovementResponse.name ?? "",
-                                    number: selectedMovementResponse.number ?? 0,
+                                    number: selectedMovementResponse.number,
                                     piece: practiceSession.piece,
                                     pieceId: selectedMovementResponse.pieceId
                                 )
@@ -161,8 +163,11 @@ struct ActiveSessionResponse: Decodable {
     var startTime: Date?
     var endTime: Date?
     var userId: String?
+    let id: UUID
+
     var durationSeconds: Int?
     enum CodingKeys: String, CodingKey {
+        case id
         case movementId = "movement_id"
         case pieceId = "piece_id"
         case startTime = "start_time"

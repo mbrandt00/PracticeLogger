@@ -52,7 +52,7 @@ struct CustomTabBar: View {
                                    }
                             }
 
-                .frame(height: 100)
+                .frame(maxHeight: practiceSessionManager.activeSession != nil ? 100 : 50)
                 .toolbarBackground(.ultraThickMaterial, for: .tabBar)
                 .toolbar(expandedSheet ? .hidden : .visible, for: .tabBar)
             }.animation(.easeInOut, value: practiceSessionManager.activeSession)

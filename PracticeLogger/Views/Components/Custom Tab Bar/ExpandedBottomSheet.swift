@@ -73,5 +73,5 @@ struct ExpandedBottomSheet: View {
 }
 
 #Preview {
-    ContentView(isSignedIn: true).preferredColorScheme(.light)
+    ContentView().preferredColorScheme(.light)
 }
