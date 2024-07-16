@@ -8,10 +8,6 @@
 import Foundation
 import MusicKit
 import Combine
-import OSLog
-
-let logger = Logger()
-
 class CreatePieceViewModel: ObservableObject {
     @Published var pieces: [Piece] = []
     @Published var searchTerm: String = ""
@@ -33,7 +29,6 @@ class CreatePieceViewModel: ObservableObject {
 
     func getClassicalPieces(_ query: String) async {
         do {
-            logger.info("Requesting music auth")
             let status = await MusicAuthorization.request()
             switch status {
             case .authorized:
@@ -43,17 +38,16 @@ class CreatePieceViewModel: ObservableObject {
                         self.pieces = fetchedPieces
                     }
                 } catch {
-                    logger.error("Error fetching pieces: \(error)")
                     print("Error fetching pieces: \(error)")
                 }
             case .denied:
-                logger.info("Denied")
+                print("Denied")
             case .notDetermined:
-                logger.info("Not Determined")
+                print("Not Determined")
             case .restricted:
-                logger.info("Restricted")
+                print("Restricted")
             default:
-                logger.info("Something happened")
+                print("Something happened")
             }
         }
     }

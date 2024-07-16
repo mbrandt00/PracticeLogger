@@ -12,6 +12,7 @@ import Supabase
 class PracticeSessionManager: ObservableObject {
     @Published var activeSession: PracticeSession?
     private var cancellables: Set<AnyCancellable> = []
+    private var currentTaskID: UUID = UUID()
 
     init() {
         subscribeToPracticeSessions()
@@ -23,8 +24,6 @@ class PracticeSessionManager: ObservableObject {
             do {
                 // Get current user ID
                 let userID = try await Database.getCurrentUser().id
-
-                // Fetch active session response
                 guard let response: ActiveSessionResponse = try await Database.client
                     .from("practice_sessions")
                     .select("*")
@@ -37,7 +36,6 @@ class PracticeSessionManager: ObservableObject {
                         return
                 }
 
-                // Fetch piece details for the active session
                 guard let pieceResponse: SupabasePieceResponse = try await Database.client
                     .from("pieces")
                     .select("*, movements!inner(*), composer:composers!inner(id, name)")
@@ -45,19 +43,15 @@ class PracticeSessionManager: ObservableObject {
                     .single()
                     .execute()
                     .value else {
-                        print("No piece found with ID \(response.pieceId)")
                         return
                 }
 
-                // Map piece response to a full piece object
                 let mappedPiece = mapResponseToFullPiece(response: pieceResponse)
 
-                // Initialize practice session based on response data
                 var practiceSession: PracticeSession
 
                 if let movementId = response.movementId,
                    let selectedMovement = pieceResponse.movements.first(where: { $0.id == movementId }) {
-                    // Initialize with movement details if movementId is present
                     practiceSession = PracticeSession(
                         start_time: response.startTime!,
                         movement: Movement(
@@ -70,7 +64,6 @@ class PracticeSessionManager: ObservableObject {
                         id: response.id
                     )
                 } else {
-                    // Initialize without movement details if movementId is nil
                     practiceSession = PracticeSession(
                         start_time: response.startTime!,
                         piece: mappedPiece,
@@ -90,25 +83,35 @@ class PracticeSessionManager: ObservableObject {
     }
 
     func subscribeToPracticeSessions() {
+        let client = Database.client.realtimeV2
         Task {
             do {
-                let channel = Database.client.realtimeV2.channel("public:practice_sessions")
-                let userID = try await Database.getCurrentUser().id
 
-                let changeStream =  channel.postgresChange(
+                await Database.client.removeAllChannels()
+
+                guard let userId = (Database.client.auth.currentUser?.id) else {
+                    print("No current user found")
+                    return
+                }
+
+                let channel = Database.client.realtimeV2.channel("practice_sessions")
+
+                let changeStream = channel.postgresChange(
                     AnyAction.self,
                     schema: "public",
                     table: "practice_sessions",
-                    filter: "user_id=eq.\(userID)"
+                    filter: "user_id=eq.\(userId)"
                 )
 
                 await channel.subscribe()
-
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .formatted(DateFormatter.supabaseIso)
+                if client.status == .disconnected {
+                }
 
                 // Iterate over the change stream
                 for try await change in changeStream {
+                    print("CHANGE")
                     switch change {
                     case .delete(let action):
                         print("Deleted: \(action.oldRecord)")
@@ -142,12 +145,11 @@ class PracticeSessionManager: ObservableObject {
                             self.activeSession = practiceSession
                         }
                     case .update(let action):
-                        print("Updated: \(action.oldRecord) with \(action.record)")
                         DispatchQueue.main.async {
                             self.activeSession = nil
                         }
                     default:
-                        print("An unregistered enum case was encountered")
+                       print("An unregistered enum case was encountered")
                     }
                 }
             } catch {

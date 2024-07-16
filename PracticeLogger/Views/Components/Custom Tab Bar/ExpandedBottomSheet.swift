@@ -73,5 +73,7 @@ struct ExpandedBottomSheet: View {
 }
 
 #Preview {
-    ContentView().preferredColorScheme(.light)
+    ContentView(isSignedIn: .constant(false))
+        .environmentObject(PracticeSessionManager())
+        .preferredColorScheme(.light)
 }

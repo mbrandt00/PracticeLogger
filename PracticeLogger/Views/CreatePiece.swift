@@ -9,7 +9,7 @@ import SwiftUI
 import MusicKit
 
 struct CreatePiece: View {
-    @ObservedObject var viewModel = CreatePieceViewModel()
+    @StateObject var viewModel = CreatePieceViewModel()
     @Binding var isTyping: Bool
     @State private var isLoading = false
     var body: some View {
@@ -27,7 +27,6 @@ struct CreatePiece: View {
                         .offset(x: 0, y: -2)
                 }
 
-                // Conditionally display content based on searchTerm
                 if viewModel.searchTerm.isEmpty {
                     VStack(alignment: .leading) {
                         Text("Repetoire")
@@ -44,8 +43,7 @@ struct CreatePiece: View {
                         Task {
                             isLoading = true
                             do {
-                                let pieces = try await viewModel.getUserPieces()
-                                print(pieces)
+                                _ = try await viewModel.getUserPieces()
                             } catch {
                                 print("Error loading user pieces: \(error)")
                             }

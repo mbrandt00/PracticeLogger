@@ -16,6 +16,7 @@ class PracticeSession: ObservableObject, Identifiable, Codable, Equatable {
     @Published var composer: Composer?
     var pieceId: UUID // ID to fetch Piece
     var movementId: Int?
+    var userId: UUID?
     @Published var movement: Movement?
 
     enum CodingKeys: String, CodingKey {
@@ -51,6 +52,7 @@ class PracticeSession: ObservableObject, Identifiable, Codable, Equatable {
         endTime = try container.decodeIfPresent(Date.self, forKey: .endTime)
         pieceId = try container.decodeIfPresent(UUID.self, forKey: .pieceId) ?? UUID() // Initialize pieceId with decoded value or a new UUID
         movementId = try container.decodeIfPresent(Int.self, forKey: .movementId)
+        userId = try container.decodeIfPresent(UUID.self, forKey: .userId)
     }
 
     // Codable encode method
@@ -70,7 +72,7 @@ class PracticeSession: ObservableObject, Identifiable, Codable, Equatable {
     func stopSession() async {
         print("IN STOP SESSION")
         do {
-            let response = try await Database.client
+            _ = try await Database.client
                         .from("practice_sessions")
                         .update(["end_time": Date()])
                         .eq("id", value: id)

@@ -4,9 +4,9 @@
 //
 //  Created by Michael Brandt on 6/8/24.
 //
-
 import Foundation
 import Supabase
+
 class PracticeSessionViewModel: ObservableObject {
     func startSession(record: Record) async throws -> PracticeSession? {
         switch record {

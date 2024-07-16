@@ -16,7 +16,13 @@ class Database: ObservableObject {
             fatalError("Missing SUPABASE_URL or SUPABASE_KEY in Info.plist")
         }
 
-        return SupabaseClient(supabaseURL: supabaseUrl, supabaseKey: supabaseKey)
+        return SupabaseClient(
+            supabaseURL: supabaseUrl,
+            supabaseKey: supabaseKey,
+            options: SupabaseClientOptions(
+//                db: .init(encoder: encoder, decoder: decoder),
+//                global: SupabaseClientOptions.GlobalOptions(logger: LogStore.shared)
+          ))
     }()
 
     @Published var isLoggedIn: Bool = false
