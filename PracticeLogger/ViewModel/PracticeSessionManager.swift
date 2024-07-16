@@ -92,14 +92,17 @@ class PracticeSessionManager: ObservableObject {
     func subscribeToPracticeSessions() {
         Task {
             do {
+                guard let userID = try await Database.client.auth.currentUser?.id else {
+                    print("No current user found")
+                    return
+                }
                 let channel = Database.client.realtimeV2.channel("public:practice_sessions")
-                let userID = try await Database.getCurrentUser().id
 
-                let changeStream =  channel.postgresChange(
+                let changeStream = channel.postgresChange(
                     AnyAction.self,
                     schema: "public",
                     table: "practice_sessions",
-                    filter: "user_id=eq.\(userID)"
+                    filter: "user_id=eq.\(userID)" // Ensure userID is properly formatted and substituted
                 )
 
                 await channel.subscribe()
