@@ -101,8 +101,8 @@ class PracticeSessionManager: ObservableObject {
                 let changeStream = channel.postgresChange(
                     AnyAction.self,
                     schema: "public",
-                    table: "practice_sessions",
-                    filter: "user_id=eq.\(userID)" // Ensure userID is properly formatted and substituted
+                    table: "practice_sessions"
+//                    filter: "user_id=eq.\(userID)" // Ensure userID is properly formatted and substituted
                 )
 
                 await channel.subscribe()
