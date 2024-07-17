@@ -99,22 +99,22 @@ class PracticeSessionManager: ObservableObject {
     }
 
     func subscribeToPracticeSessions() {
-        logger.log("In fetchCurrentActiveSession function \(self.currentTaskID)")
+        logger.log("In subscribeToPracticeSessions function \(self.currentTaskID, privacy: .public)")
         Task {
             do {
                 guard let userID = try await Database.client.auth.currentUser?.id else {
                     print("No current user found")
                     return
                 }
-                logger.log("subscribeToPracticeSessions function current user id \(userID)  \(self.currentTaskID)")
+                logger.log("subscribeToPracticeSessions function current user id \(userID, privacy: .public)  \(self.currentTaskID, privacy: .public)")
 
                 let channel = Database.client.realtimeV2.channel("public:practice_sessions")
 
                 let changeStream = channel.postgresChange(
                     AnyAction.self,
                     schema: "public",
-                    table: "practice_sessions",
-                    filter: "user_id=eq.\(userID)"
+                    table: "practice_sessions"
+//                    filter: "user_id=eq.\(userID)"
                 )
 
                 await channel.subscribe()
@@ -124,12 +124,13 @@ class PracticeSessionManager: ObservableObject {
 
                 // Iterate over the change stream
                 for try await change in changeStream {
+                    logger.log("Found change in change stream \(self.currentTaskID, privacy: .public)")
                     switch change {
                     case .delete(let action):
                         print("Deleted: \(action.oldRecord)")
                     case .insert(let insertion):
                         let practiceSession = try insertion.decodeRecord(decoder: decoder) as PracticeSession
-                        logger.log("In changeStream channel function found practice session id: \(practiceSession.id) \(self.currentTaskID)")
+                        logger.log("In changeStream channel function found practice session id: \(practiceSession.id, privacy: .public) \(self.currentTaskID, privacy: .public)")
 
                         let piece: SupabasePieceResponse = try await Database.client
                             .from("pieces")
@@ -155,6 +156,7 @@ class PracticeSessionManager: ObservableObject {
                                 print("No matching movement found for id \(movementId)")
                             }
                         }
+                        logger.log("Dispatching subscribed practice session to mainqueue \(self.currentTaskID, privacy: .public)")
                         DispatchQueue.main.async {
                             self.activeSession = practiceSession
                         }
