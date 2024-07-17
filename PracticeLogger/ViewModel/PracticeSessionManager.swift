@@ -100,6 +100,7 @@ class PracticeSessionManager: ObservableObject {
 
     func subscribeToPracticeSessions() {
         logger.log("In subscribeToPracticeSessions function \(self.currentTaskID, privacy: .public)")
+        let client = Database.client.realtimeV2
         Task {
             do {
                 logger.log("unsubscribing from all channels  \(self.currentTaskID, privacy: .public)")
@@ -113,7 +114,7 @@ class PracticeSessionManager: ObservableObject {
                 }
                 logger.log("subscribeToPracticeSessions function current user id \(userID, privacy: .public)  \(self.currentTaskID, privacy: .public)")
 
-                let channel = Database.client.realtimeV2.channel("public:practice_sessions")
+                let channel = Database.client.realtimeV2.channel("practice_sessions")
 
                 let changeStream = channel.postgresChange(
                     AnyAction.self,
@@ -121,12 +122,18 @@ class PracticeSessionManager: ObservableObject {
                     table: "practice_sessions"
 //                    filter: "user_id=eq.\(userID)"
                 )
-
-                await channel.subscribe()
+                logger.log("about to subscribe to channel  \(self.currentTaskID, privacy: .public)")
+                
+                let connection = await channel.subscribe()
+                
+                logger.log("finished subscribing to channel  \(self.currentTaskID, privacy: .public)")
 
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .formatted(DateFormatter.supabaseIso)
-
+                if client.status == .disconnected {
+                    logger.error("Did not connect to channel after calling .subscribe() \(userID, privacy: .public)  \(self.currentTaskID, privacy: .public)")
+                }
+                
                 // Iterate over the change stream
                 for try await change in changeStream {
                     logger.log("Found change in change stream \(self.currentTaskID, privacy: .public)")
