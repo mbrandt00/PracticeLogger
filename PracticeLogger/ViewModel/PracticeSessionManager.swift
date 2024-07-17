@@ -102,6 +102,11 @@ class PracticeSessionManager: ObservableObject {
         logger.log("In subscribeToPracticeSessions function \(self.currentTaskID, privacy: .public)")
         Task {
             do {
+                logger.log("unsubscribing from all channels  \(self.currentTaskID, privacy: .public)")
+
+                await Database.client.removeAllChannels()
+
+
                 guard let userID = try await Database.client.auth.currentUser?.id else {
                     print("No current user found")
                     return
