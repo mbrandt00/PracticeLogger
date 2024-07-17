@@ -23,6 +23,7 @@
 		D15C88312BF063B900AAC950 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15C88302BF063B900AAC950 /* Error.swift */; };
 		D1689CA02C06D13F00191DA7 /* RepertoireRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1689C9F2C06D13F00191DA7 /* RepertoireRow.swift */; };
 		D17C5CA82B9E561300C1CA44 /* NewPieceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17C5CA72B9E561300C1CA44 /* NewPieceRow.swift */; };
+		D1840DCE2C48892F001ED849 /* ContentViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1840DCD2C48892F001ED849 /* ContentViewViewModel.swift */; };
 		D185AC152BDF3B7E007F398D /* PieceEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D185AC142BDF3B7E007F398D /* PieceEditViewModel.swift */; };
 		D185FB722B90482E003C7631 /* CreatePiece.swift in Sources */ = {isa = PBXBuildFile; fileRef = D185FB712B90482E003C7631 /* CreatePiece.swift */; };
 		D188F6662B96CEF4005E0FA2 /* CreatePieceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D188F6652B96CEF4005E0FA2 /* CreatePieceViewModel.swift */; };
@@ -87,6 +88,7 @@
 		D15C88302BF063B900AAC950 /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		D1689C9F2C06D13F00191DA7 /* RepertoireRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepertoireRow.swift; sourceTree = "<group>"; };
 		D17C5CA72B9E561300C1CA44 /* NewPieceRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPieceRow.swift; sourceTree = "<group>"; usesTabs = 0; };
+		D1840DCD2C48892F001ED849 /* ContentViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewViewModel.swift; sourceTree = "<group>"; };
 		D185AC142BDF3B7E007F398D /* PieceEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceEditViewModel.swift; sourceTree = "<group>"; };
 		D185FB712B90482E003C7631 /* CreatePiece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePiece.swift; sourceTree = "<group>"; };
 		D188F6652B96CEF4005E0FA2 /* CreatePieceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePieceViewModel.swift; sourceTree = "<group>"; };
@@ -215,6 +217,7 @@
 				D12EE5662C04E8B10024F288 /* NewPieceRowViewModel.swift */,
 				D197387F2C1540B600EBF53F /* PracticeSessionViewModel.swift */,
 				D12F4F6C2C306A6C0083C52B /* PracticeSessionManager.swift */,
+				D1840DCD2C48892F001ED849 /* ContentViewViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -512,6 +515,7 @@
 				D15C88312BF063B900AAC950 /* Error.swift in Sources */,
 				D197387E2C153F7100EBF53F /* PieceShow.swift in Sources */,
 				D1C2BEC22BDD76A300E8E39F /* Database.swift in Sources */,
+				D1840DCE2C48892F001ED849 /* ContentViewViewModel.swift in Sources */,
 				D1D6548E2BDDB9BE008D4868 /* ProfileViewModel.swift in Sources */,
 				D15501B82BF1961C0088BCCE /* MovementEditRow.swift in Sources */,
 				D1C2BEB52BDCE22600E8E39F /* Tag.swift in Sources */,

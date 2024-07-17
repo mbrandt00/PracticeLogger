@@ -8,17 +8,18 @@ import SwiftUI
 import MusicKit
 
 struct ContentView: View {
-    @State var selectedTab: Tabs = .start
-    @State var isTyping: Bool = false
-    @State var isSignedIn: Bool = false
-    @State var isExpanded: Bool = false
-    @State var practiceSessionManager: PracticeSessionManager?
+    @State private var selectedTab: Tabs = .start
+    @State private var isTyping: Bool = false
     @Namespace private var animation
+    @State var isExpanded: Bool = false
+    
+
+    @ObservedObject private var viewModel = ContentViewViewModel()
 
     var body: some View {
         VStack {
-            if isSignedIn {
-                if let manager = practiceSessionManager {
+            if viewModel.isSignedIn {
+                if let manager = viewModel.practiceSessionManager {
                     if isExpanded && manager.activeSession != nil {
                         ExpandedBottomSheet(animation: animation, activeSession: manager.activeSession!, expandedSheet: $isExpanded)
                             .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
@@ -30,7 +31,7 @@ struct ContentView: View {
                             case .start:
                                 CreatePiece(isTyping: $isTyping)
                             case .profile:
-                                Profile(isSignedIn: $isSignedIn) .environmentObject(manager)
+                                Profile(isSignedIn: $viewModel.isSignedIn).environmentObject(manager)
                             }
 
                             Spacer()
@@ -39,27 +40,12 @@ struct ContentView: View {
                     }
                 }
             } else {
-                SignIn(isSignedIn: $isSignedIn)
-                    .onChange(of: isSignedIn) { newValue in
+                SignIn(isSignedIn: $viewModel.isSignedIn)
+                    .onChange(of: viewModel.isSignedIn) { newValue in
                         if newValue {
-                            practiceSessionManager = PracticeSessionManager()
+                            viewModel.practiceSessionManager = PracticeSessionManager()
                         }
                     }
-            }
-        }
-        .onAppear {
-            Task {
-                do {
-                    let session = try await Database.client.auth.session
-                    if !session.isExpired {
-                        DispatchQueue.main.async {
-                            isSignedIn = true
-                        }
-                    }
-                    practiceSessionManager = PracticeSessionManager()
-                } catch {
-                    print("Failed to get session: \(error)")
-                }
             }
         }
     }
