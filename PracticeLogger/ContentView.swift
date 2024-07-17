@@ -50,17 +50,7 @@ struct ContentView: View {
         .onAppear {
             Task {
                 do {
-                    let session = try await Database.client.auth.session
-                    if !session.isExpired {
-                        DispatchQueue.main.async {
-                            isSignedIn = true
-                            if practiceSessionManager?.activeSession == nil {
-                                practiceSessionManager = PracticeSessionManager()
-                            }
-                        }
-                    }
-                } catch {
-                    print("Failed to get session: \(error)")
+                    practiceSessionManager = PracticeSessionManager()
                 }
             }
         }
