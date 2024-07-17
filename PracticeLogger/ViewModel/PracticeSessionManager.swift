@@ -8,21 +8,29 @@
 import Foundation
 import Combine
 import Supabase
+import os
+let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "PracticeSessionManager")
 
 class PracticeSessionManager: ObservableObject {
     @Published var activeSession: PracticeSession?
     private var cancellables: Set<AnyCancellable> = []
+    private var currentTaskID: UUID = UUID()
 
     init() {
+        logger.log("In PracticeSessionManager init function \(self.currentTaskID)")
+
         subscribeToPracticeSessions()
         fetchCurrentActiveSession()
     }
 
     func fetchCurrentActiveSession() {
+        logger.log("In fetchCurrentActiveSession function \(self.currentTaskID)")
+
         Task {
             do {
                 // Get current user ID
                 let userID = try await Database.getCurrentUser().id
+                logger.log("fetchCurrentActiveSession function current user id \(userID) \(self.currentTaskID)")
 
                 // Fetch active session response
                 guard let response: ActiveSessionResponse = try await Database.client
@@ -45,7 +53,7 @@ class PracticeSessionManager: ObservableObject {
                     .single()
                     .execute()
                     .value else {
-                        print("No piece found with ID \(response.pieceId)")
+                    logger.log("No piece found with ID \(response.pieceId ?? "")")
                         return
                 }
 
@@ -77,6 +85,7 @@ class PracticeSessionManager: ObservableObject {
                         id: response.id
                     )
                 }
+                logger.log("About to dispatch to queue for current session \(self.currentTaskID)")
 
                 // Update active session on the main queue
                 DispatchQueue.main.async {
@@ -84,25 +93,28 @@ class PracticeSessionManager: ObservableObject {
                 }
 
             } catch {
-                print("Error retrieving active session: \(error)")
+                logger.log("Error retrieving active session: \(error) \(self.currentTaskID)")
             }
         }
     }
 
     func subscribeToPracticeSessions() {
+        logger.log("In fetchCurrentActiveSession function \(self.currentTaskID)")
         Task {
             do {
                 guard let userID = try await Database.client.auth.currentUser?.id else {
                     print("No current user found")
                     return
                 }
+                logger.log("subscribeToPracticeSessions function current user id \(userID)  \(self.currentTaskID)")
+
                 let channel = Database.client.realtimeV2.channel("public:practice_sessions")
 
                 let changeStream = channel.postgresChange(
                     AnyAction.self,
                     schema: "public",
-                    table: "practice_sessions"
-//                    filter: "user_id=eq.\(userID)" // Ensure userID is properly formatted and substituted
+                    table: "practice_sessions",
+                    filter: "user_id=eq.\(userID)"
                 )
 
                 await channel.subscribe()
@@ -117,6 +129,8 @@ class PracticeSessionManager: ObservableObject {
                         print("Deleted: \(action.oldRecord)")
                     case .insert(let insertion):
                         let practiceSession = try insertion.decodeRecord(decoder: decoder) as PracticeSession
+                        logger.log("In changeStream channel function found practice session id: \(practiceSession.id) \(self.currentTaskID)")
+
                         let piece: SupabasePieceResponse = try await Database.client
                             .from("pieces")
                             .select("*, movements!inner(*), composer:composers!inner(id, name)")
@@ -150,11 +164,11 @@ class PracticeSessionManager: ObservableObject {
                             self.activeSession = nil
                         }
                     default:
-                        print("An unregistered enum case was encountered")
+                        logger.log("An unregistered enum case was encountered  \(self.currentTaskID)")
                     }
                 }
             } catch {
-                print("Error in subscribeToPracticeSessions: \(error)")
+                logger.log("Error in subscribeToPracticeSessions: \(error)  \(self.currentTaskID)")
             }
         }
     }
