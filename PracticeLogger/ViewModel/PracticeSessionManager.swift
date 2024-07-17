@@ -17,20 +17,20 @@ class PracticeSessionManager: ObservableObject {
     private var currentTaskID: UUID = UUID()
 
     init() {
-        logger.log("In PracticeSessionManager init function \(self.currentTaskID)")
+        logger.log("In PracticeSessionManager init function \(self.currentTaskID, privacy: .public)")
 
         subscribeToPracticeSessions()
         fetchCurrentActiveSession()
     }
 
     func fetchCurrentActiveSession() {
-        logger.log("In fetchCurrentActiveSession function \(self.currentTaskID)")
+        logger.log("In fetchCurrentActiveSession function \(self.currentTaskID, privacy: .public)")
 
         Task {
             do {
                 // Get current user ID
                 let userID = try await Database.getCurrentUser().id
-                logger.log("fetchCurrentActiveSession function current user id \(userID) \(self.currentTaskID)")
+                logger.log("fetchCurrentActiveSession function current user id \(userID) \(self.currentTaskID, privacy: .public)")
 
                 // Fetch active session response
                 guard let response: ActiveSessionResponse = try await Database.client
@@ -85,7 +85,7 @@ class PracticeSessionManager: ObservableObject {
                         id: response.id
                     )
                 }
-                logger.log("About to dispatch to queue for current session \(self.currentTaskID)")
+                logger.log("About to dispatch to queue for current session \(self.currentTaskID, privacy: .public)")
 
                 // Update active session on the main queue
                 DispatchQueue.main.async {
@@ -93,7 +93,7 @@ class PracticeSessionManager: ObservableObject {
                 }
 
             } catch {
-                logger.log("Error retrieving active session: \(error) \(self.currentTaskID)")
+                logger.log("Error retrieving active session: \(error) \(self.currentTaskID, privacy: .public)")
             }
         }
     }
@@ -159,16 +159,16 @@ class PracticeSessionManager: ObservableObject {
                             self.activeSession = practiceSession
                         }
                     case .update(let action):
-                        print("Updated: \(action.oldRecord) with \(action.record)")
+                        logger.info("Updated: \(action.oldRecord, privacy: .public) with \(action.record, privacy: .public) \(self.currentTaskID, privacy: .public)")
                         DispatchQueue.main.async {
                             self.activeSession = nil
                         }
                     default:
-                        logger.log("An unregistered enum case was encountered  \(self.currentTaskID)")
+                        logger.log("An unregistered enum case was encountered  \(self.currentTaskID, privacy: .public)")
                     }
                 }
             } catch {
-                logger.log("Error in subscribeToPracticeSessions: \(error)  \(self.currentTaskID)")
+                logger.log("Error in subscribeToPracticeSessions: \(error)  \(self.currentTaskID, privacy: .public)")
             }
         }
     }
