@@ -38,17 +38,16 @@ class CreatePieceViewModel: ObservableObject {
                         self.pieces = fetchedPieces
                     }
                 } catch {
-                    logger.error("Error fetching pieces: \(error)")
                     print("Error fetching pieces: \(error)")
                 }
             case .denied:
-                logger.info("Denied")
+                print("Denied")
             case .notDetermined:
-                logger.info("Not Determined")
+                print("Not Determined")
             case .restricted:
-                logger.info("Restricted")
+                print("Restricted")
             default:
-                logger.info("Something happened")
+                print("Something happened")
             }
         }
     }
@@ -61,6 +60,7 @@ class CreatePieceViewModel: ObservableObject {
             .order("created_at", ascending: false)
             .execute()
             .value
+        dump(response)
         let pieces = mapResponseToFullPiece(response: response)
 
         DispatchQueue.main.async {

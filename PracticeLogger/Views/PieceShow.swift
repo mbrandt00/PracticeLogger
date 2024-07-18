@@ -22,7 +22,11 @@ struct PieceShow: View {
 
                 Button(action: {
                     Task {
-                        try await viewModel.startSession(record: .piece(piece))
+                        do {
+                            try await viewModel.startSession(record: .piece(piece))
+                        } catch {
+                            print(error.localizedDescription)
+                        }
                     }
                 }) {
                     Image(systemName: "play.circle.fill")

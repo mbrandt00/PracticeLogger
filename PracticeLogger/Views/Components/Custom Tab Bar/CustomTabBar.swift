@@ -21,43 +21,42 @@ struct CustomTabBar: View {
 
     var body: some View {
         VStack {
-                TabView(selection: $selectedTab) {
-                    Text("")
-                        .tabItem {
-                            Image(systemName: "chart.xyaxis.line")
-                            Text("Progress")
-                        }
-                        .tag(Tabs.progress)
+            TabView(selection: $selectedTab) {
+                Text("")
+                    .tabItem {
+                        Image(systemName: "chart.xyaxis.line")
+                        Text("Progress")
+                    }
+                    .tag(Tabs.progress)
 
-                   Text("")
-                        .tabItem {
-                            Image(systemName: "metronome")
-                            Text("Practice")
-                        }
-                        .tag(Tabs.start)
+                Text("")
+                    .tabItem {
+                        Image(systemName: "metronome")
+                        Text("Practice")
+                    }
+                    .tag(Tabs.start)
 
-                    Text("")
-                        .tabItem {
-                            Image(systemName: "person")
-                            Text("Profile")
-                        }
-                        .tag(Tabs.profile)
+                Text("")
+                    .tabItem {
+                        Image(systemName: "person")
+                        Text("Profile")
+                    }
+                    .tag(Tabs.profile)
+            }
+            .safeAreaInset(edge: .bottom) {
+                if let activeSession = practiceSessionManager.activeSession {
+                    CustomBottomSheet(animation: animation, expandedSheet: $expandedSheet, activeSession: activeSession)
+                        .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .move(edge: .bottom).combined(with: .opacity)))
+                        .animation(.easeInOut(duration: 0.3), value: practiceSessionManager.activeSession)
                 }
-
-                .safeAreaInset(edge: .bottom) {
-                    if let activeSession = practiceSessionManager.activeSession {
-                                       CustomBottomSheet(animation: animation, expandedSheet: $expandedSheet, activeSession: activeSession)
-                                           .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .move(edge: .bottom).combined(with: .opacity)))
-                                           .animation(.easeInOut(duration: 0.3), value: practiceSessionManager.activeSession)
-                                   }
-                            }
-
-                .frame(maxHeight: practiceSessionManager.activeSession != nil ? 100 : 50)
-                .toolbarBackground(.ultraThickMaterial, for: .tabBar)
-                .toolbar(expandedSheet ? .hidden : .visible, for: .tabBar)
-            }.animation(.easeInOut, value: practiceSessionManager.activeSession)
+            }
+            .frame(maxHeight: practiceSessionManager.activeSession != nil ? 100 : 50)
+            .toolbarBackground(.ultraThickMaterial, for: .tabBar)
+            .toolbar(expandedSheet ? .hidden : .visible, for: .tabBar)
         }
+        .animation(.easeInOut, value: practiceSessionManager.activeSession)
     }
+}
 struct CustomBottomSheet: View {
     var animation: Namespace.ID
     @Binding var expandedSheet: Bool

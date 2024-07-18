@@ -8,8 +8,6 @@
 import Foundation
 import Combine
 import Supabase
-import os
-let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "PracticeSessionManager")
 
 class PracticeSessionManager: ObservableObject {
     @Published var activeSession: PracticeSession?
@@ -17,22 +15,15 @@ class PracticeSessionManager: ObservableObject {
     private var currentTaskID: UUID = UUID()
 
     init() {
-        logger.log("In PracticeSessionManager init function \(self.currentTaskID, privacy: .public)")
-
         subscribeToPracticeSessions()
         fetchCurrentActiveSession()
     }
 
     func fetchCurrentActiveSession() {
-        logger.log("In fetchCurrentActiveSession function \(self.currentTaskID, privacy: .public)")
-
         Task {
             do {
                 // Get current user ID
                 let userID = try await Database.getCurrentUser().id
-                logger.log("fetchCurrentActiveSession function current user id \(userID) \(self.currentTaskID, privacy: .public)")
-
-                // Fetch active session response
                 guard let response: ActiveSessionResponse = try await Database.client
                     .from("practice_sessions")
                     .select("*")
@@ -45,7 +36,6 @@ class PracticeSessionManager: ObservableObject {
                         return
                 }
 
-                // Fetch piece details for the active session
                 guard let pieceResponse: SupabasePieceResponse = try await Database.client
                     .from("pieces")
                     .select("*, movements!inner(*), composer:composers!inner(id, name)")
@@ -53,19 +43,15 @@ class PracticeSessionManager: ObservableObject {
                     .single()
                     .execute()
                     .value else {
-                    logger.log("No piece found with ID \(response.pieceId ?? "")")
                         return
                 }
 
-                // Map piece response to a full piece object
                 let mappedPiece = mapResponseToFullPiece(response: pieceResponse)
 
-                // Initialize practice session based on response data
                 var practiceSession: PracticeSession
 
                 if let movementId = response.movementId,
                    let selectedMovement = pieceResponse.movements.first(where: { $0.id == movementId }) {
-                    // Initialize with movement details if movementId is present
                     practiceSession = PracticeSession(
                         start_time: response.startTime!,
                         movement: Movement(
@@ -78,14 +64,12 @@ class PracticeSessionManager: ObservableObject {
                         id: response.id
                     )
                 } else {
-                    // Initialize without movement details if movementId is nil
                     practiceSession = PracticeSession(
                         start_time: response.startTime!,
                         piece: mappedPiece,
                         id: response.id
                     )
                 }
-                logger.log("About to dispatch to queue for current session \(self.currentTaskID, privacy: .public)")
 
                 // Update active session on the main queue
                 DispatchQueue.main.async {
@@ -93,26 +77,22 @@ class PracticeSessionManager: ObservableObject {
                 }
 
             } catch {
-                logger.log("Error retrieving active session: \(error) \(self.currentTaskID, privacy: .public)")
+                print("Error retrieving active session: \(error)")
             }
         }
     }
 
     func subscribeToPracticeSessions() {
-        logger.log("In subscribeToPracticeSessions function \(self.currentTaskID, privacy: .public)")
         let client = Database.client.realtimeV2
         Task {
             do {
-                logger.log("unsubscribing from all channels  \(self.currentTaskID, privacy: .public)")
 
                 await Database.client.removeAllChannels()
-
 
                 guard let userID = try await Database.client.auth.currentUser?.id else {
                     print("No current user found")
                     return
                 }
-                logger.log("subscribeToPracticeSessions function current user id \(userID, privacy: .public)  \(self.currentTaskID, privacy: .public)")
 
                 let channel = Database.client.realtimeV2.channel("practice_sessions")
 
@@ -122,28 +102,21 @@ class PracticeSessionManager: ObservableObject {
                     table: "practice_sessions"
 //                    filter: "user_id=eq.\(userID)"
                 )
-                logger.log("about to subscribe to channel  \(self.currentTaskID, privacy: .public)")
-                
-                let connection = await channel.subscribe()
-                
-                logger.log("finished subscribing to channel  \(self.currentTaskID, privacy: .public)")
 
+                let connection = await channel.subscribe()
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .formatted(DateFormatter.supabaseIso)
                 if client.status == .disconnected {
-                    logger.error("Did not connect to channel after calling .subscribe() \(userID, privacy: .public)  \(self.currentTaskID, privacy: .public)")
                 }
-                
+
                 // Iterate over the change stream
                 for try await change in changeStream {
-                    logger.log("Found change in change stream \(self.currentTaskID, privacy: .public)")
+                    print("CHANGE")
                     switch change {
                     case .delete(let action):
                         print("Deleted: \(action.oldRecord)")
                     case .insert(let insertion):
                         let practiceSession = try insertion.decodeRecord(decoder: decoder) as PracticeSession
-                        logger.log("In changeStream channel function found practice session id: \(practiceSession.id, privacy: .public) \(self.currentTaskID, privacy: .public)")
-
                         let piece: SupabasePieceResponse = try await Database.client
                             .from("pieces")
                             .select("*, movements!inner(*), composer:composers!inner(id, name)")
@@ -168,21 +141,19 @@ class PracticeSessionManager: ObservableObject {
                                 print("No matching movement found for id \(movementId)")
                             }
                         }
-                        logger.log("Dispatching subscribed practice session to mainqueue \(self.currentTaskID, privacy: .public)")
                         DispatchQueue.main.async {
                             self.activeSession = practiceSession
                         }
                     case .update(let action):
-                        logger.info("Updated: \(action.oldRecord, privacy: .public) with \(action.record, privacy: .public) \(self.currentTaskID, privacy: .public)")
                         DispatchQueue.main.async {
                             self.activeSession = nil
                         }
                     default:
-                        logger.log("An unregistered enum case was encountered  \(self.currentTaskID, privacy: .public)")
+                       print("An unregistered enum case was encountered")
                     }
                 }
             } catch {
-                logger.log("Error in subscribeToPracticeSessions: \(error)  \(self.currentTaskID, privacy: .public)")
+                print("Error in subscribeToPracticeSessions: \(error)")
             }
         }
     }

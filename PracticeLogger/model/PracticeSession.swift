@@ -72,7 +72,7 @@ class PracticeSession: ObservableObject, Identifiable, Codable, Equatable {
     func stopSession() async {
         print("IN STOP SESSION")
         do {
-            let response = try await Database.client
+            _ = try await Database.client
                         .from("practice_sessions")
                         .update(["end_time": Date()])
                         .eq("id", value: id)

@@ -11,5 +11,4 @@ enum SupabaseError: Error {
 }
 
 enum AuthError: Error {
-    case signInAppleNotEnabled
-}
+    case notSignedIn, signInAppleNotEnabled}
