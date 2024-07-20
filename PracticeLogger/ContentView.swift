@@ -16,31 +16,30 @@ struct ContentView: View {
     @State private var isExpanded: Bool = false
 
     var body: some View {
-        VStack {
-            if isSignedIn {
-                if isExpanded {
-                    if let activeSession = manager.activeSession {
-                        ExpandedBottomSheet(animation: animation, activeSession: activeSession, expandedSheet: $isExpanded)
-                            .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
-                    }
-                } else {
-                    VStack {
-                        switch selectedTab {
-                        case .progress:
-                            ProgressView()
-                        case .start:
-                            CreatePiece(isTyping: $isTyping)
-                        case .profile:
-                            Profile(isSignedIn: $isSignedIn).environmentObject(manager)
-                        }
-
-                        Spacer()
-                        CustomTabBar(selectedTab: $selectedTab, isTyping: $isTyping, expandedSheet: $isExpanded, animation: animation).environmentObject(manager)
-                    }
+        if isSignedIn {
+            if isExpanded {
+                if let activeSession = manager.activeSession {
+                    ExpandedBottomSheet(animation: animation, activeSession: activeSession, expandedSheet: $isExpanded)
+                        .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
                 }
             } else {
-                SignIn(isSignedIn: $isSignedIn)
+                VStack {
+                    switch selectedTab {
+                    case .progress:
+                        ProgressView()
+                    case .start:
+                        CreatePiece(isTyping: $isTyping)
+                    case .profile:
+                        Profile(isSignedIn: $isSignedIn)
+                    }
+
+                    Spacer()
+                    CustomTabBar(selectedTab: $selectedTab, isTyping: $isTyping, expandedSheet: $isExpanded, animation: animation)
+                }
+                .environmentObject(manager)
             }
+        } else {
+            SignIn(isSignedIn: $isSignedIn)
         }
     }
 }
@@ -48,6 +47,6 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView(isSignedIn: .constant(true))
-            .environmentObject(PracticeSessionManager()) // Inject mock manager for preview
+            .environmentObject(PracticeSessionManager())
     }
 }

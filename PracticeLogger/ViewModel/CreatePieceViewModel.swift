@@ -60,7 +60,6 @@ class CreatePieceViewModel: ObservableObject {
             .order("created_at", ascending: false)
             .execute()
             .value
-        dump(response)
         let pieces = mapResponseToFullPiece(response: response)
 
         DispatchQueue.main.async {

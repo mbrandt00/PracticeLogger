@@ -23,16 +23,16 @@ struct PieceShow: View {
                 Button(action: {
                     Task {
                         do {
-                            try await viewModel.startSession(record: .piece(piece))
+                            _ = try await viewModel.startSession(record: .piece(piece))
                         } catch {
                             print(error.localizedDescription)
                         }
                     }
-                }) {
+                }, label: {
                     Image(systemName: "play.circle.fill")
                         .font(.title)
                         .foregroundColor(Color.accentColor)
-                }
+                })
             }
 
             ForEach(piece.movements, id: \.self) { movement in
@@ -46,11 +46,10 @@ struct PieceShow: View {
                         Task {
                             try await viewModel.startSession(record: .movement(movement))
                         }
-                    }) {
-
+                    }, label: {
                         Image(systemName: "play.circle.fill")
                             .foregroundColor(Color.accentColor)
-                    }
+                    })
                 }
                 .padding(.vertical, 5)
             }
