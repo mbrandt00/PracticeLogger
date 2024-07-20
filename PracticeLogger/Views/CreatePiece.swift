@@ -9,7 +9,7 @@ import SwiftUI
 import MusicKit
 
 struct CreatePiece: View {
-    @ObservedObject var viewModel = CreatePieceViewModel()
+    @StateObject var viewModel = CreatePieceViewModel()
     @Binding var isTyping: Bool
     @State private var isLoading = false
     var body: some View {
@@ -43,7 +43,7 @@ struct CreatePiece: View {
                         Task {
                             isLoading = true
                             do {
-                                let pieces = try await viewModel.getUserPieces()
+                                _ = try await viewModel.getUserPieces()
                             } catch {
                                 print("Error loading user pieces: \(error)")
                             }

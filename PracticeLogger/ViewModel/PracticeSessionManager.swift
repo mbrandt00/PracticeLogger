@@ -89,7 +89,7 @@ class PracticeSessionManager: ObservableObject {
 
                 await Database.client.removeAllChannels()
 
-                guard let userID = try await Database.client.auth.currentUser?.id else {
+                guard let userId = (Database.client.auth.currentUser?.id) else {
                     print("No current user found")
                     return
                 }
@@ -99,11 +99,11 @@ class PracticeSessionManager: ObservableObject {
                 let changeStream = channel.postgresChange(
                     AnyAction.self,
                     schema: "public",
-                    table: "practice_sessions"
-//                    filter: "user_id=eq.\(userID)"
+                    table: "practice_sessions",
+                    filter: "user_id=eq.\(userId)"
                 )
 
-                let connection = await channel.subscribe()
+                await channel.subscribe()
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .formatted(DateFormatter.supabaseIso)
                 if client.status == .disconnected {
