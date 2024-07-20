@@ -16,9 +16,6 @@ struct Profile: View {
 
     var body: some View {
         VStack {
-            if let user = user {
-                Text("UserId:  \(user.id)")
-            }
             if let activeSession = practiceSessionManager.activeSession {
                 Text("Active session: \(activeSession.startTime)")
             } else {
@@ -30,6 +27,11 @@ struct Profile: View {
             Text(sessionInfo)
                 .font(.title)
                 .padding(10)
+            if let user = user {
+                Text("UserId:  \(user.id)")
+                    .font(.title)
+                    .padding(10)
+            }
         }
         .onAppear {
             getInfo()
@@ -51,7 +53,7 @@ struct Profile: View {
         Task {
             do {
                 let session = try await viewModel.getSessionInfo()
-                let user = try await viewModel.getCurrentUser()
+                user = try await viewModel.getCurrentUser()
                 sessionInfo = "Email: \(session.user.email ?? "")"
             } catch {
                 sessionInfo = "Error fetching session: \(error)"
