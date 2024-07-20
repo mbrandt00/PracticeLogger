@@ -8,28 +8,7 @@ import Foundation
 import Supabase
 
 class PracticeSessionViewModel: ObservableObject {
-    private let dbQueue: DispatchQueue
-
-    init() {
-        self.dbQueue = DispatchQueue(label: "com.practicelogger.dbqueue", qos: .userInitiated)
-    }
-
     func startSession(record: Record) async throws -> PracticeSession? {
-        return try await withCheckedThrowingContinuation { continuation in
-            dbQueue.async {
-                Task {
-                    do {
-                        let result = try await self.performDatabaseOperation(for: record)
-                        continuation.resume(returning: result)
-                    } catch {
-                        continuation.resume(throwing: error)
-                    }
-                }
-            }
-        }
-    }
-
-    private func performDatabaseOperation(for record: Record) async throws -> PracticeSession? {
         switch record {
         case .piece(let piece):
             print("Starting session with piece: \(piece)")

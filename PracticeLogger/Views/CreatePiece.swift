@@ -27,7 +27,6 @@ struct CreatePiece: View {
                         .offset(x: 0, y: -2)
                 }
 
-                // Conditionally display content based on searchTerm
                 if viewModel.searchTerm.isEmpty {
                     VStack(alignment: .leading) {
                         Text("Repetoire")
@@ -45,7 +44,6 @@ struct CreatePiece: View {
                             isLoading = true
                             do {
                                 let pieces = try await viewModel.getUserPieces()
-                                print(pieces)
                             } catch {
                                 print("Error loading user pieces: \(error)")
                             }

@@ -22,8 +22,6 @@ struct ContentView: View {
                     if let activeSession = manager.activeSession {
                         ExpandedBottomSheet(animation: animation, activeSession: activeSession, expandedSheet: $isExpanded)
                             .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
-                    } else {
-                        Text("No active session")
                     }
                 } else {
                     VStack {
@@ -42,11 +40,6 @@ struct ContentView: View {
                 }
             } else {
                 SignIn(isSignedIn: $isSignedIn)
-                    .onChange(of: isSignedIn) { newValue in
-                        if newValue {
-                            // Initialize manager or perform necessary actions upon sign-in
-                        }
-                    }
             }
         }
     }
