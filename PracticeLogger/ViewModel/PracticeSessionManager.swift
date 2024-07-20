@@ -18,6 +18,12 @@ class PracticeSessionManager: ObservableObject {
         subscribeToPracticeSessions()
         fetchCurrentActiveSession()
     }
+    
+    func unsubscribeFromPracticeSessions() {
+        Task {
+            await Database.client.removeAllChannels()            
+        }
+    }
 
     func fetchCurrentActiveSession() {
         Task {
@@ -47,9 +53,10 @@ class PracticeSessionManager: ObservableObject {
                 }
 
                 let mappedPiece = mapResponseToFullPiece(response: pieceResponse)
-
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .formatted(DateFormatter.supabaseIso)
                 var practiceSession: PracticeSession
-
+                
                 if let movementId = response.movementId,
                    let selectedMovement = pieceResponse.movements.first(where: { $0.id == movementId }) {
                     practiceSession = PracticeSession(
@@ -168,6 +175,7 @@ struct ActiveSessionResponse: Decodable {
     let id: UUID
 
     var durationSeconds: Int?
+
     enum CodingKeys: String, CodingKey {
         case id
         case movementId = "movement_id"
@@ -178,4 +186,21 @@ struct ActiveSessionResponse: Decodable {
         case durationSeconds = "durationSeconds"
     }
 
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        pieceId = try container.decodeIfPresent(String.self, forKey: .pieceId)
+        movementId = try container.decodeIfPresent(Int.self, forKey: .movementId)
+        userId = try container.decodeIfPresent(String.self, forKey: .userId)
+        durationSeconds = try container.decodeIfPresent(Int.self, forKey: .durationSeconds)
+
+        // Decode dates using the supabaseIso formatter
+        let dateFormatter = DateFormatter.supabaseIso
+        if let startTimeString = try container.decodeIfPresent(String.self, forKey: .startTime) {
+            startTime = dateFormatter.date(from: startTimeString)
+        }
+        if let endTimeString = try container.decodeIfPresent(String.self, forKey: .endTime) {
+            endTime = dateFormatter.date(from: endTimeString)
+        }
+    }
 }

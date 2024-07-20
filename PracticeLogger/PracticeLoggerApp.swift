@@ -19,6 +19,14 @@ struct PracticeLoggerApp: App {
                 .onAppear {
                     updateSignInStatus()
                 }
+                .onChange(of: isSignedIn){ authenticated in
+                    if authenticated {
+                        manager.subscribeToPracticeSessions()
+                    }else {
+                        manager.unsubscribeFromPracticeSessions()
+                    }
+                    
+                }
         }
     }
 
