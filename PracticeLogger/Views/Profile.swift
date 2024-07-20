@@ -6,20 +6,24 @@
 //
 
 import SwiftUI
-
+import Supabase
 struct Profile: View {
     @State private var sessionInfo: String = ""
+    @State private var user: User? = nil
     @Binding var isSignedIn: Bool
     @ObservedObject var viewModel = ProfileViewModel()
     @EnvironmentObject var practiceSessionManager: PracticeSessionManager
 
     var body: some View {
         VStack {
+            if let user = user {
+                Text("UserId:  \(user.id)")
+            }
             if let activeSession = practiceSessionManager.activeSession {
-                            Text("Active session: \(activeSession.startTime)")
-                        } else {
-                            Text("No active session")
-                        }
+                Text("Active session: \(activeSession.startTime)")
+            } else {
+                Text("No active session")
+            }
             Button("Sign Out") {
                 signOut()
             }
@@ -28,7 +32,7 @@ struct Profile: View {
                 .padding(10)
         }
         .onAppear {
-            getSessionInfo()
+            getInfo()
         }
     }
 
@@ -43,10 +47,11 @@ struct Profile: View {
         }
     }
 
-    private func getSessionInfo() {
+    private func getInfo() {
         Task {
             do {
                 let session = try await viewModel.getSessionInfo()
+                let user = try await viewModel.getCurrentUser()
                 sessionInfo = "Email: \(session.user.email ?? "")"
             } catch {
                 sessionInfo = "Error fetching session: \(error)"

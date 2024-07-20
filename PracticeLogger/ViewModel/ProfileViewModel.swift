@@ -15,4 +15,8 @@ class ProfileViewModel: ObservableObject {
     func getSessionInfo() async throws -> Session {
         return try await Database.client.auth.session
     }
+    
+    func getCurrentUser() async throws -> User? {
+        return try await Database.client.auth.currentUser
+    }
 }
