@@ -7,27 +7,31 @@
 
 import SwiftUI
 import AlertToast
+
 struct PieceEdit: View {
     @StateObject private var viewModel: PieceEditViewModel
     @State private var showToast: Bool = false
     @State private var errorMessage: String = ""
     @State private var duplicatePiece: Piece?
-    
+
     init(piece: Piece) {
-          _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
-      }
+        _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
+    }
 
     var body: some View {
         VStack {
-
             Form {
                 Text(viewModel.piece.workName)
                     .font(.title)
+                    .foregroundColor(.primary) // Adapts to light and dark mode
+
                 if duplicatePiece != nil {
                     Text("Duplicate Piece Found!")
                         .font(.subheadline)
+                        .foregroundColor(.red) // Red text for emphasis
                 }
-                Section(header: Text("Movements")) {
+
+                Section(header: Text("Movements").foregroundColor(.primary)) {
                     ForEach(viewModel.piece.movements.indices, id: \.self) { index in
                         MovementEditRow(
                             movement: viewModel.piece.movements[index],
@@ -39,7 +43,7 @@ struct PieceEdit: View {
                     .onMove(perform: viewModel.move)
                 }
 
-                Section(header: Text("Catalogue Information")) {
+                Section(header: Text("Catalogue Information").foregroundColor(.primary)) {
                     Picker("Identifier", selection: Binding(
                         get: {
                             return viewModel.piece.catalogue_type?.rawValue ?? ""
@@ -56,6 +60,7 @@ struct PieceEdit: View {
 
                     HStack {
                         Text("Number")
+                            .foregroundColor(.primary)
                         Spacer()
                         TextField("", text: Binding(
                             get: {
@@ -68,8 +73,7 @@ struct PieceEdit: View {
                             set: { newValue in
                                 viewModel.piece.catalogue_number = newValue.isEmpty ? nil : Int(newValue)
                             }
-                        ), onEditingChanged: { isEditing in
-                        })
+                        ))
                         .frame(width: 200)
                         .multilineTextAlignment(.trailing)
                         .textFieldStyle(PlainTextFieldStyle())
@@ -123,8 +127,10 @@ struct PieceEdit: View {
                             Text(format.rawValue).tag(format.rawValue)
                         }
                     }
+
                     HStack {
                         Text("Nickname")
+                            .foregroundColor(.primary)
                         Spacer()
                         TextField("", text: Binding(
                             get: {
@@ -156,7 +162,6 @@ struct PieceEdit: View {
                 AlertToast(type: .error(.red), title: errorMessage)
             }
         }
-
         .navigationBarItems(
             trailing: Button(action: {
                 Task {
@@ -178,22 +183,17 @@ struct PieceEdit: View {
                 }
             }, label: {
                 Text("Create")
+                    .foregroundColor(.primary) // Ensure button text adapts to dark mode
             })
         )
         .buttonStyle(.bordered)
-        .foregroundColor(.black)
-        .padding(5)
-
+        .foregroundColor(.primary) // Ensure button text adapts to dark mode
     }
 }
 
 struct PieceEdit_Previews: PreviewProvider {
     static var previews: some View {
-        PieceEdit(piece: Piece(workName: "Sonata 2 in B flat Minor Funeral March", composer: Composer(name: "Frederic Chopin"), movements: [
-            Movement(name: "Grave - Doppio movimento", number: 1),
-            Movement(name: "Scherzo- Piu lento - Tempo 1", number: 2),
-            Movement(name: "Marche Funebre", number: 3),
-            Movement(name: "Finale", number: 4)
-        ], formattedKeySignature: "Bb Minor", catalogue_type: CatalogueType.Op, catalogue_number: 35, nickname: "Funeral March", tonality: KeySignatureTonality.minor, key_signature: KeySignatureType.bFlat))
+        PieceEdit(piece: Piece.example)
+            .environment(\.colorScheme, .dark) // Preview in dark mode
     }
 }

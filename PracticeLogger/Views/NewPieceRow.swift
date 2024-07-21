@@ -56,19 +56,7 @@ struct NewPieceRow: View {
 
 struct NewPieceRow_Previews: PreviewProvider {
     static var previews: some View {
-        let piece = Piece(
-            workName: "Sonata 2 in B flat Minor Funeral March An even longer impossibly long title blah blah",
-            composer: Composer(name: "Frederic Chopin"),
-            movements: [
-                Movement(name: "Grave - Doppio movimento", number: 1),
-                Movement(name: "Scherzo- Piu lento - Tempo 1", number: 2),
-                Movement(name: "Marche Fuenbre", number: 3),
-                Movement(name: "Finale", number: 4)
-            ],
-            formattedKeySignature: "B♭ Minor",
-            tonality: .minor,
-            key_signature: .bFlat
-        )
+        let piece = Piece.example
 
         let viewModel = NewPieceRowViewModel(piece: piece)
 

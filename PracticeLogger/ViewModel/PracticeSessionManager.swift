@@ -18,10 +18,10 @@ class PracticeSessionManager: ObservableObject {
         subscribeToPracticeSessions()
         fetchCurrentActiveSession()
     }
-    
+
     func unsubscribeFromPracticeSessions() {
         Task {
-            await Database.client.removeAllChannels()            
+            await Database.client.removeAllChannels()
         }
     }
 
@@ -56,7 +56,7 @@ class PracticeSessionManager: ObservableObject {
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .formatted(DateFormatter.supabaseIso)
                 var practiceSession: PracticeSession
-                
+
                 if let movementId = response.movementId,
                    let selectedMovement = pieceResponse.movements.first(where: { $0.id == movementId }) {
                     practiceSession = PracticeSession(

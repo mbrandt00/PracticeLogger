@@ -93,6 +93,13 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         return lhs.workName == rhs.workName && lhs.movements.count == lhs.movements.count
     }
 
+    static let example = Piece(workName: "Sonata 2 in B flat Minor Funeral March", composer: Composer(name: "Frederic Chopin"), movements: [
+        Movement(name: "Grave - Doppio movimento", number: 1),
+        Movement(name: "Scherzo- Piu lento - Tempo 1", number: 2),
+        Movement(name: "Marche Funebre", number: 3),
+        Movement(name: "Finale", number: 4)
+    ], formattedKeySignature: "Bb Minor", catalogue_type: CatalogueType.Op, catalogue_number: 35, nickname: "Funeral March", tonality: KeySignatureTonality.minor, key_signature: KeySignatureType.bFlat)
+
     static func createPiecesFromTrack(tracks: [Track]) async throws -> [Piece] {
         var pieces: [Piece] = []
         var currentPieceName: String?

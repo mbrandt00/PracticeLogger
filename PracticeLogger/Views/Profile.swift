@@ -9,7 +9,7 @@ import SwiftUI
 import Supabase
 struct Profile: View {
     @State private var sessionInfo: String = ""
-    @State private var user: User? = nil
+    @State private var user: User?
     @Binding var isSignedIn: Bool
     @ObservedObject var viewModel = ProfileViewModel()
     @EnvironmentObject var practiceSessionManager: PracticeSessionManager

@@ -32,7 +32,7 @@ struct ContentView: View {
                     case .profile:
                         Profile(isSignedIn: $isSignedIn)
                     }
-                    
+
                     Spacer()
                     if !keyboardResponder.isKeyboardVisible {
                                     CustomTabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
