@@ -13,11 +13,10 @@ enum Tabs {
 
 struct CustomTabBar: View {
     @Binding var selectedTab: Tabs
-    @Binding var isTyping: Bool
-    /// Animation Properties
     @Binding var expandedSheet: Bool
     var animation: Namespace.ID
     @EnvironmentObject var practiceSessionManager: PracticeSessionManager
+    @ObservedObject private var keyboardResponder = KeyboardResponder()
 
     var body: some View {
         VStack {
@@ -53,14 +52,18 @@ struct CustomTabBar: View {
             .frame(maxHeight: practiceSessionManager.activeSession != nil ? 100 : 50)
             .toolbarBackground(.ultraThickMaterial, for: .tabBar)
             .toolbar(expandedSheet ? .hidden : .visible, for: .tabBar)
+            .opacity(keyboardResponder.isKeyboardVisible ? 0 : 1)
+            .offset(y: keyboardResponder.isKeyboardVisible ? 100 : 0)
         }
-        .animation(.easeInOut, value: practiceSessionManager.activeSession)
+        .animation(.easeInOut, value: keyboardResponder.isKeyboardVisible)
     }
 }
+
 struct CustomBottomSheet: View {
     var animation: Namespace.ID
     @Binding var expandedSheet: Bool
     var activeSession: PracticeSession
+
     var body: some View {
         ZStack {
             if expandedSheet {
@@ -81,13 +84,11 @@ struct CustomBottomSheet: View {
                 }
         }
         .frame(height: 70)
-        /// Seperator
         .overlay(alignment: .bottom, content: {
             Rectangle()
                 .fill(Color.primary.opacity(0.2))
                 .frame(height: 2)
         })
-        /// 49: Default Tab Bar Height
         .offset(y: -49)
     }
 }
@@ -200,7 +201,7 @@ struct MusicInfo: View {
 
 #Preview {
     @Namespace var animation
-    return CustomTabBar(selectedTab: .constant(.start), isTyping: .constant(false), expandedSheet: .constant(false), animation: animation).environmentObject(PracticeSessionManager()).preferredColorScheme(.dark)
+    return CustomTabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(PracticeSessionManager()).preferredColorScheme(.dark)
 }
 #Preview {
     let manager = PracticeSessionManager()
@@ -213,5 +214,5 @@ struct MusicInfo: View {
 
     manager.activeSession = PracticeSession(start_time: Date(), movement: Movement(name: "Grave - Doppio movimento", number: 1, piece: piece))
     @Namespace var animation
-    return CustomTabBar(selectedTab: .constant(.start), isTyping: .constant(false), expandedSheet: .constant(false), animation: animation).environmentObject(manager).preferredColorScheme(.dark)
+    return CustomTabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(manager).preferredColorScheme(.dark)
 }

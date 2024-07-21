@@ -11,9 +11,9 @@ struct ContentView: View {
     @Binding var isSignedIn: Bool
     @EnvironmentObject var manager: PracticeSessionManager
     @State private var selectedTab: Tabs = .start
-    @State private var isTyping: Bool = false
     @Namespace private var animation
     @State private var isExpanded: Bool = false
+    @StateObject private var keyboardResponder = KeyboardResponder()
 
     var body: some View {
         if isSignedIn {
@@ -28,15 +28,21 @@ struct ContentView: View {
                     case .progress:
                         ProgressView()
                     case .start:
-                        CreatePiece(isTyping: $isTyping)
+                        CreatePiece()
                     case .profile:
                         Profile(isSignedIn: $isSignedIn)
                     }
-
+                    
                     Spacer()
-                    CustomTabBar(selectedTab: $selectedTab, isTyping: $isTyping, expandedSheet: $isExpanded, animation: animation)
+                    if !keyboardResponder.isKeyboardVisible {
+                                    CustomTabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
+                                        .ignoresSafeArea(.keyboard)
+                                }
+
                 }
                 .environmentObject(manager)
+                .animation(.easeInOut(duration: 0.9), value: keyboardResponder.isKeyboardVisible)
+
             }
         } else {
             SignIn(isSignedIn: $isSignedIn)

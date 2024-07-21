@@ -10,7 +10,6 @@ import MusicKit
 
 struct CreatePiece: View {
     @StateObject var viewModel = CreatePieceViewModel()
-    @Binding var isTyping: Bool
     @State private var isLoading = false
     var body: some View {
         NavigationView {
@@ -34,7 +33,7 @@ struct CreatePiece: View {
                             .padding([.leading, .top])
 
                         List(viewModel.userPieces) { piece in
-                            RepertoireRow(piece: piece, isTyping: $isTyping)
+                            RepertoireRow(piece: piece)
                         }
                         .listStyle(PlainListStyle())
                     }
@@ -57,7 +56,7 @@ struct CreatePiece: View {
                             .padding([.leading, .top])
 
                         List(viewModel.pieces) { piece in
-                            NavigationLink(destination: PieceEdit(piece: piece, isTyping: $isTyping)) {
+                            NavigationLink(destination: PieceEdit(piece: piece)) {
                                 NewPieceRow(piece: piece)
                             }
                         }
@@ -77,5 +76,5 @@ struct CreatePiece: View {
 }
 
 #Preview {
-    CreatePiece(isTyping: .constant(false))
+    CreatePiece()
 }
