@@ -28,20 +28,17 @@ class PracticeSessionManager: ObservableObject {
     func fetchCurrentActiveSession() {
         Task {
             do {
-                // Get current user ID
                 let userID = try await Database.getCurrentUser().id
-                guard let response: ActiveSessionResponse = try await Database.client
+
+                let response: ActiveSessionResponse = try await Database.client
                     .from("practice_sessions")
                     .select("*")
                     .eq("user_id", value: userID)
                     .is("end_time", value: nil)
                     .single()
                     .execute()
-                    .value else {
-                        print("No active session found for user \(userID)")
-                        return
-                }
-
+                    .value
+                
                 guard let pieceResponse: SupabasePieceResponse = try await Database.client
                     .from("pieces")
                     .select("*, movements!inner(*), composer:composers!inner(id, name)")
@@ -49,14 +46,14 @@ class PracticeSessionManager: ObservableObject {
                     .single()
                     .execute()
                     .value else {
+                        print("Could not convert Supabase response to piece object")
                         return
                 }
-
+                
+                // Map piece response to your custom piece model
                 let mappedPiece = mapResponseToFullPiece(response: pieceResponse)
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .formatted(DateFormatter.supabaseIso)
+                
                 var practiceSession: PracticeSession
-
                 if let movementId = response.movementId,
                    let selectedMovement = pieceResponse.movements.first(where: { $0.id == movementId }) {
                     practiceSession = PracticeSession(
@@ -77,14 +74,18 @@ class PracticeSessionManager: ObservableObject {
                         id: response.id
                     )
                 }
-
+                
                 // Update active session on the main queue
                 DispatchQueue.main.async {
                     self.activeSession = practiceSession
                 }
-
+                
+            } catch is PostgrestError {
+                print("No active session to retrieve")
+    
             } catch {
-                print("Error retrieving active session: \(error)")
+                // Handle any other errors that might occur
+                print("Error retrieving session: \(error)")
             }
         }
     }
