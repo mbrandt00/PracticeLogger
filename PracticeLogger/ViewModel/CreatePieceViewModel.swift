@@ -28,6 +28,7 @@ class CreatePieceViewModel: ObservableObject {
     }
 
     func getClassicalPieces(_ query: String) async {
+        if query.isEmpty { return }
         do {
             let status = await MusicAuthorization.request()
             switch status {
@@ -56,7 +57,7 @@ class CreatePieceViewModel: ObservableObject {
         let response: [SupabasePieceResponse] = try await Database.client
             .from("pieces")
             .select("*, movements!inner(*), composer:composers!inner(id, name)")
-            .eq("user_id", value: Database.getCurrentUser().id)
+            .eq("user_id", value: Database.getCurrentUser()?.id.uuidString)
             .order("created_at", ascending: false)
             .execute()
             .value

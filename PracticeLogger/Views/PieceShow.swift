@@ -6,10 +6,9 @@
 //
 
 import SwiftUI
-
 struct PieceShow: View {
     var piece: Piece
-    @ObservedObject var viewModel = PracticeSessionViewModel()
+    @EnvironmentObject var sessionManager: PracticeSessionViewModel
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -22,14 +21,17 @@ struct PieceShow: View {
 
                 Button(action: {
                     Task {
-                        do {
-                            _ = try await viewModel.startSession(record: .piece(piece))
-                        } catch {
-                            print(error.localizedDescription)
+                        if sessionManager.activeSession?.pieceId == piece.id && sessionManager.activeSession?.movementId == nil {
+                            await sessionManager.stopSession()
+                        } else {
+                            _ = try await sessionManager.startSession(record: .piece(piece))
                         }
                     }
                 }, label: {
-                    Image(systemName: "play.circle.fill")
+                    Image(systemName: sessionManager.activeSession?.movementId == nil && sessionManager.activeSession?.pieceId == piece.id ?
+                                     "stop.circle.fill" : "play.circle.fill")
+                        .font(.title)
+                        .foregroundColor(Color.accentColor)
                         .font(.title)
                         .foregroundColor(Color.accentColor)
                 })
@@ -44,10 +46,14 @@ struct PieceShow: View {
 
                     Button(action: {
                         Task {
-                            try await viewModel.startSession(record: .movement(movement))
+                            if sessionManager.activeSession?.movementId == movement.id {
+                                await sessionManager.stopSession()
+                            } else {
+                                _ = try await sessionManager.startSession(record: .movement(movement))
+                            }
                         }
                     }, label: {
-                        Image(systemName: "play.circle.fill")
+                        Image(systemName: sessionManager.activeSession?.movementId == movement.id ? "stop.circle.fill" : "play.circle.fill")
                             .foregroundColor(Color.accentColor)
                     })
                 }
@@ -59,6 +65,7 @@ struct PieceShow: View {
         .background(Color(UIColor.systemBackground))
     }
 }
+
 #Preview {
     PieceShow(piece: Piece.example)
 }

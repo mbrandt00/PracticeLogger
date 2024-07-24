@@ -53,7 +53,7 @@ struct Profile: View {
         Task {
             do {
                 let session = try await viewModel.getSessionInfo()
-                user = try await viewModel.getCurrentUser()
+                user = try viewModel.getCurrentUser()
                 sessionInfo = "Email: \(session.user.email ?? "")"
             } catch {
                 sessionInfo = "Error fetching session: \(error)"

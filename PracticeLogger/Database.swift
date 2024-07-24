@@ -27,12 +27,9 @@ class Database: ObservableObject {
 
     @Published var isLoggedIn: Bool = false
 
-    static func getCurrentUser() async throws -> User {
-            guard let user = client.auth.currentUser else {
-                throw NSError(domain: "UserManager", code: 1, userInfo: [NSLocalizedDescriptionKey: "Error retrieving user"])
-            }
-            return user
-        }
+    static func getCurrentUser() throws -> User? {
+        return Database.client.auth.currentUser
+    }
 }
 
 struct SupabasePieceResponse: Codable {

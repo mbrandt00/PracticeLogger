@@ -67,9 +67,7 @@ class PieceEditViewModel: ObservableObject {
             guard let catalogue_number = piece.catalogue_number, let catalogue_type = piece.catalogue_type else {
                 return nil
             }
-
-            let currentUserID = try await String(Database.getCurrentUser().id.uuidString)
-
+            let currentUserID = try Database.getCurrentUser()?.id.uuidString
             let response: Piece = try await Database.client.rpc("find_duplicate_piece", params: ["catalogue_number": String(catalogue_number), "catalogue_type": catalogue_type.rawValue, "user_id": currentUserID, "composer_name": piece.composer?.name ]).execute().value
 
             return response
