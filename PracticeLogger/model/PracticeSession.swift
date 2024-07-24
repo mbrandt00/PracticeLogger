@@ -35,7 +35,7 @@ init(start_time: Date, piece: Piece? = nil, movement: Movement? = nil, id: UUID 
     self.movement = movement
     self.movementId = movement?.id
     self.piece = movement?.piece ?? piece
-    self.pieceId = movement?.piece?.id ?? piece?.id ?? UUID() 
+    self.pieceId = movement?.piece?.id ?? piece?.id ?? UUID()
 }
 
     // Codable initializer
@@ -85,45 +85,5 @@ init(start_time: Date, piece: Piece? = nil, movement: Movement? = nil, id: UUID 
 
     static func == (lhs: PracticeSession, rhs: PracticeSession) -> Bool {
         return lhs.id == rhs.id
-    }
-
-}
-
-struct PracticeSessionResponse: Decodable {
-    var pieceId: String?
-    var movementId: Int?
-    var startTime: Date?
-    var endTime: Date?
-    var userId: String?
-    let id: UUID
-
-    var durationSeconds: Int?
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case movementId = "movement_id"
-        case pieceId = "piece_id"
-        case startTime = "start_time"
-        case endTime = "end_time"
-        case userId = "user_id"
-        case durationSeconds = "durationSeconds"
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(UUID.self, forKey: .id)
-        pieceId = try container.decodeIfPresent(String.self, forKey: .pieceId)
-        movementId = try container.decodeIfPresent(Int.self, forKey: .movementId)
-        userId = try container.decodeIfPresent(String.self, forKey: .userId)
-        durationSeconds = try container.decodeIfPresent(Int.self, forKey: .durationSeconds)
-
-        // Decode dates using the supabaseIso formatter
-        let dateFormatter = DateFormatter.supabaseIso
-        if let startTimeString = try container.decodeIfPresent(String.self, forKey: .startTime) {
-            startTime = dateFormatter.date(from: startTimeString)
-        }
-        if let endTimeString = try container.decodeIfPresent(String.self, forKey: .endTime) {
-            endTime = dateFormatter.date(from: endTimeString)
-        }
     }
 }

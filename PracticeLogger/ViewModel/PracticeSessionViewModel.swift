@@ -43,7 +43,7 @@ class PracticeSessionViewModel: ObservableObject {
             do {
                 let userID = try Database.getCurrentUser()?.id
 
-                let response: PracticeSessionResponse = try await Database.client
+                let response: PracticeSession = try await Database.client
                     .from("practice_sessions")
                     .select("*")
                     .eq("user_id", value: userID)
@@ -52,42 +52,7 @@ class PracticeSessionViewModel: ObservableObject {
                     .execute()
                     .value
 
-                guard let pieceResponse: SupabasePieceResponse = try await Database.client
-                    .from("pieces")
-                    .select("*, movements!inner(*), composer:composers!inner(id, name)")
-                    .eq("id", value: response.pieceId)
-                    .single()
-                    .execute()
-                    .value else {
-                        print("Could not convert Supabase response to piece object")
-                        return nil
-                }
-
-                // Map piece response to your custom piece model
-                let mappedPiece = mapResponseToFullPiece(response: pieceResponse)
-
-                var practiceSession: PracticeSession
-                if let movementId = response.movementId,
-                   let selectedMovement = pieceResponse.movements.first(where: { $0.id == movementId }) {
-                    practiceSession = PracticeSession(
-                        start_time: response.startTime!,
-                        movement: Movement(
-                            id: selectedMovement.id,
-                            name: selectedMovement.name ?? "",
-                            number: selectedMovement.number,
-                            piece: mappedPiece,
-                            pieceId: selectedMovement.pieceId
-                        ),
-                        id: response.id
-                    )
-                } else {
-                    practiceSession = PracticeSession(
-                        start_time: response.startTime!,
-                        piece: mappedPiece,
-                        id: response.id
-                    )
-                }
-
+                let practiceSession = try await createFullPracticeSessionResponse(response)
                 return practiceSession
 
             } catch {
@@ -105,15 +70,54 @@ class PracticeSessionViewModel: ObservableObject {
                 .single()
                 .execute()
                 .value
+            let activeSession = try await createFullPracticeSessionResponse(insertedPracticeSession)
             print("Inserted session:", insertedPracticeSession)
             DispatchQueue.main.async {
-                self.activeSession = insertedPracticeSession
+                self.activeSession = activeSession
             }
             return insertedPracticeSession
         } catch let error {
             print("Practice Session not inserted \(error)")
             throw error
         }
+    }
+
+    func  createFullPracticeSessionResponse(_ response: PracticeSession) async throws -> PracticeSession {
+        guard let pieceResponse: SupabasePieceResponse = try await Database.client
+            .from("pieces")
+            .select("*, movements!inner(*), composer:composers!inner(id, name)")
+            .eq("id", value: response.pieceId)
+            .single()
+            .execute()
+            .value else {
+                print("Could not convert Supabase response to piece object")
+            throw SupabaseError.pieceAlreadyExists
+        }
+
+        let mappedPiece = mapResponseToFullPiece(response: pieceResponse)
+
+        var practiceSession: PracticeSession
+        if let movementId = response.movementId,
+           let selectedMovement = pieceResponse.movements.first(where: { $0.id == movementId }) {
+            practiceSession = PracticeSession(
+                start_time: response.startTime,
+                movement: Movement(
+                    id: selectedMovement.id,
+                    name: selectedMovement.name ?? "",
+                    number: selectedMovement.number,
+                    piece: mappedPiece,
+                    pieceId: selectedMovement.pieceId
+                ),
+                id: response.id
+            )
+        } else {
+            practiceSession = PracticeSession(
+                start_time: response.startTime,
+                piece: mappedPiece,
+                id: response.id
+            )
+        }
+        return practiceSession
     }
 }
 
