@@ -12,10 +12,10 @@ class PracticeSession: ObservableObject, Identifiable, Codable, Equatable {
     let id: UUID
     @Published var startTime: Date
     @Published var endTime: Date?
-    @Published var piece: Piece? // Piece object
+    @Published var piece: Piece?
     @Published var composer: Composer?
-    var pieceId: UUID // ID to fetch Piece
-    var movementId: Int?
+    @Published var pieceId: UUID
+    @Published var movementId: Int?
     var userId: UUID?
     @Published var movement: Movement?
 
@@ -28,21 +28,15 @@ class PracticeSession: ObservableObject, Identifiable, Codable, Equatable {
         case userId = "user_id"
     }
 
-    // Initialize PracticeSession from decoder
-    init(start_time: Date, piece: Piece? = nil, movement: Movement? = nil, id: UUID = UUID()) {
-        self.id = id
-        self.startTime = start_time
-        self.endTime = nil
-        self.movement = movement
-
-        if let movement = movement {
-            self.piece = movement.piece
-            self.pieceId = movement.piece!.id
-        } else {
-            self.piece = piece
-            self.pieceId = piece!.id
-        }
-    }
+init(start_time: Date, piece: Piece? = nil, movement: Movement? = nil, id: UUID = UUID()) {
+    self.id = id
+    self.startTime = start_time
+    self.endTime = nil
+    self.movement = movement
+    self.movementId = movement?.id
+    self.piece = movement?.piece ?? piece
+    self.pieceId = movement?.piece?.id ?? piece?.id ?? UUID() 
+}
 
     // Codable initializer
     required init(from decoder: Decoder) throws {
