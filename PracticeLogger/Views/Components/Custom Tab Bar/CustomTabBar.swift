@@ -14,8 +14,8 @@ enum Tabs {
 struct CustomTabBar: View {
     @Binding var selectedTab: Tabs
     @Binding var expandedSheet: Bool
+    @EnvironmentObject var sessionManager: PracticeSessionViewModel
     var animation: Namespace.ID
-    @EnvironmentObject var practiceSessionManager: PracticeSessionManager
     @ObservedObject private var keyboardResponder = KeyboardResponder()
 
     var body: some View {
@@ -43,13 +43,13 @@ struct CustomTabBar: View {
                     .tag(Tabs.profile)
             }
             .safeAreaInset(edge: .bottom) {
-                if let activeSession = practiceSessionManager.activeSession {
+                if let activeSession = sessionManager.activeSession {
                     CustomBottomSheet(animation: animation, expandedSheet: $expandedSheet, activeSession: activeSession)
                         .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .move(edge: .bottom).combined(with: .opacity)))
-                        .animation(.easeInOut(duration: 0.3), value: practiceSessionManager.activeSession)
+                        .animation(.easeInOut(duration: 0.3))
                 }
             }
-            .frame(maxHeight: practiceSessionManager.activeSession != nil ? 100 : 50)
+            .frame(maxHeight: 100)
             .toolbarBackground(.ultraThickMaterial, for: .tabBar)
             .toolbar(expandedSheet ? .hidden : .visible, for: .tabBar)
             .opacity(keyboardResponder.isKeyboardVisible ? 0 : 1)
@@ -98,7 +98,7 @@ struct MusicInfo: View {
     @ObservedObject var activeSession: PracticeSession
     var animation: Namespace.ID
     @State private var elapsedTime: String = "00:00"
-    @State private var isStoppingSession = false
+    @EnvironmentObject var sessionManager: PracticeSessionViewModel
 
     var body: some View {
         HStack(spacing: 0) {
@@ -157,9 +157,7 @@ struct MusicInfo: View {
             // Right side: Stop button
             Button(action: {
                             Task {
-                                isStoppingSession = true
-                                await activeSession.stopSession()
-                                isStoppingSession = false
+                                await sessionManager.stopSession()
                             }
                         }) {
                             Image(systemName: "stop.fill")
@@ -167,7 +165,6 @@ struct MusicInfo: View {
                                 .foregroundColor(Color.primary)
                         }
             .padding(.trailing, 20)
-            .disabled(isStoppingSession)
         }
         .padding(.horizontal)
         .frame(height: 70)
@@ -199,20 +196,20 @@ struct MusicInfo: View {
     }
 }
 
-#Preview {
-    @Namespace var animation
-    return CustomTabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(PracticeSessionManager()).preferredColorScheme(.dark)
-}
-#Preview {
-    let manager = PracticeSessionManager()
-    let piece = Piece(workName: "Sonata 2 in B flat Minor Funeral March", composer: Composer(name: "Frederic Chopin"), movements: [
-        Movement(name: "Grave - Doppio movimento", number: 1),
-        Movement(name: "Scherzo- Piu lento - Tempo 1", number: 2),
-        Movement(name: "Marche Funebre", number: 3),
-        Movement(name: "Finale", number: 4)
-    ], formattedKeySignature: "Bb Minor", catalogue_type: CatalogueType.Op, catalogue_number: 35, nickname: "Funeral March", tonality: KeySignatureTonality.minor, key_signature: KeySignatureType.bFlat)
-
-    manager.activeSession = PracticeSession(start_time: Date(), movement: Movement(name: "Grave - Doppio movimento", number: 1, piece: piece))
-    @Namespace var animation
-    return CustomTabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(manager).preferredColorScheme(.dark)
-}
+// #Preview {
+//    @Namespace var animation
+//    return CustomTabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).preferredColorScheme(.dark)
+// }
+// #Preview {
+//    let manager = PracticeSessionManager()
+//    let piece = Piece(workName: "Sonata 2 in B flat Minor Funeral March", composer: Composer(name: "Frederic Chopin"), movements: [
+//        Movement(name: "Grave - Doppio movimento", number: 1),
+//        Movement(name: "Scherzo- Piu lento - Tempo 1", number: 2),
+//        Movement(name: "Marche Funebre", number: 3),
+//        Movement(name: "Finale", number: 4)
+//    ], formattedKeySignature: "Bb Minor", catalogue_type: CatalogueType.Op, catalogue_number: 35, nickname: "Funeral March", tonality: KeySignatureTonality.minor, key_signature: KeySignatureType.bFlat)
+//
+//    manager.activeSession = PracticeSession(start_time: Date(), movement: Movement(name: "Grave - Doppio movimento", number: 1, piece: piece))
+//    @Namespace var animation
+//    return CustomTabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(manager).preferredColorScheme(.dark)
+// }

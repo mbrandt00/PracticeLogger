@@ -9,8 +9,7 @@ import SwiftUI
 
 struct PieceShow: View {
     var piece: Piece
-    @ObservedObject var viewModel = PracticeSessionViewModel()
-
+    @EnvironmentObject var sessionManager: PracticeSessionViewModel
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             HStack {
@@ -23,7 +22,7 @@ struct PieceShow: View {
                 Button(action: {
                     Task {
                         do {
-                            _ = try await viewModel.startSession(record: .piece(piece))
+                            _ = try await sessionManager.startSession(record: .piece(piece))
                         } catch {
                             print(error.localizedDescription)
                         }
@@ -44,7 +43,7 @@ struct PieceShow: View {
 
                     Button(action: {
                         Task {
-                            try await viewModel.startSession(record: .movement(movement))
+                            try await sessionManager.startSession(record: .movement(movement))
                         }
                     }, label: {
                         Image(systemName: "play.circle.fill")

@@ -48,54 +48,88 @@ class PracticeSession: ObservableObject, Identifiable, Codable, Equatable {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
-        startTime = try container.decode(Date.self, forKey: .startTime)
-        endTime = try container.decodeIfPresent(Date.self, forKey: .endTime)
-        pieceId = try container.decodeIfPresent(UUID.self, forKey: .pieceId) ?? UUID() // Initialize pieceId with decoded value or a new UUID
+
+        // Decode startTime from String
+        let startTimeString = try container.decode(String.self, forKey: .startTime)
+        guard let startDate = DateFormatter.supabaseIso.date(from: startTimeString) else {
+            throw DecodingError.dataCorruptedError(forKey: .startTime, in: container, debugDescription: "Invalid date format: \(startTimeString)")
+        }
+        startTime = startDate
+
+        // Decode endTime from String if present
+        if let endTimeString = try container.decodeIfPresent(String.self, forKey: .endTime) {
+            if let endDate = DateFormatter.supabaseIso.date(from: endTimeString) {
+                endTime = endDate
+            } else {
+                throw DecodingError.dataCorruptedError(forKey: .endTime, in: container, debugDescription: "Invalid date format: \(endTimeString)")
+            }
+        } else {
+            endTime = nil
+        }
+
+        // Decode pieceId, movementId, userId
+        pieceId = try container.decodeIfPresent(UUID.self, forKey: .pieceId) ?? UUID()
         movementId = try container.decodeIfPresent(Int.self, forKey: .movementId)
         userId = try container.decodeIfPresent(UUID.self, forKey: .userId)
     }
 
     // Codable encode method
     func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(id, forKey: .id)
-        try container.encode(startTime, forKey: .startTime)
-        try container.encodeIfPresent(endTime, forKey: .endTime)
-        try container.encodeIfPresent(piece?.id, forKey: .pieceId)
-        try container.encodeIfPresent(movement?.id, forKey: .movementId)
-    }
+            let dateFormatter = DateFormatter.supabaseIso
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            let startTimeString = dateFormatter.string(from: startTime)
+            try container.encode(startTimeString, forKey: .startTime)
+            if let endTime = endTime {
+                let endTimeString = dateFormatter.string(from: endTime)
+                try container.encode(endTimeString, forKey: .endTime)
+            }
+
+            try container.encode(id, forKey: .id)
+            try container.encodeIfPresent(piece?.id, forKey: .pieceId)
+            try container.encodeIfPresent(movement?.id, forKey: .movementId)
+        }
 
     static func == (lhs: PracticeSession, rhs: PracticeSession) -> Bool {
         return lhs.id == rhs.id
     }
 
-    func stopSession() async {
-        print("IN STOP SESSION")
-        do {
-            _ = try await Database.client
-                        .from("practice_sessions")
-                        .update(["end_time": Date()])
-                        .eq("id", value: id)
-                        .execute()
-        } catch {
-            print("Error updating end_time: \(error)")
-        }
-    }
 }
 
 struct PracticeSessionResponse: Decodable {
-    var endTime: Date?
-    var startTime: Date?
-    var id: String?
+    var pieceId: String?
     var movementId: Int?
+    var startTime: Date?
+    var endTime: Date?
     var userId: String?
-    var durationSeconds: String?
+    let id: UUID
+
+    var durationSeconds: Int?
+
     enum CodingKeys: String, CodingKey {
-        case endTime = "end_time"
-        case startTime = "start_time"
+        case id
         case movementId = "movement_id"
+        case pieceId = "piece_id"
+        case startTime = "start_time"
+        case endTime = "end_time"
         case userId = "user_id"
-        case durationSeconds = "duration_seconds"
+        case durationSeconds = "durationSeconds"
     }
 
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        pieceId = try container.decodeIfPresent(String.self, forKey: .pieceId)
+        movementId = try container.decodeIfPresent(Int.self, forKey: .movementId)
+        userId = try container.decodeIfPresent(String.self, forKey: .userId)
+        durationSeconds = try container.decodeIfPresent(Int.self, forKey: .durationSeconds)
+
+        // Decode dates using the supabaseIso formatter
+        let dateFormatter = DateFormatter.supabaseIso
+        if let startTimeString = try container.decodeIfPresent(String.self, forKey: .startTime) {
+            startTime = dateFormatter.date(from: startTimeString)
+        }
+        if let endTimeString = try container.decodeIfPresent(String.self, forKey: .endTime) {
+            endTime = dateFormatter.date(from: endTimeString)
+        }
+    }
 }

@@ -9,16 +9,16 @@ import MusicKit
 
 struct ContentView: View {
     @Binding var isSignedIn: Bool
-    @EnvironmentObject var manager: PracticeSessionManager
     @State private var selectedTab: Tabs = .start
     @Namespace private var animation
     @State private var isExpanded: Bool = false
+    @StateObject var viewModel = PracticeSessionViewModel()
     @StateObject private var keyboardResponder = KeyboardResponder()
 
     var body: some View {
         if isSignedIn {
             if isExpanded {
-                if let activeSession = manager.activeSession {
+                if let activeSession = viewModel.activeSession {
                     ExpandedBottomSheet(animation: animation, activeSession: activeSession, expandedSheet: $isExpanded)
                         .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
                 }
@@ -35,13 +35,20 @@ struct ContentView: View {
 
                     Spacer()
                     if !keyboardResponder.isKeyboardVisible {
-                                    CustomTabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
+                        CustomTabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
                                         .ignoresSafeArea(.keyboard)
                                 }
 
                 }
-                .environmentObject(manager)
+                .environmentObject(viewModel)
                 .animation(.easeInOut(duration: 0.9), value: keyboardResponder.isKeyboardVisible)
+                .onAppear {
+                    Task {
+                        do {
+                            viewModel.activeSession = await viewModel.fetchCurrentActiveSession()
+                        }
+                    }
+                }
 
             }
         } else {
