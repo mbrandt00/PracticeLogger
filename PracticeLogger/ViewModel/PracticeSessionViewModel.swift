@@ -24,12 +24,11 @@ class PracticeSessionViewModel: ObservableObject {
     }
 
     func stopSession() async {
-        print("IN STOP SESSION")
         do {
             _ = try await Database.client
                         .from("practice_sessions")
                         .update(["end_time": Date()])
-                        .eq("id", value: activeSession?.pieceId)
+                        .eq("id", value: activeSession?.id)
                         .execute()
             DispatchQueue.main.async {
                 self.activeSession = nil
