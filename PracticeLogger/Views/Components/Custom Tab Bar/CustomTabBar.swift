@@ -194,20 +194,12 @@ struct MusicInfo: View {
     }
 }
 
-// #Preview {
-//    @Namespace var animation
-//    return CustomTabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).preferredColorScheme(.dark)
-// }
-// #Preview {
-//    let manager = PracticeSessionManager()
-//    let piece = Piece(workName: "Sonata 2 in B flat Minor Funeral March", composer: Composer(name: "Frederic Chopin"), movements: [
-//        Movement(name: "Grave - Doppio movimento", number: 1),
-//        Movement(name: "Scherzo- Piu lento - Tempo 1", number: 2),
-//        Movement(name: "Marche Funebre", number: 3),
-//        Movement(name: "Finale", number: 4)
-//    ], formattedKeySignature: "Bb Minor", catalogue_type: CatalogueType.Op, catalogue_number: 35, nickname: "Funeral March", tonality: KeySignatureTonality.minor, key_signature: KeySignatureType.bFlat)
-//
-//    manager.activeSession = PracticeSession(start_time: Date(), movement: Movement(name: "Grave - Doppio movimento", number: 1, piece: piece))
-//    @Namespace var animation
-//    return CustomTabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(manager).preferredColorScheme(.dark)
-// }
+#Preview {
+    @Namespace var animation
+    return CustomTabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).preferredColorScheme(.dark).environmentObject(PracticeSessionViewModel())
+}
+
+#Preview {
+    @Namespace var animation
+    return CustomTabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(PracticeSessionViewModel()).preferredColorScheme(.dark)
+}
