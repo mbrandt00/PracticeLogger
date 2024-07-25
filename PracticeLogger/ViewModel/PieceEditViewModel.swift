@@ -13,6 +13,7 @@ class PieceEditViewModel: ObservableObject {
     init(piece: Piece) {
         self.piece = piece
     }
+
     func insertPiece(piece: Piece) async throws -> Piece? {
         do {
             let composer: Composer = try await Database.client
@@ -50,16 +51,15 @@ class PieceEditViewModel: ObservableObject {
 
     func move(from source: IndexSet, to destination: Int) {
         piece.movements.move(fromOffsets: source, toOffset: destination)
-        for (index) in piece.movements.indices {
+        for index in piece.movements.indices {
             piece.movements[index].number = index + 1
         }
-        self.piece = piece
+        piece = piece
     }
 
     func updateMovementName(at index: Int, newName: String) {
         guard index < piece.movements.count else { return } // Ensure index is within bounds
         piece.movements[index].name = newName
-
     }
 
     func isDuplicate(piece: Piece) async throws -> Piece? {
@@ -68,7 +68,7 @@ class PieceEditViewModel: ObservableObject {
                 return nil
             }
             let currentUserID = try Database.getCurrentUser()?.id.uuidString
-            let response: Piece = try await Database.client.rpc("find_duplicate_piece", params: ["catalogue_number": String(catalogue_number), "catalogue_type": catalogue_type.rawValue, "user_id": currentUserID, "composer_name": piece.composer?.name ]).execute().value
+            let response: Piece = try await Database.client.rpc("find_duplicate_piece", params: ["catalogue_number": String(catalogue_number), "catalogue_type": catalogue_type.rawValue, "user_id": currentUserID, "composer_name": piece.composer?.name]).execute().value
 
             return response
         } catch {
@@ -76,7 +76,7 @@ class PieceEditViewModel: ObservableObject {
             switch error {
             case let decodingError as DecodingError:
                 // Check if the error is of type valueNotFound
-                if case DecodingError.valueNotFound(_, _) = decodingError {
+                if case DecodingError.valueNotFound = decodingError {
                     return nil
                 } else {
                     print("Decoding error:", decodingError)

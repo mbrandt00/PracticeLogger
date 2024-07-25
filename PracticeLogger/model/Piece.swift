@@ -5,8 +5,8 @@
 //  Created by Michael Brandt on 3/4/24.
 //
 
-import SwiftUI
 import MusicKit
+import SwiftUI
 
 class Piece: ObservableObject, Identifiable, Hashable, Codable {
     let id: UUID
@@ -183,7 +183,6 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
                 }
             } else {
                 print("No catalog matches...")
-
             }
         }
 
@@ -203,7 +202,8 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         }
         return result
     }
-    static func searchPieceFromSongName(query: String)  async throws -> [Piece] {
+
+    static func searchPieceFromSongName(query: String) async throws -> [Piece] {
         var pieces: [Piece] = []
         var uniqWorks: [String: Song] = [:]
         var result = MusicCatalogSearchRequest(term: query, types: [Song.self])
@@ -212,7 +212,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         result.includeTopResults = true
         let response = try await result.response()
 
-        response.songs.forEach { song in
+        for song in response.songs {
             if song.workName != nil && !uniqWorks.keys.contains(song.workName!) && songMatchesQuery(query: query, song: song) {
                 uniqWorks[song.workName!] = song
             }
@@ -226,14 +226,12 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
                 do {
                     let detailedSong = try await firstSong.with([.albums])
                     if let album = detailedSong.albums?.first {
-
                         // Use guard statement instead of conditional binding
                         if let albumTrack = try? await album.with([.tracks]) {
                             if let allAlbumTracks = albumTrack.tracks {
                                 return try await createPiecesFromTrack(tracks: Array(allAlbumTracks))
                             }
                         }
-
                     }
                 }
             }
@@ -303,11 +301,10 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
     }
 
     static func createPieceFromSong(song: Song) async throws -> Piece {
-
         let workName = song.workName
         let songAlbum = try await song.with(.albums)
         let withTracks = try await songAlbum.albums?.first?.with(.tracks)
-        let groupedTracks = withTracks?.tracks?.filter {$0.workName == workName}
+        let groupedTracks = withTracks?.tracks?.filter { $0.workName == workName }
         let matchingSongs = groupedTracks?.compactMap { track -> Song? in
             guard case .song(let song) = track else { return nil }
             return song
@@ -316,8 +313,8 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         return Piece(workName: matchingSongs?.first?.workName ?? "",
                      composer: Composer(name: matchingSongs?.first?.composerName ?? ""),
                      movements: matchingSongs?.map { song in
-            Movement(name: song.movementName ?? "", number: song.movementNumber ?? 0)
-        } ?? [], formattedKeySignature: workName!.parseKeySignature().formatKeySignature() ?? nil)
+                         Movement(name: song.movementName ?? "", number: song.movementNumber ?? 0)
+                     } ?? [], formattedKeySignature: workName!.parseKeySignature().formatKeySignature() ?? nil)
     }
 
     static func isMatchingKeySignature(query: String, workName: String) -> Bool {
@@ -328,10 +325,10 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
 
     static func extractCatalogNumber(from string: String) -> String? {
         // Define regular expression patterns for different cataloguing types
-        let opPattern = #"Op\. (\d+)"#  // For Op. numbers
-        let kPattern = #"K\. (\d+)"#    // For K. numbers (Mozart)
-        let bwvPattern = #"BWV (\d+)"#  // For BWV numbers (Bach)
-        let dPattern = #"D (\d+)"#      // For D numbers (Schubert)
+        let opPattern = #"Op\. (\d+)"# // For Op. numbers
+        let kPattern = #"K\. (\d+)"# // For K. numbers (Mozart)
+        let bwvPattern = #"BWV (\d+)"# // For BWV numbers (Bach)
+        let dPattern = #"D (\d+)"# // For D numbers (Schubert)
 
         // Attempt to match each pattern in the input string
         let patterns = [opPattern, kPattern, bwvPattern, dPattern]
@@ -342,7 +339,6 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
                     return String(string[range])
                 }
             }
-
         }
         return nil
     }

@@ -8,7 +8,6 @@
 import Foundation
 
 extension DateFormatter {
-
     /// Essentially iso8601WithoutFractionalSeconds,  suapbase realtime returns this data type
     static let supabaseIso: DateFormatter = {
         let formatter = DateFormatter()

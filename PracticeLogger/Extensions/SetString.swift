@@ -13,7 +13,7 @@ extension Set where Element == String {
         let tonalities = ["major", "minor"]
         let flatSymbols = ["♭", "flat", "b"]
         let sharpSymbols = ["♯", "#", "sharp"]
-        let accidentals = ["flat", "sharp", "#", "b" ]
+        let accidentals = ["flat", "sharp", "#", "b"]
 
         let elementsArray = Array(self)
 

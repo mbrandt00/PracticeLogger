@@ -4,8 +4,8 @@
 //  Created by Michael Brandt on 2/23/24.
 //
 
-import SwiftUI
 import MusicKit
+import SwiftUI
 
 struct ContentView: View {
     @Binding var isSignedIn: Bool
@@ -36,9 +36,8 @@ struct ContentView: View {
                     Spacer()
                     if !keyboardResponder.isKeyboardVisible {
                         CustomTabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
-                                        .ignoresSafeArea(.keyboard)
-                                }
-
+                            .ignoresSafeArea(.keyboard)
+                    }
                 }
                 .environmentObject(viewModel)
                 .animation(.easeInOut(duration: 0.9), value: keyboardResponder.isKeyboardVisible)
@@ -49,7 +48,6 @@ struct ContentView: View {
                         }
                     }
                 }
-
             }
         } else {
             SignIn(isSignedIn: $isSignedIn)

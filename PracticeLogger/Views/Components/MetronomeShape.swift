@@ -31,7 +31,7 @@ struct RoundedTrapezoid: Shape {
 
             // Points a and b
             let pa2 = CGPoint(x: c2.x - cs2.width, y: 0)
-            let pb2 = CGPoint(x: c2.x + CGFloat(cs2.height * tan((.pi/2) - angle)), y: cs2.height)
+            let pb2 = CGPoint(x: c2.x + CGFloat(cs2.height * tan((.pi / 2) - angle)), y: cs2.height)
 
             let pb3 = CGPoint(x: c3.x - cs3.width, y: rect.height)
             let pa3 = CGPoint(x: c3.x - (cs3.height != 0 ? CGFloat(tan(angle) / cs3.height) : 0.0), y: rect.height - cs3.height)
@@ -40,7 +40,7 @@ struct RoundedTrapezoid: Shape {
             let pb4 = CGPoint(x: c4.x + (cs4.height != 0 ? CGFloat(tan(angle) / cs4.height) : 0.0), y: rect.height - cs4.height)
 
             let pb1 = CGPoint(x: c1.x + cs1.width, y: 0)
-            let pa1 = CGPoint(x: c1.x - CGFloat(cs1.height * tan((.pi/2) - angle)), y: cs1.height)
+            let pa1 = CGPoint(x: c1.x - CGFloat(cs1.height * tan((.pi / 2) - angle)), y: cs1.height)
 
             path.move(to: start)
 
@@ -59,6 +59,7 @@ struct RoundedTrapezoid: Shape {
             path.closeSubpath()
         }
     }
+
     // swiftlint:disable large_tuple
     func decodeCornerSize() -> (CGSize, CGSize, CGSize, CGSize) {
         if cornerSizes.count == 1 {
@@ -80,7 +81,6 @@ struct RoundedTrapezoid: Shape {
 }
 
 struct MetronomeBack: View {
-
     var body: some View {
         RoundedTrapezoid(pct: 0.5, cornerSizes: [CGSize(width: 15, height: 15)])
             .foregroundStyle(Color.theme.accent.opacity(0.5))
@@ -106,7 +106,7 @@ struct MetronomePendulum: View {
     var body: some View {
         Pendulum(angle: pendulumOnLeft ? -30 : 30)
             .animation(.easeInOut(duration: 60 / bpm), value: pendulumOnLeft)
-            .onChange(of: date) {beat()}
+            .onChange(of: date) { beat() }
             .onAppear { beat() }
     }
 

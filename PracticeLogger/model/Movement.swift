@@ -9,14 +9,13 @@ import Foundation
 import MusicKit
 
 class Movement: Identifiable, ObservableObject, Codable, Hashable {
-
     let id: Int
     @Published var name: String
     var number: Int
     var piece: Piece?
     var pieceId: UUID?
 
-    init(id: Int = Int.random(in: 1...Int.max), name: String, number: Int, piece: Piece? = nil, pieceId: UUID? = nil) {
+    init(id: Int = Int.random(in: 1 ... Int.max), name: String, number: Int, piece: Piece? = nil, pieceId: UUID? = nil) {
         self.id = id
         self.name = name
         self.number = number
@@ -33,7 +32,7 @@ class Movement: Identifiable, ObservableObject, Codable, Hashable {
         hasher.combine(id)
         hasher.combine(piece)
         hasher.combine(pieceId)
-      }
+    }
 
     private enum CodingKeys: String, CodingKey {
         case id
