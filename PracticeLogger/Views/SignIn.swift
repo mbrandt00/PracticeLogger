@@ -5,10 +5,10 @@
 //  Created by Michael Brandt on 4/27/24.
 //
 
-import SwiftUI
-import Supabase
-import AuthenticationServices
 import AlertToast
+import AuthenticationServices
+import Supabase
+import SwiftUI
 
 struct SignIn: View {
     @Binding var isSignedIn: Bool
@@ -29,7 +29,7 @@ struct SignIn: View {
                             return
                         }
 
-                    try await viewModel.signInWithApple(idToken: idToken)
+                        try await viewModel.signInWithApple(idToken: idToken)
                         isSignedIn = true
                     } catch AuthError.notSignedIn {
                         errorMessage = "Sign In With Apple not enabled"
@@ -39,23 +39,23 @@ struct SignIn: View {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                         errorMessage = "" // Clear error message after 2 seconds
                     }
-                    }
                 }
             }
-            .fixedSize()
+        }
+        .fixedSize()
 
-            #if DEBUG
-            Button("Test Account") {
-                Task {
-                    do {
-                        try await viewModel.signInWithEmail()
-                        isSignedIn = true
-                    } catch {
-                        errorMessage = error.localizedDescription
-                    }
+        #if DEBUG
+        Button("Test Account") {
+            Task {
+                do {
+                    try await viewModel.signInWithEmail()
+                    isSignedIn = true
+                } catch {
+                    errorMessage = error.localizedDescription
                 }
             }
-            #endif
+        }
+        #endif
         if !errorMessage.isEmpty {
             AlertToast(type: .error(.red), title: errorMessage)
                 .padding()
@@ -65,7 +65,6 @@ struct SignIn: View {
                     }
                 }
         }
-
     }
 }
 

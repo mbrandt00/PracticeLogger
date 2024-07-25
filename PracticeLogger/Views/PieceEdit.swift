@@ -5,8 +5,8 @@
 //  Created by Michael Brandt on 4/20/24.
 //
 
-import SwiftUI
 import AlertToast
+import SwiftUI
 
 struct PieceEdit: View {
     @StateObject private var viewModel: PieceEditViewModel
@@ -46,7 +46,7 @@ struct PieceEdit: View {
                 Section(header: Text("Catalogue Information").foregroundColor(.primary)) {
                     Picker("Identifier", selection: Binding(
                         get: {
-                            return viewModel.piece.catalogue_type?.rawValue ?? ""
+                            viewModel.piece.catalogue_type?.rawValue ?? ""
                         },
                         set: { newValue in
                             viewModel.piece.catalogue_type = CatalogueType(rawValue: newValue)

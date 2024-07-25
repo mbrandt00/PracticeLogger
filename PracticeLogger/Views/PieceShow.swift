@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+
 struct PieceShow: View {
     var piece: Piece
     @EnvironmentObject var sessionManager: PracticeSessionViewModel
@@ -29,43 +30,45 @@ struct PieceShow: View {
                     }
                 }, label: {
                     Image(systemName: sessionManager.activeSession?.movementId == nil && sessionManager.activeSession?.pieceId == piece.id ?
-                                     "stop.circle.fill" : "play.circle.fill")
-                        .font(.title)
-                        .foregroundColor(Color.accentColor)
+                        "stop.circle.fill" : "play.circle.fill")
                         .font(.title)
                         .foregroundColor(Color.accentColor)
                 })
             }
 
-            ForEach(piece.movements, id: \.self) { movement in
-                HStack {
-                    Text(movement.name)
-                        .font(.body)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 10) {
+                    ForEach(piece.movements, id: \.self) { movement in
+                        HStack {
+                            Text(movement.name)
+                                .font(.body)
 
-                    Spacer()
+                            Spacer()
 
-                    Button(action: {
-                        Task {
-                            if sessionManager.activeSession?.movementId == movement.id {
-                                await sessionManager.stopSession()
-                            } else {
-                                _ = try await sessionManager.startSession(record: .movement(movement))
-                            }
+                            Button(action: {
+                                Task {
+                                    if sessionManager.activeSession?.movementId == movement.id {
+                                        await sessionManager.stopSession()
+                                    } else {
+                                        _ = try await sessionManager.startSession(record: .movement(movement))
+                                    }
+                                }
+                            }, label: {
+                                Image(systemName: sessionManager.activeSession?.movementId == movement.id ? "stop.circle.fill" : "play.circle.fill")
+                                    .foregroundColor(Color.accentColor)
+                            })
                         }
-                    }, label: {
-                        Image(systemName: sessionManager.activeSession?.movementId == movement.id ? "stop.circle.fill" : "play.circle.fill")
-                            .foregroundColor(Color.accentColor)
-                    })
+                        .padding(.vertical, 5)
+                    }
                 }
-                .padding(.vertical, 5)
             }
         }
-        .padding(20)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .navigationBarTitleDisplayMode(.inline)
         .background(Color(UIColor.systemBackground))
+        .padding()
     }
 }
 
 #Preview {
-    PieceShow(piece: Piece.example)
+    PieceShow(piece: Piece.example).environmentObject(PracticeSessionViewModel())
 }

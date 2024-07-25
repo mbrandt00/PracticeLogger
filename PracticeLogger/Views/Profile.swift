@@ -5,8 +5,9 @@
 //  Created by Michael Brandt on 4/27/24.
 //
 
-import SwiftUI
 import Supabase
+import SwiftUI
+
 struct Profile: View {
     @State private var sessionInfo: String = ""
     @State private var user: User?

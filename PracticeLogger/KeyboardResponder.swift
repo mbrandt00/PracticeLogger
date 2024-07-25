@@ -5,9 +5,9 @@
 //  Created by Michael Brandt on 7/20/24.
 //
 
+import Combine
 import Foundation
 import SwiftUI
-import Combine
 
 final class KeyboardResponder: ObservableObject {
     @Published var isKeyboardVisible = false

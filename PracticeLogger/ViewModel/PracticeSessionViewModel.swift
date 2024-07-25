@@ -26,10 +26,10 @@ class PracticeSessionViewModel: ObservableObject {
     func stopSession() async {
         do {
             _ = try await Database.client
-                        .from("practice_sessions")
-                        .update(["end_time": Date()])
-                        .eq("id", value: activeSession?.id)
-                        .execute()
+                .from("practice_sessions")
+                .update(["end_time": Date()])
+                .eq("id", value: activeSession?.id)
+                .execute()
             DispatchQueue.main.async {
                 self.activeSession = nil
             }
@@ -39,26 +39,26 @@ class PracticeSessionViewModel: ObservableObject {
     }
 
     func fetchCurrentActiveSession() async -> PracticeSession? {
-            do {
-                let userID = try Database.getCurrentUser()?.id
+        do {
+            let userID = try Database.getCurrentUser()?.id
 
-                let response: PracticeSession = try await Database.client
-                    .from("practice_sessions")
-                    .select("*")
-                    .eq("user_id", value: userID)
-                    .is("end_time", value: nil)
-                    .single()
-                    .execute()
-                    .value
+            let response: PracticeSession = try await Database.client
+                .from("practice_sessions")
+                .select("*")
+                .eq("user_id", value: userID)
+                .is("end_time", value: nil)
+                .single()
+                .execute()
+                .value
 
-                let practiceSession = try await createFullPracticeSessionResponse(response)
-                return practiceSession
+            let practiceSession = try await createFullPracticeSessionResponse(response)
+            return practiceSession
 
-            } catch {
-                print("Error retrieving session: \(error)")
-                return nil
-            }
+        } catch {
+            print("Error retrieving session: \(error)")
+            return nil
         }
+    }
 
     private func insertPracticeSession(_ practiceSession: PracticeSession) async throws -> PracticeSession {
         do {
@@ -75,21 +75,22 @@ class PracticeSessionViewModel: ObservableObject {
                 self.activeSession = activeSession
             }
             return insertedPracticeSession
-        } catch let error {
+        } catch {
             print("Practice Session not inserted \(error)")
             throw error
         }
     }
 
-    func  createFullPracticeSessionResponse(_ response: PracticeSession) async throws -> PracticeSession {
+    func createFullPracticeSessionResponse(_ response: PracticeSession) async throws -> PracticeSession {
         guard let pieceResponse: SupabasePieceResponse = try await Database.client
             .from("pieces")
             .select("*, movements!inner(*), composer:composers!inner(id, name)")
             .eq("id", value: response.pieceId)
             .single()
             .execute()
-            .value else {
-                print("Could not convert Supabase response to piece object")
+            .value
+        else {
+            print("Could not convert Supabase response to piece object")
             throw SupabaseError.pieceAlreadyExists
         }
 

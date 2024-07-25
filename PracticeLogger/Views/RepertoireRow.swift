@@ -19,7 +19,6 @@ struct RepertoireRow: View {
         }
         .padding()
     }
-
 }
 
 #Preview {

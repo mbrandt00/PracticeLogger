@@ -26,12 +26,12 @@ struct ExpandedBottomSheet: View {
                     })
                     .overlay(alignment: .top) {
                         MusicInfo(expandedSheet: $expandedSheet, activeSession: activeSession, animation: animation)
-                        /// Disable interactions
+                            /// Disable interactions
                             .allowsHitTesting(false)
                             .opacity(animateContent ? 0 : 1)
                     }
                     .matchedGeometryEffect(id: "BGVIEW", in: animation)
-                VStack(spacing: 15 ) {
+                VStack(spacing: 15) {
                     Capsule()
                         .fill(.gray)
                         .frame(width: 40, height: 5)
@@ -54,12 +54,11 @@ struct ExpandedBottomSheet: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 .onTapGesture {
                     /// for testing
-                    withAnimation(.easeInOut(duration: 0.3) ) {
+                    withAnimation(.easeInOut(duration: 0.3)) {
                         expandedSheet = false
                         animateContent = false
                     }
                 }
-
             }
 
             .ignoresSafeArea(.container, edges: .all)
