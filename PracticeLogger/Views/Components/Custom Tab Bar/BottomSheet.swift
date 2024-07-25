@@ -12,76 +12,24 @@ enum Tabs {
     case progress, start, profile
 }
 
-struct CustomTabBar: View {
-    @Binding var selectedTab: Tabs
-    @Binding var expandedSheet: Bool
-    @EnvironmentObject var sessionManager: PracticeSessionViewModel
+struct BottomSheet: View {
     var animation: Namespace.ID
-    @ObservedObject private var keyboardResponder = KeyboardResponder()
-
-    var body: some View {
-        VStack {
-            TabView(selection: $selectedTab) {
-                Text("")
-                    .tabItem {
-                        Image(systemName: "chart.xyaxis.line")
-                        Text("Progress")
-                    }
-                    .tag(Tabs.progress)
-
-                Text("")
-                    .tabItem {
-                        Image(systemName: "metronome")
-                        Text("Practice")
-                    }
-                    .tag(Tabs.start)
-
-                Text("")
-                    .tabItem {
-                        Image(systemName: "person")
-                        Text("Profile")
-                    }
-                    .tag(Tabs.profile)
-            }
-            .safeAreaInset(edge: .bottom) {
-                if let activeSession = sessionManager.activeSession {
-                    CustomBottomSheet(animation: animation, expandedSheet: $expandedSheet, activeSession: activeSession)
-                        .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .move(edge: .bottom).combined(with: .opacity)))
-                        .animation(.easeInOut(duration: 0.3))
-                }
-            }
-            .frame(maxHeight: 100)
-            .toolbarBackground(.ultraThickMaterial, for: .tabBar)
-            .toolbar(expandedSheet ? .hidden : .visible, for: .tabBar)
-            .opacity(keyboardResponder.isKeyboardVisible ? 0 : 1)
-            .offset(y: keyboardResponder.isKeyboardVisible ? 100 : 0)
-        }
-        .animation(.easeInOut, value: keyboardResponder.isKeyboardVisible)
-    }
-}
-
-struct CustomBottomSheet: View {
-    var animation: Namespace.ID
-    @Binding var expandedSheet: Bool
+    @Binding var isExpanded: Bool
     var activeSession: PracticeSession
+    @EnvironmentObject var sessionManager: PracticeSessionViewModel
 
     var body: some View {
         ZStack {
-            if expandedSheet {
-                Rectangle()
-                    .fill(.clear)
-            } else {
-                Rectangle()
-                    .fill(.ultraThickMaterial)
-                    .overlay {
-                        MusicInfo(expandedSheet: $expandedSheet, activeSession: activeSession, animation: animation)
-                            .matchedGeometryEffect(id: "BGVIEW", in: animation)
-                    }
-            }
             Rectangle()
                 .fill(.ultraThickMaterial)
                 .overlay {
-                    MusicInfo(expandedSheet: $expandedSheet, activeSession: activeSession, animation: animation)
+                    MusicInfo(expandedSheet: $isExpanded, activeSession: activeSession, animation: animation)
+                        .matchedGeometryEffect(id: "BGVIEW", in: animation)
+                }
+            Rectangle()
+                .fill(.ultraThickMaterial)
+                .overlay {
+                    MusicInfo(expandedSheet: $isExpanded, activeSession: activeSession, animation: animation)
                 }
         }
         .frame(height: 70)
@@ -97,6 +45,7 @@ struct CustomBottomSheet: View {
 struct MusicInfo: View {
     @Binding var expandedSheet: Bool
     @ObservedObject var activeSession: PracticeSession
+
     var animation: Namespace.ID
     @State private var elapsedTime: String = "00:00"
     @EnvironmentObject var sessionManager: PracticeSessionViewModel
@@ -105,14 +54,14 @@ struct MusicInfo: View {
         HStack(spacing: 0) {
             // Left side: Timer
             ZStack {
-                if !expandedSheet {
-                    GeometryReader { geometry in
-                        Text(elapsedTime)
-                            .font(.caption)
-                            .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
-                    }
-                    .matchedGeometryEffect(id: "Artwork", in: animation)
+//                if !expandedSheet {
+                GeometryReader { geometry in
+                    Text(elapsedTime)
+                        .font(.caption)
+                        .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
                 }
+                .matchedGeometryEffect(id: "Artwork", in: animation)
+//                }
             }
             .frame(width: 45, height: 45)
 
@@ -157,11 +106,11 @@ struct MusicInfo: View {
                 Task {
                     await sessionManager.stopSession()
                 }
-            }) {
+            }, label: {
                 Image(systemName: "stop.fill")
                     .font(.title2)
                     .foregroundColor(Color.primary)
-            }
+            })
             .padding(.trailing, 20)
         }
         .padding(.horizontal)
@@ -196,10 +145,5 @@ struct MusicInfo: View {
 
 #Preview {
     @Namespace var animation
-    return CustomTabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).preferredColorScheme(.dark).environmentObject(PracticeSessionViewModel())
-}
-
-#Preview {
-    @Namespace var animation
-    return CustomTabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(PracticeSessionViewModel()).preferredColorScheme(.dark)
+    return BottomSheet(animation: animation, isExpanded: .constant(false), activeSession: PracticeSession.example).preferredColorScheme(.dark).environmentObject(PracticeSessionViewModel())
 }

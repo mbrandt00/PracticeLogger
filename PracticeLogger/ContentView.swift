@@ -17,30 +17,33 @@ struct ContentView: View {
 
     var body: some View {
         if isSignedIn {
-            if isExpanded {
-                if let activeSession = viewModel.activeSession {
-                    ExpandedBottomSheet(animation: animation, activeSession: activeSession, expandedSheet: $isExpanded)
-                        .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
-                }
+            if isExpanded, let activeSession = viewModel.activeSession {
+                ExpandedBottomSheet(animation: animation, activeSession: activeSession, expandedSheet: $isExpanded)
+                    .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
             } else {
-                VStack {
-                    switch selectedTab {
-                    case .progress:
-                        ProgressView()
-                    case .start:
-                        CreatePiece()
-                    case .profile:
-                        Profile(isSignedIn: $isSignedIn)
-                    }
+                TabView(selection: $selectedTab) {
+                    ProgressView()
+                        .tabItem {
+                            Image(systemName: "chart.xyaxis.line")
+                            Text("Progress")
+                        }
+                        .tag(Tabs.progress)
 
-                    Spacer()
-                    if !keyboardResponder.isKeyboardVisible {
-                        CustomTabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
-                            .ignoresSafeArea(.keyboard)
-                    }
+                    CreatePiece()
+                        .tabItem {
+                            Image(systemName: "metronome")
+                            Text("Practice")
+                        }
+                        .tag(Tabs.start)
+
+                    Profile(isSignedIn: $isSignedIn)
+                        .tabItem {
+                            Image(systemName: "person")
+                            Text("Profile")
+                        }
+                        .tag(Tabs.profile)
                 }
                 .environmentObject(viewModel)
-                .animation(.easeInOut(duration: 0.9), value: keyboardResponder.isKeyboardVisible)
                 .onAppear {
                     Task {
                         do {
@@ -48,6 +51,19 @@ struct ContentView: View {
                         }
                     }
                 }
+                .safeAreaInset(edge: .bottom, spacing: 100.0) {
+                    if !keyboardResponder.isKeyboardVisible {
+                        if let activeSession = viewModel.activeSession {
+                            BottomSheet(animation: animation, isExpanded: $isExpanded, activeSession: activeSession)
+                                .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .move(edge: .bottom).combined(with: .opacity)))
+                                .animation(.easeInOut(duration: 0.3))
+                                .environmentObject(viewModel)
+                                .frame(maxHeight: 100)
+                        }
+                    }
+                }
+                .toolbarBackground(.ultraThickMaterial, for: .tabBar)
+                .toolbar(isExpanded ? .hidden : .visible, for: .tabBar)
             }
         } else {
             SignIn(isSignedIn: $isSignedIn)
