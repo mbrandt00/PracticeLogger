@@ -21,49 +21,55 @@ struct ContentView: View {
                 ExpandedBottomSheet(animation: animation, activeSession: activeSession, expandedSheet: $isExpanded)
                     .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
             } else {
-                TabView(selection: $selectedTab) {
-                    ProgressView()
-                        .tabItem {
-                            Image(systemName: "chart.xyaxis.line")
-                            Text("Progress")
-                        }
-                        .tag(Tabs.progress)
+                ZStack {
+                    VStack {
+                        TabView(selection: $selectedTab) {
+                            ProgressView()
+                                .tabItem {
+                                    Image(systemName: "chart.xyaxis.line")
+                                    Text("Progress")
+                                }
+                                .tag(Tabs.progress)
 
-                    CreatePiece()
-                        .tabItem {
-                            Image(systemName: "metronome")
-                            Text("Practice")
-                        }
-                        .tag(Tabs.start)
+                            CreatePiece()
+                                .tabItem {
+                                    Image(systemName: "metronome")
+                                    Text("Practice")
+                                }
+                                .tag(Tabs.start)
 
-                    Profile(isSignedIn: $isSignedIn)
-                        .tabItem {
-                            Image(systemName: "person")
-                            Text("Profile")
+                            Profile(isSignedIn: $isSignedIn)
+                                .tabItem {
+                                    Image(systemName: "person")
+                                    Text("Profile")
+                                }
+                                .tag(Tabs.profile)
                         }
-                        .tag(Tabs.profile)
-                }
-                .environmentObject(viewModel)
-                .onAppear {
-                    Task {
-                        do {
-                            viewModel.activeSession = await viewModel.fetchCurrentActiveSession()
+                        .toolbarBackground(.ultraThickMaterial, for: .tabBar)
+                        .environmentObject(viewModel)
+                        .onAppear {
+                            Task {
+                                do {
+                                    viewModel.activeSession = await viewModel.fetchCurrentActiveSession()
+                                }
+                            }
                         }
                     }
-                }
-                .safeAreaInset(edge: .bottom, spacing: 100.0) {
+                    Spacer()
+                        .frame(height: isExpanded ? 150 : 70)
                     if !keyboardResponder.isKeyboardVisible {
-                        if let activeSession = viewModel.activeSession {
-                            BottomSheet(animation: animation, isExpanded: $isExpanded, activeSession: activeSession)
-                                .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .move(edge: .bottom).combined(with: .opacity)))
-                                .animation(.easeInOut(duration: 0.3))
-                                .environmentObject(viewModel)
-                                .frame(maxHeight: 100)
+                        VStack {
+                            Spacer()
+                            if let activeSession = viewModel.activeSession, !isExpanded {
+                                BottomSheet(animation: animation, isExpanded: $isExpanded, activeSession: activeSession)
+                                    .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .move(edge: .bottom).combined(with: .opacity)))
+                                    .animation(.easeInOut(duration: 0.3))
+                                    .environmentObject(viewModel)
+                                    .frame(height: 70)
+                            }
                         }
                     }
                 }
-                .toolbarBackground(.ultraThickMaterial, for: .tabBar)
-                .toolbar(isExpanded ? .hidden : .visible, for: .tabBar)
             }
         } else {
             SignIn(isSignedIn: $isSignedIn)

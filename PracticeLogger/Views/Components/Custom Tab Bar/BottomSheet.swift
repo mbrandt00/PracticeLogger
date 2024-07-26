@@ -19,26 +19,26 @@ struct BottomSheet: View {
     @EnvironmentObject var sessionManager: PracticeSessionViewModel
 
     var body: some View {
-        ZStack {
-            Rectangle()
-                .fill(.ultraThickMaterial)
-                .overlay {
-                    MusicInfo(expandedSheet: $isExpanded, activeSession: activeSession, animation: animation)
-                        .matchedGeometryEffect(id: "BGVIEW", in: animation)
-                }
-            Rectangle()
-                .fill(.ultraThickMaterial)
-                .overlay {
-                    MusicInfo(expandedSheet: $isExpanded, activeSession: activeSession, animation: animation)
-                }
-        }
-        .frame(height: 70)
-        .overlay(alignment: .bottom, content: {
-            Rectangle()
-                .fill(Color.primary.opacity(0.2))
-                .frame(height: 2)
-        })
-        .offset(y: -49)
+//        ZStack {
+//        Rectangle()
+//            .fill(.ultraThickMaterial)
+//            .overlay {
+//                MusicInfo(expandedSheet: $isExpanded, activeSession: activeSession, animation: animation)
+//                    .matchedGeometryEffect(id: "BGVIEW", in: animation)
+//            }
+        Rectangle()
+            .fill(.ultraThickMaterial)
+            .overlay {
+                MusicInfo(expandedSheet: $isExpanded, activeSession: activeSession, animation: animation)
+            }
+//        }
+            .frame(height: 70)
+            .overlay(alignment: .bottom, content: {
+                Rectangle()
+                    .fill(Color.primary.opacity(0.2))
+                    .frame(height: 2)
+            })
+            .offset(y: -49)
     }
 }
 

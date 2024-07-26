@@ -9,6 +9,7 @@ import Supabase
 
 class PracticeSessionViewModel: ObservableObject {
     @Published var activeSession: PracticeSession?
+
     func startSession(record: Record) async throws -> PracticeSession? {
         switch record {
         case .piece(let piece):
@@ -98,7 +99,8 @@ class PracticeSessionViewModel: ObservableObject {
 
         var practiceSession: PracticeSession
         if let movementId = response.movementId,
-           let selectedMovement = pieceResponse.movements.first(where: { $0.id == movementId }) {
+           let selectedMovement = pieceResponse.movements.first(where: { $0.id == movementId })
+        {
             practiceSession = PracticeSession(
                 start_time: response.startTime,
                 movement: Movement(

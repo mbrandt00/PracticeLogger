@@ -37,7 +37,7 @@ struct PieceShow: View {
             }
 
             ScrollView {
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 20) {
                     ForEach(piece.movements, id: \.self) { movement in
                         HStack {
                             Text(movement.name)
@@ -64,6 +64,7 @@ struct PieceShow: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        .scrollIndicators(.hidden)
         .background(Color(UIColor.systemBackground))
         .padding()
     }
