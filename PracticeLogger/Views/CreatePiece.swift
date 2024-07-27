@@ -11,44 +11,28 @@ import SwiftUI
 struct CreatePiece: View {
     @StateObject var viewModel = CreatePieceViewModel()
     @State private var isLoading = false
+
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 TextField("Search", text: $viewModel.searchTerm)
                     .padding()
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .autocorrectionDisabled(true)
+
                 if isLoading {
                     ProgressView()
                         .padding(4)
                         .background(Color.white)
                         .cornerRadius(6)
-                        .offset(x: 0, y: -2)
+                        .offset(y: -2)
                 }
 
                 if viewModel.searchTerm.isEmpty {
-                    VStack(alignment: .leading) {
-                        Text("Repetoire")
-                            .font(.headline)
-                            .padding([.leading, .top])
-
-                        List(viewModel.userPieces) { piece in
-                            RepertoireRow(piece: piece)
-                        }
-                        .listStyle(PlainListStyle())
+                    List(viewModel.userPieces) { piece in
+                        RepertoireRow(piece: piece)
                     }
-                    .navigationTitle("Recent Pieces")
-                    .onAppear {
-                        Task {
-                            isLoading = true
-                            do {
-                                _ = try await viewModel.getUserPieces()
-                            } catch {
-                                print("Error loading user pieces: \(error)")
-                            }
-                            isLoading = false
-                        }
-                    }
+                    .listStyle(PlainListStyle())
                 } else {
                     VStack(alignment: .leading) {
                         Text("Search Results")
@@ -62,15 +46,30 @@ struct CreatePiece: View {
                         }
                         .listStyle(PlainListStyle())
                     }
-                    .navigationTitle("Search Pieces")
-                    .task(id: viewModel.searchTerm) {
-                        isLoading = true
-                        await viewModel.getClassicalPieces(viewModel.searchTerm)
-                        isLoading = false
-                    }
                 }
             }
-            .navigationTitle("Search Pieces")
+            .onAppear {
+                loadUserPieces()
+            }
+            .task(id: viewModel.searchTerm) {
+                if !viewModel.searchTerm.isEmpty {
+                    isLoading = true
+                    await viewModel.getClassicalPieces(viewModel.searchTerm)
+                    isLoading = false
+                }
+            }
+        }
+    }
+
+    private func loadUserPieces() {
+        Task {
+            isLoading = true
+            do {
+                _ = try await viewModel.getUserPieces()
+            } catch {
+                print("Error loading user pieces: \(error)")
+            }
+            isLoading = false
         }
     }
 }
