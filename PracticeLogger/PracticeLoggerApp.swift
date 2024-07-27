@@ -10,6 +10,10 @@ import SwiftUI
 @main
 struct PracticeLoggerApp: App {
     @State private var isSignedIn = false
+    init() {
+        // Set the appearance of UITextField here
+        UITextField.appearance().clearButtonMode = .whileEditing
+    }
 
     var body: some Scene {
         WindowGroup {
