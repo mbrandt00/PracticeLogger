@@ -12,7 +12,8 @@ class Database: ObservableObject {
     static let client: SupabaseClient = {
         guard let supabaseUrlString = Bundle.main.infoDictionary?["SUPABASE_URL"] as? String,
               let supabaseUrl = URL(string: supabaseUrlString),
-              let supabaseKey = Bundle.main.infoDictionary?["SUPABASE_KEY"] as? String else {
+              let supabaseKey = Bundle.main.infoDictionary?["SUPABASE_KEY"] as? String
+        else {
             fatalError("Missing SUPABASE_URL or SUPABASE_KEY in Info.plist")
         }
 
@@ -20,9 +21,10 @@ class Database: ObservableObject {
             supabaseURL: supabaseUrl,
             supabaseKey: supabaseKey,
             options: SupabaseClientOptions(
-//                db: .init(encoder: encoder, decoder: decoder),
+                //                db: .init(encoder: encoder, decoder: decoder),
 //                global: SupabaseClientOptions.GlobalOptions(logger: LogStore.shared)
-          ))
+            )
+        )
     }()
 
     @Published var isLoggedIn: Bool = false
@@ -83,6 +85,7 @@ struct MovementResponse: Codable {
         case pieceId = "piece_id"
     }
 }
+
 struct ComposerResponse: Codable {
     let id: Int
     let name: String

@@ -6,9 +6,11 @@
 //
 
 import Foundation
+
 enum SupabaseError: Error {
     case pieceAlreadyExists
 }
 
 enum AuthError: Error {
-    case notSignedIn, signInAppleNotEnabled}
+    case notSignedIn, signInAppleNotEnabled
+}

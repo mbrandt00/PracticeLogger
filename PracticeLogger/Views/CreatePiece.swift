@@ -5,8 +5,8 @@
 //  Created by Michael Brandt on 2/28/24.
 //
 
-import SwiftUI
 import MusicKit
+import SwiftUI
 
 struct CreatePiece: View {
     @StateObject var viewModel = CreatePieceViewModel()

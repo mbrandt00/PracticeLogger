@@ -8,7 +8,6 @@
 import Foundation
 
 class PracticeSession: ObservableObject, Identifiable, Codable, Equatable {
-
     let id: UUID
     @Published var startTime: Date
     @Published var endTime: Date?
@@ -28,15 +27,15 @@ class PracticeSession: ObservableObject, Identifiable, Codable, Equatable {
         case userId = "user_id"
     }
 
-init(start_time: Date, piece: Piece? = nil, movement: Movement? = nil, id: UUID = UUID()) {
-    self.id = id
-    self.startTime = start_time
-    self.endTime = nil
-    self.movement = movement
-    self.movementId = movement?.id
-    self.piece = movement?.piece ?? piece
-    self.pieceId = movement?.piece?.id ?? piece?.id ?? UUID()
-}
+    init(start_time: Date, piece: Piece? = nil, movement: Movement? = nil, id: UUID = UUID()) {
+        self.id = id
+        startTime = start_time
+        endTime = nil
+        self.movement = movement
+        movementId = movement?.id
+        self.piece = movement?.piece ?? piece
+        pieceId = movement?.piece?.id ?? piece?.id ?? UUID()
+    }
 
     // Codable initializer
     required init(from decoder: Decoder) throws {
@@ -69,19 +68,19 @@ init(start_time: Date, piece: Piece? = nil, movement: Movement? = nil, id: UUID 
 
     // Codable encode method
     func encode(to encoder: Encoder) throws {
-            let dateFormatter = DateFormatter.supabaseIso
-            var container = encoder.container(keyedBy: CodingKeys.self)
-            let startTimeString = dateFormatter.string(from: startTime)
-            try container.encode(startTimeString, forKey: .startTime)
-            if let endTime = endTime {
-                let endTimeString = dateFormatter.string(from: endTime)
-                try container.encode(endTimeString, forKey: .endTime)
-            }
-
-            try container.encode(id, forKey: .id)
-            try container.encodeIfPresent(piece?.id, forKey: .pieceId)
-            try container.encodeIfPresent(movement?.id, forKey: .movementId)
+        let dateFormatter = DateFormatter.supabaseIso
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        let startTimeString = dateFormatter.string(from: startTime)
+        try container.encode(startTimeString, forKey: .startTime)
+        if let endTime = endTime {
+            let endTimeString = dateFormatter.string(from: endTime)
+            try container.encode(endTimeString, forKey: .endTime)
         }
+
+        try container.encode(id, forKey: .id)
+        try container.encodeIfPresent(piece?.id, forKey: .pieceId)
+        try container.encodeIfPresent(movement?.id, forKey: .movementId)
+    }
 
     static func == (lhs: PracticeSession, rhs: PracticeSession) -> Bool {
         return lhs.id == rhs.id

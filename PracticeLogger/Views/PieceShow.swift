@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+
 struct PieceShow: View {
     var piece: Piece
     @EnvironmentObject var sessionManager: PracticeSessionViewModel
@@ -29,7 +30,7 @@ struct PieceShow: View {
                     }
                 }, label: {
                     Image(systemName: sessionManager.activeSession?.movementId == nil && sessionManager.activeSession?.pieceId == piece.id ?
-                                     "stop.circle.fill" : "play.circle.fill")
+                        "stop.circle.fill" : "play.circle.fill")
                         .font(.title)
                         .foregroundColor(Color.accentColor)
                         .font(.title)

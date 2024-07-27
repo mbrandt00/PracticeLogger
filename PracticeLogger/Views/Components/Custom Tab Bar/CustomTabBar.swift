@@ -5,8 +5,9 @@
 //  Created by Michael Brandt on 2/24/24.
 //
 
-import SwiftUI
 import Combine
+import SwiftUI
+
 enum Tabs {
     case progress, start, profile
 }
@@ -74,7 +75,7 @@ struct CustomBottomSheet: View {
                     .fill(.ultraThickMaterial)
                     .overlay {
                         MusicInfo(expandedSheet: $expandedSheet, activeSession: activeSession, animation: animation)
-                             .matchedGeometryEffect(id: "BGVIEW", in: animation)
+                            .matchedGeometryEffect(id: "BGVIEW", in: animation)
                     }
             }
             Rectangle()
@@ -117,12 +118,10 @@ struct MusicInfo: View {
 
             // Middle side: Composer name, Work name, Movement
             VStack(alignment: .leading, spacing: 5) {
-
                 if let composerName = activeSession.piece?.composer?.name {
                     Text(composerName)
                         .font(.system(size: 10))
                         .foregroundColor(Color.secondary)
-
                 }
 
                 if let workName = activeSession.piece?.workName {
@@ -131,7 +130,6 @@ struct MusicInfo: View {
                         .fontWeight(.semibold)
                         .lineLimit(2)
                         .foregroundColor(Color.primary)
-
                 }
 
                 if let movementName = activeSession.movement?.name {
@@ -156,14 +154,14 @@ struct MusicInfo: View {
 
             // Right side: Stop button
             Button(action: {
-                            Task {
-                                await sessionManager.stopSession()
-                            }
-                        }) {
-                            Image(systemName: "stop.fill")
-                                .font(.title2)
-                                .foregroundColor(Color.primary)
-                        }
+                Task {
+                    await sessionManager.stopSession()
+                }
+            }) {
+                Image(systemName: "stop.fill")
+                    .font(.title2)
+                    .foregroundColor(Color.primary)
+            }
             .padding(.trailing, 20)
         }
         .padding(.horizontal)

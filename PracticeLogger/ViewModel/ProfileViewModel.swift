@@ -7,6 +7,7 @@
 
 import Foundation
 import Supabase
+
 class ProfileViewModel: ObservableObject {
     func signOut() async throws {
         try await Database.client.auth.signOut()

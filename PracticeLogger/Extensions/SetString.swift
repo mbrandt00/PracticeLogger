@@ -13,14 +13,15 @@ extension Set where Element == String {
         let tonalities = ["major", "minor"]
         let flatSymbols = ["♭", "flat", "b"]
         let sharpSymbols = ["♯", "#", "sharp"]
-        let accidentals = ["flat", "sharp", "#", "b" ]
+        let accidentals = ["flat", "sharp", "#", "b"]
 
         let elementsArray = Array(self)
 
         switch elementsArray.count {
         case 2:
             if let keyElement = elementsArray.first(where: { keyCharacters.contains($0.first!) }),
-               let nonKeyElement = elementsArray.first(where: { !keyCharacters.contains($0.first!) }) {
+               let nonKeyElement = elementsArray.first(where: { !keyCharacters.contains($0.first!) })
+            {
                 let tonalityValue = tonalities.contains(nonKeyElement) ? nonKeyElement.capitalized : ""
                 return "\(keyElement.capitalized) \(tonalityValue)"
             }

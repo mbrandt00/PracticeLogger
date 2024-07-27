@@ -5,9 +5,10 @@
 //  Created by Michael Brandt on 3/4/24.
 //
 
+import Combine
 import Foundation
 import MusicKit
-import Combine
+
 class CreatePieceViewModel: ObservableObject {
     @Published var pieces: [Piece] = []
     @Published var searchTerm: String = ""
