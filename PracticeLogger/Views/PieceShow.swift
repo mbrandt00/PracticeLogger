@@ -58,7 +58,7 @@ struct PieceShow: View {
                             .foregroundColor(Color.accentColor)
                     })
                 }
-                .padding(.vertical, 5)
+                .padding(.vertical, 10)
             }
         })
         .padding()

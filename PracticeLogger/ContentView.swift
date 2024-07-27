@@ -23,26 +23,22 @@ struct ContentView: View {
                         .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
                 }
             } else {
-                ZStack(alignment: .top) {
-                    Color.orange
-
-                    VStack {
-                        switch selectedTab {
-                        case .progress:
-                            ProgressView()
-                        case .start:
-                            CreatePiece()
-                        case .profile:
-                            Profile(isSignedIn: $isSignedIn)
-                        }
+                VStack {
+                    switch selectedTab {
+                    case .progress:
+                        ProgressView()
+                    case .start:
+                        CreatePiece()
+                    case .profile:
+                        Profile(isSignedIn: $isSignedIn)
                     }
-                    .environmentObject(viewModel)
                 }
+                .environmentObject(viewModel)
+
                 if !keyboardResponder.isKeyboardVisible {
                     ZStack(alignment: .bottom, content: {
                         TabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
                             .padding(0.0)
-                            .background(Color.green)
                     })
                     .environmentObject(viewModel)
                     .animation(.easeInOut(duration: 0.9), value: keyboardResponder.isKeyboardVisible)

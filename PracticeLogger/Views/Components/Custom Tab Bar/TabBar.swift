@@ -45,7 +45,7 @@ struct TabBar: View {
             }
             .safeAreaInset(edge: .bottom) {
                 if let activeSession = sessionManager.activeSession {
-                    CustomBottomSheet(animation: animation, expandedSheet: $expandedSheet, activeSession: activeSession)
+                    BottomSheet(animation: animation, expandedSheet: $expandedSheet, activeSession: activeSession)
                         .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .move(edge: .bottom).combined(with: .opacity)))
                         .animation(.easeInOut(duration: 0.3))
                 }
@@ -60,7 +60,7 @@ struct TabBar: View {
     }
 }
 
-struct CustomBottomSheet: View {
+struct BottomSheet: View {
     var animation: Namespace.ID
     @Binding var expandedSheet: Bool
     var activeSession: PracticeSession
@@ -82,7 +82,7 @@ struct CustomBottomSheet: View {
         .frame(height: 70)
         .overlay(alignment: .bottom, content: {
             Rectangle()
-                .fill(Color.primary.opacity(0.2))
+                .fill(Color.accentColor.opacity(0.8))
                 .frame(height: 2)
         })
         .offset(y: -49)
@@ -98,62 +98,43 @@ struct MusicInfo: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            // Left side: Timer
-//            ZStack {
-//            if !expandedSheet {
-//                GeometryReader { geometry in
-//                    Text(elapsedTime)
-//                        .font(.caption2)
-//                        .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
-//                }
-//                .matchedGeometryEffect(id: "Artwork", in: animation)
-//                .frame(width: 40, alignment: .leading)
-//                .padding(.leading, 10)
-//            }
-//            }
-
-            // Middle side: Composer name, Work name, Movement
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 0.0) {
+                if !expandedSheet {
+                    Text(elapsedTime)
+                        .font(.headline.bold())
+                }
                 if let workName = activeSession.piece?.workName {
                     Text(workName)
                         .font(.caption)
                         .fontWeight(.semibold)
                         .lineLimit(2)
-                        .foregroundColor(Color.primary)
+                        .foregroundColor(Color.secondary)
                 }
-//                HStack {
-//                    if let movementName = activeSession.movement?.name {
-//                        if let movementNumber = activeSession.movement?.number {
-//                            HStack {
-//                                Text(movementNumber.toRomanNumeral() ?? "")
-//                                Text(movementName)
-//                            }
-//                            .foregroundColor(Color.secondary)
-//                            .lineLimit(1)
-//                        } else {Co
-//                            Text(movementName)
-//                                .font(.caption2)
-//                                .foregroundColor(Color.secondary)
-//                                .lineLimit(1)
-//                        }
-//                    }
-//                if let composerName = activeSession.piece?.composer?.name {
-//                    Text(composerName)
-//                        .font(.callout)
-//                        .foregroundColor(Color.secondary)
-//                }
-//                }
-                if !expandedSheet {
-                    Text(elapsedTime)
-                        .font(.headline).fontWeight(.bold)
-                    //                        .matchedGeometryEffect(id: "Artwork", in: animation)
+                HStack {
+                    if let movementName = activeSession.movement?.name {
+                        if let movementNumber = activeSession.movement?.number {
+                            HStack {
+                                Text(movementNumber.toRomanNumeral() ?? "")
+                                Text(movementName)
+                            }
+
+                        } else {
+                            Text(movementName)
+                        }
+                    }
+
+                    if let composerName = activeSession.piece?.composer?.name {
+                        Divider()
+                        Text(composerName)
+                    }
                 }
+                .font(.caption2)
+                .foregroundColor(Color.secondary)
+                .lineLimit(1)
             }
-            .padding()
             .frame(maxWidth: .infinity, alignment: .bottomLeading)
             .font(.system(size: 12, design: .serif))
 
-            // Right side: Stop button
             Button(action: {
                 Task {
                     await sessionManager.stopSession()
@@ -165,6 +146,7 @@ struct MusicInfo: View {
                     .padding(.trailing, 20)
             })
         }
+        .padding()
         .frame(maxHeight: 70)
         .contentShape(Rectangle())
         .onTapGesture {
@@ -178,6 +160,7 @@ struct MusicInfo: View {
         .onReceive(Timer.publish(every: 1, on: .main, in: .common).autoconnect()) { _ in
             updateElapsedTime()
         }
+        .background(Color.gray.opacity(0.3))
     }
 
     private func updateElapsedTime() {
