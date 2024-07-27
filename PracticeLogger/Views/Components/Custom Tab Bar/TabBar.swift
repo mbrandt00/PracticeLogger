@@ -1,5 +1,5 @@
 //
-//  CustomTabBar.swift
+//  TabBar.swift
 //  PracticeLogger
 //
 //  Created by Michael Brandt on 2/24/24.
@@ -12,7 +12,7 @@ enum Tabs {
     case progress, start, profile
 }
 
-struct CustomTabBar: View {
+struct TabBar: View {
     @Binding var selectedTab: Tabs
     @Binding var expandedSheet: Bool
     @EnvironmentObject var sessionManager: PracticeSessionViewModel
@@ -196,7 +196,7 @@ struct MusicInfo: View {
 
 // #Preview {
 //    @Namespace var animation
-//    return CustomTabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).preferredColorScheme(.dark)
+//    return TabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).preferredColorScheme(.dark)
 // }
 // #Preview {
 //    let manager = PracticeSessionManager()
@@ -209,5 +209,5 @@ struct MusicInfo: View {
 //
 //    manager.activeSession = PracticeSession(start_time: Date(), movement: Movement(name: "Grave - Doppio movimento", number: 1, piece: piece))
 //    @Namespace var animation
-//    return CustomTabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(manager).preferredColorScheme(.dark)
+//    return TabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(manager).preferredColorScheme(.dark)
 // }

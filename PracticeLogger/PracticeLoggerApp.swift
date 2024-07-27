@@ -9,13 +9,11 @@ import SwiftUI
 
 @main
 struct PracticeLoggerApp: App {
-    @StateObject private var manager = PracticeSessionManager()
     @State private var isSignedIn = false
 
     var body: some Scene {
         WindowGroup {
             ContentView(isSignedIn: $isSignedIn)
-                .environmentObject(manager)
                 .onAppear {
                     updateSignInStatus()
                 }

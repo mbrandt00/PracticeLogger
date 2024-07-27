@@ -35,7 +35,7 @@ struct ContentView: View {
 
                     Spacer()
                     if !keyboardResponder.isKeyboardVisible {
-                        CustomTabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
+                        TabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
                             .ignoresSafeArea(.keyboard)
                     }
                 }
@@ -58,6 +58,5 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView(isSignedIn: .constant(true))
-            .environmentObject(PracticeSessionManager())
     }
 }

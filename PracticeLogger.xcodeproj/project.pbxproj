@@ -12,9 +12,8 @@
 		D11D58A82C39A06300501C6F /* ExpandedBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11D58A72C39A06300501C6F /* ExpandedBottomSheet.swift */; };
 		D12E1BB02C37B64500A4DC28 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12E1BAF2C37B64500A4DC28 /* DateFormatter.swift */; };
 		D12EE5672C04E8B10024F288 /* NewPieceRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12EE5662C04E8B10024F288 /* NewPieceRowViewModel.swift */; };
-		D12F4F6D2C306A6C0083C52B /* PracticeSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12F4F6C2C306A6C0083C52B /* PracticeSessionManager.swift */; };
 		D131F16D2B8AE54E002261BC /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F16C2B8AE54E002261BC /* Color.swift */; };
-		D131F1702B8AE8B9002261BC /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F16F2B8AE8B9002261BC /* CustomTabBar.swift */; };
+		D131F1702B8AE8B9002261BC /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F16F2B8AE8B9002261BC /* TabBar.swift */; };
 		D131F17B2B8B090D002261BC /* MetronomeShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F17A2B8B090D002261BC /* MetronomeShape.swift */; };
 		D13D0EDA2BCC2FA1006B2683 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13D0ED92BCC2FA1006B2683 /* Int.swift */; };
 		D13D0EDC2BCC4B23006B2683 /* SetString.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13D0EDB2BCC4B23006B2683 /* SetString.swift */; };
@@ -79,9 +78,8 @@
 		D11D58A72C39A06300501C6F /* ExpandedBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedBottomSheet.swift; sourceTree = "<group>"; };
 		D12E1BAF2C37B64500A4DC28 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		D12EE5662C04E8B10024F288 /* NewPieceRowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPieceRowViewModel.swift; sourceTree = "<group>"; };
-		D12F4F6C2C306A6C0083C52B /* PracticeSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSessionManager.swift; sourceTree = "<group>"; };
 		D131F16C2B8AE54E002261BC /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
-		D131F16F2B8AE8B9002261BC /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
+		D131F16F2B8AE8B9002261BC /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
 		D131F17A2B8B090D002261BC /* MetronomeShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetronomeShape.swift; sourceTree = "<group>"; };
 		D13D0ED92BCC2FA1006B2683 /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		D13D0EDB2BCC4B23006B2683 /* SetString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetString.swift; sourceTree = "<group>"; };
@@ -193,7 +191,7 @@
 		D131F1712B8AF415002261BC /* Custom Tab Bar */ = {
 			isa = PBXGroup;
 			children = (
-				D131F16F2B8AE8B9002261BC /* CustomTabBar.swift */,
+				D131F16F2B8AE8B9002261BC /* TabBar.swift */,
 				D11D58A72C39A06300501C6F /* ExpandedBottomSheet.swift */,
 			);
 			path = "Custom Tab Bar";
@@ -218,7 +216,6 @@
 				D185AC142BDF3B7E007F398D /* PieceEditViewModel.swift */,
 				D12EE5662C04E8B10024F288 /* NewPieceRowViewModel.swift */,
 				D197387F2C1540B600EBF53F /* PracticeSessionViewModel.swift */,
-				D12F4F6C2C306A6C0083C52B /* PracticeSessionManager.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -500,14 +497,13 @@
 				D17C5CA82B9E561300C1CA44 /* NewPieceRow.swift in Sources */,
 				D1DF5B5F2BB882CD00FFED0F /* String.swift in Sources */,
 				D11D58A82C39A06300501C6F /* ExpandedBottomSheet.swift in Sources */,
-				D131F1702B8AE8B9002261BC /* CustomTabBar.swift in Sources */,
+				D131F1702B8AE8B9002261BC /* TabBar.swift in Sources */,
 				D19738822C1540E500EBF53F /* PracticeSession.swift in Sources */,
 				D13D0EDA2BCC2FA1006B2683 /* Int.swift in Sources */,
 				D19E73412B898F9300BB3EC7 /* ContentView.swift in Sources */,
 				D12EE5672C04E8B10024F288 /* NewPieceRowViewModel.swift in Sources */,
 				D13D0EDC2BCC4B23006B2683 /* SetString.swift in Sources */,
 				D19738802C1540B600EBF53F /* PracticeSessionViewModel.swift in Sources */,
-				D12F4F6D2C306A6C0083C52B /* PracticeSessionManager.swift in Sources */,
 				D1AC00D62BD46BC80019FA0F /* PieceEdit.swift in Sources */,
 				D1689CA02C06D13F00191DA7 /* RepertoireRow.swift in Sources */,
 				D19E733F2B898F9300BB3EC7 /* PracticeLoggerApp.swift in Sources */,
