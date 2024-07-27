@@ -68,7 +68,7 @@ struct ContentView: View {
 
 #Preview {
     let vm = PracticeSessionViewModel()
-    vm.activeSession = PracticeSession.example()
+    vm.activeSession = PracticeSession.example
 
     return ContentView(isSignedIn: .constant(true), viewModel: vm)
 }

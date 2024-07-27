@@ -182,13 +182,13 @@ struct MusicInfo: View {
 #Preview {
     @Namespace var animation
     let vm = PracticeSessionViewModel()
-    vm.activeSession = PracticeSession.example()
+    vm.activeSession = PracticeSession.example
     return TabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(vm).preferredColorScheme(.light)
 }
 
 #Preview {
     let vm = PracticeSessionViewModel()
-    vm.activeSession = PracticeSession.example()
+    vm.activeSession = PracticeSession.example
 
     @Namespace var animation
     return TabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(vm).preferredColorScheme(.dark)

@@ -27,7 +27,7 @@ struct ExpandedBottomSheet: View {
                     .fill(.ultraThickMaterial)
                     .overlay(content: {
                         RoundedRectangle(cornerRadius: animateContent ? deviceCornerRadius * cornerProgress : 0, style: .continuous)
-                            .fill(Color("BG"))
+                            .fill(Color.gray.opacity(0.3))
                             .opacity(animateContent ? 1 : 0)
                     })
 //                    .overlay(alignment: .top) {
@@ -106,7 +106,7 @@ struct ExpandedBottomSheet_Previews: PreviewProvider {
     @Namespace static var animation
 
     static var previews: some View {
-        let activeSession = PracticeSession.example()
+        let activeSession = PracticeSession.example
         ExpandedBottomSheet(
             expandSheet: .constant(true),
             activeSession: activeSession,

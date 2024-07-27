@@ -86,7 +86,5 @@ class PracticeSession: ObservableObject, Identifiable, Codable, Equatable {
         return lhs.id == rhs.id
     }
 
-    static let example = {
-        PracticeSession(start_time: Date(), piece: Piece.example, movement: Piece.example.movements.first)
-    }
+    static let example = PracticeSession(start_time: Date(), piece: Piece.example, movement: Piece.example.movements.first)
 }
