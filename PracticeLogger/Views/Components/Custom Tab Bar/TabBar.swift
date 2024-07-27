@@ -114,7 +114,9 @@ struct MusicInfo: View {
                     if let movementName = activeSession.movement?.name {
                         if let movementNumber = activeSession.movement?.number {
                             HStack {
-                                Text(movementNumber.toRomanNumeral() ?? "")
+                                if let movementNumber = movementNumber.toRomanNumeral() {
+                                    Text(movementNumber)
+                                }
                                 Text(movementName)
                             }
 

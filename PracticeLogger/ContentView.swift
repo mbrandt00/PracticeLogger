@@ -19,7 +19,7 @@ struct ContentView: View {
         if isSignedIn {
             if isExpanded {
                 if let activeSession = viewModel.activeSession {
-                    ExpandedBottomSheet(animation: animation, activeSession: activeSession, expandedSheet: $isExpanded)
+                    ExpandedBottomSheet(expandSheet: $isExpanded, activeSession: activeSession, animation: animation)
                         .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
                 }
             } else {
@@ -35,20 +35,18 @@ struct ContentView: View {
                 }
                 .environmentObject(viewModel)
 
-                if !keyboardResponder.isKeyboardVisible {
-                    ZStack(alignment: .bottom, content: {
-                        TabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
-                            .padding(0.0)
-                    })
-                    .environmentObject(viewModel)
-                    .animation(.easeInOut(duration: 0.9), value: keyboardResponder.isKeyboardVisible)
-                    .onAppear {
-                        Task {
-                            do {
-                                viewModel.activeSession = await viewModel.fetchCurrentActiveSession()
+                if !isExpanded && !keyboardResponder.isKeyboardVisible {
+                    TabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
+                        .padding(0.0)
+                        .environmentObject(viewModel)
+                        .animation(.easeInOut(duration: 0.9), value: keyboardResponder.isKeyboardVisible)
+                        .onAppear {
+                            Task {
+                                do {
+                                    viewModel.activeSession = await viewModel.fetchCurrentActiveSession()
+                                }
                             }
                         }
-                    }
                 }
             }
         } else {
