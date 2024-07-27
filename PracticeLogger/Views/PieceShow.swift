@@ -37,29 +37,30 @@ struct PieceShow: View {
                         .foregroundColor(Color.accentColor)
                 })
             }
+            ScrollView(showsIndicators: false, content: {
+                ForEach(piece.movements, id: \.self) { movement in
+                    HStack {
+                        Text(movement.name)
+                            .font(.body)
 
-            ForEach(piece.movements, id: \.self) { movement in
-                HStack {
-                    Text(movement.name)
-                        .font(.body)
+                        Spacer()
 
-                    Spacer()
-
-                    Button(action: {
-                        Task {
-                            if sessionManager.activeSession?.movementId == movement.id {
-                                await sessionManager.stopSession()
-                            } else {
-                                _ = try await sessionManager.startSession(record: .movement(movement))
+                        Button(action: {
+                            Task {
+                                if sessionManager.activeSession?.movementId == movement.id {
+                                    await sessionManager.stopSession()
+                                } else {
+                                    _ = try await sessionManager.startSession(record: .movement(movement))
+                                }
                             }
-                        }
-                    }, label: {
-                        Image(systemName: sessionManager.activeSession?.movementId == movement.id ? "stop.circle.fill" : "play.circle.fill")
-                            .foregroundColor(Color.accentColor)
-                    })
+                        }, label: {
+                            Image(systemName: sessionManager.activeSession?.movementId == movement.id ? "stop.circle.fill" : "play.circle.fill")
+                                .foregroundColor(Color.accentColor)
+                        })
+                    }
+                    .padding(.vertical, 5)
                 }
-                .padding(.vertical, 5)
-            }
+            })
         }
         .padding(20)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
