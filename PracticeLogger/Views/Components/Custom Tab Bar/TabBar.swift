@@ -50,7 +50,7 @@ struct TabBar: View {
                         .animation(.easeInOut(duration: 0.3))
                 }
             }
-            .frame(height: sessionManager.activeSession != nil ? 80 : 30)
+            .frame(height: sessionManager.activeSession != nil ? 90 : 30)
             .toolbarBackground(.ultraThickMaterial, for: .tabBar)
             .toolbar(expandedSheet ? .hidden : .visible, for: .tabBar)
             .opacity(keyboardResponder.isKeyboardVisible ? 0 : 1)
@@ -149,7 +149,7 @@ struct MusicInfo: View {
                     //                        .matchedGeometryEffect(id: "Artwork", in: animation)
                 }
             }
-//            .padding()
+            .padding()
             .frame(maxWidth: .infinity, alignment: .bottomLeading)
             .font(.system(size: 12, design: .serif))
 
