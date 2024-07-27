@@ -50,7 +50,7 @@ struct TabBar: View {
                         .animation(.easeInOut(duration: 0.3))
                 }
             }
-            .frame(maxHeight: 100)
+            .frame(height: sessionManager.activeSession != nil ? 80 : 30)
             .toolbarBackground(.ultraThickMaterial, for: .tabBar)
             .toolbar(expandedSheet ? .hidden : .visible, for: .tabBar)
             .opacity(keyboardResponder.isKeyboardVisible ? 0 : 1)
@@ -78,11 +78,6 @@ struct CustomBottomSheet: View {
                             .matchedGeometryEffect(id: "BGVIEW", in: animation)
                     }
             }
-            Rectangle()
-                .fill(.ultraThickMaterial)
-                .overlay {
-                    MusicInfo(expandedSheet: $expandedSheet, activeSession: activeSession, animation: animation)
-                }
         }
         .frame(height: 70)
         .overlay(alignment: .bottom, content: {
@@ -104,26 +99,21 @@ struct MusicInfo: View {
     var body: some View {
         HStack(spacing: 0) {
             // Left side: Timer
-            ZStack {
-                if !expandedSheet {
-                    GeometryReader { geometry in
-                        Text(elapsedTime)
-                            .font(.caption)
-                            .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
-                    }
-                    .matchedGeometryEffect(id: "Artwork", in: animation)
-                }
-            }
-            .frame(width: 45, height: 45)
+//            ZStack {
+//            if !expandedSheet {
+//                GeometryReader { geometry in
+//                    Text(elapsedTime)
+//                        .font(.caption2)
+//                        .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
+//                }
+//                .matchedGeometryEffect(id: "Artwork", in: animation)
+//                .frame(width: 40, alignment: .leading)
+//                .padding(.leading, 10)
+//            }
+//            }
 
             // Middle side: Composer name, Work name, Movement
-            VStack(alignment: .leading, spacing: 5) {
-                if let composerName = activeSession.piece?.composer?.name {
-                    Text(composerName)
-                        .font(.system(size: 10))
-                        .foregroundColor(Color.secondary)
-                }
-
+            VStack(alignment: .leading) {
                 if let workName = activeSession.piece?.workName {
                     Text(workName)
                         .font(.caption)
@@ -131,41 +121,51 @@ struct MusicInfo: View {
                         .lineLimit(2)
                         .foregroundColor(Color.primary)
                 }
-
-                if let movementName = activeSession.movement?.name {
-                    if let movementNumber = activeSession.movement?.number {
-                        HStack {
-                            Text(movementNumber.toRomanNumeral() ?? "")
-                            Text(movementName)
-                        }
-                        .foregroundColor(Color.secondary)
-                        .lineLimit(1)
-                    } else {
-                        Text(movementName)
-                            .font(.caption2)
-                            .foregroundColor(Color.secondary)
-                            .lineLimit(1)
-                    }
+//                HStack {
+//                    if let movementName = activeSession.movement?.name {
+//                        if let movementNumber = activeSession.movement?.number {
+//                            HStack {
+//                                Text(movementNumber.toRomanNumeral() ?? "")
+//                                Text(movementName)
+//                            }
+//                            .foregroundColor(Color.secondary)
+//                            .lineLimit(1)
+//                        } else {Co
+//                            Text(movementName)
+//                                .font(.caption2)
+//                                .foregroundColor(Color.secondary)
+//                                .lineLimit(1)
+//                        }
+//                    }
+//                if let composerName = activeSession.piece?.composer?.name {
+//                    Text(composerName)
+//                        .font(.callout)
+//                        .foregroundColor(Color.secondary)
+//                }
+//                }
+                if !expandedSheet {
+                    Text(elapsedTime)
+                        .font(.headline).fontWeight(.bold)
+                    //                        .matchedGeometryEffect(id: "Artwork", in: animation)
                 }
             }
+//            .padding()
+            .frame(maxWidth: .infinity, alignment: .bottomLeading)
             .font(.system(size: 12, design: .serif))
-            .padding(.horizontal, 15)
-            .frame(maxWidth: .infinity)
 
             // Right side: Stop button
             Button(action: {
                 Task {
                     await sessionManager.stopSession()
                 }
-            }) {
+            }, label: {
                 Image(systemName: "stop.fill")
                     .font(.title2)
                     .foregroundColor(Color.primary)
-            }
-            .padding(.trailing, 20)
+                    .padding(.trailing, 20)
+            })
         }
-        .padding(.horizontal)
-        .frame(height: 70)
+        .frame(maxHeight: 70)
         .contentShape(Rectangle())
         .onTapGesture {
             withAnimation(.easeInOut(duration: 0.3)) {
@@ -194,20 +194,17 @@ struct MusicInfo: View {
     }
 }
 
-// #Preview {
-//    @Namespace var animation
-//    return TabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).preferredColorScheme(.dark)
-// }
-// #Preview {
-//    let manager = PracticeSessionManager()
-//    let piece = Piece(workName: "Sonata 2 in B flat Minor Funeral March", composer: Composer(name: "Frederic Chopin"), movements: [
-//        Movement(name: "Grave - Doppio movimento", number: 1),
-//        Movement(name: "Scherzo- Piu lento - Tempo 1", number: 2),
-//        Movement(name: "Marche Funebre", number: 3),
-//        Movement(name: "Finale", number: 4)
-//    ], formattedKeySignature: "Bb Minor", catalogue_type: CatalogueType.Op, catalogue_number: 35, nickname: "Funeral March", tonality: KeySignatureTonality.minor, key_signature: KeySignatureType.bFlat)
-//
-//    manager.activeSession = PracticeSession(start_time: Date(), movement: Movement(name: "Grave - Doppio movimento", number: 1, piece: piece))
-//    @Namespace var animation
-//    return TabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(manager).preferredColorScheme(.dark)
-// }
+#Preview {
+    @Namespace var animation
+    let vm = PracticeSessionViewModel()
+    vm.activeSession = PracticeSession.example()
+    return TabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(vm).preferredColorScheme(.light)
+}
+
+#Preview {
+    let vm = PracticeSessionViewModel()
+    vm.activeSession = PracticeSession.example()
+
+    @Namespace var animation
+    return TabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(vm).preferredColorScheme(.dark)
+}

@@ -23,28 +23,34 @@ struct ContentView: View {
                         .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
                 }
             } else {
-                VStack {
-                    switch selectedTab {
-                    case .progress:
-                        ProgressView()
-                    case .start:
-                        CreatePiece()
-                    case .profile:
-                        Profile(isSignedIn: $isSignedIn)
-                    }
+                ZStack(alignment: .top) {
+                    Color.orange
 
-                    Spacer()
-                    if !keyboardResponder.isKeyboardVisible {
-                        TabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
-                            .ignoresSafeArea(.keyboard)
+                    VStack {
+                        switch selectedTab {
+                        case .progress:
+                            ProgressView()
+                        case .start:
+                            CreatePiece()
+                        case .profile:
+                            Profile(isSignedIn: $isSignedIn)
+                        }
                     }
+                    .environmentObject(viewModel)
                 }
-                .environmentObject(viewModel)
-                .animation(.easeInOut(duration: 0.9), value: keyboardResponder.isKeyboardVisible)
-                .onAppear {
-                    Task {
-                        do {
-                            viewModel.activeSession = await viewModel.fetchCurrentActiveSession()
+                if !keyboardResponder.isKeyboardVisible {
+                    ZStack(alignment: .bottom, content: {
+                        TabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
+                            .padding(0.0)
+                            .background(Color.green)
+                    })
+                    .environmentObject(viewModel)
+                    .animation(.easeInOut(duration: 0.9), value: keyboardResponder.isKeyboardVisible)
+                    .onAppear {
+                        Task {
+                            do {
+                                viewModel.activeSession = await viewModel.fetchCurrentActiveSession()
+                            }
                         }
                     }
                 }
@@ -55,8 +61,20 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView(isSignedIn: .constant(true))
-    }
+// struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        // Initialize your view model
+//        let viewModel = PracticeSessionViewModel()
+//        viewModel.activeSession = PracticeSession.example()
+//
+//        // Pass the view model and a constant binding to ContentView
+//        ContentView(isSignedIn: .constant(true), viewModel: viewModel)
+//    }
+// }
+
+#Preview {
+    let vm = PracticeSessionViewModel()
+    vm.activeSession = PracticeSession.example()
+
+    return ContentView(isSignedIn: .constant(true), viewModel: vm)
 }

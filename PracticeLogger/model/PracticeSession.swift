@@ -85,4 +85,8 @@ class PracticeSession: ObservableObject, Identifiable, Codable, Equatable {
     static func == (lhs: PracticeSession, rhs: PracticeSession) -> Bool {
         return lhs.id == rhs.id
     }
+
+    static let example = {
+        PracticeSession(start_time: Date(), piece: Piece.example, movement: Piece.example.movements.first)
+    }
 }
