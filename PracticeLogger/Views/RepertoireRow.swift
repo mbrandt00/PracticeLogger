@@ -10,12 +10,15 @@ import SwiftUI
 struct RepertoireRow: View {
     var piece: Piece
     var body: some View {
-        NavigationLink(destination: PieceShow(piece: piece)) {
+        NavigationLink(value: piece) {
             Text(piece.workName)
             if let composerName = piece.composer?.name {
                 Text(composerName)
                     .font(.caption)
             }
+        }
+        .navigationDestination(for: Piece.self) { piece in
+            PieceShow(piece: piece)
         }
         .padding()
     }

@@ -9,13 +9,15 @@ import SwiftUI
 
 @main
 struct PracticeLoggerApp: App {
-    @StateObject private var manager = PracticeSessionManager()
     @State private var isSignedIn = false
+    init() {
+        // Set the appearance of UITextField here
+        UITextField.appearance().clearButtonMode = .whileEditing
+    }
 
     var body: some Scene {
         WindowGroup {
             ContentView(isSignedIn: $isSignedIn)
-                .environmentObject(manager)
                 .onAppear {
                     updateSignInStatus()
                 }

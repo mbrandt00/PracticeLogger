@@ -20,7 +20,8 @@ extension Set where Element == String {
         switch elementsArray.count {
         case 2:
             if let keyElement = elementsArray.first(where: { keyCharacters.contains($0.first!) }),
-               let nonKeyElement = elementsArray.first(where: { !keyCharacters.contains($0.first!) }) {
+               let nonKeyElement = elementsArray.first(where: { !keyCharacters.contains($0.first!) })
+            {
                 let tonalityValue = tonalities.contains(nonKeyElement) ? nonKeyElement.capitalized : ""
                 return "\(keyElement.capitalized) \(tonalityValue)"
             }

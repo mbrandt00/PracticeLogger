@@ -98,7 +98,8 @@ class PracticeSessionViewModel: ObservableObject {
 
         var practiceSession: PracticeSession
         if let movementId = response.movementId,
-           let selectedMovement = pieceResponse.movements.first(where: { $0.id == movementId }) {
+           let selectedMovement = pieceResponse.movements.first(where: { $0.id == movementId })
+        {
             practiceSession = PracticeSession(
                 start_time: response.startTime,
                 movement: Movement(

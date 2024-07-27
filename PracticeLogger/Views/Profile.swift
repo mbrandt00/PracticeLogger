@@ -13,11 +13,11 @@ struct Profile: View {
     @State private var user: User?
     @Binding var isSignedIn: Bool
     @ObservedObject var viewModel = ProfileViewModel()
-    @EnvironmentObject var practiceSessionManager: PracticeSessionManager
+    @EnvironmentObject var sessionManager: PracticeSessionViewModel
 
     var body: some View {
         VStack {
-            if let activeSession = practiceSessionManager.activeSession {
+            if let activeSession = sessionManager.activeSession {
                 Text("Active session: \(activeSession.startTime)")
             } else {
                 Text("No active session")
