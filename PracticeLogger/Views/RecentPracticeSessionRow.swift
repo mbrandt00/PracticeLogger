@@ -7,16 +7,20 @@
 
 import SwiftUI
 
-struct RepertoireRow: View {
-    var data: PracticeSession
+struct RecentPracticeSessionRow: View {
+    var practiceSession: PracticeSession
     var body: some View {
-        NavigationLink(value: data) {
-            if let workName = data.piece?.workName {
-                Text(workName)
-            }
-            if let composerName = data.piece?.composer?.name {
-                Text(composerName)
-                    .font(.caption)
+        NavigationLink(value: practiceSession) {
+            VStack(alignment: .leading) {
+                if let workName = practiceSession.piece?.workName {
+                    Text(workName)
+                }
+
+                Text(practiceSession.durationSeconds?.formattedTimeDuration ?? "")
+                if let composerName = practiceSession.piece?.composer?.name {
+                    Text(composerName)
+                        .font(.caption)
+                }
             }
         }
         .navigationDestination(for: PracticeSession.self) { ps in
@@ -26,6 +30,15 @@ struct RepertoireRow: View {
     }
 }
 
-#Preview {
-    RepertoireRow(data: PracticeSession.example)
+struct RecentPracticeSessionRow_Previews: PreviewProvider {
+    static var session: PracticeSession = {
+        var exampleSession = PracticeSession.endedExample
+        exampleSession.durationSeconds = 12000
+        return exampleSession
+    }()
+
+    static var previews: some View {
+        // Create and return the view for preview
+        RecentPracticeSessionRow(practiceSession: session)
+    }
 }

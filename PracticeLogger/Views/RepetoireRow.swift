@@ -2,17 +2,28 @@
 //  RepetoireRow.swift
 //  PracticeLogger
 //
-//  Created by Michael Brandt on 7/28/24.
+//  Created by Michael Brandt on 5/28/24.
 //
 
 import SwiftUI
 
-struct RepetoireRow: View {
+struct RepertoireRow: View {
+    var piece: Piece
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationLink(value: piece) {
+            Text(piece.workName)
+            if let composerName = piece.composer?.name {
+                Text(composerName)
+                    .font(.caption)
+            }
+        }
+        .navigationDestination(for: Piece.self) { piece in
+            PieceShow(piece: piece)
+        }
+        .padding()
     }
 }
 
 #Preview {
-    RepetoireRow()
+    RepertoireRow(piece: Piece.example)
 }
