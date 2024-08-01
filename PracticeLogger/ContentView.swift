@@ -15,6 +15,7 @@ struct ContentView: View {
     @StateObject var practiceSessionViewModel = PracticeSessionViewModel()
     @StateObject var searchViewModel = SearchViewModel()
     @StateObject private var keyboardResponder = KeyboardResponder()
+    @State private var recentSessions: [PracticeSession] = []
 
     var body: some View {
         if isSignedIn {
@@ -25,8 +26,12 @@ struct ContentView: View {
                             switch selectedTab {
                             case .progress:
                                 ProgressView()
+
                             case .start:
-                                Text("Recent pieces...")
+                                List(recentSessions) { session in
+                                    RecentPracticeSessionRow(practiceSession: session)
+                                }
+
                             case .profile:
                                 Profile(isSignedIn: $isSignedIn)
                             }
@@ -58,7 +63,12 @@ struct ContentView: View {
                 ) { token in
                     Text(token.displayText) // Customize token appearance
                 }
-                .onChange(of: searchViewModel.searchTerm) { _ in
+                .onAppear {
+                    Task {
+                        recentSessions = try await practiceSessionViewModel.getRecentUserPracticeSessions()
+                    }
+                }
+                .onChange(of: searchViewModel.searchTerm) {
                     searchViewModel.updateTokens()
                     Task {
                         await searchViewModel.getClassicalPieces()
