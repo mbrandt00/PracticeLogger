@@ -9,6 +9,8 @@ import Supabase
 
 class PracticeSessionViewModel: ObservableObject {
     @Published var activeSession: PracticeSession?
+    @Published private var recentSessions: [PracticeSession] = []
+
     func startSession(record: Record) async throws -> PracticeSession? {
         switch record {
         case .piece(let piece):
@@ -20,6 +22,35 @@ class PracticeSessionViewModel: ObservableObject {
             print("Starting session with movement: \(movement)")
             let practice_session = PracticeSession(startTime: Date.now, movement: movement)
             return try await insertPracticeSession(practice_session)
+        }
+    }
+
+    func getRecentUserPracticeSessions() async throws -> [PracticeSession] {
+        do {
+            let userID = try Database.getCurrentUser()?.id
+
+            let response: [PracticeSession] = try await Database.client
+                .from("user_unique_piece_sessions_v")
+                .select("*")
+                .eq("user_id", value: userID)
+                .order("end_time", ascending: false)
+                .execute()
+                .value
+            dump(response)
+            var sessions: [PracticeSession] = []
+
+            // Process each response item
+            for practiceSession in response {
+                print(practiceSession.durationSeconds)
+                let convertedSession = try await PracticeSessionViewModel().createFullPracticeSessionResponse(practiceSession)
+                sessions.append(convertedSession)
+            }
+
+            return sessions
+
+        } catch {
+            print("Error retrieving session: \(error)")
+            return []
         }
     }
 

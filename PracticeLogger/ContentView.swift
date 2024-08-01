@@ -27,19 +27,29 @@ struct ContentView: View {
             } else {
                 NavigationStack {
                     VStack {
-                        TextField("Search...", text: $searchViewModel.searchTerm)
-                            .searchable(
-                                text: $searchViewModel.searchTerm,
-                                tokens: $searchViewModel.tokens,
-                                suggestedTokens: $searchViewModel.tokens,
-                                prompt: "Search"
-                            ) { token in
-                                Text(token.displayText) // Customize token appearance
+                        List(searchViewModel.pieces, id: \.self) { piece in
+                            Text(piece.workName)
+                            if let composerName = piece.composer?.name {
+                                Text(composerName)
+                                    .font(.subheadline)
                             }
-                            .onChange(of: searchViewModel.searchTerm) { _ in
-                                searchViewModel.updateTokens()
+                        }
+                        .searchable(
+                            text: $searchViewModel.searchTerm,
+                            tokens: $searchViewModel.tokens,
+                            suggestedTokens: $searchViewModel.suggestedTokens
+
+//                                prompt: "Searchfghj"
+                        ) { token in
+                            Text(token.displayText) // Customize token appearance
+                        }
+                        .onChange(of: searchViewModel.searchTerm) { _ in
+                            searchViewModel.updateTokens()
+                            Task {
+                                await searchViewModel.getClassicalPieces()
                             }
-                            .autocorrectionDisabled()
+                        }
+                        .autocorrectionDisabled()
                     }
                 }
 
@@ -80,3 +90,5 @@ struct ContentView: View {
 
     return ContentView(isSignedIn: .constant(true), practiceSessionViewModel: vm)
 }
+
+// www.swiftyplace.com/blog/swiftui-search-bar-best-practices-and-examples

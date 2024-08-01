@@ -16,12 +16,6 @@ struct CreatePiece: View {
     var body: some View {
         NavigationStack {
             VStack {
-                // this needs to search db also. Esp. since if piece created and no practice session, no way to start session.
-//                TextField("Search", text: $viewModel.searchTerm)
-//                    .padding()
-//                    .textFieldStyle(RoundedBorderTextFieldStyle())
-//                    .autocorrectionDisabled(true)
-
                 if isLoading {
                     ProgressView()
                         .padding(4)
@@ -40,14 +34,6 @@ struct CreatePiece: View {
                             List(userPieces) { piece in
                                 RepertoireRow(piece: piece)
                             }
-                        }
-                    } else {
-                        Section(header: Text("Recently practiced")) {
-                            List(recentSessions) { practiceSession in
-                                RecentPracticeSessionRow(practiceSession: practiceSession)
-                            }
-                            .listStyle(PlainListStyle())
-                            .scrollIndicators(.hidden)
                         }
                     }
                 } else {
@@ -81,7 +67,7 @@ struct CreatePiece: View {
             .task(id: viewModel.searchTerm) {
                 if !viewModel.searchTerm.isEmpty {
                     isLoading = true
-                    await viewModel.getClassicalPieces(viewModel.searchTerm)
+//                    await viewModel.getClassicalPieces(viewModel.searchTerm)
                     isLoading = false
                 }
             }

@@ -86,7 +86,15 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
     }
 
     func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+        hasher.combine(workName)
+//        hasher.combine(composer)
+//        hasher.combine(movements)
+        hasher.combine(catalogue_type)
+        hasher.combine(catalogue_number)
+        hasher.combine(format)
+        hasher.combine(nickname)
+        hasher.combine(tonality)
+        hasher.combine(key_signature)
     }
 
     static func == (lhs: Piece, rhs: Piece) -> Bool {
@@ -203,48 +211,84 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         return result
     }
 
-    static func searchPieceFromSongName(query: String) async throws -> [Piece] {
+    static func addMetadata(_ workName: String, _ composerName: String) async -> Piece? {
+        do {
+            if let response: MetadataInformation = try await Database.client.rpc("parse_piece_metadata", params: ["work_name": workName]).select().single().execute().value {
+                return Piece(
+                    workName: workName,
+                    composer: Composer(name: composerName), // Replace "TEST" with actual composer name if available
+                    movements: [], // Provide movements if available
+                    catalogue_type: response.catalogue_type,
+                    catalogue_number: response.catalogue_number,
+                    format: response.format,
+                    nickname: response.nickname,
+                    tonality: response.tonality,
+                    key_signature: response.key_signature
+                )
+            }
+        } catch {
+            print("Error getting piece metadata:", error)
+        }
+        return nil
+    }
+
+    static func searchPieceFromSongName(query: String, keySignatureToken: KeySignatureToken?) async throws -> [Piece] {
         var pieces: [Piece] = []
         var uniqWorks: [String: Song] = [:]
-        var result = MusicCatalogSearchRequest(term: query, types: [Song.self])
 
+        var result = MusicCatalogSearchRequest(term: query, types: [Song.self])
         result.limit = 25
         result.includeTopResults = true
+
         let response = try await result.response()
 
+        // Create an array to hold tasks
+        var tasks: [Task<Piece?, Never>] = []
+
+        // Iterate over the songs in the response
         for song in response.songs {
-            if song.workName != nil && !uniqWorks.keys.contains(song.workName!) && songMatchesQuery(query: query, song: song) {
-                uniqWorks[song.workName!] = song
-            }
-        }
-
-        print("uniqWork count \(uniqWorks.count)")
-        if uniqWorks.isEmpty && !response.songs.isEmpty {
-            print("Work names not found, but songs were")
-
-            if let firstSong = response.songs.first {
-                do {
-                    let detailedSong = try await firstSong.with([.albums])
-                    if let album = detailedSong.albums?.first {
-                        // Use guard statement instead of conditional binding
-                        if let albumTrack = try? await album.with([.tracks]) {
-                            if let allAlbumTracks = albumTrack.tracks {
-                                return try await createPiecesFromTrack(tracks: Array(allAlbumTracks))
-                            }
-                        }
-                    }
+            if let workName = song.workName, let composerName = song.composerName {
+                let task = Task {
+                    await Piece.addMetadata(workName, composerName)
                 }
+                tasks.append(task)
             }
         }
-        uniqWorks = chooseBestRecords(uniqWorks: uniqWorks)
 
-        for (_, song) in uniqWorks {
-            let piece = try await createPieceFromSong(song: song)
-            pieces.append(piece)
+        for task in tasks {
+            if let piece = await task.value {
+                pieces.append(piece)
+            }
         }
-        print("pieces count \(pieces.count)")
 
         return pieces
+
+//        if uniqWorks.isEmpty && !response.songs.isEmpty {
+//            print("Work names not found, but songs were")
+//
+//            if let firstSong = response.songs.first {
+//                do {
+//                    let detailedSong = try await firstSong.with([.albums])
+//                    if let album = detailedSong.albums?.first {
+//                        // Use guard statement instead of conditional binding
+//                        if let albumTrack = try? await album.with([.tracks]) {
+//                            if let allAlbumTracks = albumTrack.tracks {
+//                                return try await createPiecesFromTrack(tracks: Array(allAlbumTracks))
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        uniqWorks = chooseBestRecords(uniqWorks: uniqWorks)
+
+//        for (_, song) in uniqWorks {
+//            let piece = try await createPieceFromSong(song: song)
+//            pieces.append(piece)
+//        }
+//        print("pieces count \(pieces.count)")
+//
+//        return pieces
     }
 
     /**
