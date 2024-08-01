@@ -11,14 +11,16 @@ import SwiftUI
 struct CreatePiece: View {
     @StateObject var viewModel = CreatePieceViewModel()
     @State private var isLoading = false
-
+    @State private var recentSessions: [PracticeSession] = []
+    @State private var userPieces: [Piece] = []
     var body: some View {
         NavigationStack {
             VStack {
-                TextField("Search", text: $viewModel.searchTerm)
-                    .padding()
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .autocorrectionDisabled(true)
+                // this needs to search db also. Esp. since if piece created and no practice session, no way to start session.
+//                TextField("Search", text: $viewModel.searchTerm)
+//                    .padding()
+//                    .textFieldStyle(RoundedBorderTextFieldStyle())
+//                    .autocorrectionDisabled(true)
 
                 if isLoading {
                     ProgressView()
@@ -29,10 +31,25 @@ struct CreatePiece: View {
                 }
 
                 if viewModel.searchTerm.isEmpty {
-                    List(viewModel.userPieces) { piece in
-                        RepertoireRow(piece: piece)
+                    if recentSessions.isEmpty {
+                        if userPieces.isEmpty {
+                            HStack(alignment: .center) {
+                                Text("Add a piece by searching to start practicing!")
+                            }
+                        } else {
+                            List(userPieces) { piece in
+                                RepertoireRow(piece: piece)
+                            }
+                        }
+                    } else {
+                        Section(header: Text("Recently practiced")) {
+                            List(recentSessions) { practiceSession in
+                                RecentPracticeSessionRow(practiceSession: practiceSession)
+                            }
+                            .listStyle(PlainListStyle())
+                            .scrollIndicators(.hidden)
+                        }
                     }
-                    .listStyle(PlainListStyle())
                 } else {
                     VStack(alignment: .leading) {
                         Text("Search Results")
@@ -46,10 +63,20 @@ struct CreatePiece: View {
                         }
                         .listStyle(PlainListStyle())
                     }
+                    .padding()
                 }
             }
             .onAppear {
-                loadUserPieces()
+                Task {
+                    do {
+                        recentSessions = try await viewModel.getRecentUserPracticeSessions()
+                        if recentSessions.isEmpty {
+                            userPieces = try await viewModel.getUserPieces()
+                        }
+                    } catch {
+                        print("Error loading recent user practice sessions \(error.localizedDescription)")
+                    }
+                }
             }
             .task(id: viewModel.searchTerm) {
                 if !viewModel.searchTerm.isEmpty {
@@ -58,18 +85,6 @@ struct CreatePiece: View {
                     isLoading = false
                 }
             }
-        }
-    }
-
-    private func loadUserPieces() {
-        Task {
-            isLoading = true
-            do {
-                _ = try await viewModel.getUserPieces()
-            } catch {
-                print("Error loading user pieces: \(error)")
-            }
-            isLoading = false
         }
     }
 }

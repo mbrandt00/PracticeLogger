@@ -50,7 +50,7 @@ struct TabBar: View {
                         .animation(.easeInOut(duration: 0.3))
                 }
             }
-            .frame(height: sessionManager.activeSession != nil ? 90 : 30)
+            .frame(height: sessionManager.activeSession != nil ? 90 : 35)
             .toolbarBackground(.ultraThickMaterial, for: .tabBar)
             .toolbar(expandedSheet ? .hidden : .visible, for: .tabBar)
             .opacity(keyboardResponder.isKeyboardVisible ? 0 : 1)
@@ -182,13 +182,13 @@ struct MusicInfo: View {
 #Preview {
     @Namespace var animation
     let vm = PracticeSessionViewModel()
-    vm.activeSession = PracticeSession.example
+    vm.activeSession = PracticeSession.inProgressExample
     return TabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(vm).preferredColorScheme(.light)
 }
 
 #Preview {
     let vm = PracticeSessionViewModel()
-    vm.activeSession = PracticeSession.example
+    vm.activeSession = PracticeSession.inProgressExample
 
     @Namespace var animation
     return TabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(vm).preferredColorScheme(.dark)

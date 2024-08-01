@@ -106,7 +106,7 @@ struct ExpandedBottomSheet_Previews: PreviewProvider {
     @Namespace static var animation
 
     static var previews: some View {
-        let activeSession = PracticeSession.example
+        let activeSession = PracticeSession.inProgressExample
         ExpandedBottomSheet(
             expandSheet: .constant(true),
             activeSession: activeSession,

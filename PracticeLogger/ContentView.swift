@@ -12,38 +12,46 @@ struct ContentView: View {
     @State private var selectedTab: Tabs = .start
     @Namespace private var animation
     @State private var isExpanded: Bool = false
-    @StateObject var viewModel = PracticeSessionViewModel()
+    @StateObject var practiceSessionViewModel = PracticeSessionViewModel()
+    @StateObject var searchViewModel = SearchViewModel()
     @StateObject private var keyboardResponder = KeyboardResponder()
+    @State private var searchIsFocused = false
 
     var body: some View {
         if isSignedIn {
             if isExpanded {
-                if let activeSession = viewModel.activeSession {
+                if let activeSession = practiceSessionViewModel.activeSession {
                     ExpandedBottomSheet(expandSheet: $isExpanded, activeSession: activeSession, animation: animation)
                         .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
                 }
             } else {
-                VStack {
-                    switch selectedTab {
-                    case .progress:
-                        ProgressView()
-                    case .start:
-                        CreatePiece()
-                    case .profile:
-                        Profile(isSignedIn: $isSignedIn)
+                NavigationStack {
+                    VStack {
+                        TextField("Search...", text: $searchViewModel.searchTerm)
+                            .searchable(
+                                text: $searchViewModel.searchTerm,
+                                tokens: $searchViewModel.tokens,
+                                suggestedTokens: $searchViewModel.tokens,
+                                prompt: "Search"
+                            ) { token in
+                                Text(token.displayText) // Customize token appearance
+                            }
+                            .onChange(of: searchViewModel.searchTerm) { _ in
+                                searchViewModel.updateTokens()
+                            }
+                            .autocorrectionDisabled()
                     }
                 }
-                .environmentObject(viewModel)
 
+                Spacer()
                 if !isExpanded && !keyboardResponder.isKeyboardVisible {
                     TabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
-                        .padding(0.0)
-                        .environmentObject(viewModel)
+                        .environmentObject(practiceSessionViewModel)
                         .animation(.easeInOut(duration: 0.9), value: keyboardResponder.isKeyboardVisible)
                         .onAppear {
                             Task {
                                 do {
-                                    viewModel.activeSession = await viewModel.fetchCurrentActiveSession()
+                                    practiceSessionViewModel.activeSession = await practiceSessionViewModel.fetchCurrentActiveSession()
                                 }
                             }
                         }
@@ -68,7 +76,7 @@ struct ContentView: View {
 
 #Preview {
     let vm = PracticeSessionViewModel()
-    vm.activeSession = PracticeSession.example
+    vm.activeSession = PracticeSession.inProgressExample
 
-    return ContentView(isSignedIn: .constant(true), viewModel: vm)
+    return ContentView(isSignedIn: .constant(true), practiceSessionViewModel: vm)
 }
