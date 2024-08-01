@@ -15,57 +15,56 @@ struct ContentView: View {
     @StateObject var practiceSessionViewModel = PracticeSessionViewModel()
     @StateObject var searchViewModel = SearchViewModel()
     @StateObject private var keyboardResponder = KeyboardResponder()
-    @State private var searchIsFocused = false
 
     var body: some View {
         if isSignedIn {
-            if isExpanded {
-                if let activeSession = practiceSessionViewModel.activeSession {
-                    ExpandedBottomSheet(expandSheet: $isExpanded, activeSession: activeSession, animation: animation)
-                        .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
-                }
-            } else {
-                NavigationStack {
-                    VStack {
-                        List(searchViewModel.pieces, id: \.self) { piece in
+            NavigationStack {
+                VStack {
+                    if searchViewModel.searchTerm.isEmpty {
+                        VStack {
+                            switch selectedTab {
+                            case .progress:
+                                ProgressView()
+                            case .start:
+                                Text("Recent pieces...")
+                            case .profile:
+                                Profile(isSignedIn: $isSignedIn)
+                            }
+                        }
+                        .environmentObject(practiceSessionViewModel)
+                        Spacer()
+                        if !isExpanded && !keyboardResponder.isKeyboardVisible {
+                            TabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
+                                .environmentObject(practiceSessionViewModel)
+                                .animation(.easeInOut(duration: 0.9), value: keyboardResponder.isKeyboardVisible)
+                                .onAppear {
+                                    Task {
+                                        do {
+                                            practiceSessionViewModel.activeSession = await practiceSessionViewModel.fetchCurrentActiveSession()
+                                        }
+                                    }
+                                }
+                        }
+                    } else {
+                        List(searchViewModel.pieces) { piece in
                             Text(piece.workName)
-                            if let composerName = piece.composer?.name {
-                                Text(composerName)
-                                    .font(.subheadline)
-                            }
                         }
-                        .searchable(
-                            text: $searchViewModel.searchTerm,
-                            tokens: $searchViewModel.tokens,
-                            suggestedTokens: $searchViewModel.suggestedTokens
-
-//                                prompt: "Searchfghj"
-                        ) { token in
-                            Text(token.displayText) // Customize token appearance
-                        }
-                        .onChange(of: searchViewModel.searchTerm) { _ in
-                            searchViewModel.updateTokens()
-                            Task {
-                                await searchViewModel.getClassicalPieces()
-                            }
-                        }
-                        .autocorrectionDisabled()
                     }
                 }
-
-                Spacer()
-                if !isExpanded && !keyboardResponder.isKeyboardVisible {
-                    TabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
-                        .environmentObject(practiceSessionViewModel)
-                        .animation(.easeInOut(duration: 0.9), value: keyboardResponder.isKeyboardVisible)
-                        .onAppear {
-                            Task {
-                                do {
-                                    practiceSessionViewModel.activeSession = await practiceSessionViewModel.fetchCurrentActiveSession()
-                                }
-                            }
-                        }
+                .searchable(
+                    text: $searchViewModel.searchTerm,
+                    tokens: $searchViewModel.tokens,
+                    suggestedTokens: $searchViewModel.suggestedTokens
+                ) { token in
+                    Text(token.displayText) // Customize token appearance
                 }
+                .onChange(of: searchViewModel.searchTerm) { _ in
+                    searchViewModel.updateTokens()
+                    Task {
+                        await searchViewModel.getClassicalPieces()
+                    }
+                }
+                .autocorrectionDisabled()
             }
         } else {
             SignIn(isSignedIn: $isSignedIn)
