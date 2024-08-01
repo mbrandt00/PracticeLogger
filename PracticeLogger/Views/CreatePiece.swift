@@ -36,6 +36,7 @@ struct CreatePiece: View {
                             }
                         }
                     }
+                    .listStyle(PlainListStyle())
                 } else {
                     VStack(alignment: .leading) {
                         Text("Search Results")
