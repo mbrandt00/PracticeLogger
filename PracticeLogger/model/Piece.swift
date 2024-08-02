@@ -233,8 +233,9 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
     }
 
     static func searchPieceFromSongName(query: String, keySignatureToken: KeySignatureToken?) async throws -> [Piece] {
+        // Dictionary to hold all movements, with catalogue_number as the key
+        var allMovements: [Int: Set<Movement>] = [:]
         var pieces: [Piece] = []
-        var uniqWorks: [String: Song] = [:]
 
         var result = MusicCatalogSearchRequest(term: query, types: [Song.self])
         result.limit = 25
@@ -242,106 +243,53 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
 
         let response = try await result.response()
 
-        // Create an array to hold tasks
-        var tasks: [Task<Piece?, Never>] = []
-
         // Iterate over the songs in the response
         for song in response.songs {
-            if let workName = song.workName, let composerName = song.composerName {
-                let task = Task {
-                    await Piece.addMetadata(workName, composerName)
-                }
-                tasks.append(task)
-            }
-        }
+            if let workName = song.workName, let composerName = song.composerName, let movementName = song.movementName, let movementNumber = song.movementNumber, let movementCount = song.movementCount {
+                // Fetch piece metadata
+                if let piece = await Piece.addMetadata(workName, composerName) {
+                    if let catalogueNumber = piece.catalogue_number {
+                        // Initialize the set if it doesn't exist for this catalogue_number
+                        if allMovements[catalogueNumber] == nil {
+                            allMovements[catalogueNumber] = Set()
+                        }
 
-        for task in tasks {
-            if let piece = await task.value {
-                pieces.append(piece)
-            }
-        }
+                        // Create the Movement object
+                        let movement = Movement(id: movementNumber, name: movementName, number: movementNumber, piece: piece)
 
-        return pieces
+                        // Insert into the set only if movementNumber is not already present
+                        var existingMovements = allMovements[catalogueNumber] ?? Set()
 
-//        if uniqWorks.isEmpty && !response.songs.isEmpty {
-//            print("Work names not found, but songs were")
-//
-//            if let firstSong = response.songs.first {
-//                do {
-//                    let detailedSong = try await firstSong.with([.albums])
-//                    if let album = detailedSong.albums?.first {
-//                        // Use guard statement instead of conditional binding
-//                        if let albumTrack = try? await album.with([.tracks]) {
-//                            if let allAlbumTracks = albumTrack.tracks {
-//                                return try await createPiecesFromTrack(tracks: Array(allAlbumTracks))
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        uniqWorks = chooseBestRecords(uniqWorks: uniqWorks)
-
-//        for (_, song) in uniqWorks {
-//            let piece = try await createPieceFromSong(song: song)
-//            pieces.append(piece)
-//        }
-//        print("pieces count \(pieces.count)")
-//
-//        return pieces
-    }
-
-    /**
-     Checks Composer, Key Signature, and Cataloging information (opus/K/BWV) Information to determine if the piece matches with an 80% confidence score
-     */
-    static func songMatchesQuery(query: String, song: Song?) -> Bool {
-        guard let song = song else {
-            return false
-        }
-
-        let splitQuery = query.split(separator: " ")
-        let matchingWeight = 10
-        var total = splitQuery.count
-        var matching = 0
-
-        // Check if composer name matches
-        if query.containsComposerName() {
-            // Ensure song has a composer name and that it matches the query
-            if let composerName = song.composerName {
-                // Check if any part of the query is contained in the composer name
-                if splitQuery.contains(where: { composerName.localizedCaseInsensitiveContains($0) }) {
-                    matching += matchingWeight
-                } else {
-                    // composer does not match
-                    return false
-                }
-            } else {
-                return false
-            }
-            total += matchingWeight
-        }
-
-        // Check if work name matches
-        if let workName = song.workName {
-            if query.containsKeySignature() {
-                if isMatchingKeySignature(query: query, workName: workName) {
-                    matching += matchingWeight
-                }
-                total += matchingWeight
-            }
-            for word in splitQuery where query.contains(word) {
-                if String(word).isNumber() {
-                    matching += matchingWeight
-                } else {
-                    matching += 1
+                        if !existingMovements.contains(where: { $0.number == movementNumber }) {
+                            existingMovements.insert(movement)
+                            allMovements[catalogueNumber] = existingMovements
+                        }
+                    }
+                    // Add the piece to the pieces array
+                    pieces.append(piece)
                 }
             }
         }
 
-        let confidence = Double(matching) / Double(total)
-        print(song.workName ?? "", confidence)
+        // Dictionary to keep track of the final pieces, ensuring only one piece per catalogue_number
+        var uniquePieces: [Int: Piece] = [:]
 
-        return confidence >= 0.90
+        // Ensure only one piece per catalogue_number
+        for piece in pieces {
+            if let catalogueNumber = piece.catalogue_number {
+                uniquePieces[catalogueNumber] = piece
+            }
+        }
+
+        // Map the movements to the corresponding pieces
+        for (catalogueNumber, movements) in allMovements {
+            if let piece = uniquePieces[catalogueNumber] {
+                piece.movements = Array(movements).sorted(by: { $0.number < $1.number })
+            }
+        }
+
+        // Return the pieces with updated movements
+        return Array(uniquePieces.values)
     }
 
     static func createPieceFromSong(song: Song) async throws -> Piece {

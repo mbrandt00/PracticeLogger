@@ -52,7 +52,10 @@ struct ContentView: View {
                         }
                     } else {
                         List(searchViewModel.pieces) { piece in
-                            Text(piece.workName)
+                            NavigationLink(destination: PieceEdit(piece: piece), label: {
+                                NewPieceRow(piece: piece)
+                            })
+                            .navigationTitle("Search results")
                         }
                     }
                 }
