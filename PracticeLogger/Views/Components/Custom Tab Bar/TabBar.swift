@@ -126,7 +126,9 @@ struct MusicInfo: View {
                     }
 
                     if let composerName = activeSession.piece?.composer?.name {
-                        Divider()
+                        if activeSession.movement?.name != nil {
+                            Divider()
+                        }
                         Text(composerName)
                     }
                 }
