@@ -11,7 +11,6 @@
 		D11990652B9CC58D0031E8A0 /* MusicKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D11990642B9CC58D0031E8A0 /* MusicKit.framework */; };
 		D11D58A82C39A06300501C6F /* ExpandedBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11D58A72C39A06300501C6F /* ExpandedBottomSheet.swift */; };
 		D12E1BB02C37B64500A4DC28 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12E1BAF2C37B64500A4DC28 /* DateFormatter.swift */; };
-		D12EE5672C04E8B10024F288 /* NewPieceRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12EE5662C04E8B10024F288 /* NewPieceRowViewModel.swift */; };
 		D131F16D2B8AE54E002261BC /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F16C2B8AE54E002261BC /* Color.swift */; };
 		D131F1702B8AE8B9002261BC /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F16F2B8AE8B9002261BC /* TabBar.swift */; };
 		D131F17B2B8B090D002261BC /* MetronomeShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F17A2B8B090D002261BC /* MetronomeShape.swift */; };
@@ -28,8 +27,6 @@
 		D17C5CA82B9E561300C1CA44 /* NewPieceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17C5CA72B9E561300C1CA44 /* NewPieceRow.swift */; };
 		D1840DD02C48902F001ED849 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1840DCF2C48902F001ED849 /* Logger.swift */; };
 		D185AC152BDF3B7E007F398D /* PieceEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D185AC142BDF3B7E007F398D /* PieceEditViewModel.swift */; };
-		D185FB722B90482E003C7631 /* CreatePiece.swift in Sources */ = {isa = PBXBuildFile; fileRef = D185FB712B90482E003C7631 /* CreatePiece.swift */; };
-		D188F6662B96CEF4005E0FA2 /* CreatePieceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D188F6652B96CEF4005E0FA2 /* CreatePieceViewModel.swift */; };
 		D197387E2C153F7100EBF53F /* PieceShow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197387D2C153F7100EBF53F /* PieceShow.swift */; };
 		D19738802C1540B600EBF53F /* PracticeSessionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197387F2C1540B600EBF53F /* PracticeSessionViewModel.swift */; };
 		D19738822C1540E500EBF53F /* PracticeSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19738812C1540E500EBF53F /* PracticeSession.swift */; };
@@ -87,7 +84,6 @@
 		D11990642B9CC58D0031E8A0 /* MusicKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MusicKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/MusicKit.framework; sourceTree = DEVELOPER_DIR; };
 		D11D58A72C39A06300501C6F /* ExpandedBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedBottomSheet.swift; sourceTree = "<group>"; };
 		D12E1BAF2C37B64500A4DC28 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
-		D12EE5662C04E8B10024F288 /* NewPieceRowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPieceRowViewModel.swift; sourceTree = "<group>"; };
 		D131F16C2B8AE54E002261BC /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		D131F16F2B8AE8B9002261BC /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
 		D131F17A2B8B090D002261BC /* MetronomeShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetronomeShape.swift; sourceTree = "<group>"; };
@@ -103,8 +99,6 @@
 		D17C5CA72B9E561300C1CA44 /* NewPieceRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPieceRow.swift; sourceTree = "<group>"; usesTabs = 0; };
 		D1840DCF2C48902F001ED849 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		D185AC142BDF3B7E007F398D /* PieceEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceEditViewModel.swift; sourceTree = "<group>"; };
-		D185FB712B90482E003C7631 /* CreatePiece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePiece.swift; sourceTree = "<group>"; };
-		D188F6652B96CEF4005E0FA2 /* CreatePieceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePieceViewModel.swift; sourceTree = "<group>"; };
 		D197387D2C153F7100EBF53F /* PieceShow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceShow.swift; sourceTree = "<group>"; };
 		D197387F2C1540B600EBF53F /* PracticeSessionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSessionViewModel.swift; sourceTree = "<group>"; };
 		D19738812C1540E500EBF53F /* PracticeSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSession.swift; sourceTree = "<group>"; };
@@ -184,7 +178,6 @@
 			isa = PBXGroup;
 			children = (
 				D131F1742B8AFCC8002261BC /* Components */,
-				D185FB712B90482E003C7631 /* CreatePiece.swift */,
 				D17C5CA72B9E561300C1CA44 /* NewPieceRow.swift */,
 				D1AC00D52BD46BC80019FA0F /* PieceEdit.swift */,
 				D1C2BEB62BDD612F00E8E39F /* SignIn.swift */,
@@ -235,11 +228,9 @@
 		D188F6642B96CED4005E0FA2 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				D188F6652B96CEF4005E0FA2 /* CreatePieceViewModel.swift */,
 				D1C2BEB82BDD61A800E8E39F /* SignInViewModel.swift */,
 				D1D6548D2BDDB9BE008D4868 /* ProfileViewModel.swift */,
 				D185AC142BDF3B7E007F398D /* PieceEditViewModel.swift */,
-				D12EE5662C04E8B10024F288 /* NewPieceRowViewModel.swift */,
 				D197387F2C1540B600EBF53F /* PracticeSessionViewModel.swift */,
 				D1E98BCC2C59D0F80065D27D /* SearchViewModel.swift */,
 			);
@@ -544,17 +535,14 @@
 				D14A436F2C5DF2E300556C03 /* SearchableContainer.swift in Sources */,
 				D13D0EDA2BCC2FA1006B2683 /* Int.swift in Sources */,
 				D19E73412B898F9300BB3EC7 /* ContentView.swift in Sources */,
-				D12EE5672C04E8B10024F288 /* NewPieceRowViewModel.swift in Sources */,
 				D13D0EDC2BCC4B23006B2683 /* SetString.swift in Sources */,
 				D19738802C1540B600EBF53F /* PracticeSessionViewModel.swift in Sources */,
 				D1AC00D62BD46BC80019FA0F /* PieceEdit.swift in Sources */,
 				D1689CA02C06D13F00191DA7 /* RecentPracticeSessionRow.swift in Sources */,
 				D19E733F2B898F9300BB3EC7 /* PracticeLoggerApp.swift in Sources */,
-				D188F6662B96CEF4005E0FA2 /* CreatePieceViewModel.swift in Sources */,
 				D1E98BCF2C59E9960065D27D /* CustomKeyboard.swift in Sources */,
 				D1C2BEB92BDD61A800E8E39F /* SignInViewModel.swift in Sources */,
 				D185AC152BDF3B7E007F398D /* PieceEditViewModel.swift in Sources */,
-				D185FB722B90482E003C7631 /* CreatePiece.swift in Sources */,
 				D1E46FF22B96D52D00228C3F /* Piece.swift in Sources */,
 				D1E98BDA2C59EFF40065D27D /* CatalogueType.swift in Sources */,
 				D15C88312BF063B900AAC950 /* Error.swift in Sources */,

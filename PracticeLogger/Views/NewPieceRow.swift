@@ -34,14 +34,11 @@ struct NewPieceRow: View {
     }
 }
 
-// struct NewPieceRow_Previews: PreviewProvider {
-//    static var previews: some View {
-//        let piece = Piece.example
-//
-//        let viewModel = NewPieceRowViewModel(piece: piece)
-//
-//        return NewPieceRow(piece: piece)
-//            .environmentObject(viewModel)
-//            .previewLayout(.sizeThatFits)
-//    }
-// }
+struct NewPieceRow_Previews: PreviewProvider {
+    static var previews: some View {
+        let piece = Piece.example
+
+        return NewPieceRow(piece: piece)
+            .previewLayout(.sizeThatFits)
+    }
+}

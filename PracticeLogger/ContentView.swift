@@ -52,17 +52,6 @@ struct ContentView: View {
     }
 }
 
-// struct ContentView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        // Initialize your view model
-//        let viewModel = PracticeSessionViewModel()
-//        viewModel.activeSession = PracticeSession.example()
-//
-//        // Pass the view model and a constant binding to ContentView
-//        ContentView(isSignedIn: .constant(true), viewModel: viewModel)
-//    }
-// }
-
 #Preview {
     let vm = PracticeSessionViewModel()
     vm.activeSession = PracticeSession.inProgressExample

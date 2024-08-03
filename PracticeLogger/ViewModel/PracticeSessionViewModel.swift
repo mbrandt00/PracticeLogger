@@ -86,7 +86,6 @@ class PracticeSessionViewModel: ObservableObject {
             return practiceSession
 
         } catch {
-            print("No current active session")
             return nil
         }
     }

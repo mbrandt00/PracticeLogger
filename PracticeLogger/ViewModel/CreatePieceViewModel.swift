@@ -56,9 +56,7 @@ class CreatePieceViewModel: ObservableObject {
             dump(response)
             var sessions: [PracticeSession] = []
 
-            // Process each response item
             for practiceSession in response {
-                print(practiceSession.durationSeconds)
                 let convertedSession = try await PracticeSessionViewModel().createFullPracticeSessionResponse(practiceSession)
                 sessions.append(convertedSession)
             }
