@@ -17,22 +17,29 @@ struct TabBarContainer<Content: View>: View {
     let content: () -> Content
 
     var body: some View {
-        VStack {
-            content()
+        if isExpanded {
+            if let activeSession = practiceSessionViewModel.activeSession {
+                ExpandedBottomSheet(expandSheet: $isExpanded, activeSession: activeSession, animation: animation)
+                    .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
+            }
+        } else {
+            VStack {
+                content()
 
-            Spacer()
+                Spacer()
 
-            if !isExpanded && !keyboardResponder.isKeyboardVisible {
-                TabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
-                    .environmentObject(practiceSessionViewModel)
-                    .animation(.easeInOut(duration: 0.9), value: keyboardResponder.isKeyboardVisible)
-                    .onAppear {
-                        Task {
-                            do {
-                                practiceSessionViewModel.activeSession = await practiceSessionViewModel.fetchCurrentActiveSession()
+                if !isExpanded && !keyboardResponder.isKeyboardVisible {
+                    TabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
+                        .environmentObject(practiceSessionViewModel)
+                        .animation(.easeInOut(duration: 0.9), value: keyboardResponder.isKeyboardVisible)
+                        .onAppear {
+                            Task {
+                                do {
+                                    practiceSessionViewModel.activeSession = await practiceSessionViewModel.fetchCurrentActiveSession()
+                                }
                             }
                         }
-                    }
+                }
             }
         }
     }
@@ -41,7 +48,7 @@ struct TabBarContainer<Content: View>: View {
 struct TabBarContainer_Previews: PreviewProvider {
     static var previews: some View {
         TabBarContainer(
-            selectedTab: .constant(.profile),
+            selectedTab: .constant(.start),
             isExpanded: .constant(false),
             content: {
                 ProgressView()

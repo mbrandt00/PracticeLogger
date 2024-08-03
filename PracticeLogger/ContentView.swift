@@ -19,39 +19,31 @@ struct ContentView: View {
 
     var body: some View {
         if isSignedIn {
-            if isExpanded {
-                if let activeSession = practiceSessionViewModel.activeSession {
-                    ExpandedBottomSheet(expandSheet: $isExpanded, activeSession: activeSession, animation: animation)
-                        .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
-                }
-            } else {
-                TabBarContainer(selectedTab: $selectedTab, isExpanded: $isExpanded) {
-                    SearchableContainer { searchViewModel in
-                        VStack {
-                            if searchViewModel.searchTerm.isEmpty {
-                                VStack {
-                                    switch selectedTab {
-                                    case .progress:
-                                        ProgressView()
-                                    case .start:
-                                        List(recentSessions) { session in
-                                            RecentPracticeSessionRow(practiceSession: session)
-                                        }
-                                    case .profile:
-                                        Profile(isSignedIn: $isSignedIn)
+            TabBarContainer(selectedTab: $selectedTab, isExpanded: $isExpanded) {
+                SearchableContainer { searchViewModel in
+                    VStack {
+                        if searchViewModel.searchTerm.isEmpty {
+                            VStack {
+                                switch selectedTab {
+                                case .progress:
+                                    ProgressView()
+                                case .start:
+                                    List(recentSessions) { session in
+                                        RecentPracticeSessionRow(practiceSession: session)
                                     }
+                                case .profile:
+                                    Profile(isSignedIn: $isSignedIn)
                                 }
-                                Spacer()
                             }
                         }
                     }
                 }
-                .environmentObject(practiceSessionViewModel)
-                .environmentObject(keyboardResponder)
-                .onAppear {
-                    Task {
-                        recentSessions = try await practiceSessionViewModel.getRecentUserPracticeSessions()
-                    }
+            }
+            .environmentObject(practiceSessionViewModel)
+            .environmentObject(keyboardResponder)
+            .onAppear {
+                Task {
+                    recentSessions = try await practiceSessionViewModel.getRecentUserPracticeSessions()
                 }
             }
         } else {

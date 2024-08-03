@@ -34,6 +34,7 @@ struct SearchableContainer<Content: View>: View {
                 .onAppear {
                     searchViewModel.searchTerm = searchTerm
                 }
+            Spacer()
         }
     }
 }
