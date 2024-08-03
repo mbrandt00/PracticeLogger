@@ -9,8 +9,6 @@ import SwiftUI
 
 struct RecentPracticeSessionRow: View {
     var practiceSession: PracticeSession
-    @StateObject var practiceSessionViewModel = PracticeSessionViewModel()
-
     var body: some View {
         NavigationLink(value: practiceSession) {
             VStack(alignment: .leading) {
@@ -27,7 +25,6 @@ struct RecentPracticeSessionRow: View {
         }
         .navigationDestination(for: PracticeSession.self) { ps in
             PieceShow(piece: ps.piece!)
-                .environmentObject(practiceSessionViewModel)
         }
         .padding()
     }

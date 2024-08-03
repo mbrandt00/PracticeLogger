@@ -25,46 +25,29 @@ struct ContentView: View {
                         .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
                 }
             } else {
-                SearchableContainer { searchViewModel in
-                    VStack {
-                        if searchViewModel.searchTerm.isEmpty {
-                            VStack {
-                                switch selectedTab {
-                                case .progress:
-                                    ProgressView()
-                                case .start:
-                                    List(recentSessions) { session in
-                                        RecentPracticeSessionRow(practiceSession: session)
-                                    }
-                                case .profile:
-                                    Profile(isSignedIn: $isSignedIn)
-                                }
-                            }
-                            .environmentObject(practiceSessionViewModel)
-                            Spacer()
-                            if !isExpanded && !keyboardResponder.isKeyboardVisible {
-                                TabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
-                                    .environmentObject(practiceSessionViewModel)
-                                    .animation(.easeInOut(duration: 0.9), value: keyboardResponder.isKeyboardVisible)
-                                    .onAppear {
-                                        Task {
-                                            do {
-                                                practiceSessionViewModel.activeSession = await practiceSessionViewModel.fetchCurrentActiveSession()
-                                            }
+                TabBarContainer(selectedTab: $selectedTab, isExpanded: $isExpanded) {
+                    SearchableContainer { searchViewModel in
+                        VStack {
+                            if searchViewModel.searchTerm.isEmpty {
+                                VStack {
+                                    switch selectedTab {
+                                    case .progress:
+                                        ProgressView()
+                                    case .start:
+                                        List(recentSessions) { session in
+                                            RecentPracticeSessionRow(practiceSession: session)
                                         }
+                                    case .profile:
+                                        Profile(isSignedIn: $isSignedIn)
                                     }
-                            }
-
-                        } else {
-                            List(searchViewModel.pieces) { piece in
-                                NavigationLink(destination: PieceEdit(piece: piece)) {
-                                    NewPieceRow(piece: piece)
                                 }
-                                .navigationTitle("Search Results")
+                                Spacer()
                             }
                         }
                     }
                 }
+                .environmentObject(practiceSessionViewModel)
+                .environmentObject(keyboardResponder)
                 .onAppear {
                     Task {
                         recentSessions = try await practiceSessionViewModel.getRecentUserPracticeSessions()
