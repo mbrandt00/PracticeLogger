@@ -12,13 +12,18 @@ struct RepertoireRow: View {
     var body: some View {
         NavigationLink(value: piece) {
             Text(piece.workName)
+                .foregroundStyle(piece.savedPiece ? .red : .blue)
             if let composerName = piece.composer?.name {
                 Text(composerName)
                     .font(.caption)
             }
         }
         .navigationDestination(for: Piece.self) { piece in
-            PieceShow(piece: piece)
+            if !piece.savedPiece {
+                PieceEdit(piece: piece)
+            } else {
+                PieceShow(piece: piece)
+            }
         }
         .padding()
     }

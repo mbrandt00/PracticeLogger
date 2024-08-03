@@ -27,7 +27,7 @@ struct SearchableContainer<Content: View>: View {
                     searchViewModel.searchTerm = searchTerm
                     searchViewModel.updateTokens()
                     Task {
-                        await searchViewModel.getClassicalPieces()
+                        await searchViewModel.searchPieces()
                     }
                 }
                 .autocorrectionDisabled()

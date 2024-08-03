@@ -36,7 +36,7 @@ struct ContentView: View {
                                 }
                             }
                         } else {
-                            List(searchViewModel.pieces) { piece in
+                            List(searchViewModel.searchResults) { piece in
                                 RepertoireRow(piece: piece)
                             }
                         }
