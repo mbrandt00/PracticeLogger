@@ -19,49 +19,56 @@ struct ContentView: View {
 
     var body: some View {
         if isSignedIn {
-            SearchableContainer { searchViewModel in
-                VStack {
-                    if searchViewModel.searchTerm.isEmpty {
-                        VStack {
-                            switch selectedTab {
-                            case .progress:
-                                ProgressView()
-                            case .start:
-                                List(recentSessions) { session in
-                                    RecentPracticeSessionRow(practiceSession: session)
+            if isExpanded {
+                if let activeSession = practiceSessionViewModel.activeSession {
+                    ExpandedBottomSheet(expandSheet: $isExpanded, activeSession: activeSession, animation: animation)
+                        .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
+                }
+            } else {
+                SearchableContainer { searchViewModel in
+                    VStack {
+                        if searchViewModel.searchTerm.isEmpty {
+                            VStack {
+                                switch selectedTab {
+                                case .progress:
+                                    ProgressView()
+                                case .start:
+                                    List(recentSessions) { session in
+                                        RecentPracticeSessionRow(practiceSession: session)
+                                    }
+                                case .profile:
+                                    Profile(isSignedIn: $isSignedIn)
                                 }
-                            case .profile:
-                                Profile(isSignedIn: $isSignedIn)
                             }
-                        }
-                        .environmentObject(practiceSessionViewModel)
-                        Spacer()
-                        if !isExpanded && !keyboardResponder.isKeyboardVisible {
-                            TabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
-                                .environmentObject(practiceSessionViewModel)
-                                .animation(.easeInOut(duration: 0.9), value: keyboardResponder.isKeyboardVisible)
-                                .onAppear {
-                                    Task {
-                                        do {
-                                            practiceSessionViewModel.activeSession = await practiceSessionViewModel.fetchCurrentActiveSession()
+                            .environmentObject(practiceSessionViewModel)
+                            Spacer()
+                            if !isExpanded && !keyboardResponder.isKeyboardVisible {
+                                TabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
+                                    .environmentObject(practiceSessionViewModel)
+                                    .animation(.easeInOut(duration: 0.9), value: keyboardResponder.isKeyboardVisible)
+                                    .onAppear {
+                                        Task {
+                                            do {
+                                                practiceSessionViewModel.activeSession = await practiceSessionViewModel.fetchCurrentActiveSession()
+                                            }
                                         }
                                     }
-                                }
-                        }
-
-                    } else {
-                        List(searchViewModel.pieces) { piece in
-                            NavigationLink(destination: PieceEdit(piece: piece)) {
-                                NewPieceRow(piece: piece)
                             }
-                            .navigationTitle("Search Results")
+
+                        } else {
+                            List(searchViewModel.pieces) { piece in
+                                NavigationLink(destination: PieceEdit(piece: piece)) {
+                                    NewPieceRow(piece: piece)
+                                }
+                                .navigationTitle("Search Results")
+                            }
                         }
                     }
                 }
-            }
-            .onAppear {
-                Task {
-                    recentSessions = try await practiceSessionViewModel.getRecentUserPracticeSessions()
+                .onAppear {
+                    Task {
+                        recentSessions = try await practiceSessionViewModel.getRecentUserPracticeSessions()
+                    }
                 }
             }
         } else {
