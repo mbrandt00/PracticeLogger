@@ -41,7 +41,6 @@ class PracticeSessionViewModel: ObservableObject {
 
             // Process each response item
             for practiceSession in response {
-                print(practiceSession.durationSeconds)
                 let convertedSession = try await PracticeSessionViewModel().createFullPracticeSessionResponse(practiceSession)
                 sessions.append(convertedSession)
             }

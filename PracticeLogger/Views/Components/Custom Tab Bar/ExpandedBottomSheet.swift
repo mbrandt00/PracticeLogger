@@ -63,9 +63,6 @@ struct ExpandedBottomSheet: View {
                     .frame(height: size.width - 50)
                     /// For Smaller Devices the padding will be 10 and for larger devices the padding will be 30
                     .padding(.vertical, size.height < 700 ? 10 : 30)
-                    /// Player View
-                    //                    PlayerView(size)
-                    /// Moving it From Bottom
                     .offset(y: animateContent ? 0 : size.height)
                 }
                 .padding(.top, safeArea.top + (safeArea.bottom == 0 ? 10 : 0))

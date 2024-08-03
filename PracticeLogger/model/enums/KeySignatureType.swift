@@ -27,9 +27,9 @@ enum KeySignatureType: String, Decodable, Encodable, CaseIterable, Identifiable 
     case b = "B"
     case bSharp = "B♯"
     case bFlat = "B♭"
-    
+
     var id: Self { self }
-    
+
     static var allCases: [KeySignatureType] {
         return [
             .c, .cSharp, .cFlat,
@@ -41,13 +41,13 @@ enum KeySignatureType: String, Decodable, Encodable, CaseIterable, Identifiable 
             .b, .bSharp, .bFlat
         ]
     }
-    
+
     static func fromNormalizedString(_ string: String) -> KeySignatureType? {
         let normalizedString = normalizeString(string)
-        
-        var longestMatch: KeySignatureType? = nil
+
+        var longestMatch: KeySignatureType?
         var maxLength = 0
-        
+
         for type in KeySignatureType.allCases {
             let typeString = normalizeString(type.rawValue)
             if normalizedString.contains(typeString) && typeString.count > maxLength {
@@ -55,10 +55,10 @@ enum KeySignatureType: String, Decodable, Encodable, CaseIterable, Identifiable 
                 maxLength = typeString.count
             }
         }
-        
+
         return longestMatch
     }
-    
+
     static func normalizeString(_ string: String) -> String {
         let lowercasedString = string.lowercased()
         return lowercasedString
