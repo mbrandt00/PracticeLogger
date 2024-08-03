@@ -35,6 +35,10 @@ struct ContentView: View {
                                     Profile(isSignedIn: $isSignedIn)
                                 }
                             }
+                        } else {
+                            List(searchViewModel.pieces) { piece in
+                                Text(piece.workName)
+                            }
                         }
                     }
                 }

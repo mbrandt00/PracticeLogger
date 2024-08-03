@@ -21,7 +21,7 @@ class SearchViewModel: ObservableObject {
     @Published var pieces: [Piece] = []
 
     @Published var tokens: [KeySignatureToken] = []
-    @Published var suggestedTokens: [KeySignatureToken] = [KeySignatureToken(type: KeySignatureType.a, tonality: KeySignatureTonality.major)]
+    @Published var suggestedTokens: [KeySignatureToken] = []
     private var cancellables = Set<AnyCancellable>()
     func updateTokens() {
         // Ensure the last character is a space
