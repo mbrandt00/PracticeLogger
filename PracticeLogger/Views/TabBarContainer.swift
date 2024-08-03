@@ -17,11 +17,10 @@ struct TabBarContainer<Content: View>: View {
     let content: () -> Content
 
     var body: some View {
-        if isExpanded {
-            if let activeSession = practiceSessionViewModel.activeSession {
-                ExpandedBottomSheet(expandSheet: $isExpanded, activeSession: activeSession, animation: animation)
-                    .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
-            }
+        if isExpanded, let activeSession = practiceSessionViewModel.activeSession {
+            ExpandedBottomSheet(expandSheet: $isExpanded, activeSession: activeSession, animation: animation)
+                .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
+
         } else {
             VStack {
                 content()

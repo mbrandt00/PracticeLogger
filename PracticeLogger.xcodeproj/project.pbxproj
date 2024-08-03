@@ -52,7 +52,6 @@
 		D1DF5B5F2BB882CD00FFED0F /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1DF5B5E2BB882CD00FFED0F /* String.swift */; };
 		D1E46FF22B96D52D00228C3F /* Piece.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E46FF12B96D52D00228C3F /* Piece.swift */; };
 		D1E98BCD2C59D0F80065D27D /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E98BCC2C59D0F80065D27D /* SearchViewModel.swift */; };
-		D1E98BCF2C59E9960065D27D /* CustomKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E98BCE2C59E9960065D27D /* CustomKeyboard.swift */; };
 		D1E98BD32C59EF750065D27D /* KeySignatureType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E98BD22C59EF750065D27D /* KeySignatureType.swift */; };
 		D1E98BD52C59EF990065D27D /* KeySignatureTonality.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E98BD42C59EF990065D27D /* KeySignatureTonality.swift */; };
 		D1E98BD72C59EFB20065D27D /* Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E98BD62C59EFB20065D27D /* Format.swift */; };
@@ -122,7 +121,6 @@
 		D1DF5B5E2BB882CD00FFED0F /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		D1E46FF12B96D52D00228C3F /* Piece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Piece.swift; sourceTree = "<group>"; };
 		D1E98BCC2C59D0F80065D27D /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
-		D1E98BCE2C59E9960065D27D /* CustomKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomKeyboard.swift; sourceTree = "<group>"; };
 		D1E98BD22C59EF750065D27D /* KeySignatureType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeySignatureType.swift; sourceTree = "<group>"; };
 		D1E98BD42C59EF990065D27D /* KeySignatureTonality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeySignatureTonality.swift; sourceTree = "<group>"; };
 		D1E98BD62C59EFB20065D27D /* Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Format.swift; sourceTree = "<group>"; };
@@ -210,7 +208,6 @@
 			children = (
 				D131F16F2B8AE8B9002261BC /* TabBar.swift */,
 				D11D58A72C39A06300501C6F /* ExpandedBottomSheet.swift */,
-				D1E98BCE2C59E9960065D27D /* CustomKeyboard.swift */,
 			);
 			path = "Custom Tab Bar";
 			sourceTree = "<group>";
@@ -540,7 +537,6 @@
 				D1AC00D62BD46BC80019FA0F /* PieceEdit.swift in Sources */,
 				D1689CA02C06D13F00191DA7 /* RecentPracticeSessionRow.swift in Sources */,
 				D19E733F2B898F9300BB3EC7 /* PracticeLoggerApp.swift in Sources */,
-				D1E98BCF2C59E9960065D27D /* CustomKeyboard.swift in Sources */,
 				D1C2BEB92BDD61A800E8E39F /* SignInViewModel.swift in Sources */,
 				D185AC152BDF3B7E007F398D /* PieceEditViewModel.swift in Sources */,
 				D1E46FF22B96D52D00228C3F /* Piece.swift in Sources */,
