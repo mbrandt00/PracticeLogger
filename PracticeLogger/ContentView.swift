@@ -19,19 +19,17 @@ struct ContentView: View {
 
     var body: some View {
         if isSignedIn {
-            NavigationStack {
+            SearchableContainer { searchViewModel in
                 VStack {
                     if searchViewModel.searchTerm.isEmpty {
                         VStack {
                             switch selectedTab {
                             case .progress:
                                 ProgressView()
-
                             case .start:
                                 List(recentSessions) { session in
                                     RecentPracticeSessionRow(practiceSession: session)
                                 }
-
                             case .profile:
                                 Profile(isSignedIn: $isSignedIn)
                             }
@@ -50,34 +48,21 @@ struct ContentView: View {
                                     }
                                 }
                         }
+
                     } else {
                         List(searchViewModel.pieces) { piece in
-                            NavigationLink(destination: PieceEdit(piece: piece), label: {
+                            NavigationLink(destination: PieceEdit(piece: piece)) {
                                 NewPieceRow(piece: piece)
-                            })
-                            .navigationTitle("Search results")
+                            }
+                            .navigationTitle("Search Results")
                         }
                     }
                 }
-                .searchable(
-                    text: $searchViewModel.searchTerm,
-                    tokens: $searchViewModel.tokens,
-                    suggestedTokens: $searchViewModel.suggestedTokens
-                ) { token in
-                    Text(token.displayText) // Customize token appearance
+            }
+            .onAppear {
+                Task {
+                    recentSessions = try await practiceSessionViewModel.getRecentUserPracticeSessions()
                 }
-                .onAppear {
-                    Task {
-                        recentSessions = try await practiceSessionViewModel.getRecentUserPracticeSessions()
-                    }
-                }
-                .onChange(of: searchViewModel.searchTerm) {
-                    searchViewModel.updateTokens()
-                    Task {
-                        await searchViewModel.getClassicalPieces()
-                    }
-                }
-                .autocorrectionDisabled()
             }
         } else {
             SignIn(isSignedIn: $isSignedIn)
