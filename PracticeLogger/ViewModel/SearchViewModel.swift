@@ -26,7 +26,6 @@ class SearchViewModel: ObservableObject {
     func updateTokens() {
         // Ensure the last character is a space
         guard searchTerm.hasSuffix(" ") else {
-            print("Search term does not end with a space. Exiting updateTokens.")
             return
         }
 
