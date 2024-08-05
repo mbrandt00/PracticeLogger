@@ -237,7 +237,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         return nil
     }
 
-    static func searchPieceFromSongName(query: String, keySignatureToken: KeySignatureToken?) async throws -> [Piece] {
+    static func searchPieceFromSongName(query: String) async throws -> [Piece] {
         var pieces: [Piece] = []
         var uniqWorks: [String: Song] = [:]
         var result = MusicCatalogSearchRequest(term: query, types: [Song.self])

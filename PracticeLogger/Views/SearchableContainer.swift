@@ -10,30 +10,47 @@ import SwiftUI
 struct SearchableContainer<Content: View>: View {
     @StateObject private var searchViewModel = SearchViewModel()
     @State private var searchTerm = ""
-
     let content: (SearchViewModel) -> Content
+    @Environment(\.isSearching) private var isSearching
 
     var body: some View {
         NavigationStack {
-            content(searchViewModel)
-                .searchable(
-                    text: $searchTerm,
-                    tokens: $searchViewModel.tokens,
-                    suggestedTokens: $searchViewModel.suggestedTokens
-                ) { token in
-                    Text(token.displayText) // Customize token appearance
-                }
-                .onChange(of: searchTerm) {
-                    searchViewModel.searchTerm = searchTerm
-                    searchViewModel.updateTokens()
-                    Task {
-                        await searchViewModel.searchPieces()
+            VStack {
+                // Show Picker only when searching
+                if isSearching {
+                    Picker("Key Signature", selection: $searchViewModel.selectedKeySignature) {
+                        Text("Key Signature").tag(KeySignatureType?.none) // Default value
+                        ForEach(KeySignatureType.allCases) { keySignature in
+                            Text(keySignature.rawValue).tag(KeySignatureType?(keySignature))
+                        }
                     }
+                    .pickerStyle(MenuPickerStyle())
                 }
-                .autocorrectionDisabled()
-                .onAppear {
-                    searchViewModel.searchTerm = searchTerm
+
+                // Content based on search term
+                content(searchViewModel)
+                    .searchable(
+                        text: $searchTerm,
+                        tokens: $searchViewModel.tokens
+                    ) { token in
+                        Text(token.displayText())
+                    }
+                    .onChange(of: searchTerm) {
+                        searchViewModel.searchTerm = searchTerm
+                        Task {
+                            await searchViewModel.searchPieces()
+                        }
+                    }
+                    .autocorrectionDisabled()
+                    .onAppear {
+                        searchViewModel.searchTerm = searchTerm
+                    }
+                if isSearching {
+                    Text("Searching")
+                } else {
+                    Text("not searching")
                 }
+            }
             Spacer()
         }
     }
