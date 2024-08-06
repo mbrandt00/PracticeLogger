@@ -32,12 +32,11 @@ struct PieceShow: View {
                     "stop.circle.fill" : "play.circle.fill")
                     .font(.title)
                     .foregroundColor(Color.accentColor)
-                    .font(.title)
-                    .foregroundColor(Color.accentColor)
             })
         }
         .padding(.horizontal)
-        ScrollView(showsIndicators: false, content: {
+
+        ScrollView(showsIndicators: false) {
             ForEach(piece.movements, id: \.self) { movement in
                 HStack {
                     Text(movement.name)
@@ -60,8 +59,9 @@ struct PieceShow: View {
                 }
                 .padding(.vertical, 10)
             }
-        })
+        }
         .padding()
+        .navigationBarTitleDisplayMode(.inline) // Set the title display mode
     }
 }
 

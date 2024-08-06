@@ -23,4 +23,21 @@ extension Int {
         ]
         return numberToRoman[self]
     }
+
+    var formattedTimeDuration: String {
+        if self < 60 {
+            return "\(self) seconds"
+        } else if self < 3600 {
+            let minutes = self / 60
+            return "\(minutes) minute\(minutes != 1 ? "s" : "")"
+        } else {
+            let hours = self / 3600
+            let remainingMinutes = (self % 3600) / 60
+            if remainingMinutes == 0 {
+                return "\(hours) hour\(hours != 1 ? "s" : "")"
+            } else {
+                return "\(hours) hour\(hours != 1 ? "s" : "") \(remainingMinutes) minute\(remainingMinutes != 1 ? "s" : "")"
+            }
+        }
+    }
 }

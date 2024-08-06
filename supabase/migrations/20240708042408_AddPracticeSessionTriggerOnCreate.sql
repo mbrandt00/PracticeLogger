@@ -5,7 +5,7 @@ BEGIN
     IF EXISTS (SELECT 1 FROM practice_sessions WHERE end_time IS NULL AND user_id = NEW.user_id) THEN
         -- Update the existing row's end_time to the current time, cast to timestamp without time zone
         UPDATE practice_sessions
-        SET end_time = CURRENT_TIMESTAMP::timestamp without time zone
+        SET end_time = CURRENT_TIMESTAMP::timestamp(0)
         WHERE end_time IS NULL AND user_id = NEW.user_id;
     END IF;
 
