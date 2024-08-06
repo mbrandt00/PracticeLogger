@@ -11,16 +11,11 @@ import MusicKit
 
 class SearchViewModel: ObservableObject {
     @Published var searchTerm = ""
-//        didSet {
-//            if searchTerm.last == " " {
-//                updateTokens()
-//            }
-//        }
+    @Published var isFocused: Bool = false
     @Published var selectedKeySignature: KeySignatureType?
     @Published var searchResults: [Piece] = []
 
     @Published var tokens: [FilterToken] = []
-//    @Published var suggestedTokens: [KeySignatureToken] = []
     private var cancellables = Set<AnyCancellable>()
 //    func updateTokens() {
 //        // Ensure the last character is a space

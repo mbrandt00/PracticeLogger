@@ -12,17 +12,17 @@ struct ContentView: View {
     @State private var selectedTab: Tabs = .start
     @Namespace private var animation
     @State private var isExpanded: Bool = false
-    @StateObject var practiceSessionViewModel = PracticeSessionViewModel()
-    @StateObject var searchViewModel = SearchViewModel()
+    @StateObject private var practiceSessionViewModel = PracticeSessionViewModel()
+    @StateObject private var searchViewModel = SearchViewModel()
     @StateObject private var keyboardResponder = KeyboardResponder()
     @State private var recentSessions: [PracticeSession] = []
-
+    @State var searchIsFocused = false
     var body: some View {
         if isSignedIn {
             TabBarContainer(selectedTab: $selectedTab, isExpanded: $isExpanded) {
-                SearchableContainer { searchViewModel in
+                NavigationStack {
                     VStack {
-                        if searchViewModel.searchTerm.isEmpty {
+                        if !searchIsFocused {
                             VStack {
                                 switch selectedTab {
                                 case .progress:
@@ -36,9 +36,20 @@ struct ContentView: View {
                                 }
                             }
                         } else {
-                            List(searchViewModel.searchResults) { piece in
-                                RepertoireRow(piece: piece)
-                            }
+                            SearchView(searchViewModel: searchViewModel)
+                        }
+                    }
+                    .searchable(
+                        text: $searchViewModel.searchTerm,
+                        tokens: $searchViewModel.tokens,
+                        isPresented: $searchIsFocused
+                    ) { token in
+                        Text(token.displayText())
+                    }
+                    .autocorrectionDisabled()
+                    .onChange(of: searchViewModel.searchTerm) { _ in
+                        Task {
+                            await searchViewModel.searchPieces()
                         }
                     }
                 }
@@ -57,10 +68,7 @@ struct ContentView: View {
 }
 
 #Preview {
-    let vm = PracticeSessionViewModel()
-    vm.activeSession = PracticeSession.inProgressExample
-
-    return ContentView(isSignedIn: .constant(true), practiceSessionViewModel: vm)
+    ContentView(isSignedIn: .constant(true))
 }
 
 // www.swiftyplace.com/blog/swiftui-search-bar-best-practices-and-examples
