@@ -48,7 +48,7 @@ struct ContentView: View {
                         Text(token.displayText())
                     }
                     .autocorrectionDisabled()
-                    .onChange(of: searchViewModel.searchTerm) { _ in
+                    .onChange(of: searchViewModel.searchTerm) {
                         Task {
                             await searchViewModel.searchPieces()
                         }
