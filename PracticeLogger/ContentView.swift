@@ -32,6 +32,7 @@ struct ContentView: View {
                                     List(recentSessions) { session in
                                         RecentPracticeSessionRow(practiceSession: session)
                                     }
+                                    .navigationTitle("Recent Sessions")
                                 case .profile:
                                     Profile(isSignedIn: $isSignedIn)
                                 }

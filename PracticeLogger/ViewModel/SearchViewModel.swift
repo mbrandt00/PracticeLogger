@@ -18,147 +18,69 @@ class SearchViewModel: ObservableObject {
 
     @Published var tokens: [FilterToken] = []
     private var cancellables = Set<AnyCancellable>()
-//    func updateTokens() {
-//        // Ensure the last character is a space
-//        guard searchTerm.hasSuffix(" ") else {
-//            return
-//        }
-//
-//        // Define key signature patterns
-//        let accidentals = ["sharp", "flat", "♯", "♭", "#", "b"]
-//        let keys = ["a", "b", "c", "d", "e", "f", "g"]
-//        let tonalities = ["major", "minor"]
-//
-//        // Split the search term into words
-//        let words = searchTerm.lowercased().split(separator: " ").map { String($0) }
-//        var keySignatureToken: KeySignatureToken?
-//
-//        // Identify and extract key signature
-//        for i in 0 ..< words.count {
-//            let word = words[i]
-//
-//            if keys.contains(word) || keySignatureToken != nil {
-//                // Check if the next word is an accidental
-//                if i + 1 < words.count, accidentals.contains(words[i + 1]) {
-//                    let nextWord = words[i + 1]
-//                    let accidental = nextWord == "sharp" || nextWord == "♯" || nextWord == "#" ? "♯" : "♭"
-//                    let keySignature = "\(word)\(accidental)"
-//                    let keyType = KeySignatureType.fromNormalizedString(keySignature)
-//
-//                    // Create or update the keySignatureToken
-//                    keySignatureToken = KeySignatureToken(type: keyType, tonality: nil)
-//
-//                    // Update tokens array
-//                    if let token = keySignatureToken {
-//                        tokens = [token]
-//                    }
-//
-//                    // Remove the key signature part from searchTerm
-//                    let prefix = words.prefix(i).joined(separator: " ")
-//                    let suffix = words.dropFirst(i + 2).joined(separator: " ")
-//                    searchTerm = [prefix, suffix].joined(separator: " ").trimmingCharacters(in: .whitespaces)
-//
-//                    print("Remaining string: \(searchTerm)")
-//                    print("Token: \(keySignatureToken!)")
-//                    continue
-//                } else {
-//                    if i + 1 < words.count && !accidentals.contains(words[i + 1]) {
-//                        let keySignature = word
-//                        let keyType = KeySignatureType.fromNormalizedString(keySignature)
-//
-//                        // Create or update the keySignatureToken
-//                        keySignatureToken = KeySignatureToken(type: keyType, tonality: nil)
-//
-//                        // Update tokens array
-//                        if let token = keySignatureToken {
-//                            tokens = [token]
-//                        }
-//
-//                        // Remove the key signature part from searchTerm
-//                        let prefix = words.prefix(i).joined(separator: " ")
-//                        let suffix = words.dropFirst(i + 1).joined(separator: " ")
-//                        searchTerm = [prefix, suffix].joined(separator: " ").trimmingCharacters(in: .whitespaces)
-//
-//                        print("Remaining string: \(searchTerm)")
-//                        print("Token: \(keySignatureToken!)")
-//                        continue
-//                    }
-//                }
-//            }
-//        }
-//
-//        // Process tonalities if a key signature token exists
-//        for i in 0 ..< words.count {
-//            let word = words[i]
-//            if tonalities.contains(word) {
-//                let tonality = KeySignatureTonality.fromNormalizedString(word)
-//
-//                if let existingToken = tokens.first {
-//                    let type = existingToken.type
-//                    let updatedToken = KeySignatureToken(type: type, tonality: tonality)
-//                    tokens = [updatedToken]
-//                }
-//
-//                // Update searchTerm to remove tonality
-//                let prefix = words.prefix(i).joined(separator: " ")
-//                let suffix = words.dropFirst(i + 1).joined(separator: " ")
-//                searchTerm = [prefix, suffix].joined(separator: " ").trimmingCharacters(in: .whitespaces)
-//
-//                print("Remaining string: \(searchTerm)")
-//            }
-//        }
-//    }
 
+    @MainActor
     func searchPieces() async {
-        if searchTerm.isEmpty { return }
         do {
-            let status = await MusicAuthorization.request()
-            switch status {
-            case .authorized:
-                do {
-                    var fetchedPieces = try await Piece.searchPieceFromSongName(query: searchTerm)
-//                    if let token = tokens.first {
-//                        fetchedPieces = fetchedPieces.filter { piece in
-//                            piece.key_signature == token.type
-//                        }
-//                    }
-                    let userPieces = try await getUserPieces()
-                    DispatchQueue.main.async {
-                        self.userPieces = userPieces
-                        self.newPieces = fetchedPieces
+            if searchTerm.isEmpty {
+                userPieces = try await getUserPieces()
+            } else {
+                let status = await MusicAuthorization.request()
+                switch status {
+                case .authorized:
+                    do {
+                        var fetchedPieces = try await Piece.searchPieceFromSongName(query: searchTerm)
+                        let userPieceSet = Set(userPieces)
+                        fetchedPieces.removeAll { userPieceSet.contains($0) }
+                        if let selectedKeySignature = selectedKeySignature {
+                            fetchedPieces = fetchedPieces.filter { $0.key_signature == selectedKeySignature }
+                        }
+
+                        userPieces = userPieces
+                        newPieces = fetchedPieces
+
+                    } catch {
+                        print("Error fetching pieces: \(error)")
                     }
-                } catch {
-                    print("Error fetching pieces: \(error)")
+
+                case .denied:
+                    print("Music authorization denied.")
+
+                case .notDetermined:
+                    print("Music authorization not determined.")
+
+                case .restricted:
+                    print("Music authorization restricted.")
+
+                default:
+                    print("Unknown music authorization status.")
                 }
-            case .denied:
-                print("Denied")
-            case .notDetermined:
-                print("Not Determined")
-            case .restricted:
-                print("Restricted")
-            default:
-                print("Something happened")
             }
+        } catch {
+            print("Unexpected error: \(error)")
         }
     }
 
     func getUserPieces() async throws -> [Piece] {
-        let response: [SupabasePieceResponse] = try await Database.client
+        let userId = try Database.getCurrentUser()?.id.uuidString
+        var query = Database.client
             .from("pieces")
             .select("*, movements!inner(*), composer:composers!inner(id, name)")
-            .ilike("work_name", pattern: "%\(searchTerm)%")
-            .eq("user_id", value: Database.getCurrentUser()?.id.uuidString)
-            .order("created_at", ascending: false)
-            .execute()
-            .value
+            .eq("user_id", value: userId)
+
+        if let selectedKeySignature = selectedKeySignature {
+            print("Found key signature...")
+            query = query.eq("key_signature", value: selectedKeySignature.rawValue)
+        }
+        if !searchTerm.isEmpty {
+            let escapedSearchTerm = searchTerm.replacingOccurrences(of: "'", with: "''")
+            query = query.textSearch("search_pieces_f", query: escapedSearchTerm, type: .websearch)
+        }
+
+        let response: [SupabasePieceResponse] = try await query.execute().value
 
         let pieces = mapResponseToFullPiece(response: response)
 
-//        if let token = tokens.first {
-//            return pieces.filter { piece in
-//                piece.key_signature == token.type
-//            }
-//        }
         return pieces
     }
 

@@ -36,7 +36,6 @@ class PracticeSessionViewModel: ObservableObject {
                 .order("end_time", ascending: false)
                 .execute()
                 .value
-            dump(response)
             var sessions: [PracticeSession] = []
 
             // Process each response item

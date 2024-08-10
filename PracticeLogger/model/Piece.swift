@@ -98,7 +98,9 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
     }
 
     static func == (lhs: Piece, rhs: Piece) -> Bool {
-        return lhs.workName == rhs.workName && lhs.movements.count == lhs.movements.count
+        return
+            lhs.catalogue_type == rhs.catalogue_type &&
+            lhs.catalogue_number == rhs.catalogue_number
     }
 
     static let example = Piece(workName: "Sonata 2 in B flat Minor Funeral March", composer: Composer(name: "Frederic Chopin"), movements: [

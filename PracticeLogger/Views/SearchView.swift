@@ -20,6 +20,11 @@ struct SearchView: View {
                 }
             }
             .pickerStyle(MenuPickerStyle())
+            .onChange(of: searchViewModel.selectedKeySignature) {
+                Task {
+                    await searchViewModel.searchPieces()
+                }
+            }
 
             List {
                 // Display sections only if they have content
@@ -52,6 +57,11 @@ struct SearchView: View {
                 }
             }
             .listStyle(InsetGroupedListStyle())
+        }
+        .onAppear {
+            Task {
+                await searchViewModel.searchPieces()
+            }
         }
     }
 }
