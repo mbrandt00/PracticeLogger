@@ -7,13 +7,14 @@
 
 import Foundation
 
-class PracticeSession: ObservableObject, Identifiable, Codable, Equatable {
+class PracticeSession: ObservableObject, Identifiable, Codable, Equatable, Hashable {
     let id: UUID
     @Published var startTime: Date
     @Published var endTime: Date?
     @Published var piece: Piece?
     @Published var composer: Composer?
     @Published var pieceId: UUID
+    @Published var durationSeconds: Int?
     @Published var movementId: Int?
     var userId: UUID?
     @Published var movement: Movement?
@@ -25,16 +26,18 @@ class PracticeSession: ObservableObject, Identifiable, Codable, Equatable {
         case pieceId = "piece_id"
         case movementId = "movement_id"
         case userId = "user_id"
+        case durationSeconds = "duration_seconds"
     }
 
-    init(start_time: Date, piece: Piece? = nil, movement: Movement? = nil, id: UUID = UUID()) {
+    init(startTime: Date, endTime: Date? = nil, piece: Piece? = nil, durationSeconds: Int? = nil, movement: Movement? = nil, id: UUID = UUID()) {
         self.id = id
-        startTime = start_time
-        endTime = nil
+        self.startTime = startTime
+        self.endTime = endTime
         self.movement = movement
         movementId = movement?.id
         self.piece = movement?.piece ?? piece
         pieceId = movement?.piece?.id ?? piece?.id ?? UUID()
+        self.durationSeconds = durationSeconds
     }
 
     // Codable initializer
@@ -64,6 +67,7 @@ class PracticeSession: ObservableObject, Identifiable, Codable, Equatable {
         pieceId = try container.decodeIfPresent(UUID.self, forKey: .pieceId) ?? UUID()
         movementId = try container.decodeIfPresent(Int.self, forKey: .movementId)
         userId = try container.decodeIfPresent(UUID.self, forKey: .userId)
+        durationSeconds = try container.decodeIfPresent(Int.self, forKey: .durationSeconds)
     }
 
     // Codable encode method
@@ -86,5 +90,16 @@ class PracticeSession: ObservableObject, Identifiable, Codable, Equatable {
         return lhs.id == rhs.id
     }
 
-    static let example = PracticeSession(start_time: Date(), piece: Piece.example, movement: Piece.example.movements.first)
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
+    static let inProgressExample = PracticeSession(startTime: Date(), piece: Piece.example, movement: Piece.example.movements.first)
+    static let endedExample = PracticeSession(
+        startTime: Calendar.current.date(byAdding: .hour, value: -2, to: Date())!,
+        endTime: Calendar.current.date(byAdding: .hour, value: -1, to: Date())!,
+        piece: Piece.example,
+        durationSeconds: 200,
+        movement: Piece.example.movements.first
+    )
 }

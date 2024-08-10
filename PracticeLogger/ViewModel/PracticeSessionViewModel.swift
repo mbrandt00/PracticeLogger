@@ -9,17 +9,46 @@ import Supabase
 
 class PracticeSessionViewModel: ObservableObject {
     @Published var activeSession: PracticeSession?
+    @Published private var recentSessions: [PracticeSession] = []
+
     func startSession(record: Record) async throws -> PracticeSession? {
         switch record {
         case .piece(let piece):
             print("Starting session with piece: \(piece)")
-            let practice_session = PracticeSession(start_time: Date.now, piece: piece)
+            let practice_session = PracticeSession(startTime: Date.now, piece: piece)
             return try await insertPracticeSession(practice_session)
 
         case .movement(let movement):
             print("Starting session with movement: \(movement)")
-            let practice_session = PracticeSession(start_time: Date.now, movement: movement)
+            let practice_session = PracticeSession(startTime: Date.now, movement: movement)
             return try await insertPracticeSession(practice_session)
+        }
+    }
+
+    func getRecentUserPracticeSessions() async throws -> [PracticeSession] {
+        do {
+            let userID = try Database.getCurrentUser()?.id
+
+            let response: [PracticeSession] = try await Database.client
+                .from("user_unique_piece_sessions_v")
+                .select("*")
+                .eq("user_id", value: userID)
+                .order("end_time", ascending: false)
+                .execute()
+                .value
+            var sessions: [PracticeSession] = []
+
+            // Process each response item
+            for practiceSession in response {
+                let convertedSession = try await PracticeSessionViewModel().createFullPracticeSessionResponse(practiceSession)
+                sessions.append(convertedSession)
+            }
+
+            return sessions
+
+        } catch {
+            print("Error retrieving session: \(error)")
+            return []
         }
     }
 
@@ -55,7 +84,6 @@ class PracticeSessionViewModel: ObservableObject {
             return practiceSession
 
         } catch {
-            print("Error retrieving session: \(error)")
             return nil
         }
     }
@@ -97,11 +125,11 @@ class PracticeSessionViewModel: ObservableObject {
         let mappedPiece = mapResponseToFullPiece(response: pieceResponse)
 
         var practiceSession: PracticeSession
-        if let movementId = response.movementId,
-           let selectedMovement = pieceResponse.movements.first(where: { $0.id == movementId })
-        {
+        if let movementId = response.movementId, let selectedMovement = pieceResponse.movements.first(where: { $0.id == movementId }) {
             practiceSession = PracticeSession(
-                start_time: response.startTime,
+                startTime: response.startTime,
+                endTime: response.endTime,
+                durationSeconds: response.durationSeconds,
                 movement: Movement(
                     id: selectedMovement.id,
                     name: selectedMovement.name ?? "",
@@ -113,9 +141,9 @@ class PracticeSessionViewModel: ObservableObject {
             )
         } else {
             practiceSession = PracticeSession(
-                start_time: response.startTime,
-                piece: mappedPiece,
-                id: response.id
+                startTime: response.startTime,
+                endTime: response.endTime, piece: mappedPiece,
+                durationSeconds: response.durationSeconds, id: response.id
             )
         }
         return practiceSession

@@ -16,9 +16,6 @@ final class KeyboardResponder: ObservableObject {
     init() {
         let keyboardWillShow = NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
             .map { _ in true }
-            .handleEvents(receiveOutput: { _ in
-                print("Keyboard will show")
-            })
 
         let keyboardWillHide = NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
             .map { _ in false }

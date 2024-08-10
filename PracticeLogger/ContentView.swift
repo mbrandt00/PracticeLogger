@@ -12,41 +12,55 @@ struct ContentView: View {
     @State private var selectedTab: Tabs = .start
     @Namespace private var animation
     @State private var isExpanded: Bool = false
-    @StateObject var viewModel = PracticeSessionViewModel()
+    @StateObject private var practiceSessionViewModel = PracticeSessionViewModel()
+    @StateObject private var searchViewModel = SearchViewModel()
     @StateObject private var keyboardResponder = KeyboardResponder()
+    @State private var recentSessions: [PracticeSession] = []
+    @State var searchIsFocused = false
 
     var body: some View {
         if isSignedIn {
-            if isExpanded {
-                if let activeSession = viewModel.activeSession {
-                    ExpandedBottomSheet(expandSheet: $isExpanded, activeSession: activeSession, animation: animation)
-                        .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
-                }
-            } else {
-                VStack {
-                    switch selectedTab {
-                    case .progress:
-                        ProgressView()
-                    case .start:
-                        CreatePiece()
-                    case .profile:
-                        Profile(isSignedIn: $isSignedIn)
-                    }
-                }
-                .environmentObject(viewModel)
-
-                if !isExpanded && !keyboardResponder.isKeyboardVisible {
-                    TabBar(selectedTab: $selectedTab, expandedSheet: $isExpanded, animation: animation)
-                        .padding(0.0)
-                        .environmentObject(viewModel)
-                        .animation(.easeInOut(duration: 0.9), value: keyboardResponder.isKeyboardVisible)
-                        .onAppear {
-                            Task {
-                                do {
-                                    viewModel.activeSession = await viewModel.fetchCurrentActiveSession()
+            TabBarContainer(selectedTab: $selectedTab, isExpanded: $isExpanded) {
+                NavigationStack {
+                    VStack {
+                        if !searchIsFocused {
+                            VStack {
+                                switch selectedTab {
+                                case .progress:
+                                    ProgressView()
+                                case .start:
+                                    List(recentSessions) { session in
+                                        RecentPracticeSessionRow(practiceSession: session)
+                                    }
+                                    .navigationTitle("Recent Sessions")
+                                case .profile:
+                                    Profile(isSignedIn: $isSignedIn)
                                 }
                             }
+                        } else {
+                            SearchView(searchViewModel: searchViewModel)
                         }
+                    }
+                    .searchable(
+                        text: $searchViewModel.searchTerm,
+                        tokens: $searchViewModel.tokens,
+                        isPresented: $searchIsFocused
+                    ) { token in
+                        Text(token.displayText())
+                    }
+                    .autocorrectionDisabled()
+                    .onChange(of: searchViewModel.searchTerm) {
+                        Task {
+                            await searchViewModel.searchPieces()
+                        }
+                    }
+                }
+            }
+            .environmentObject(practiceSessionViewModel)
+            .environmentObject(keyboardResponder)
+            .onAppear {
+                Task {
+                    recentSessions = try await practiceSessionViewModel.getRecentUserPracticeSessions()
                 }
             }
         } else {
@@ -55,20 +69,13 @@ struct ContentView: View {
     }
 }
 
-// struct ContentView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        // Initialize your view model
-//        let viewModel = PracticeSessionViewModel()
-//        viewModel.activeSession = PracticeSession.example()
-//
-//        // Pass the view model and a constant binding to ContentView
-//        ContentView(isSignedIn: .constant(true), viewModel: viewModel)
-//    }
-// }
-
 #Preview {
-    let vm = PracticeSessionViewModel()
-    vm.activeSession = PracticeSession.example
+    ContentView(isSignedIn: .constant(true))
+}
 
-    return ContentView(isSignedIn: .constant(true), viewModel: vm)
+// www.swiftyplace.com/blog/swiftui-search-bar-best-practices-and-examples
+
+enum PieceNavigationContext: Hashable {
+    case userPiece(Piece)
+    case newPiece(Piece)
 }

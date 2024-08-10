@@ -86,11 +86,21 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
     }
 
     func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+        hasher.combine(workName)
+//        hasher.combine(composer)
+//        hasher.combine(movements)
+        hasher.combine(catalogue_type)
+        hasher.combine(catalogue_number)
+        hasher.combine(format)
+        hasher.combine(nickname)
+        hasher.combine(tonality)
+        hasher.combine(key_signature)
     }
 
     static func == (lhs: Piece, rhs: Piece) -> Bool {
-        return lhs.workName == rhs.workName && lhs.movements.count == lhs.movements.count
+        return
+            lhs.catalogue_type == rhs.catalogue_type &&
+            lhs.catalogue_number == rhs.catalogue_number
     }
 
     static let example = Piece(workName: "Sonata 2 in B flat Minor Funeral March", composer: Composer(name: "Frederic Chopin"), movements: [
@@ -203,6 +213,27 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         return result
     }
 
+    static func addMetadata(_ piece: Piece) async -> Piece? {
+        do {
+            if let response: MetadataInformation = try await Database.client.rpc("parse_piece_metadata", params: ["work_name": piece.workName]).select().single().execute().value {
+                return Piece(
+                    workName: piece.workName,
+                    composer: Composer(name: piece.composer?.name ?? ""),
+                    movements: piece.movements,
+                    catalogue_type: response.catalogue_type,
+                    catalogue_number: response.catalogue_number,
+                    format: response.format,
+                    nickname: response.nickname,
+                    tonality: response.tonality,
+                    key_signature: response.key_signature
+                )
+            }
+        } catch {
+            print("Error getting piece metadata:", error)
+        }
+        return nil
+    }
+
     static func searchPieceFromSongName(query: String) async throws -> [Piece] {
         var pieces: [Piece] = []
         var uniqWorks: [String: Song] = [:]
@@ -239,7 +270,8 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         uniqWorks = chooseBestRecords(uniqWorks: uniqWorks)
 
         for (_, song) in uniqWorks {
-            let piece = try await createPieceFromSong(song: song)
+            var piece = try await createPieceFromSong(song: song)
+            piece = await addMetadata(piece)!
             pieces.append(piece)
         }
         print("pieces count \(pieces.count)")
@@ -433,102 +465,4 @@ func mapResponseToFullPiece(response: [SupabasePieceResponse]) -> [Piece] {
     }
 
     return pieces
-}
-
-enum CatalogueType: String, Decodable, CaseIterable, Encodable {
-    case B, BWV, CPEB, D, DD, EG, FMW, H, K, L, Op, S, T, TH, VB, WAB, WD, WoO, Wq
-
-    static var allCases: [CatalogueType] {
-        return [
-            .B, .BWV, .CPEB, .D, .DD, .EG, .FMW, .H, .K, .L, .Op, .S, .T, .TH, .VB, .WAB, .WD, .WoO, .Wq
-        ]
-    }
-}
-
-enum Format: String, Decodable, Encodable, CaseIterable {
-    case bagatelle = "Bagatelle"
-    case ballade = "Ballade"
-    case canon = "Canon"
-    case caprice = "Caprice"
-    case chorale = "Chorale"
-    case concerto = "Concerto"
-    case dance = "Dance"
-    case etude = "Etude"
-    case fantasy = "Fantasy"
-    case fugue = "Fugue"
-    case gavotte = "Gavotte"
-    case gigue = "Gigue"
-    case impromptu = "Impromptu"
-    case intermezzo = "Intermezzo"
-    case lied = "Lied"
-    case march = "March"
-    case mazurka = "Mazurka"
-    case mass = "Mass"
-    case minuet = "Minuet"
-    case nocturne = "Nocturne"
-    case overture = "Overture"
-    case opera = "Opera"
-    case oratorio = "Oratorio"
-    case pastiche = "Pastiche"
-    case prelude = "Prelude"
-    case polonaise = "Polonaise"
-    case rhapsody = "Rhapsody"
-    case requiem = "Requiem"
-    case rondo = "Rondo"
-    case sarabande = "Sarabande"
-    case scherzo = "Scherzo"
-    case serenade = "Serenade"
-    case sonata = "Sonata"
-    case stringQuartet = "String Quartet"
-    case suite = "Suite"
-    case symphony = "Symphony"
-    case tarantella = "Tarantella"
-    case toccata = "Toccata"
-    case variations = "Variations"
-    case waltz = "Waltz"
-}
-
-enum KeySignatureType: String, Decodable, Encodable, CaseIterable {
-    case c = "C"
-    case cSharp = "C♯"
-    case cFlat = "C♭"
-    case d = "D"
-    case dSharp = "D♯"
-    case dFlat = "D♭"
-    case e = "E"
-    case eSharp = "E♯"
-    case eFlat = "E♭"
-    case f = "F"
-    case fSharp = "F♯"
-    case fFlat = "F♭"
-    case g = "G"
-    case gSharp = "G♯"
-    case gFlat = "G♭"
-    case a = "A"
-    case aSharp = "A♯"
-    case aFlat = "A♭"
-    case b = "B"
-    case bSharp = "B♯"
-    case bFlat = "B♭"
-
-    static var allCases: [KeySignatureType] {
-        return [
-            .c, .cSharp, .cFlat,
-            .d, .dSharp, .dFlat,
-            .e, .eSharp, .eFlat,
-            .f, .fSharp, .fFlat,
-            .g, .gSharp, .gFlat,
-            .a, .aSharp, .aFlat,
-            .b, .bSharp, .bFlat
-        ]
-    }
-}
-
-enum KeySignatureTonality: String, Decodable, Encodable, CaseIterable {
-    case major = "Major"
-    case minor = "Minor"
-
-    static var allCases: [KeySignatureTonality] {
-        return [.major, .minor]
-    }
 }
