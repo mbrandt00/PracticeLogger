@@ -37,6 +37,7 @@
 		D19E735A2B898F9400BB3EC7 /* PracticeLoggerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E73592B898F9400BB3EC7 /* PracticeLoggerUITests.swift */; };
 		D19E735C2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E735B2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift */; };
 		D1AC00D62BD46BC80019FA0F /* PieceEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1AC00D52BD46BC80019FA0F /* PieceEdit.swift */; };
+		D1BE01D22C67EE1E00529BAE /* NavigationContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1BE01D12C67EE1E00529BAE /* NavigationContext.swift */; };
 		D1C2BEB52BDCE22600E8E39F /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C2BEB42BDCE22600E8E39F /* Tag.swift */; };
 		D1C2BEB72BDD612F00E8E39F /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C2BEB62BDD612F00E8E39F /* SignIn.swift */; };
 		D1C2BEB92BDD61A800E8E39F /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C2BEB82BDD61A800E8E39F /* SignInViewModel.swift */; };
@@ -111,6 +112,7 @@
 		D19E73592B898F9400BB3EC7 /* PracticeLoggerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLoggerUITests.swift; sourceTree = "<group>"; };
 		D19E735B2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLoggerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		D1AC00D52BD46BC80019FA0F /* PieceEdit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceEdit.swift; sourceTree = "<group>"; };
+		D1BE01D12C67EE1E00529BAE /* NavigationContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationContext.swift; sourceTree = "<group>"; };
 		D1C2BEB42BDCE22600E8E39F /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		D1C2BEB62BDD612F00E8E39F /* SignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
 		D1C2BEB82BDD61A800E8E39F /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
@@ -230,6 +232,7 @@
 				D185AC142BDF3B7E007F398D /* PieceEditViewModel.swift */,
 				D197387F2C1540B600EBF53F /* PracticeSessionViewModel.swift */,
 				D1E98BCC2C59D0F80065D27D /* SearchViewModel.swift */,
+				D1BE01D12C67EE1E00529BAE /* NavigationContext.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -549,6 +552,7 @@
 				D1D6548E2BDDB9BE008D4868 /* ProfileViewModel.swift in Sources */,
 				D1840DD02C48902F001ED849 /* Logger.swift in Sources */,
 				D15501B82BF1961C0088BCCE /* MovementEditRow.swift in Sources */,
+				D1BE01D22C67EE1E00529BAE /* NavigationContext.swift in Sources */,
 				D1C2BEB52BDCE22600E8E39F /* Tag.swift in Sources */,
 				D14A43712C5DF83A00556C03 /* TabBarContainer.swift in Sources */,
 				D131F17B2B8B090D002261BC /* MetronomeShape.swift in Sources */,

@@ -13,7 +13,8 @@ class SearchViewModel: ObservableObject {
     @Published var searchTerm = ""
     @Published var isFocused: Bool = false
     @Published var selectedKeySignature: KeySignatureType?
-    @Published var searchResults: [Piece] = []
+    @Published var userPieces: [Piece] = []
+    @Published var newPieces: [Piece] = []
 
     @Published var tokens: [FilterToken] = []
     private var cancellables = Set<AnyCancellable>()
@@ -123,7 +124,8 @@ class SearchViewModel: ObservableObject {
 //                    }
                     let userPieces = try await getUserPieces()
                     DispatchQueue.main.async {
-                        self.searchResults = userPieces + fetchedPieces
+                        self.userPieces = userPieces
+                        self.newPieces = fetchedPieces
                     }
                 } catch {
                     print("Error fetching pieces: \(error)")

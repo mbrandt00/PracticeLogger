@@ -16,7 +16,6 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
     @Published var catalogue_type: CatalogueType?
     @Published var catalogue_number: Int?
     @Published var nickname: String?
-    @Published var savedPiece: Bool
     var format: Format?
     var key_signature: KeySignatureType?
     var tonality: KeySignatureTonality?
@@ -30,7 +29,6 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         catalogue_type: CatalogueType? = nil,
         catalogue_number: Int? = nil,
         format: Format? = nil,
-        savedPiece: Bool = false,
         nickname: String? = nil,
         tonality: KeySignatureTonality? = nil,
         key_signature: KeySignatureType? = nil
@@ -41,7 +39,6 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         self.movements = movements ?? []
         self.format = format
         self.tonality = tonality
-        self.savedPiece = savedPiece
         self.key_signature = key_signature
         self.catalogue_type = catalogue_type
         self.catalogue_number = catalogue_number
@@ -57,7 +54,6 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         case catalogue_type
         case catalogue_number
         case format
-        case savedPiece
         case key_signature
         case tonality
     }
@@ -87,7 +83,6 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         key_signature = try container.decodeIfPresent(KeySignatureType.self, forKey: .key_signature)
         tonality = try container.decodeIfPresent(KeySignatureTonality.self, forKey: .tonality)
         nickname = try container.decodeIfPresent(String.self, forKey: .nickname)
-        savedPiece = try container.decode(Bool.self, forKey: .savedPiece)
     }
 
     func hash(into hasher: inout Hasher) {
@@ -446,7 +441,6 @@ func mapResponseToFullPiece(response: [SupabasePieceResponse]) -> [Piece] {
                 catalogue_type: CatalogueType(rawValue: r.catalogueType ?? ""),
                 catalogue_number: r.catalogueNumber ?? 0,
                 format: Format(rawValue: r.format ?? ""),
-                savedPiece: true,
                 nickname: r.nickname ?? "",
                 tonality: KeySignatureTonality(rawValue: r.tonality ?? ""),
                 key_signature: KeySignatureType(rawValue: r.keySignature ?? "")

@@ -10,22 +10,22 @@ import SwiftUI
 struct RecentPracticeSessionRow: View {
     var practiceSession: PracticeSession
     var body: some View {
-        NavigationLink(value: practiceSession) {
-            VStack(alignment: .leading) {
-                if let workName = practiceSession.piece?.workName {
-                    Text(workName)
-                }
+//        NavigationLink(value: practiceSession) {
+        VStack(alignment: .leading) {
+            if let workName = practiceSession.piece?.workName {
+                Text(workName)
+            }
 
-                Text(practiceSession.durationSeconds?.formattedTimeDuration ?? "")
-                if let composerName = practiceSession.piece?.composer?.name {
-                    Text(composerName)
-                        .font(.caption)
-                }
+            Text(practiceSession.durationSeconds?.formattedTimeDuration ?? "")
+            if let composerName = practiceSession.piece?.composer?.name {
+                Text(composerName)
+                    .font(.caption)
             }
         }
-        .navigationDestination(for: PracticeSession.self) { ps in
-            PieceShow(piece: ps.piece!)
-        }
+//        }
+//        .navigationDestination(for: PracticeSession.self) { ps in
+//            PieceShow(piece: ps.piece!)
+//        }
         .padding()
     }
 }

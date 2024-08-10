@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SearchView: View {
     @ObservedObject var searchViewModel: SearchViewModel
+    @State private var selectedPieceContext: PieceNavigationContext? = nil
 
     var body: some View {
         VStack {
@@ -20,13 +21,41 @@ struct SearchView: View {
             }
             .pickerStyle(MenuPickerStyle())
 
-            List(searchViewModel.searchResults) { piece in
-                RepertoireRow(piece: piece)
+            List {
+                // Display sections only if they have content
+                if !searchViewModel.userPieces.isEmpty {
+                    Section(header: Text("Pieces")) {
+                        ForEach(searchViewModel.userPieces) { piece in
+                            NavigationLink(
+                                destination: PieceShow(piece: piece),
+                                tag: PieceNavigationContext.userPiece(piece),
+                                selection: $selectedPieceContext
+                            ) {
+                                RepertoireRow(piece: piece)
+                            }
+                        }
+                    }
+                }
+
+                if !searchViewModel.newPieces.isEmpty {
+                    Section(header: Text("New Pieces")) {
+                        ForEach(searchViewModel.newPieces) { piece in
+                            NavigationLink(
+                                destination: PieceEdit(piece: piece),
+                                tag: PieceNavigationContext.newPiece(piece),
+                                selection: $selectedPieceContext
+                            ) {
+                                RepertoireRow(piece: piece)
+                            }
+                        }
+                    }
+                }
             }
+            .listStyle(InsetGroupedListStyle())
         }
     }
 }
 
-// #Preview {
-//    SearchView()
-// }
+#Preview {
+    SearchView(searchViewModel: SearchViewModel())
+}

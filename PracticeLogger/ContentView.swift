@@ -17,6 +17,7 @@ struct ContentView: View {
     @StateObject private var keyboardResponder = KeyboardResponder()
     @State private var recentSessions: [PracticeSession] = []
     @State var searchIsFocused = false
+
     var body: some View {
         if isSignedIn {
             TabBarContainer(selectedTab: $selectedTab, isExpanded: $isExpanded) {
@@ -72,3 +73,8 @@ struct ContentView: View {
 }
 
 // www.swiftyplace.com/blog/swiftui-search-bar-best-practices-and-examples
+
+enum PieceNavigationContext: Hashable {
+    case userPiece(Piece)
+    case newPiece(Piece)
+}
