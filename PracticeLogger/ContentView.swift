@@ -32,7 +32,13 @@ struct ContentView: View {
                                     List(recentSessions) { session in
                                         RecentPracticeSessionRow(practiceSession: session)
                                     }
+                                    .listStyle(.plain)
                                     .navigationTitle("Recent Sessions")
+                                    .onAppear {
+                                        Task {
+                                            recentSessions = try await practiceSessionViewModel.getRecentUserPracticeSessions()
+                                        }
+                                    }
                                 case .profile:
                                     Profile(isSignedIn: $isSignedIn)
                                 }
@@ -58,11 +64,6 @@ struct ContentView: View {
             }
             .environmentObject(practiceSessionViewModel)
             .environmentObject(keyboardResponder)
-            .onAppear {
-                Task {
-                    recentSessions = try await practiceSessionViewModel.getRecentUserPracticeSessions()
-                }
-            }
         } else {
             SignIn(isSignedIn: $isSignedIn)
         }
