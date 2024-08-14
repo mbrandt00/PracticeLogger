@@ -19,5 +19,5 @@ struct RepertoireRow: View {
 }
 
 #Preview {
-    RepertoireRow(piece: Piece.example)
+    RepertoireRow(piece: Piece.examplePieces.randomElement()!)
 }

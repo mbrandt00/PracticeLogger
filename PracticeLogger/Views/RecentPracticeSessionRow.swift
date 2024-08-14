@@ -16,11 +16,25 @@ struct RecentPracticeSessionRow: View {
                     Text(workName)
                 }
 
+                Text(practiceSession.startTime.formatted(
+                    .dateTime
+                        .year().month().day()
+                        .hour().minute()
+                ))
+
                 Text(practiceSession.durationSeconds?.formattedTimeDuration ?? "")
                 if let composerName = practiceSession.piece?.composer?.name {
                     Text(composerName)
                         .font(.caption)
                 }
+            }
+        }
+        .swipeActions {
+            Button(role: .destructive) {
+                // Your action here
+                print("Triggered")
+            } label: {
+                Image(systemName: "trash")
             }
         }
         .navigationDestination(for: PracticeSession.self) { ps in
