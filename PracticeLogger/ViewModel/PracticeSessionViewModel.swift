@@ -30,7 +30,7 @@ class PracticeSessionViewModel: ObservableObject {
             let userID = try Database.getCurrentUser()?.id
 
             let response: [PracticeSession] = try await Database.client
-                .from("user_unique_piece_sessions_v")
+                .from("practice_sessions")
                 .select("*")
                 .eq("user_id", value: userID)
                 .order("end_time", ascending: false)

@@ -8,37 +8,88 @@
 import SwiftUI
 
 struct RecentPracticeSessionRow: View {
-    var practiceSession: PracticeSession
-    var body: some View {
-        NavigationLink(value: practiceSession) {
-            VStack(alignment: .leading) {
-                if let workName = practiceSession.piece?.workName {
-                    Text(workName)
-                }
+    var piece: Piece
+    var sessions: [PracticeSession]
+    @State var isExpanded: Bool = false
 
-                Text(practiceSession.durationSeconds?.formattedTimeDuration ?? "")
-                if let composerName = practiceSession.piece?.composer?.name {
-                    Text(composerName)
-                        .font(.caption)
+    var body: some View {
+        DisclosureGroup(
+            isExpanded: $isExpanded,
+            content: {
+                VStack(alignment: .leading, spacing: 5) {
+                    let sortedSessions = sessions.sorted { $0.endTime! < $1.endTime! }
+                    ForEach(sortedSessions) { session in
+                        VStack(alignment: .leading, spacing: 4) {
+                            if let movement = session.movement {
+                                Text(movement.name)
+                                    .font(.body)
+                                    .fontWeight(.medium)
+                            }
+
+                            Text(session.startTime.formatted(
+                                .dateTime
+                                    .hour().minute()
+                            ))
+                            .font(.subheadline)
+                            .fontWeight(.regular)
+
+                            Text(session.durationSeconds?.formattedTimeDuration ?? "")
+                                .font(.subheadline)
+                                .fontWeight(.regular)
+                        }
+                        .padding(.vertical, 2)
+                        .padding(.leading, 0)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }
+            },
+            label: {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(piece.workName)
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .lineLimit(1)
+
+                    if let composerName = piece.composer?.name {
+                        Text(composerName)
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                    }
+                }
+                .padding(.vertical, 2)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-        }
-        .navigationDestination(for: PracticeSession.self) { ps in
-            PieceShow(piece: ps.piece!)
-        }
+        )
         .padding()
     }
 }
 
 struct RecentPracticeSessionRow_Previews: PreviewProvider {
-    static var session: PracticeSession = {
-        var exampleSession = PracticeSession.endedExample
-        exampleSession.durationSeconds = 12000
-        return exampleSession
-    }()
+    static var piece: Piece =
+        .example1
+
+    static var sessions: [PracticeSession] =
+        [
+            PracticeSession(
+                startTime: Date(),
+                endTime: Calendar.current.date(byAdding: .hour, value: 2, to: Date()),
+                piece: piece,
+                durationSeconds: 1200,
+                movement: piece.movements.first
+            ),
+            PracticeSession(
+                startTime: Calendar.current.date(byAdding: .hour, value: -3, to: Date()) ?? Date.now,
+                endTime: Calendar.current.date(byAdding: .hour, value: -1, to: Date()),
+                piece: piece,
+                durationSeconds: 1800,
+                movement: piece.movements.last
+            )
+        ]
 
     static var previews: some View {
-        // Create and return the view for preview
-        RecentPracticeSessionRow(practiceSession: session)
+        VStack {
+            RecentPracticeSessionRow(piece: piece, sessions: sessions, isExpanded: true)
+            RecentPracticeSessionRow(piece: piece, sessions: sessions)
+        }
     }
 }

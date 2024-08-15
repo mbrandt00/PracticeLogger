@@ -193,7 +193,7 @@ struct PieceEdit: View {
 
 struct PieceEdit_Previews: PreviewProvider {
     static var previews: some View {
-        PieceEdit(piece: Piece.example)
+        PieceEdit(piece: Piece.examplePieces.randomElement()!)
             .environment(\.colorScheme, .dark) // Preview in dark mode
     }
 }

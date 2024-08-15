@@ -10,6 +10,7 @@
 		D11990622B9CBC160031E8A0 /* MusicKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11990612B9CBC160031E8A0 /* MusicKitTests.swift */; };
 		D11990652B9CC58D0031E8A0 /* MusicKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D11990642B9CC58D0031E8A0 /* MusicKit.framework */; };
 		D11D58A82C39A06300501C6F /* ExpandedBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11D58A72C39A06300501C6F /* ExpandedBottomSheet.swift */; };
+		D11D792C2C6C5B9D0073BA21 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11D792B2C6C5B9D0073BA21 /* Array.swift */; };
 		D12E1BB02C37B64500A4DC28 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12E1BAF2C37B64500A4DC28 /* DateFormatter.swift */; };
 		D131F16D2B8AE54E002261BC /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F16C2B8AE54E002261BC /* Color.swift */; };
 		D131F1702B8AE8B9002261BC /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F16F2B8AE8B9002261BC /* TabBar.swift */; };
@@ -58,6 +59,9 @@
 		D1E98BD72C59EFB20065D27D /* Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E98BD62C59EFB20065D27D /* Format.swift */; };
 		D1E98BDA2C59EFF40065D27D /* CatalogueType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E98BD92C59EFF40065D27D /* CatalogueType.swift */; };
 		D1ED6C442C4CB0BF00300FE9 /* KeyboardResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1ED6C432C4CB0BF00300FE9 /* KeyboardResponder.swift */; };
+		D1F29CE92C6C52F000FC5E74 /* RecentPracticeSessions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F29CE82C6C52F000FC5E74 /* RecentPracticeSessions.swift */; };
+		D1F29CEC2C6C56A200FC5E74 /* Piece+SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F29CEB2C6C56A200FC5E74 /* Piece+SampleData.swift */; };
+		D1F29CEF2C6C580B00FC5E74 /* PracticeSession+SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F29CEE2C6C580B00FC5E74 /* PracticeSession+SampleData.swift */; };
 		D1F5EE892BF8656E00E9DA23 /* Movement.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F5EE882BF8656E00E9DA23 /* Movement.swift */; };
 		D1F5EE8B2BF8662000E9DA23 /* Composer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F5EE8A2BF8662000E9DA23 /* Composer.swift */; };
 /* End PBXBuildFile section */
@@ -83,6 +87,7 @@
 		D11990612B9CBC160031E8A0 /* MusicKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicKitTests.swift; sourceTree = "<group>"; };
 		D11990642B9CC58D0031E8A0 /* MusicKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MusicKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/MusicKit.framework; sourceTree = DEVELOPER_DIR; };
 		D11D58A72C39A06300501C6F /* ExpandedBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedBottomSheet.swift; sourceTree = "<group>"; };
+		D11D792B2C6C5B9D0073BA21 /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		D12E1BAF2C37B64500A4DC28 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		D131F16C2B8AE54E002261BC /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		D131F16F2B8AE8B9002261BC /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
@@ -129,6 +134,9 @@
 		D1E98BD92C59EFF40065D27D /* CatalogueType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogueType.swift; sourceTree = "<group>"; };
 		D1EA64CD2B8A7E7B00D95E1F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D1ED6C432C4CB0BF00300FE9 /* KeyboardResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardResponder.swift; sourceTree = "<group>"; };
+		D1F29CE82C6C52F000FC5E74 /* RecentPracticeSessions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentPracticeSessions.swift; sourceTree = "<group>"; };
+		D1F29CEB2C6C56A200FC5E74 /* Piece+SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Piece+SampleData.swift"; sourceTree = "<group>"; };
+		D1F29CEE2C6C580B00FC5E74 /* PracticeSession+SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PracticeSession+SampleData.swift"; sourceTree = "<group>"; };
 		D1F5EE882BF8656E00E9DA23 /* Movement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movement.swift; sourceTree = "<group>"; };
 		D1F5EE8A2BF8662000E9DA23 /* Composer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Composer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -188,6 +196,7 @@
 				D157BF612C56DA0F00139677 /* RepetoireRow.swift */,
 				D14A43702C5DF83A00556C03 /* TabBarContainer.swift */,
 				D16E3A912C61E1AC00DA96A7 /* SearchView.swift */,
+				D1F29CE82C6C52F000FC5E74 /* RecentPracticeSessions.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -201,6 +210,7 @@
 				D13D0EDB2BCC4B23006B2683 /* SetString.swift */,
 				D12E1BAF2C37B64500A4DC28 /* DateFormatter.swift */,
 				D177FDA82C55855C00830F0D /* View.swift */,
+				D11D792B2C6C5B9D0073BA21 /* Array.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -241,10 +251,10 @@
 			isa = PBXGroup;
 			children = (
 				D1E98BD82C59EFB80065D27D /* enums */,
-				D1E46FF12B96D52D00228C3F /* Piece.swift */,
+				D1F29CEA2C6C569300FC5E74 /* Piece */,
 				D1F5EE882BF8656E00E9DA23 /* Movement.swift */,
 				D1F5EE8A2BF8662000E9DA23 /* Composer.swift */,
-				D19738812C1540E500EBF53F /* PracticeSession.swift */,
+				D1F29CED2C6C57F900FC5E74 /* PracticeSession */,
 				D1840DCF2C48902F001ED849 /* Logger.swift */,
 			);
 			path = model;
@@ -323,6 +333,24 @@
 				D1E98BD92C59EFF40065D27D /* CatalogueType.swift */,
 			);
 			path = enums;
+			sourceTree = "<group>";
+		};
+		D1F29CEA2C6C569300FC5E74 /* Piece */ = {
+			isa = PBXGroup;
+			children = (
+				D1E46FF12B96D52D00228C3F /* Piece.swift */,
+				D1F29CEB2C6C56A200FC5E74 /* Piece+SampleData.swift */,
+			);
+			path = Piece;
+			sourceTree = "<group>";
+		};
+		D1F29CED2C6C57F900FC5E74 /* PracticeSession */ = {
+			isa = PBXGroup;
+			children = (
+				D19738812C1540E500EBF53F /* PracticeSession.swift */,
+				D1F29CEE2C6C580B00FC5E74 /* PracticeSession+SampleData.swift */,
+			);
+			path = PracticeSession;
 			sourceTree = "<group>";
 		};
 		D1F5EE8D2BF8664C00E9DA23 /* utils */ = {
@@ -538,6 +566,7 @@
 				D19738802C1540B600EBF53F /* PracticeSessionViewModel.swift in Sources */,
 				D1AC00D62BD46BC80019FA0F /* PieceEdit.swift in Sources */,
 				D1689CA02C06D13F00191DA7 /* RecentPracticeSessionRow.swift in Sources */,
+				D11D792C2C6C5B9D0073BA21 /* Array.swift in Sources */,
 				D19E733F2B898F9300BB3EC7 /* PracticeLoggerApp.swift in Sources */,
 				D1C2BEB92BDD61A800E8E39F /* SignInViewModel.swift in Sources */,
 				D16E3A922C61E1AC00DA96A7 /* SearchView.swift in Sources */,
@@ -548,6 +577,7 @@
 				D197387E2C153F7100EBF53F /* PieceShow.swift in Sources */,
 				D1C2BEC22BDD76A300E8E39F /* Database.swift in Sources */,
 				D1E98BD32C59EF750065D27D /* KeySignatureType.swift in Sources */,
+				D1F29CEF2C6C580B00FC5E74 /* PracticeSession+SampleData.swift in Sources */,
 				D1E98BD52C59EF990065D27D /* KeySignatureTonality.swift in Sources */,
 				D1D6548E2BDDB9BE008D4868 /* ProfileViewModel.swift in Sources */,
 				D1840DD02C48902F001ED849 /* Logger.swift in Sources */,
@@ -560,6 +590,8 @@
 				D1F5EE892BF8656E00E9DA23 /* Movement.swift in Sources */,
 				D1C2BEC42BDD7A9100E8E39F /* Profile.swift in Sources */,
 				D131F16D2B8AE54E002261BC /* Color.swift in Sources */,
+				D1F29CE92C6C52F000FC5E74 /* RecentPracticeSessions.swift in Sources */,
+				D1F29CEC2C6C56A200FC5E74 /* Piece+SampleData.swift in Sources */,
 				D1C2BEB72BDD612F00E8E39F /* SignIn.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

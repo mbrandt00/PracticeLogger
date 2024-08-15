@@ -15,7 +15,6 @@ struct ContentView: View {
     @StateObject private var practiceSessionViewModel = PracticeSessionViewModel()
     @StateObject private var searchViewModel = SearchViewModel()
     @StateObject private var keyboardResponder = KeyboardResponder()
-    @State private var recentSessions: [PracticeSession] = []
     @State var searchIsFocused = false
 
     var body: some View {
@@ -29,10 +28,7 @@ struct ContentView: View {
                                 case .progress:
                                     ProgressView()
                                 case .start:
-                                    List(recentSessions) { session in
-                                        RecentPracticeSessionRow(practiceSession: session)
-                                    }
-                                    .navigationTitle("Recent Sessions")
+                                    RecentPracticeSessions(practiceSessionViewModel: practiceSessionViewModel)
                                 case .profile:
                                     Profile(isSignedIn: $isSignedIn)
                                 }
@@ -58,11 +54,6 @@ struct ContentView: View {
             }
             .environmentObject(practiceSessionViewModel)
             .environmentObject(keyboardResponder)
-            .onAppear {
-                Task {
-                    recentSessions = try await practiceSessionViewModel.getRecentUserPracticeSessions()
-                }
-            }
         } else {
             SignIn(isSignedIn: $isSignedIn)
         }
@@ -72,8 +63,6 @@ struct ContentView: View {
 #Preview {
     ContentView(isSignedIn: .constant(true))
 }
-
-// www.swiftyplace.com/blog/swiftui-search-bar-best-practices-and-examples
 
 enum PieceNavigationContext: Hashable {
     case userPiece(Piece)

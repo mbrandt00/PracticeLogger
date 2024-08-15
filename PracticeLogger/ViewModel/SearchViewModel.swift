@@ -22,40 +22,37 @@ class SearchViewModel: ObservableObject {
     @MainActor
     func searchPieces() async {
         do {
-            if searchTerm.isEmpty {
-                userPieces = try await getUserPieces()
-            } else {
-                let status = await MusicAuthorization.request()
-                switch status {
-                case .authorized:
-                    do {
-                        var fetchedPieces = try await Piece.searchPieceFromSongName(query: searchTerm)
-                        let userPieceSet = Set(userPieces)
-                        fetchedPieces.removeAll { userPieceSet.contains($0) }
-                        if let selectedKeySignature = selectedKeySignature {
-                            fetchedPieces = fetchedPieces.filter { $0.key_signature == selectedKeySignature }
-                        }
-
-                        userPieces = userPieces
-                        newPieces = fetchedPieces
-
-                    } catch {
-                        print("Error fetching pieces: \(error)")
+            let status = await MusicAuthorization.request()
+            switch status {
+            case .authorized:
+                do {
+                    userPieces = try await getUserPieces()
+                    var fetchedPieces = try await Piece.searchPieceFromSongName(query: searchTerm)
+                    let userPieceSet = Set(userPieces)
+                    fetchedPieces.removeAll { userPieceSet.contains($0) }
+                    if let selectedKeySignature = selectedKeySignature {
+                        fetchedPieces = fetchedPieces.filter { $0.key_signature == selectedKeySignature }
                     }
+                    userPieces = userPieces
+                    newPieces = fetchedPieces
 
-                case .denied:
-                    print("Music authorization denied.")
-
-                case .notDetermined:
-                    print("Music authorization not determined.")
-
-                case .restricted:
-                    print("Music authorization restricted.")
-
-                default:
-                    print("Unknown music authorization status.")
+                } catch {
+                    print("Error fetching pieces: \(error)")
                 }
+
+            case .denied:
+                print("Music authorization denied.")
+
+            case .notDetermined:
+                print("Music authorization not determined.")
+
+            case .restricted:
+                print("Music authorization restricted.")
+
+            default:
+                print("Unknown music authorization status.")
             }
+
         } catch {
             print("Unexpected error: \(error)")
         }
