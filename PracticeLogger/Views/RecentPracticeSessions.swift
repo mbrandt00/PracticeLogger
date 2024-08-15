@@ -13,14 +13,16 @@ struct RecentPracticeSessions: View {
 
     var body: some View {
         List {
-            ForEach(recentSessions.groupedByDay.keys.sorted(by: >), id: \.self) { day in
+            ForEach(recentSessions.groupedByDayAndPiece.keys.sorted(by: >), id: \.self) { day in
                 Section(header: Text(day.formatted(.dateTime.year().month().day()))) {
-                    ForEach(recentSessions.groupedByDay[day] ?? []) { session in
-                        RecentPracticeSessionRow(practiceSession: session)
+                    ForEach(recentSessions.groupedByDayAndPiece[day]?.keys.sorted { $0.workName < $1.workName } ?? [], id: \.self) { piece in
+                        let sessions = recentSessions.groupedByDayAndPiece[day]?[piece] ?? []
+                        RecentPracticeSessionRow(piece: piece, sessions: sessions)
                     }
                 }
             }
         }
+        .listRowSeparatorTint(Color.accentColor, edges: .all)
         .listStyle(.plain)
         .navigationTitle("Recent Sessions")
         .onAppear {
@@ -39,6 +41,6 @@ struct RecentPracticeSessions_Previews: PreviewProvider {
 
 class MockPracticeSessionViewModel: PracticeSessionViewModel {
     override func getRecentUserPracticeSessions() async throws -> [PracticeSession] {
-        return PracticeSession.generateRandomSessions(count: 10)
+        return PracticeSession.generateRandomSessions(count: 30)
     }
 }
