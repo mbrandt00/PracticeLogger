@@ -1,3 +1,5 @@
+comment on schema public is e'@graphql({"inflect_names": true})';
+
 CREATE TABLE IF NOT EXISTS composers (
     id BIGSERIAL PRIMARY KEY,
     name varchar(255) NOT NULL

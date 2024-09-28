@@ -1,0 +1,41 @@
+{
+  "schemaNamespace" : "ApolloGQL",
+  "input" : {
+    "operationSearchPaths" : [
+      "**/*.graphql"
+    ],
+    "schemaSearchPaths" : [
+      "**/*.graphqls"
+    ]
+  },
+"schemaDownload": {
+  "downloadMethod": {
+    "introspection": {
+      "endpointURL": "http://localhost:54321/graphql/v1",
+      "httpMethod": {
+        "POST": {}
+      },
+      "includeDeprecatedInputValues": false,
+      "outputFormat": "SDL"
+    }
+  },
+  "downloadTimeout": 60,
+  "headers": [],
+  "outputPath": "./schema.graphqls"
+},
+ "output": {
+  "schemaTypes": {
+    "moduleType": {
+      "swiftPackageManager": {}
+    },
+    "path": "./ApolloGQL/"
+  },
+  
+  "operations": {
+    "inSchemaModule": {}
+  },
+  "testMocks": {
+    "none": {}
+  }
+}
+}
