@@ -181,17 +181,18 @@ struct MusicInfo: View {
     }
 }
 
-#Preview {
-    @Namespace var animation
-    let vm = PracticeSessionViewModel()
-    vm.activeSession = PracticeSession.inProgressExample
-    return TabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(vm).preferredColorScheme(.light)
-}
-
-#Preview {
-    let vm = PracticeSessionViewModel()
-    vm.activeSession = PracticeSession.inProgressExample
-
-    @Namespace var animation
-    return TabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(vm).preferredColorScheme(.dark)
-}
+//
+// #Preview {
+//    @Namespace var animation
+//    let vm = PracticeSessionViewModel()
+//    vm.activeSession = PracticeSession.inProgressExample
+//    return TabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(vm).preferredColorScheme(.light)
+// }
+//
+// #Preview {
+//    let vm = PracticeSessionViewModel()
+//    vm.activeSession = PracticeSession.inProgressExample
+//
+//    @Namespace var animation
+//    return TabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(vm).preferredColorScheme(.dark)
+// }

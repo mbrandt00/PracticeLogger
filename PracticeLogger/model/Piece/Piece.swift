@@ -223,6 +223,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
             }
         } catch {
             print("Error getting piece metadata:", error)
+            return nil
         }
         return nil
     }

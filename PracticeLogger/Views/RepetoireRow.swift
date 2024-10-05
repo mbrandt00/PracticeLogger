@@ -18,6 +18,6 @@ struct RepertoireRow: View {
     }
 }
 
-#Preview {
-    RepertoireRow(piece: Piece.examplePieces.randomElement()!)
-}
+// #Preview {
+//    RepertoireRow(piece: Piece.examplePieces.randomElement()!)
+// }

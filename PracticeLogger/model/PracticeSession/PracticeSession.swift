@@ -94,12 +94,12 @@ class PracticeSession: ObservableObject, Identifiable, Codable, Equatable, Hasha
         hasher.combine(id)
     }
 
-    static let inProgressExample = PracticeSession(startTime: Date(), piece: Piece.examplePieces.randomElement(), movement: Piece.examplePieces.randomElement()?.movements.first)
-    static let endedExample = PracticeSession(
-        startTime: Calendar.current.date(byAdding: .hour, value: -2, to: Date())!,
-        endTime: Calendar.current.date(byAdding: .hour, value: -1, to: Date())!,
-        piece: Piece.examplePieces.randomElement(),
-        durationSeconds: 200,
-        movement: Piece.examplePieces.randomElement()?.movements.randomElement()
-    )
+//    static let inProgressExample = PracticeSession(startTime: Date(), piece: Piece.examplePieces.randomElement(), movement: Piece.examplePieces.randomElement()?.movements.first)
+//    static let endedExample = PracticeSession(
+//        startTime: Calendar.current.date(byAdding: .hour, value: -2, to: Date())!,
+//        endTime: Calendar.current.date(byAdding: .hour, value: -1, to: Date())!,
+//        piece: Piece.examplePieces.randomElement(),
+//        durationSeconds: 200,
+//        movement: Piece.examplePieces.randomElement()?.movements.randomElement()
+//    )
 }

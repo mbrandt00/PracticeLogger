@@ -65,6 +65,6 @@ struct PieceShow: View {
     }
 }
 
-#Preview {
-    PieceShow(piece: Piece.examplePieces.randomElement()!).environmentObject(PracticeSessionViewModel())
-}
+// #Preview {
+//    PieceShow(piece: Piece.examplePieces.randomElement()!).environmentObject(PracticeSessionViewModel())
+// }

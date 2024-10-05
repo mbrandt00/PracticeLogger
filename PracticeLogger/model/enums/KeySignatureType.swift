@@ -5,66 +5,78 @@
 //  Created by Michael Brandt on 7/30/24.
 //
 
+import Foundation
+
 enum KeySignatureType: String, Decodable, Encodable, CaseIterable, Identifiable {
-    case c = "C"
-    case cSharp = "C♯"
-    case cFlat = "C♭"
-    case d = "D"
-    case dSharp = "D♯"
-    case dFlat = "D♭"
-    case e = "E"
-    case eSharp = "E♯"
-    case eFlat = "E♭"
-    case f = "F"
-    case fSharp = "F♯"
-    case fFlat = "F♭"
-    case g = "G"
-    case gSharp = "G♯"
-    case gFlat = "G♭"
-    case a = "A"
-    case aSharp = "A♯"
-    case aFlat = "A♭"
-    case b = "B"
-    case bSharp = "B♯"
-    case bFlat = "B♭"
+    case C
+    case Csharp = "C♯"
+    case Cflat = "C♭"
+    case D
+    case Dsharp = "D♯"
+    case Dflat = "D♭"
+    case E
+    case Esharp = "E♯"
+    case Eflat = "E♭"
+    case F
+    case Fsharp = "F♯"
+    case Fflat = "F♭"
+    case G
+    case Gsharp = "G♯"
+    case Gflat = "G♭"
+    case A
+    case Asharp = "A♯"
+    case Aflat = "A♭"
+    case B
+    case Bsharp = "B♯"
+    case Bflat = "B♭"
 
     var id: Self { self }
 
-    static var allCases: [KeySignatureType] {
-        return [
-            .c, .cSharp, .cFlat,
-            .d, .dSharp, .dFlat,
-            .e, .eSharp, .eFlat,
-            .f, .fSharp, .fFlat,
-            .g, .gSharp, .gFlat,
-            .a, .aSharp, .aFlat,
-            .b, .bSharp, .bFlat
-        ]
-    }
+    // Mapping for encoding
+    private static let encodingMap: [KeySignatureType: String] = {
+        var map = [KeySignatureType: String]()
+        for keySignature in KeySignatureType.allCases {
+            map[keySignature] = keySignature.rawValue
+        }
+        return map
+    }()
 
+    // Normalize string for decoding
     static func fromNormalizedString(_ string: String) -> KeySignatureType? {
         let normalizedString = normalizeString(string)
-
-        var longestMatch: KeySignatureType?
-        var maxLength = 0
-
-        for type in KeySignatureType.allCases {
-            let typeString = normalizeString(type.rawValue)
-            if normalizedString.contains(typeString) && typeString.count > maxLength {
-                longestMatch = type
-                maxLength = typeString.count
-            }
+        return KeySignatureType.allCases.first { keySignature in
+            let keySignatureString = normalizeString(keySignature.rawValue)
+            return keySignatureString == normalizedString
         }
-
-        return longestMatch
     }
 
+    // Normalize string for comparison
     static func normalizeString(_ string: String) -> String {
-        let lowercasedString = string.lowercased()
-        return lowercasedString
+        return string
+            .lowercased()
             .replacingOccurrences(of: "sharp", with: "♯")
             .replacingOccurrences(of: "flat", with: "♭")
             .replacingOccurrences(of: " ", with: "")
             .replacingOccurrences(of: "-", with: "")
+    }
+
+    // Override encode to ensure we encode in the correct format for PostgreSQL
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        if let encodedValue = KeySignatureType.encodingMap[self] {
+            try container.encode(encodedValue)
+        } else {
+            throw EncodingError.invalidValue(self, EncodingError.Context(codingPath: container.codingPath, debugDescription: "Invalid KeySignatureType"))
+        }
+    }
+
+    // Implement custom decoding
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        guard let keySignature = KeySignatureType.fromNormalizedString(rawValue) else {
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid value for KeySignatureType: \(rawValue)")
+        }
+        self = keySignature
     }
 }

@@ -99,15 +99,15 @@ struct ExpandedBottomSheet: View {
     }
 }
 
-struct ExpandedBottomSheet_Previews: PreviewProvider {
-    @Namespace static var animation
-
-    static var previews: some View {
-        let activeSession = PracticeSession.inProgressExample
-        ExpandedBottomSheet(
-            expandSheet: .constant(true),
-            activeSession: activeSession,
-            animation: animation
-        ).preferredColorScheme(.dark)
-    }
-}
+// struct ExpandedBottomSheet_Previews: PreviewProvider {
+//    @Namespace static var animation
+//
+//    static var previews: some View {
+//        let activeSession = PracticeSession.inProgressExample
+//        ExpandedBottomSheet(
+//            expandSheet: .constant(true),
+//            activeSession: activeSession,
+//            animation: animation
+//        ).preferredColorScheme(.dark)
+//    }
+// }

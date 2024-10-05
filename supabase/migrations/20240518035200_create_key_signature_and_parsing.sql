@@ -22,53 +22,50 @@ CREATE TYPE key_signature_type AS ENUM (
     'Bflat'
 );
 CREATE TYPE key_signature_tonality AS ENUM ('major', 'minor');
-CREATE TYPE key_signature AS (
-    key key_signature_type,
-    tonality key_signature_tonality
-);
 CREATE OR REPLACE FUNCTION parse_piece_key_signature(work_name TEXT) RETURNS key_signature AS $$
 DECLARE key_info key_signature;
 found_key key_signature_type;
 BEGIN key_info := ROW(NULL, NULL)::key_signature;
 -- Initialize composite type
 work_name := LOWER(work_name);
+-- Convert work_name to lowercase
 -- Find the key signature
 found_key := (
     SELECT CASE
             WHEN work_name LIKE '%c#%'
-            OR work_name LIKE '%c sharp%' THEN 'C♯'
+            OR work_name LIKE '%c sharp%' THEN 'Csharp'
             WHEN work_name LIKE '%c-flat%'
-            OR work_name LIKE '%c flat%' THEN 'C♭'
+            OR work_name LIKE '%c flat%' THEN 'Cflat'
             WHEN work_name LIKE '% c %' THEN 'C'
             WHEN work_name LIKE '%d#%'
-            OR work_name LIKE '%d sharp%' THEN 'D♯'
+            OR work_name LIKE '%d sharp%' THEN 'Dsharp'
             WHEN work_name LIKE '%d-flat%'
-            OR work_name LIKE '%d flat%' THEN 'D♭'
+            OR work_name LIKE '%d flat%' THEN 'Dflat'
             WHEN work_name LIKE '% d %' THEN 'D'
             WHEN work_name LIKE '%e#%'
-            OR work_name LIKE '%e sharp%' THEN 'E♯'
+            OR work_name LIKE '%e sharp%' THEN 'Esharp'
             WHEN work_name LIKE '%e-flat%'
-            OR work_name LIKE '%e flat%' THEN 'E♭'
+            OR work_name LIKE '%e flat%' THEN 'Eflat'
             WHEN work_name LIKE '% e %' THEN 'E'
             WHEN work_name LIKE '%f#%'
-            OR work_name LIKE '%f sharp%' THEN 'F♯'
+            OR work_name LIKE '%f sharp%' THEN 'Fsharp'
             WHEN work_name LIKE '%f-flat%'
-            OR work_name LIKE '%f flat%' THEN 'F♭'
+            OR work_name LIKE '%f flat%' THEN 'Fflat'
             WHEN work_name LIKE '% f %' THEN 'F'
             WHEN work_name LIKE '%g#%'
-            OR work_name LIKE '%g sharp%' THEN 'G♯'
+            OR work_name LIKE '%g sharp%' THEN 'Gsharp'
             WHEN work_name LIKE '%g-flat%'
-            OR work_name LIKE '%g flat%' THEN 'G♭'
+            OR work_name LIKE '%g flat%' THEN 'Gflat'
             WHEN work_name LIKE '% g %' THEN 'G'
             WHEN work_name LIKE '%a#%'
-            OR work_name LIKE '%a sharp%' THEN 'A♯'
+            OR work_name LIKE '%a sharp%' THEN 'Asharp'
             WHEN work_name LIKE '%a-flat%'
-            OR work_name LIKE '%a flat%' THEN 'A♭'
+            OR work_name LIKE '%a flat%' THEN 'Aflat'
             WHEN work_name LIKE '% a %' THEN 'A'
             WHEN work_name LIKE '%b#%'
-            OR work_name LIKE '%b sharp%' THEN 'B♯'
+            OR work_name LIKE '%b sharp%' THEN 'Bsharp'
             WHEN work_name LIKE '%b-flat%'
-            OR work_name LIKE '%b flat%' THEN 'B♭'
+            OR work_name LIKE '%b flat%' THEN 'Bflat' -- Correct enum value
             WHEN work_name LIKE '% b %' THEN 'B'
             ELSE NULL
         END
