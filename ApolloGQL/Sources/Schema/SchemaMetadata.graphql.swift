@@ -27,6 +27,8 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
     case "Composers": return ApolloGQL.Objects.Composers
     case "Movements": return ApolloGQL.Objects.Movements
     case "Pieces": return ApolloGQL.Objects.Pieces
+    case "Mutation": return ApolloGQL.Objects.Mutation
+    case "PiecesInsertResponse": return ApolloGQL.Objects.PiecesInsertResponse
     default: return nil
     }
   }

@@ -57,21 +57,6 @@ struct ContentView: View {
             }
             .environmentObject(practiceSessionViewModel)
             .environmentObject(keyboardResponder)
-            .onAppear {
-                Task {
-                    do {
-                        let userId = try await Database.client.auth.user().id.uuidString
-                        let data = Network.shared.apollo.fetch(query: RecentUserSessionsQuery(userId: userId)) { result in
-                            switch result {
-                            case .success(let graphQlResult):
-                                print(graphQlResult.data?.practiceSessionsCollection?.edges[0].node)
-                            case .failure(let error):
-                                print(error)
-                            }
-                        }
-                    }
-                }
-            }
         } else {
             SignIn(isSignedIn: $isSignedIn)
         }

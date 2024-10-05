@@ -4,6 +4,8 @@
 //
 //  Created by Michael Brandt on 6/8/24.
 //
+import Apollo
+import ApolloGQL
 import Foundation
 import Supabase
 
@@ -25,30 +27,24 @@ class PracticeSessionViewModel: ObservableObject {
         }
     }
 
-    func getRecentUserPracticeSessions() async throws -> [PracticeSession] {
-        do {
-            let userID = try Database.getCurrentUser()?.id
+    func getRecentUserPracticeSessions() async throws -> [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge] {
+        let userId = try await Database.client.auth.user().id.uuidString
 
-            let response: [PracticeSession] = try await Database.client
-                .from("practice_sessions")
-                .select("*")
-                .eq("user_id", value: userID)
-                .order("end_time", ascending: false)
-                .execute()
-                .value
-            var sessions: [PracticeSession] = []
-
-            // Process each response item
-            for practiceSession in response {
-                let convertedSession = try await PracticeSessionViewModel().createFullPracticeSessionResponse(practiceSession)
-                sessions.append(convertedSession)
+        return try await withCheckedThrowingContinuation { continuation in
+            Network.shared.apollo.fetch(query: RecentUserSessionsQuery(userId: userId)) { result in
+                switch result {
+                case .success(let graphQlResult):
+                    if let practiceSessions = graphQlResult.data?.practiceSessionsCollection?.edges {
+                        dump(practiceSessions)
+                        continuation.resume(returning: practiceSessions) // Return the edges
+                    } else {
+                        continuation.resume(returning: []) // Return an empty array if no sessions found
+                    }
+                case .failure(let error):
+                    print("GraphQL query failed: \(error)")
+                    continuation.resume(throwing: error) // Rethrow the error
+                }
             }
-
-            return sessions
-
-        } catch {
-            print("Error retrieving session: \(error)")
-            return []
         }
     }
 

@@ -27,34 +27,22 @@ class SearchViewModel: ObservableObject {
             case .authorized:
                 do {
                     userPieces = try await getUserPieces()
-                    var fetchedPieces = try await Piece.searchPieceFromSongName(query: searchTerm)
-                    let userPieceSet = Set(userPieces)
-                    fetchedPieces.removeAll { userPieceSet.contains($0) }
-                    if let selectedKeySignature = selectedKeySignature {
-                        fetchedPieces = fetchedPieces.filter { $0.key_signature == selectedKeySignature }
+                    if !searchTerm.isEmpty {
+                        var fetchedPieces = try await Piece.searchPieceFromSongName(query: searchTerm)
+                        let userPieceSet = Set(userPieces)
+                        fetchedPieces.removeAll { userPieceSet.contains($0) }
+                        if let selectedKeySignature = selectedKeySignature {
+                            fetchedPieces = fetchedPieces.filter { $0.key_signature == selectedKeySignature }
+                        }
+                        userPieces = userPieces
+                        newPieces = fetchedPieces
                     }
-                    userPieces = userPieces
-                    newPieces = fetchedPieces
-
                 } catch {
                     print("Error fetching pieces: \(error)")
                 }
-
-            case .denied:
-                print("Music authorization denied.")
-
-            case .notDetermined:
-                print("Music authorization not determined.")
-
-            case .restricted:
-                print("Music authorization restricted.")
-
             default:
                 print("Unknown music authorization status.")
             }
-
-        } catch {
-            print("Unexpected error: \(error)")
         }
     }
 

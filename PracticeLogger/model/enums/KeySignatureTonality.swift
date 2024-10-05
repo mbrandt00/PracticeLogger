@@ -8,8 +8,8 @@
 import Foundation
 
 enum KeySignatureTonality: String, Decodable, Encodable, CaseIterable, Identifiable {
-    case major = "Major"
-    case minor = "Minor"
+    case major
+    case minor
 
     var id: Self { self }
 

@@ -26,9 +26,9 @@
 		D157BF622C56DA0F00139677 /* RepetoireRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D157BF612C56DA0F00139677 /* RepetoireRow.swift */; };
 		D15C882F2BF05E5000AAC950 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = D15C882E2BF05E5000AAC950 /* AlertToast */; };
 		D15C88312BF063B900AAC950 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15C88302BF063B900AAC950 /* Error.swift */; };
-		D1689CA02C06D13F00191DA7 /* RecentPracticeSessionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1689C9F2C06D13F00191DA7 /* RecentPracticeSessionRow.swift */; };
 		D16E3A922C61E1AC00DA96A7 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D16E3A912C61E1AC00DA96A7 /* SearchView.swift */; };
 		D177FDA92C55855C00830F0D /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = D177FDA82C55855C00830F0D /* View.swift */; };
+		D178732E2CA9B5D40009EBC5 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D178732D2CA9B5D40009EBC5 /* ApolloGQL */; };
 		D17C5CA82B9E561300C1CA44 /* NewPieceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17C5CA72B9E561300C1CA44 /* NewPieceRow.swift */; };
 		D1840DD02C48902F001ED849 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1840DCF2C48902F001ED849 /* Logger.swift */; };
 		D185AC152BDF3B7E007F398D /* PieceEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D185AC142BDF3B7E007F398D /* PieceEditViewModel.swift */; };
@@ -41,6 +41,7 @@
 		D19E73462B898F9400BB3EC7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D19E73452B898F9400BB3EC7 /* Preview Assets.xcassets */; };
 		D19E735A2B898F9400BB3EC7 /* PracticeLoggerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E73592B898F9400BB3EC7 /* PracticeLoggerUITests.swift */; };
 		D19E735C2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E735B2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift */; };
+		D1A056112CB1A9E30024DC2A /* PracticeSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1A056102CB1A9E30024DC2A /* PracticeSessionView.swift */; };
 		D1AC00D62BD46BC80019FA0F /* PieceEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1AC00D52BD46BC80019FA0F /* PieceEdit.swift */; };
 		D1BE01D22C67EE1E00529BAE /* NavigationContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1BE01D12C67EE1E00529BAE /* NavigationContext.swift */; };
 		D1C2BEB52BDCE22600E8E39F /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C2BEB42BDCE22600E8E39F /* Tag.swift */; };
@@ -104,7 +105,6 @@
 		D15501B72BF1961C0088BCCE /* MovementEditRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementEditRow.swift; sourceTree = "<group>"; };
 		D157BF612C56DA0F00139677 /* RepetoireRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepetoireRow.swift; sourceTree = "<group>"; };
 		D15C88302BF063B900AAC950 /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
-		D1689C9F2C06D13F00191DA7 /* RecentPracticeSessionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentPracticeSessionRow.swift; sourceTree = "<group>"; };
 		D16E3A912C61E1AC00DA96A7 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		D177FDA82C55855C00830F0D /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		D17C5CA72B9E561300C1CA44 /* NewPieceRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPieceRow.swift; sourceTree = "<group>"; usesTabs = 0; };
@@ -122,6 +122,7 @@
 		D19E73552B898F9400BB3EC7 /* PracticeLoggerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PracticeLoggerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D19E73592B898F9400BB3EC7 /* PracticeLoggerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLoggerUITests.swift; sourceTree = "<group>"; };
 		D19E735B2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLoggerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		D1A056102CB1A9E30024DC2A /* PracticeSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSessionView.swift; sourceTree = "<group>"; };
 		D1AC00D52BD46BC80019FA0F /* PieceEdit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceEdit.swift; sourceTree = "<group>"; };
 		D1BE01D12C67EE1E00529BAE /* NavigationContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationContext.swift; sourceTree = "<group>"; };
 		D1C2BEB42BDCE22600E8E39F /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
@@ -155,6 +156,7 @@
 				D14092FE2CA86C13008B5CDB /* ApolloAPI in Frameworks */,
 				D1C6B0DC2B8BC81300F7B877 /* PostgREST in Frameworks */,
 				D15C882F2BF05E5000AAC950 /* AlertToast in Frameworks */,
+				D178732E2CA9B5D40009EBC5 /* ApolloGQL in Frameworks */,
 				D1C6B0DA2B8BC81300F7B877 /* Functions in Frameworks */,
 				D1C2BEBD2BDD63A200E8E39F /* Supabase in Frameworks */,
 				D1C6B0D82B8BC81300F7B877 /* Auth in Frameworks */,
@@ -201,11 +203,11 @@
 				D197387D2C153F7100EBF53F /* PieceShow.swift */,
 				D1C2BEC32BDD7A9100E8E39F /* Profile.swift */,
 				D15501B72BF1961C0088BCCE /* MovementEditRow.swift */,
-				D1689C9F2C06D13F00191DA7 /* RecentPracticeSessionRow.swift */,
 				D157BF612C56DA0F00139677 /* RepetoireRow.swift */,
 				D14A43702C5DF83A00556C03 /* TabBarContainer.swift */,
 				D16E3A912C61E1AC00DA96A7 /* SearchView.swift */,
 				D1F29CE82C6C52F000FC5E74 /* RecentPracticeSessions.swift */,
+				D1A056102CB1A9E30024DC2A /* PracticeSessionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -403,6 +405,7 @@
 				D14092FB2CA86C13008B5CDB /* Apollo */,
 				D14092FD2CA86C13008B5CDB /* ApolloAPI */,
 				D117BFB12CA8BF7E0046A1E5 /* ApolloGQL */,
+				D178732D2CA9B5D40009EBC5 /* ApolloGQL */,
 			);
 			productName = PracticeLogger;
 			productReference = D19E733B2B898F9300BB3EC7 /* PracticeLogger.app */;
@@ -480,7 +483,7 @@
 				D1C6B0D62B8BC81300F7B877 /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				D15C882D2BF05E5000AAC950 /* XCRemoteSwiftPackageReference "AlertToast" */,
 				D14092FA2CA86C13008B5CDB /* XCRemoteSwiftPackageReference "apollo-ios" */,
-				D117BFB02CA8BF7E0046A1E5 /* XCLocalSwiftPackageReference "ApolloGQL" */,
+				D178732C2CA9B5D40009EBC5 /* XCLocalSwiftPackageReference "ApolloGQL" */,
 			);
 			productRefGroup = D19E733C2B898F9300BB3EC7 /* Products */;
 			projectDirPath = "";
@@ -582,7 +585,6 @@
 				D13D0EDC2BCC4B23006B2683 /* SetString.swift in Sources */,
 				D19738802C1540B600EBF53F /* PracticeSessionViewModel.swift in Sources */,
 				D1AC00D62BD46BC80019FA0F /* PieceEdit.swift in Sources */,
-				D1689CA02C06D13F00191DA7 /* RecentPracticeSessionRow.swift in Sources */,
 				D11D792C2C6C5B9D0073BA21 /* Array.swift in Sources */,
 				D19E733F2B898F9300BB3EC7 /* PracticeLoggerApp.swift in Sources */,
 				D1C2BEB92BDD61A800E8E39F /* SignInViewModel.swift in Sources */,
@@ -593,6 +595,7 @@
 				D15C88312BF063B900AAC950 /* Error.swift in Sources */,
 				D197387E2C153F7100EBF53F /* PieceShow.swift in Sources */,
 				D1C2BEC22BDD76A300E8E39F /* Database.swift in Sources */,
+				D1A056112CB1A9E30024DC2A /* PracticeSessionView.swift in Sources */,
 				D1E98BD32C59EF750065D27D /* KeySignatureType.swift in Sources */,
 				D1F29CEF2C6C580B00FC5E74 /* PracticeSession+SampleData.swift in Sources */,
 				D1E98BD52C59EF990065D27D /* KeySignatureTonality.swift in Sources */,
@@ -967,7 +970,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		D117BFB02CA8BF7E0046A1E5 /* XCLocalSwiftPackageReference "ApolloGQL" */ = {
+		D178732C2CA9B5D40009EBC5 /* XCLocalSwiftPackageReference "ApolloGQL" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ApolloGQL;
 		};
@@ -1019,6 +1022,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D15C882D2BF05E5000AAC950 /* XCRemoteSwiftPackageReference "AlertToast" */;
 			productName = AlertToast;
+		};
+		D178732D2CA9B5D40009EBC5 /* ApolloGQL */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ApolloGQL;
 		};
 		D1C2BEBC2BDD63A200E8E39F /* Supabase */ = {
 			isa = XCSwiftPackageProductDependency;

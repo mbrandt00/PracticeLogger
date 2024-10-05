@@ -21,7 +21,7 @@ CREATE TYPE key_signature_type AS ENUM (
     'Bsharp',
     'Bflat'
 );
-CREATE TYPE key_signature_tonality AS ENUM ('Major', 'Minor');
+CREATE TYPE key_signature_tonality AS ENUM ('major', 'minor');
 CREATE TYPE key_signature AS (
     key key_signature_type,
     tonality key_signature_tonality
@@ -76,8 +76,8 @@ found_key := (
 -- Set the found key signature
 key_info.key := found_key;
 -- Determine the tonality
-IF work_name LIKE '%minor%' THEN key_info.tonality := 'Minor';
-ELSE key_info.tonality := 'Major';
+IF work_name LIKE '%minor%' THEN key_info.tonality := 'minor';
+ELSE key_info.tonality := 'major';
 END IF;
 RETURN key_info;
 END;
