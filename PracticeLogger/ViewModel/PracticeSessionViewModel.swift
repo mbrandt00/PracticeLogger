@@ -35,14 +35,13 @@ class PracticeSessionViewModel: ObservableObject {
                 switch result {
                 case .success(let graphQlResult):
                     if let practiceSessions = graphQlResult.data?.practiceSessionsCollection?.edges {
-                        dump(practiceSessions)
-                        continuation.resume(returning: practiceSessions) // Return the edges
+                        continuation.resume(returning: practiceSessions)
                     } else {
-                        continuation.resume(returning: []) // Return an empty array if no sessions found
+                        continuation.resume(returning: [])
                     }
                 case .failure(let error):
                     print("GraphQL query failed: \(error)")
-                    continuation.resume(throwing: error) // Rethrow the error
+                    continuation.resume(throwing: error)
                 }
             }
         }
@@ -61,6 +60,14 @@ class PracticeSessionViewModel: ObservableObject {
         } catch {
             print("Error updating end_time: \(error)")
         }
+    }
+
+    func setActiveSessionForPreview() {
+        let composer = Composer(name: "Fake Composer", id: 1)
+        let movements = ["Movement 1", "Movement 2"] // Example movements
+        let fakePiece = Piece(workName: "Fake Piece", composer: composer, movements: [])
+
+        activeSession = PracticeSession(startTime: Date(), piece: fakePiece)
     }
 
     func fetchCurrentActiveSession() async -> PracticeSession? {

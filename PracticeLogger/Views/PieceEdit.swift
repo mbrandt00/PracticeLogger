@@ -13,6 +13,8 @@ struct PieceEdit: View {
     @State private var showToast: Bool = false
     @State private var errorMessage: String = ""
     @State private var duplicatePiece: Piece?
+    @Environment(\.presentationMode) var presentationMode
+    @State private var isRedirected = false
 
     init(piece: Piece) {
         _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
@@ -161,13 +163,17 @@ struct PieceEdit: View {
             .toast(isPresenting: $showToast) {
                 AlertToast(type: .error(.red), title: errorMessage)
             }
+            .navigationDestination(isPresented: $isRedirected) {
+                // Navigate to the specific view after creating a piece
+                PieceShow(piece: viewModel.piece)
+            }
         }
         .navigationBarItems(
             trailing: Button(action: {
                 Task {
                     do {
                         _ = try await viewModel.insertPiece(piece: viewModel.piece)
-                        // toast success/redirect
+                        self.isRedirected = true
                     } catch {
                         if let supabaseError = error as? SupabaseError {
                             print(supabaseError)

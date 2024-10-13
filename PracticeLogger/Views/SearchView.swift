@@ -10,7 +10,6 @@ import SwiftUI
 struct SearchView: View {
     @ObservedObject var searchViewModel: SearchViewModel
     @State private var selectedPieceContext: PieceNavigationContext? = nil
-
     var body: some View {
         VStack {
             Picker("Key Signature", selection: $searchViewModel.selectedKeySignature) {
@@ -63,6 +62,13 @@ struct SearchView: View {
                 await searchViewModel.searchPieces()
             }
         }
+//        .onDisappear {
+//            if path.isEmpty {
+//                print("EMPTY LIST")
+        ////                path.removeLast() // Remove the last view from the stack
+        ////                print("COUNT", path.count)
+//            }
+//        }
     }
 }
 

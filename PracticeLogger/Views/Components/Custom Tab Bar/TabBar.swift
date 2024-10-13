@@ -8,10 +8,6 @@
 import Combine
 import SwiftUI
 
-enum Tabs {
-    case progress, start, profile
-}
-
 struct TabBar: View {
     @Binding var selectedTab: Tabs
     @Binding var expandedSheet: Bool
@@ -20,43 +16,20 @@ struct TabBar: View {
     @ObservedObject private var keyboardResponder = KeyboardResponder()
 
     var body: some View {
-        VStack {
-            TabView(selection: $selectedTab) {
-                Text("")
-                    .tabItem {
-                        Image(systemName: "chart.xyaxis.line")
-                        Text("Progress")
-                    }
-                    .tag(Tabs.progress)
-
-                Text("")
-                    .tabItem {
-                        Image(systemName: "metronome")
-                        Text("Practice")
-                    }
-                    .tag(Tabs.start)
-
-                Text("")
-                    .tabItem {
-                        Image(systemName: "person")
-                        Text("Profile")
-                    }
-                    .tag(Tabs.profile)
-            }
-            .safeAreaInset(edge: .bottom) {
-                if let activeSession = sessionManager.activeSession {
-                    BottomSheet(animation: animation, expandedSheet: $expandedSheet, activeSession: activeSession)
-                        .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .move(edge: .bottom).combined(with: .opacity)))
-                        .animation(.easeInOut(duration: 0.3))
-                }
-            }
-            .frame(height: sessionManager.activeSession != nil ? 90 : 35)
-            .toolbarBackground(.ultraThickMaterial, for: .tabBar)
-            .toolbar(expandedSheet ? .hidden : .visible, for: .tabBar)
-            .opacity(keyboardResponder.isKeyboardVisible ? 0 : 1)
-            .offset(y: keyboardResponder.isKeyboardVisible ? 100 : 0)
-        }
-        .animation(.easeInOut, value: keyboardResponder.isKeyboardVisible)
+//        .safeAreaInset(edge: .bottom) {
+//            if let activeSession = sessionManager.activeSession {
+//                BottomSheet(animation: animation, expandedSheet: $expandedSheet, activeSession: activeSession)
+//                    .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .move(edge: .bottom).combined(with: .opacity)))
+//                    .animation(.easeInOut(duration: 0.3))
+//            }
+//        }
+//        .frame(height: sessionManager.activeSession != nil ? 90 : 35)
+//        .toolbarBackground(.ultraThickMaterial, for: .tabBar)
+//        .toolbar(expandedSheet ? .hidden : .visible, for: .tabBar)
+//        .opacity(keyboardResponder.isKeyboardVisible ? 0 : 1)
+//        .offset(y: keyboardResponder.isKeyboardVisible ? 100 : 0)
+//        .animation(.easeInOut, value: keyboardResponder.isKeyboardVisible)
+        Text("body")
     }
 }
 
@@ -85,7 +58,6 @@ struct BottomSheet: View {
                 .fill(Color.accentColor.opacity(0.8))
                 .frame(height: 2)
         })
-        .offset(y: -49)
     }
 }
 
