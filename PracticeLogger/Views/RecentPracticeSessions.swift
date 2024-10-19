@@ -13,6 +13,7 @@ struct RecentPracticeSessions: View {
     @State private var recentSessions = [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge]()
     @StateObject private var searchViewModel = SearchViewModel()
     @State private var isSearching = false
+//    @State private var path = NavigationPath()
 
     var groupedSessionsByDay: [Date: [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge]] {
         Dictionary(grouping: recentSessions) { session in
@@ -79,7 +80,23 @@ struct RecentPracticeSessions: View {
                     }
                 }
             }
+            .navigationDestination(for: PieceNavigationContext.self) { context in
+                switch context {
+                case .newPiece(let piece):
+                    PieceEdit(piece: piece)
+                case .userPiece(let piece):
+                    PieceShow(piece: piece)
+                }
+            }
         }
         .searchable(text: $searchViewModel.searchTerm, isPresented: $isSearching)
+//        .onReceive(searchViewModel.$newlyCreatedPiece) { newlyCreatedPiece in
+//            // When a new piece is created, update the navigation path to show the piece detail view
+//            if let piece = newlyCreatedPiece {
+//                // Clear the navigation history and navigate directly to the piece detail view
+//                path.removeLast(path.count)
+//                path.append(PieceNavigationContext.showPiece(piece))
+//            }
+//        }
     }
 }

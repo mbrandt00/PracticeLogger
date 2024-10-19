@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SearchView: View {
     @ObservedObject var searchViewModel: SearchViewModel
-    @State private var selectedPieceContext: PieceNavigationContext?
 
     var body: some View {
         Picker("Key Signature", selection: $searchViewModel.selectedKeySignature) {
@@ -30,10 +29,10 @@ struct SearchView: View {
                 Section(header: Text("Pieces")) {
                     ForEach(searchViewModel.userPieces) { piece in
                         NavigationLink(
-                            value: PieceNavigationContext.userPiece(piece)
-                        ) {
-                            RepertoireRow(piece: piece)
-                        }
+                            value: PieceNavigationContext.userPiece(piece), label: {
+                                RepertoireRow(piece: piece)
+                            }
+                        )
                     }
                 }
             }
@@ -41,10 +40,10 @@ struct SearchView: View {
                 Section(header: Text("New Pieces")) {
                     ForEach(searchViewModel.newPieces) { piece in
                         NavigationLink(
-                            value: PieceNavigationContext.newPiece(piece)
-                        ) {
-                            RepertoireRow(piece: piece)
-                        }
+                            value: PieceNavigationContext.newPiece(piece), label: {
+                                RepertoireRow(piece: piece)
+                            }
+                        )
                     }
                 }
             }
