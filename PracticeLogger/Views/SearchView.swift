@@ -9,66 +9,51 @@ import SwiftUI
 
 struct SearchView: View {
     @ObservedObject var searchViewModel: SearchViewModel
-    @State private var selectedPieceContext: PieceNavigationContext? = nil
+    @State private var selectedPieceContext: PieceNavigationContext?
+
     var body: some View {
-        VStack {
-            Picker("Key Signature", selection: $searchViewModel.selectedKeySignature) {
-                Text("Key Signature").tag(KeySignatureType?.none) // Default value
-                ForEach(KeySignatureType.allCases) { keySignature in
-                    Text(keySignature.rawValue).tag(KeySignatureType?(keySignature))
-                }
+        Picker("Key Signature", selection: $searchViewModel.selectedKeySignature) {
+            Text("Key Signature").tag(KeySignatureType?.none) // Default value
+            ForEach(KeySignatureType.allCases) { keySignature in
+                Text(keySignature.rawValue).tag(KeySignatureType?(keySignature))
             }
-            .pickerStyle(MenuPickerStyle())
-            .onChange(of: searchViewModel.selectedKeySignature) {
-                Task {
-                    await searchViewModel.searchPieces()
-                }
-            }
-
-            List {
-                // Display sections only if they have content
-                if !searchViewModel.userPieces.isEmpty {
-                    Section(header: Text("Pieces")) {
-                        ForEach(searchViewModel.userPieces) { piece in
-                            NavigationLink(
-                                destination: PieceShow(piece: piece),
-                                tag: PieceNavigationContext.userPiece(piece),
-                                selection: $selectedPieceContext
-                            ) {
-                                RepertoireRow(piece: piece)
-                            }
-                        }
-                    }
-                }
-
-                if !searchViewModel.newPieces.isEmpty {
-                    Section(header: Text("New Pieces")) {
-                        ForEach(searchViewModel.newPieces) { piece in
-                            NavigationLink(
-                                destination: PieceEdit(piece: piece),
-                                tag: PieceNavigationContext.newPiece(piece),
-                                selection: $selectedPieceContext
-                            ) {
-                                RepertoireRow(piece: piece)
-                            }
-                        }
-                    }
-                }
-            }
-            .listStyle(InsetGroupedListStyle())
         }
-        .onAppear {
+        .pickerStyle(MenuPickerStyle())
+        .onChange(of: searchViewModel.selectedKeySignature) {
             Task {
                 await searchViewModel.searchPieces()
             }
         }
-//        .onDisappear {
-//            if path.isEmpty {
-//                print("EMPTY LIST")
-        ////                path.removeLast() // Remove the last view from the stack
-        ////                print("COUNT", path.count)
-//            }
-//        }
+
+        List {
+            if !searchViewModel.userPieces.isEmpty {
+                Section(header: Text("Pieces")) {
+                    ForEach(searchViewModel.userPieces) { piece in
+                        NavigationLink(
+                            value: PieceNavigationContext.userPiece(piece)
+                        ) {
+                            RepertoireRow(piece: piece)
+                        }
+                    }
+                }
+            }
+            if !searchViewModel.newPieces.isEmpty {
+                Section(header: Text("New Pieces")) {
+                    ForEach(searchViewModel.newPieces) { piece in
+                        NavigationLink(
+                            value: PieceNavigationContext.newPiece(piece)
+                        ) {
+                            RepertoireRow(piece: piece)
+                        }
+                    }
+                }
+            }
+        }
+        .onChange(of: searchViewModel.searchTerm, initial: true) {
+            Task {
+                await searchViewModel.searchPieces()
+            }
+        }
     }
 }
 

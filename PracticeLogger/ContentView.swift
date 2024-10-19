@@ -21,7 +21,6 @@ struct ContentView: View {
     @State private var selectedTab: Tabs = .practice
     @Namespace private var animation
     @StateObject private var practiceSessionViewModel = PracticeSessionViewModel()
-    @StateObject private var searchViewModel = SearchViewModel()
     @State private var keyboardResponder = KeyboardResponder()
     @State var searchIsFocused = false
 
@@ -32,68 +31,46 @@ struct ContentView: View {
 
     var body: some View {
         if isSignedIn {
-            NavigationStack {
-                if !searchIsFocused {
-                    ZStack {
-                        TabView(selection: $selectedTab) {
-                            ProgressView()
-                                .tabItem {
-                                    Label("Progress", systemImage: "chart.xyaxis.line")
-                                }
-                                .tag(Tabs.progress)
-
-                            RecentPracticeSessions(practiceSessionViewModel: practiceSessionViewModel)
-                                .tabItem {
-                                    Label("Practice", systemImage: "metronome")
-                                }
-                                .tag(Tabs.practice)
-
-                            Profile(isSignedIn: $isSignedIn)
-                                .tabItem {
-                                    Label("Profile", systemImage: "person")
-                                }
-                                .tag(Tabs.profile)
+//            NavigationStack {
+            ZStack {
+                TabView(selection: $selectedTab) {
+                    ProgressView()
+                        .tabItem {
+                            Label("Progress", systemImage: "chart.xyaxis.line")
                         }
-                        .edgesIgnoringSafeArea(.top)
+                        .tag(Tabs.progress)
 
-                        // BottomSheet positioned above the TabView
-                        if let activeSession = practiceSessionViewModel.activeSession {
-                            GeometryReader { geometry in
-                                VStack {
-                                    Spacer()
-
-                                    BottomSheet(
-                                        animation: animation,
-                                        expandedSheet: .constant(false),
-                                        activeSession: PracticeSession(
-                                            startTime: Date(),
-                                            piece: Piece(workName: "Test Workname", composer: Composer(name: "Test Composer name", id: 1), movements: [])
-                                        )
-                                    )
-                                    .transition(.move(edge: .bottom))
-                                    .animation(.easeInOut(duration: 0.3))
-                                    .padding(.bottom, geometry.safeAreaInsets.bottom + 49)
-                                }
-                                .edgesIgnoringSafeArea(.bottom)
-                            }
+                    RecentPracticeSessions(practiceSessionViewModel: practiceSessionViewModel)
+                        .tabItem {
+                            Label("Practice", systemImage: "metronome")
                         }
+                        .tag(Tabs.practice)
+
+                    Profile(isSignedIn: $isSignedIn)
+                        .tabItem {
+                            Label("Profile", systemImage: "person")
+                        }
+                        .tag(Tabs.profile)
+                }
+
+                // BottomSheet positioned above the TabView
+                if let activeSession = practiceSessionViewModel.activeSession {
+                    GeometryReader { geometry in
+                        VStack {
+                            Spacer()
+                            BottomSheet(
+                                animation: animation,
+                                expandedSheet: .constant(false),
+                                activeSession: activeSession
+                            )
+                            .transition(.move(edge: .bottom))
+                            .animation(.easeInOut(duration: 0.3))
+                            .padding(.bottom, geometry.safeAreaInsets.bottom + 49)
+                        }
+                        .edgesIgnoringSafeArea(.bottom)
                     }
-                } else {
-                    SearchView(searchViewModel: searchViewModel)
                 }
-            }
-            .searchable(
-                text: $searchViewModel.searchTerm,
-                tokens: $searchViewModel.tokens,
-                isPresented: $searchIsFocused
-            ) { token in
-                Text(token.displayText())
-            }
-            .autocorrectionDisabled()
-            .onChange(of: searchViewModel.searchTerm) {
-                Task {
-                    await searchViewModel.searchPieces()
-                }
+//                }
             }
             .environmentObject(practiceSessionViewModel)
             .environmentObject(keyboardResponder)
