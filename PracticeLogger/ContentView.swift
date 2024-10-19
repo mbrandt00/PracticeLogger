@@ -31,7 +31,6 @@ struct ContentView: View {
 
     var body: some View {
         if isSignedIn {
-//            NavigationStack {
             ZStack {
                 TabView(selection: $selectedTab) {
                     ProgressView()
@@ -53,7 +52,6 @@ struct ContentView: View {
                         .tag(Tabs.profile)
                 }
 
-                // BottomSheet positioned above the TabView
                 if let activeSession = practiceSessionViewModel.activeSession {
                     GeometryReader { geometry in
                         VStack {
@@ -63,14 +61,27 @@ struct ContentView: View {
                                 expandedSheet: .constant(false),
                                 activeSession: activeSession
                             )
-                            .transition(.move(edge: .bottom))
-                            .animation(.easeInOut(duration: 0.3))
                             .padding(.bottom, geometry.safeAreaInsets.bottom + 49)
+                            .transition(.move(edge: .bottom))
                         }
                         .edgesIgnoringSafeArea(.bottom)
                     }
                 }
-//                }
+            }
+            .onAppear {
+                Task {
+                    do {
+                        practiceSessionViewModel.activeSession = await practiceSessionViewModel.fetchCurrentActiveSession()
+                    }
+                }
+                // correct the transparency bug for Tab bars
+                let tabBarAppearance = UITabBarAppearance()
+                tabBarAppearance.configureWithOpaqueBackground()
+                UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+                // correct the transparency bug for Navigation bars
+                let navigationBarAppearance = UINavigationBarAppearance()
+                navigationBarAppearance.configureWithOpaqueBackground()
+                UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
             }
             .environmentObject(practiceSessionViewModel)
             .environmentObject(keyboardResponder)
@@ -88,9 +99,4 @@ struct ContentView_Previews: PreviewProvider {
 
         return ContentView(isSignedIn: .constant(true), practiceSessionViewModel: practiceSessionViewModel)
     }
-}
-
-enum PieceNavigationContext: Hashable {
-    case userPiece(Piece)
-    case newPiece(Piece)
 }

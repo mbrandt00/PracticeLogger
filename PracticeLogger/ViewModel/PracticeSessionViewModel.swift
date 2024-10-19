@@ -64,7 +64,7 @@ class PracticeSessionViewModel: ObservableObject {
 
     func setActiveSessionForPreview() {
         let composer = Composer(name: "Fake Composer", id: 1)
-        let movements = ["Movement 1", "Movement 2"] // Example movements
+        let movements = ["Movement 1", "Movement 2"]
         let fakePiece = Piece(workName: "Fake Piece", composer: composer, movements: [])
 
         activeSession = PracticeSession(startTime: Date(), piece: fakePiece)

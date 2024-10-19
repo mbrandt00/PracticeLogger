@@ -59,3 +59,8 @@ struct SearchView: View {
 #Preview {
     SearchView(searchViewModel: SearchViewModel())
 }
+
+enum PieceNavigationContext: Hashable {
+    case userPiece(Piece)
+    case newPiece(Piece)
+}
