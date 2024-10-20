@@ -13,7 +13,7 @@ struct RecentPracticeSessions: View {
     @State private var recentSessions = [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge]()
     @StateObject private var searchViewModel = SearchViewModel()
     @State private var isSearching = false
-//    @State private var path = NavigationPath()
+    @State private var path = NavigationPath()
 
     var groupedSessionsByDay: [Date: [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge]] {
         Dictionary(grouping: recentSessions) { session in
@@ -22,7 +22,7 @@ struct RecentPracticeSessions: View {
     }
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             ZStack {
                 List {
                     if !isSearching {
@@ -60,7 +60,7 @@ struct RecentPracticeSessions: View {
                         }
                     }
                 }
-                .listStyle(.plain)
+                .padding(.bottom, practiceSessionViewModel.activeSession != nil ? 55 : 0)
                 .navigationTitle("Recent Sessions")
                 .autocorrectionDisabled()
                 .onAppear {
@@ -78,25 +78,18 @@ struct RecentPracticeSessions: View {
                         SearchView(searchViewModel: searchViewModel)
                             .background(Color.white) // Add a background to distinguish the view
                     }
+                    .padding(.vertical, 2)
                 }
             }
             .navigationDestination(for: PieceNavigationContext.self) { context in
                 switch context {
                 case .newPiece(let piece):
-                    PieceEdit(piece: piece)
+                    PieceEdit(piece: piece, path: $path)
                 case .userPiece(let piece):
                     PieceShow(piece: piece)
                 }
             }
         }
         .searchable(text: $searchViewModel.searchTerm, isPresented: $isSearching)
-//        .onReceive(searchViewModel.$newlyCreatedPiece) { newlyCreatedPiece in
-//            // When a new piece is created, update the navigation path to show the piece detail view
-//            if let piece = newlyCreatedPiece {
-//                // Clear the navigation history and navigate directly to the piece detail view
-//                path.removeLast(path.count)
-//                path.append(PieceNavigationContext.showPiece(piece))
-//            }
-//        }
     }
 }

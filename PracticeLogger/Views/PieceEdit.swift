@@ -14,10 +14,11 @@ struct PieceEdit: View {
     @State private var errorMessage: String = ""
     @State private var duplicatePiece: Piece?
     @Environment(\.presentationMode) var presentationMode
-    @State private var isRedirected = false
+    @Binding var path: NavigationPath
 
-    init(piece: Piece) {
+    init(piece: Piece, path: Binding<NavigationPath>) {
         _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
+        _path = path
     }
 
     var body: some View {
@@ -163,17 +164,17 @@ struct PieceEdit: View {
             .toast(isPresenting: $showToast) {
                 AlertToast(type: .error(.red), title: errorMessage)
             }
-            .navigationDestination(isPresented: $isRedirected) {
-                // Navigate to the specific view after creating a piece
-                PieceShow(piece: viewModel.piece)
-            }
         }
         .navigationBarItems(
             trailing: Button(action: {
                 Task {
                     do {
-                        _ = try await viewModel.insertPiece(piece: viewModel.piece)
-                        self.isRedirected = true
+                        let piece = try await viewModel.insertPiece(piece: viewModel.piece)
+
+                        if let piece = piece {
+                            path.removeLast() // remove edit page
+                            path.append(PieceNavigationContext.userPiece(piece))
+                        }
                     } catch {
                         if let supabaseError = error as? SupabaseError {
                             print(supabaseError)
