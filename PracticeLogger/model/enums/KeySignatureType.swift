@@ -33,13 +33,29 @@ enum KeySignatureType: String, Decodable, Encodable, CaseIterable, Identifiable 
     var id: Self { self }
 
     // Mapping for encoding
-    private static let encodingMap: [KeySignatureType: String] = {
-        var map = [KeySignatureType: String]()
-        for keySignature in KeySignatureType.allCases {
-            map[keySignature] = keySignature.rawValue
-        }
-        return map
-    }()
+    private static let encodingMap: [KeySignatureType: String] = [
+        .C: "C",
+        .Csharp: "Csharp",
+        .Cflat: "Cflat",
+        .D: "D",
+        .Dsharp: "Dsharp",
+        .Dflat: "Dflat",
+        .E: "E",
+        .Esharp: "Esharp",
+        .Eflat: "Eflat",
+        .F: "F",
+        .Fsharp: "Fsharp",
+        .Fflat: "Fflat",
+        .G: "G",
+        .Gsharp: "Gsharp",
+        .Gflat: "Gflat",
+        .A: "A",
+        .Asharp: "Asharp",
+        .Aflat: "Aflat",
+        .B: "B",
+        .Bsharp: "Bsharp",
+        .Bflat: "Bflat"
+    ]
 
     // Normalize string for decoding
     static func fromNormalizedString(_ string: String) -> KeySignatureType? {
