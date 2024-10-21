@@ -171,10 +171,8 @@ struct PieceEdit: View {
                     do {
                         let piece = try await viewModel.insertPiece(piece: viewModel.piece)
 
-                        if let piece = piece {
-                            path.removeLast() // remove edit page
-                            path.append(PieceNavigationContext.userPiece(piece))
-                        }
+                        path.removeLast() // remove edit page
+                        path.append(PieceNavigationContext.userPiece(viewModel.piece))
                     } catch {
                         if let supabaseError = error as? SupabaseError {
                             print(supabaseError)
