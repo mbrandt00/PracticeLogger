@@ -7,7 +7,7 @@ public class ActiveUserSessionQuery: GraphQLQuery {
   public static let operationName: String = "ActiveUserSession"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query ActiveUserSession($userId: UUID!) { practiceSessionsCollection( filter: { userId: { eq: $userId }, endTime: { eq: null } } first: 1 ) { __typename edges { __typename node { __typename ...PracticeSessionDetails } } } }"#,
+      #"query ActiveUserSession($userId: UUID!) { practiceSessionsCollection( filter: { userId: { eq: $userId }, endTime: { is: NULL } } first: 1 ) { __typename edges { __typename node { __typename ...PracticeSessionDetails } } } }"#,
       fragments: [PieceDetails.self, PracticeSessionDetails.self]
     ))
 
@@ -28,7 +28,7 @@ public class ActiveUserSessionQuery: GraphQLQuery {
       .field("practiceSessionsCollection", PracticeSessionsCollection?.self, arguments: [
         "filter": [
           "userId": ["eq": .variable("userId")],
-          "endTime": ["eq": .null]
+          "endTime": ["is": "NULL"]
         ],
         "first": 1
       ]),

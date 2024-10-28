@@ -1,6 +1,6 @@
 query ActiveUserSession($userId: UUID!) {
   practiceSessionsCollection(
-    filter: { userId: { eq: $userId }, endTime: { eq: null } }
+    filter: { userId: { eq: $userId }, endTime: { is: NULL } }
     first: 1
   ) {
     edges {
