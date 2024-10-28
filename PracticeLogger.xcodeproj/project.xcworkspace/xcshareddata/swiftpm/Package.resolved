@@ -1,5 +1,5 @@
 {
-  "originHash" : "5e50f16a02526a02e39cb310f8092dc7e35650224a4ce91d03c81f0bb30ca648",
+  "originHash" : "591c9a332ec2fc2434b715434cc960817a0e53e4de83d2af9cb4800543583a16",
   "pins" : [
     {
       "identity" : "alerttoast",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apollographql/apollo-ios.git",
       "state" : {
-        "revision" : "e70850751f6b21acd1c7871dbcd2cee5d6103c7e",
-        "version" : "1.15.1"
+        "revision" : "7122421c2ba9ce2d252943cef055c74ef56ea431",
+        "version" : "1.15.2"
       }
     },
     {
@@ -33,8 +33,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/supabase-community/supabase-swift.git",
       "state" : {
-        "revision" : "42a22357c290992d1b548dc153c23fc96bf12ff9",
-        "version" : "2.15.3"
+        "revision" : "70158cce191a9676f47d3ba11d71b7f9150721f9",
+        "version" : "2.20.2"
+      }
+    },
+    {
+      "identity" : "swift-asn1",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-asn1.git",
+      "state" : {
+        "revision" : "7faebca1ea4f9aaf0cda1cef7c43aecd2311ddf6",
+        "version" : "1.3.0"
       }
     },
     {
@@ -42,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-concurrency-extras",
       "state" : {
-        "revision" : "bb5059bde9022d69ac516803f4f227d8ac967f71",
-        "version" : "1.1.0"
+        "revision" : "6054df64b55186f08b6d0fd87152081b8ad8d613",
+        "version" : "1.2.0"
       }
     },
     {
@@ -51,8 +60,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-crypto.git",
       "state" : {
-        "revision" : "f0525da24dc3c6cbb2b6b338b65042bc91cbc4bb",
-        "version" : "3.3.0"
+        "revision" : "21f7878f2b39d46fd8ba2b06459ccb431cdf876c",
+        "version" : "3.8.1"
+      }
+    },
+    {
+      "identity" : "swift-http-types",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-http-types.git",
+      "state" : {
+        "revision" : "ae67c8178eb46944fd85e4dc6dd970e1f3ed6ccd",
+        "version" : "1.3.0"
       }
     },
     {
@@ -60,8 +78,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",
       "state" : {
-        "revision" : "357ca1e5dd31f613a1d43320870ebc219386a495",
-        "version" : "1.2.2"
+        "revision" : "770f990d3e4eececb57ac04a6076e22f8c97daeb",
+        "version" : "1.4.2"
       }
     }
   ],

@@ -5,11 +5,12 @@
 //  Created by Michael Brandt on 3/4/24.
 //
 
+import ApolloGQL
 import MusicKit
 import SwiftUI
 
 class Piece: ObservableObject, Identifiable, Hashable, Codable {
-    let id: UUID
+    var id: Int
     @Published var workName: String
     var composer: Composer?
     @Published var movements: [Movement]
@@ -21,7 +22,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
     var tonality: KeySignatureTonality?
 
     init(
-        id: UUID = UUID(),
+        id: Int = .random(in: 1 ... 10000),
         workName: String,
         composer: Composer,
         movements: [Movement]?,
@@ -73,7 +74,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
 
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(UUID.self, forKey: .id)
+        id = try container.decode(Int.self, forKey: .id)
         workName = try container.decode(String.self, forKey: .workName)
         composer = nil
         movements = []
@@ -209,6 +210,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
     static func addMetadata(_ piece: Piece) async -> Piece? {
         do {
             if let response: MetadataInformation = try await Database.client.rpc("parse_piece_metadata", params: ["work_name": piece.workName]).select().single().execute().value {
+                dump(piece)
                 return Piece(
                     workName: piece.workName,
                     composer: Composer(name: piece.composer?.name ?? ""),
@@ -379,84 +381,101 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
  - Parameter response: The SupabasePieceResponse object to be converted.
  - Returns: A Piece object with all its associated movements and composer details.
  */
-func mapResponseToFullPiece(response: SupabasePieceResponse) -> Piece {
-    let pieceId = response.id
+// func mapResponseToFullPiece(response: SupabasePieceResponse) -> Piece {
+//    let pieceId = response.id
+//
+//    let composer = Composer(
+//        name: response.composer.name,
+//        id: response.composer.id
+//    )
+//    let piece = Piece(
+//        id: pieceId,
+//        workName: response.workName,
+//        composer: composer,
+//        movements: [],
+//        catalogue_type: CatalogueType(rawValue: response.catalogueType ?? ""),
+//        catalogue_number: response.catalogueNumber ?? 0,
+//        format: Format(rawValue: response.format ?? ""),
+//        nickname: response.nickname ?? "",
+//        tonality: KeySignatureTonality(rawValue: response.tonality ?? ""),
+//        key_signature: KeySignatureType(rawValue: response.keySignature ?? "")
+//    )
+//
+//    for movementResponse in response.movements {
+//        let movement = Movement(
+//            id: movementResponse.id,
+//            name: movementResponse.name ?? "",
+//            number: movementResponse.number,
+//            piece: piece,
+//            pieceId: movementResponse.pieceId
+//        )
+//        piece.movements.append(movement)
+//    }
+//    return piece
+// }
+//
+/// **
+// Maps an array of SupabasePieceResponse to a Piece.
+//
+// - Parameter response: The SupabasePieceResponse object to be converted.
+// - Returns: A Piece object with all associated movements and composer details.
+// */
+// func mapResponseToFullPiece(response: [SupabasePieceResponse]) -> [Piece] {
+//    var pieceDictionary: [UUID: Piece] = [:]
+//    var pieces: [Piece] = []
+//
+//    for r in response {
+//        let pieceId = r.id
+//        let composer = Composer(
+//            name: r.composer.name,
+//            id: r.composer.id
+//        )
+//        if pieceDictionary[pieceId] == nil {
+//            let piece = Piece(
+//                id: pieceId,
+//                workName: r.workName,
+//                composer: composer,
+//                movements: [],
+//                catalogue_type: CatalogueType(rawValue: r.catalogueType ?? ""),
+//                catalogue_number: r.catalogueNumber ?? 0,
+//                format: Format(rawValue: r.format ?? ""),
+//                nickname: r.nickname ?? "",
+//                tonality: KeySignatureTonality(rawValue: r.tonality ?? ""),
+//                key_signature: KeySignatureType(rawValue: r.keySignature ?? "")
+//            )
+//            pieceDictionary[pieceId] = piece
+//            pieces.append(piece)
+//        }
+//
+//        for movementResponse in r.movements {
+//            let movement = Movement(
+//                id: movementResponse.id,
+//                name: movementResponse.name ?? "",
+//                number: movementResponse.number,
+//                piece: pieceDictionary[pieceId],
+//                pieceId: movementResponse.pieceId
+//            )
+//
+//            pieceDictionary[pieceId]?.movements.append(movement)
+//        }
+//    }
+//
+//    return pieces
+// }
+extension Piece {
+    func toGraphQLInput() -> PiecesInsertInput {
+        // Create a new PiecesInsertInput using the initializer
+        return PiecesInsertInput(
+            workName: .some(workName),
+            composerId: composer?.id != nil ? .some(BigInt(composer!.id)) : .null,
+            format: format != nil ? .some(GraphQLEnum(format!.rawValue)) : .null,
 
-    let composer = Composer(
-        name: response.composer.name,
-        id: response.composer.id
-    )
-    let piece = Piece(
-        id: pieceId,
-        workName: response.workName,
-        composer: composer,
-        movements: [],
-        catalogue_type: CatalogueType(rawValue: response.catalogueType ?? ""),
-        catalogue_number: response.catalogueNumber ?? 0,
-        format: Format(rawValue: response.format ?? ""),
-        nickname: response.nickname ?? "",
-        tonality: KeySignatureTonality(rawValue: response.tonality ?? ""),
-        key_signature: KeySignatureType(rawValue: response.keySignature ?? "")
-    )
+            keySignature: key_signature != nil ? .some(GraphQLEnum(key_signature!.rawValue)) : .null,
 
-    for movementResponse in response.movements {
-        let movement = Movement(
-            id: movementResponse.id,
-            name: movementResponse.name ?? "",
-            number: movementResponse.number,
-            piece: piece,
-            pieceId: movementResponse.pieceId
+            tonality: tonality != nil ? .some(GraphQLEnum(tonality!.rawValue.lowercased())) : .null, // TODO: make this consistent
+            catalogueType: catalogue_type != nil ? .some(GraphQLEnum(catalogue_type!.rawValue)) : .null,
+            catalogueNumber: catalogue_number != nil ? .some(catalogue_number!) : .null,
+            nickname: nickname != nil ? .some(nickname!) : .null
         )
-        piece.movements.append(movement)
     }
-    return piece
-}
-
-/**
- Maps an array of SupabasePieceResponse to a Piece.
-
- - Parameter response: The SupabasePieceResponse object to be converted.
- - Returns: A Piece object with all associated movements and composer details.
- */
-func mapResponseToFullPiece(response: [SupabasePieceResponse]) -> [Piece] {
-    var pieceDictionary: [UUID: Piece] = [:]
-    var pieces: [Piece] = []
-
-    for r in response {
-        let pieceId = r.id
-        let composer = Composer(
-            name: r.composer.name,
-            id: r.composer.id
-        )
-        if pieceDictionary[pieceId] == nil {
-            let piece = Piece(
-                id: pieceId,
-                workName: r.workName,
-                composer: composer,
-                movements: [],
-                catalogue_type: CatalogueType(rawValue: r.catalogueType ?? ""),
-                catalogue_number: r.catalogueNumber ?? 0,
-                format: Format(rawValue: r.format ?? ""),
-                nickname: r.nickname ?? "",
-                tonality: KeySignatureTonality(rawValue: r.tonality ?? ""),
-                key_signature: KeySignatureType(rawValue: r.keySignature ?? "")
-            )
-            pieceDictionary[pieceId] = piece
-            pieces.append(piece)
-        }
-
-        for movementResponse in r.movements {
-            let movement = Movement(
-                id: movementResponse.id,
-                name: movementResponse.name ?? "",
-                number: movementResponse.number,
-                piece: pieceDictionary[pieceId],
-                pieceId: movementResponse.pieceId
-            )
-
-            pieceDictionary[pieceId]?.movements.append(movement)
-        }
-    }
-
-    return pieces
 }

@@ -353,8 +353,8 @@ input IntListFilter {
 scalar JSON
 
 enum KeySignatureTonality {
-  Major
-  Minor
+  major
+  minor
 }
 
 """
@@ -690,13 +690,13 @@ enum PieceFormat {
   lied
   march
   mazurka
-  Mass
-  Minuet
-  Nocturne
-  Overture
-  Opera
-  Oratorio
-  Pastiche
+  mass
+  minuet
+  nocturne
+  overture
+  opera
+  oratorio
+  pastiche
   prelude
   polonaise
   rhapsody
@@ -906,12 +906,12 @@ type PracticeSessions implements Node {
   id: UUID!
   startTime: Datetime!
   endTime: Datetime
-  pieceId: UUID
+  pieceId: UUID!
   movementId: BigInt
   userId: UUID!
   durationSeconds: Int
   movement: Movements
-  piece: Pieces
+  piece: Pieces!
 }
 
 type PracticeSessionsConnection {

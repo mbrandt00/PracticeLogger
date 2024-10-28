@@ -26,12 +26,12 @@ struct PieceEdit: View {
             Form {
                 Text(viewModel.piece.workName)
                     .font(.title)
-                    .foregroundColor(.primary) // Adapts to light and dark mode
+                    .foregroundColor(.primary)
 
                 if duplicatePiece != nil {
                     Text("Duplicate Piece Found!")
                         .font(.subheadline)
-                        .foregroundColor(.red) // Red text for emphasis
+                        .foregroundColor(.red)
                 }
 
                 Section(header: Text("Movements").foregroundColor(.primary)) {
@@ -172,8 +172,9 @@ struct PieceEdit: View {
                         let piece = try await viewModel.insertPiece(piece: viewModel.piece)
 
                         path.removeLast() // remove edit page
-                        path.append(PieceNavigationContext.userPiece(viewModel.piece))
+                        path.append(PieceNavigationContext.userPiece(piece))
                     } catch {
+                        print(error.localizedDescription)
                         if let supabaseError = error as? SupabaseError {
                             print(supabaseError)
                             switch supabaseError {

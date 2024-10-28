@@ -5,6 +5,7 @@
 //  Created by Michael Brandt on 7/30/24.
 //
 
+import ApolloGQL
 import Combine
 import Foundation
 import MusicKit
@@ -13,10 +14,10 @@ class SearchViewModel: ObservableObject {
     @Published var searchTerm = ""
     @Published var isFocused: Bool = false
     @Published var selectedKeySignature: KeySignatureType?
-    @Published var userPieces: [Piece] = []
+    @Published var userPieces: [GetUserPiecesQuery.Data.PiecesCollection.Edge.Node] = []
     @Published var newPieces: [Piece] = []
 
-    @Published var tokens: [FilterToken] = []
+//    @Published var tokens: [FilterToken] = []
     private var cancellables = Set<AnyCancellable>()
 
     @MainActor
@@ -29,12 +30,12 @@ class SearchViewModel: ObservableObject {
                     userPieces = try await getUserPieces()
                     if !searchTerm.isEmpty {
                         var fetchedPieces = try await Piece.searchPieceFromSongName(query: searchTerm)
-                        let userPieceSet = Set(userPieces)
-                        fetchedPieces.removeAll { userPieceSet.contains($0) }
+//                        let userPieceSet = Set(userPieces)
+//                        fetchedPieces.removeAll { userPieceSet.contains($0) }
                         if let selectedKeySignature = selectedKeySignature {
                             fetchedPieces = fetchedPieces.filter { $0.key_signature == selectedKeySignature }
                         }
-                        userPieces = userPieces
+//                        userPieces = userPieces
                         newPieces = fetchedPieces
                     }
                 } catch {
@@ -46,51 +47,49 @@ class SearchViewModel: ObservableObject {
         }
     }
 
-    func getUserPieces() async throws -> [Piece] {
-        let userId = try Database.getCurrentUser()?.id.uuidString
-        var query = Database.client
-            .from("pieces")
-            .select("*, movements!inner(*), composer:composers!inner(id, name)")
-            .eq("user_id", value: userId)
+    func getUserPieces() async throws -> [GetUserPiecesQuery.Data.PiecesCollection.Edge.Node] {
+        let userId = try await Database.client.auth.user().id.uuidString
 
-        if let selectedKeySignature = selectedKeySignature {
-            print("Found key signature...")
-            query = query.eq("key_signature", value: selectedKeySignature.rawValue)
-        }
-        if !searchTerm.isEmpty {
-            let escapedSearchTerm = searchTerm.replacingOccurrences(of: "'", with: "''")
-            query = query.textSearch("search_pieces_f", query: escapedSearchTerm, type: .websearch)
-        }
-
-        let response: [SupabasePieceResponse] = try await query.execute().value
-
-        let pieces = mapResponseToFullPiece(response: response)
-
-        return pieces
-    }
-
-    func addKeySignatureToken(_ keySignature: KeySignatureType) {
-        // Remove any existing tokens of type keySignature
-        tokens.removeAll {
-            if case .keySignature = $0.filterType {
-                return true
+        return try await withCheckedThrowingContinuation { continuation in
+            Network.shared.apollo.fetch(query: GetUserPiecesQuery(userId: UUIDFilter(eq: GraphQLNullable(stringLiteral: userId)))) { result in
+                switch result {
+                case .success(let graphQlResult):
+                    if let pieces = graphQlResult.data?.piecesCollection?.edges {
+                        let nodes = pieces.compactMap { $0.node }
+                        continuation.resume(returning: nodes)
+                    } else {
+                        continuation.resume(returning: [])
+                    }
+                case .failure(let error):
+                    print("GraphQL query failed: \(error)")
+                    continuation.resume(throwing: error)
+                }
             }
-            return false
-        }
-
-        // Add the new token
-        let newToken = FilterToken(filterType: .keySignature(keySignature))
-        tokens.append(newToken)
-    }
-
-    func removeKeySignatureToken() {
-        tokens.removeAll {
-            if case .keySignature = $0.filterType {
-                return true
-            }
-            return false
         }
     }
+
+//    func addKeySignatureToken(_ keySignature: KeySignatureType) {
+//        // Remove any existing tokens of type keySignature
+//        tokens.removeAll {
+//            if case .keySignature = $0.filterType {
+//                return true
+//            }
+//            return false
+//        }
+//
+//        // Add the new token
+//        let newToken = FilterToken(filterType: .keySignature(keySignature))
+//        tokens.append(newToken)
+//    }
+
+//    func removeKeySignatureToken() {
+//        tokens.removeAll {
+//            if case .keySignature = $0.filterType {
+//                return true
+//            }
+//            return false
+//        }
+//    }
 }
 
 // struct KeySignatureToken: Identifiable, Hashable {
@@ -129,23 +128,23 @@ class SearchViewModel: ObservableObject {
 //    }
 // }
 
-struct FilterToken: Identifiable {
-    var id: UUID = .init()
-    var filterType: FilterType
-    func displayText() -> String {
-        switch filterType {
-        case .keySignature(let keySignatureType):
-            return keySignatureType.rawValue
-        case .composer(let composer):
-            return composer.name
-        case .tonality(let tonality):
-            return tonality.rawValue
-        }
-    }
-}
-
-enum FilterType {
-    case keySignature(KeySignatureType)
-    case composer(Composer)
-    case tonality(KeySignatureTonality)
-}
+// struct FilterToken: Identifiable {
+//    var id: UUID = .init()
+//    var filterType: FilterType
+//    func displayText() -> String {
+//        switch filterType {
+//        case .keySignature(let keySignatureType):
+//            return keySignatureType.rawValue
+//        case .composer(let composer):
+//            return composer.name
+//        case .tonality(let tonality):
+//            return tonality.rawValue
+//        }
+//    }
+// }
+//
+// enum FilterType {
+//    case keySignature(KeySignatureType)
+//    case composer(Composer)
+//    case tonality(KeySignatureTonality)
+// }

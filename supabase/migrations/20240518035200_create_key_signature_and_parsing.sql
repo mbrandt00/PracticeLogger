@@ -22,14 +22,20 @@ CREATE TYPE key_signature_type AS ENUM (
     'Bflat'
 );
 CREATE TYPE key_signature_tonality AS ENUM ('major', 'minor');
+CREATE TYPE key_signature AS (
+    key key_signature_type,
+    tonality key_signature_tonality
+);
+-- Step 2: Define the function separately
 CREATE OR REPLACE FUNCTION parse_piece_key_signature(work_name TEXT) RETURNS key_signature AS $$
 DECLARE key_info key_signature;
+-- Declare variable of composite type
 found_key key_signature_type;
-BEGIN key_info := ROW(NULL, NULL)::key_signature;
--- Initialize composite type
-work_name := LOWER(work_name);
+BEGIN -- Initialize composite type with default values
+key_info := ROW(NULL, NULL)::key_signature;
 -- Convert work_name to lowercase
--- Find the key signature
+work_name := LOWER(work_name);
+-- Find the key signature using a CASE statement
 found_key := (
     SELECT CASE
             WHEN work_name LIKE '%c#%'
@@ -65,12 +71,12 @@ found_key := (
             WHEN work_name LIKE '%b#%'
             OR work_name LIKE '%b sharp%' THEN 'Bsharp'
             WHEN work_name LIKE '%b-flat%'
-            OR work_name LIKE '%b flat%' THEN 'Bflat' -- Correct enum value
+            OR work_name LIKE '%b flat%' THEN 'Bflat'
             WHEN work_name LIKE '% b %' THEN 'B'
             ELSE NULL
         END
 );
--- Set the found key signature
+-- Set the found key signature in key_info
 key_info.key := found_key;
 -- Determine the tonality
 IF work_name LIKE '%minor%' THEN key_info.tonality := 'minor';
@@ -79,6 +85,7 @@ END IF;
 RETURN key_info;
 END;
 $$ LANGUAGE plpgsql;
+-- Step 3: Modify the table structure to add the new columns
 ALTER TABLE pieces
 ADD COLUMN key_signature key_signature_type,
     ADD COLUMN tonality key_signature_tonality;

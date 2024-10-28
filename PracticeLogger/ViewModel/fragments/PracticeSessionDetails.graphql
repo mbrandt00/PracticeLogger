@@ -1,0 +1,13 @@
+fragment PracticeSessionDetails on PracticeSessions {
+  id
+  startTime
+  endTime
+  movement {
+    id
+    name
+    number
+  }
+  piece {
+    ...PieceDetails
+  }
+}

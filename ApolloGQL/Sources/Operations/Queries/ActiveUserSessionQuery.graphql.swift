@@ -3,12 +3,12 @@
 
 @_exported import ApolloAPI
 
-public class RecentUserSessionsQuery: GraphQLQuery {
-  public static let operationName: String = "RecentUserSessions"
+public class ActiveUserSessionQuery: GraphQLQuery {
+  public static let operationName: String = "ActiveUserSession"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query RecentUserSessions($userId: UUID!) { practiceSessionsCollection( filter: { userId: { eq: $userId } } orderBy: { endTime: DescNullsFirst } ) { __typename edges { __typename node { __typename id startTime durationSeconds piece { __typename ...PieceDetails } endTime movement { __typename name } } } } }"#,
-      fragments: [PieceDetails.self]
+      #"query ActiveUserSession($userId: UUID!) { practiceSessionsCollection( filter: { userId: { eq: $userId }, endTime: { eq: null } } first: 1 ) { __typename edges { __typename node { __typename ...PracticeSessionDetails } } } }"#,
+      fragments: [PieceDetails.self, PracticeSessionDetails.self]
     ))
 
   public var userId: UUID
@@ -26,8 +26,11 @@ public class RecentUserSessionsQuery: GraphQLQuery {
     public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Query }
     public static var __selections: [ApolloAPI.Selection] { [
       .field("practiceSessionsCollection", PracticeSessionsCollection?.self, arguments: [
-        "filter": ["userId": ["eq": .variable("userId")]],
-        "orderBy": ["endTime": "DescNullsFirst"]
+        "filter": [
+          "userId": ["eq": .variable("userId")],
+          "endTime": ["eq": .null]
+        ],
+        "first": 1
       ]),
     ] }
 
@@ -74,66 +77,25 @@ public class RecentUserSessionsQuery: GraphQLQuery {
           public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.PracticeSessions }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
-            .field("id", ApolloGQL.UUID.self),
-            .field("startTime", ApolloGQL.Datetime.self),
-            .field("durationSeconds", Int?.self),
-            .field("piece", Piece.self),
-            .field("endTime", ApolloGQL.Datetime?.self),
-            .field("movement", Movement?.self),
+            .fragment(PracticeSessionDetails.self),
           ] }
 
           public var id: ApolloGQL.UUID { __data["id"] }
           public var startTime: ApolloGQL.Datetime { __data["startTime"] }
-          public var durationSeconds: Int? { __data["durationSeconds"] }
-          public var piece: Piece { __data["piece"] }
           public var endTime: ApolloGQL.Datetime? { __data["endTime"] }
           public var movement: Movement? { __data["movement"] }
+          public var piece: Piece { __data["piece"] }
 
-          /// PracticeSessionsCollection.Edge.Node.Piece
-          ///
-          /// Parent Type: `Pieces`
-          public struct Piece: ApolloGQL.SelectionSet {
+          public struct Fragments: FragmentContainer {
             public let __data: DataDict
             public init(_dataDict: DataDict) { __data = _dataDict }
 
-            public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Pieces }
-            public static var __selections: [ApolloAPI.Selection] { [
-              .field("__typename", String.self),
-              .fragment(PieceDetails.self),
-            ] }
-
-            public var id: ApolloGQL.UUID { __data["id"] }
-            public var workName: String { __data["workName"] }
-            public var composer: Composer? { __data["composer"] }
-            public var movements: Movements? { __data["movements"] }
-
-            public struct Fragments: FragmentContainer {
-              public let __data: DataDict
-              public init(_dataDict: DataDict) { __data = _dataDict }
-
-              public var pieceDetails: PieceDetails { _toFragment() }
-            }
-
-            public typealias Composer = PieceDetails.Composer
-
-            public typealias Movements = PieceDetails.Movements
+            public var practiceSessionDetails: PracticeSessionDetails { _toFragment() }
           }
 
-          /// PracticeSessionsCollection.Edge.Node.Movement
-          ///
-          /// Parent Type: `Movements`
-          public struct Movement: ApolloGQL.SelectionSet {
-            public let __data: DataDict
-            public init(_dataDict: DataDict) { __data = _dataDict }
+          public typealias Movement = PracticeSessionDetails.Movement
 
-            public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Movements }
-            public static var __selections: [ApolloAPI.Selection] { [
-              .field("__typename", String.self),
-              .field("name", String?.self),
-            ] }
-
-            public var name: String? { __data["name"] }
-          }
+          public typealias Piece = PracticeSessionDetails.Piece
         }
       }
     }

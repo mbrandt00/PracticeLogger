@@ -71,7 +71,9 @@ struct ContentView: View {
             .onAppear {
                 Task {
                     do {
-                        practiceSessionViewModel.activeSession = await practiceSessionViewModel.fetchCurrentActiveSession()
+                        practiceSessionViewModel.activeSession = await try practiceSessionViewModel.fetchCurrentActiveSession()
+                    } catch {
+                        print("Something went wrong in on appear: \(error.localizedDescription)")
                     }
                 }
                 // correct the transparency bug for Tab bars
@@ -92,11 +94,11 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        let practiceSessionViewModel = PracticeSessionViewModel()
-        practiceSessionViewModel.setActiveSessionForPreview()
-
-        return ContentView(isSignedIn: .constant(true), practiceSessionViewModel: practiceSessionViewModel)
-    }
-}
+// struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let practiceSessionViewModel = PracticeSessionViewModel()
+//        practiceSessionViewModel.setActiveSessionForPreview()
+//
+//        return ContentView(isSignedIn: .constant(true), practiceSessionViewModel: practiceSessionViewModel)
+//    }
+// }

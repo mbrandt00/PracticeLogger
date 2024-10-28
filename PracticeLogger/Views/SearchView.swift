@@ -5,6 +5,7 @@
 //  Created by Michael Brandt on 8/5/24.
 //
 
+import ApolloGQL
 import SwiftUI
 
 struct SearchView: View {
@@ -27,9 +28,10 @@ struct SearchView: View {
         List {
             if !searchViewModel.userPieces.isEmpty {
                 Section(header: Text("Pieces")) {
-                    ForEach(searchViewModel.userPieces) { piece in
+                    ForEach(searchViewModel.userPieces, id: \.id) { piece in
                         NavigationLink(
-                            value: PieceNavigationContext.userPiece(piece), label: {
+                            value: PieceNavigationContext.userPiece(piece.fragments.pieceDetails),
+                            label: {
                                 RepertoireRow(piece: piece)
                             }
                         )
@@ -41,7 +43,8 @@ struct SearchView: View {
                     ForEach(searchViewModel.newPieces) { piece in
                         NavigationLink(
                             value: PieceNavigationContext.newPiece(piece), label: {
-                                RepertoireRow(piece: piece)
+//                                RepertoireRow(piece: piece)
+                                Text("New piece: \(piece.workName)")
                             }
                         )
                     }
@@ -61,6 +64,8 @@ struct SearchView: View {
 // }
 
 enum PieceNavigationContext: Hashable {
-    case userPiece(Piece)
-    case newPiece(Piece)
+//    case userPiece(GetUserPiecesQuery.Data.PiecesCollection.Edge.Node)
+//    case recentlyCreatedPieceShow(Piece)
+    case userPiece(PieceDetails)
+    case newPiece(Piece) // new piece
 }

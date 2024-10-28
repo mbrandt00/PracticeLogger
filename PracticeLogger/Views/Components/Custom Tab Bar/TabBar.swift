@@ -5,6 +5,7 @@
 //  Created by Michael Brandt on 2/24/24.
 //
 
+import ApolloGQL
 import Combine
 import SwiftUI
 
@@ -36,7 +37,7 @@ struct TabBar: View {
 struct BottomSheet: View {
     var animation: Namespace.ID
     @Binding var expandedSheet: Bool
-    var activeSession: PracticeSession
+    var activeSession: PracticeSessionDetails
 
     var body: some View {
         ZStack {
@@ -63,7 +64,7 @@ struct BottomSheet: View {
 
 struct MusicInfo: View {
     @Binding var expandedSheet: Bool
-    @ObservedObject var activeSession: PracticeSession
+    @State var activeSession: PracticeSessionDetails
     var animation: Namespace.ID
     @State private var elapsedTime: String = "00:00"
     @EnvironmentObject var sessionManager: PracticeSessionViewModel
@@ -75,13 +76,12 @@ struct MusicInfo: View {
                     Text(elapsedTime)
                         .font(.headline.bold())
                 }
-                if let workName = activeSession.piece?.workName {
-                    Text(workName)
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .lineLimit(2)
-                        .foregroundColor(Color.secondary)
-                }
+
+                Text(activeSession.piece.workName)
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .lineLimit(2)
+                    .foregroundColor(Color.secondary)
                 HStack {
                     if let movementName = activeSession.movement?.name {
                         if let movementNumber = activeSession.movement?.number {
@@ -97,7 +97,7 @@ struct MusicInfo: View {
                         }
                     }
 
-                    if let composerName = activeSession.piece?.composer?.name {
+                    if let composerName = activeSession.piece.composer?.name {
                         if activeSession.movement?.name != nil {
                             Divider()
                         }

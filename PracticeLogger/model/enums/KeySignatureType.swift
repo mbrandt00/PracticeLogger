@@ -33,7 +33,7 @@ enum KeySignatureType: String, Decodable, Encodable, CaseIterable, Identifiable 
     var id: Self { self }
 
     // Mapping for encoding
-    private static let encodingMap: [KeySignatureType: String] = [
+    static let encodingMap: [KeySignatureType: String] = [
         .C: "C",
         .Csharp: "Csharp",
         .Cflat: "Cflat",

@@ -1,7 +1,7 @@
 query RecentUserSessions($userId: UUID!) {
   practiceSessionsCollection(
-    filter: {userId: {eq: $userId}}
-    orderBy: {endTime: DescNullsFirst}
+    filter: { userId: { eq: $userId } }
+    orderBy: { endTime: DescNullsFirst }
   ) {
     edges {
       node {
@@ -9,10 +9,7 @@ query RecentUserSessions($userId: UUID!) {
         startTime
         durationSeconds
         piece {
-          workName
-          composer {
-            name
-          }
+          ...PieceDetails
         }
         endTime
         movement {
@@ -22,3 +19,4 @@ query RecentUserSessions($userId: UUID!) {
     }
   }
 }
+

@@ -1,8 +1,8 @@
 mutation InsertNewPiece($input: [PiecesInsertInput!]!) {
   insertIntoPiecesCollection(objects: $input) {
     records {
-      id
-      nickname
+      ...PieceDetails
     }
   }
 }
+

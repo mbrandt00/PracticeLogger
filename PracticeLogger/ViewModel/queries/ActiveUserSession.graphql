@@ -1,0 +1,12 @@
+query ActiveUserSession($userId: UUID!) {
+  practiceSessionsCollection(
+    filter: { userId: { eq: $userId }, endTime: { eq: null } }
+    first: 1
+  ) {
+    edges {
+      node {
+        ...PracticeSessionDetails
+      }
+    }
+  }
+}

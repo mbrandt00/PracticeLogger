@@ -18,7 +18,7 @@ CREATE TYPE piece_format AS ENUM (
     'mazurka',
     'mass',
     'minuet',
-    'nocturne',1019
+    'nocturne',
     'overture',
     'opera',
     'oratorio',

@@ -20,15 +20,20 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
 
   public static func objectType(forTypename typename: String) -> ApolloAPI.Object? {
     switch typename {
-    case "Query": return ApolloGQL.Objects.Query
-    case "PracticeSessionsConnection": return ApolloGQL.Objects.PracticeSessionsConnection
-    case "PracticeSessionsEdge": return ApolloGQL.Objects.PracticeSessionsEdge
+    case "Mutation": return ApolloGQL.Objects.Mutation
+    case "PracticeSessionsInsertResponse": return ApolloGQL.Objects.PracticeSessionsInsertResponse
     case "PracticeSessions": return ApolloGQL.Objects.PracticeSessions
     case "Composers": return ApolloGQL.Objects.Composers
     case "Movements": return ApolloGQL.Objects.Movements
     case "Pieces": return ApolloGQL.Objects.Pieces
-    case "Mutation": return ApolloGQL.Objects.Mutation
+    case "MovementsConnection": return ApolloGQL.Objects.MovementsConnection
+    case "MovementsEdge": return ApolloGQL.Objects.MovementsEdge
     case "PiecesInsertResponse": return ApolloGQL.Objects.PiecesInsertResponse
+    case "Query": return ApolloGQL.Objects.Query
+    case "PracticeSessionsConnection": return ApolloGQL.Objects.PracticeSessionsConnection
+    case "PracticeSessionsEdge": return ApolloGQL.Objects.PracticeSessionsEdge
+    case "PiecesConnection": return ApolloGQL.Objects.PiecesConnection
+    case "PiecesEdge": return ApolloGQL.Objects.PiecesEdge
     default: return nil
     }
   }

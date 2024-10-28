@@ -11,8 +11,9 @@ import SwiftUI
 struct PracticeSessionView: View {
     var session: RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge
     var body: some View {
+        Text(session.node.piece.workName)
         Text(session.node.startTime.formatted())
-        Text(session.node.endTime?.formatted() ?? "Not yet completed")
+        Text(session.node.endTime?.formatted() ?? "In progress")
     }
 }
 

@@ -3,7 +3,7 @@
 
 import ApolloAPI
 
-public enum KeySignatureTonality: String, EnumType {
-  case major = "major"
-  case minor = "minor"
+public enum FilterIs: String, EnumType {
+  case null = "NULL"
+  case notNull = "NOT_NULL"
 }

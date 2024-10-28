@@ -7,7 +7,8 @@ public class InsertNewPieceMutation: GraphQLMutation {
   public static let operationName: String = "InsertNewPiece"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"mutation InsertNewPiece($input: [PiecesInsertInput!]!) { insertIntoPiecesCollection(objects: $input) { __typename records { __typename id nickname } } }"#
+      #"mutation InsertNewPiece($input: [PiecesInsertInput!]!) { insertIntoPiecesCollection(objects: $input) { __typename records { __typename ...PieceDetails } } }"#,
+      fragments: [PieceDetails.self]
     ))
 
   public var input: [PiecesInsertInput]
@@ -56,12 +57,24 @@ public class InsertNewPieceMutation: GraphQLMutation {
         public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Pieces }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
-          .field("id", ApolloGQL.UUID.self),
-          .field("nickname", String?.self),
+          .fragment(PieceDetails.self),
         ] }
 
         public var id: ApolloGQL.UUID { __data["id"] }
-        public var nickname: String? { __data["nickname"] }
+        public var workName: String { __data["workName"] }
+        public var composer: Composer? { __data["composer"] }
+        public var movements: Movements? { __data["movements"] }
+
+        public struct Fragments: FragmentContainer {
+          public let __data: DataDict
+          public init(_dataDict: DataDict) { __data = _dataDict }
+
+          public var pieceDetails: PieceDetails { _toFragment() }
+        }
+
+        public typealias Composer = PieceDetails.Composer
+
+        public typealias Movements = PieceDetails.Movements
       }
     }
   }
