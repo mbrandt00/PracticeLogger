@@ -27,15 +27,14 @@ class PieceEditViewModel: ObservableObject {
             piece.composer?.id = composer.id
             let inputObject = piece.toGraphQLInput()
 
-            // Perform mutation on a background thread
             let pieceDetails = try await withCheckedThrowingContinuation { continuation in
 
                 Network.shared.apollo.perform(mutation: InsertNewPieceMutation(input: [inputObject])) { result in
                     switch result {
                     case .success(let graphQlResult):
                         if let insertedPiece = graphQlResult.data?.insertIntoPiecesCollection?.records.first {
-                            // Access the fragment
                             let pieceDetails = insertedPiece.fragments.pieceDetails
+                            // TODO: - Insert movements as well here.
                             continuation.resume(returning: pieceDetails) // Return the piece details
                         } else {
                             print("ERROR IN PIECE INPUT", result)

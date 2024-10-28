@@ -64,8 +64,6 @@ struct SearchView: View {
 // }
 
 enum PieceNavigationContext: Hashable {
-//    case userPiece(GetUserPiecesQuery.Data.PiecesCollection.Edge.Node)
-//    case recentlyCreatedPieceShow(Piece)
     case userPiece(PieceDetails)
     case newPiece(Piece) // new piece
 }

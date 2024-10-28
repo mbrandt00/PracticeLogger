@@ -19,7 +19,7 @@ class PracticeSessionViewModel: ObservableObject {
             pieceId: .some(BigInt(pieceId)),
             movementId: movementId != nil ? .some(BigInt(movementId!)) : .null
         )
-        let session = try await withCheckedThrowingContinuation { continuation in
+        _ = try await withCheckedThrowingContinuation { continuation in
             Network.shared.apollo.perform(mutation: CreatePracticeSessionMutation(input: graphqlInsertObject)) { result in
                 switch result {
                 case .success(let graphqlResult):
@@ -27,9 +27,8 @@ class PracticeSessionViewModel: ObservableObject {
                         self.activeSession = insertedPiece.fragments.practiceSessionDetails
                         continuation.resume(returning: insertedPiece)
                     }
-                    print(graphqlResult)
                 case .failure(let error):
-                    print(error)
+                    print("error in starting session", error)
                     continuation.resume(throwing: RuntimeError(error.localizedDescription))
                 }
             }
@@ -49,7 +48,6 @@ class PracticeSessionViewModel: ObservableObject {
                         continuation.resume(returning: [])
                     }
                 case .failure(let error):
-                    print("GraphQL query failed: \(error)")
                     continuation.resume(throwing: error)
                 }
             }

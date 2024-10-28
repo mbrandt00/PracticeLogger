@@ -71,7 +71,7 @@ struct ContentView: View {
             .onAppear {
                 Task {
                     do {
-                        practiceSessionViewModel.activeSession = await try practiceSessionViewModel.fetchCurrentActiveSession()
+                        practiceSessionViewModel.activeSession = try await practiceSessionViewModel.fetchCurrentActiveSession()
                     } catch {
                         print("Something went wrong in on appear: \(error.localizedDescription)")
                     }

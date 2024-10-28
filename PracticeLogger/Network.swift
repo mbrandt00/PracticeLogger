@@ -21,12 +21,9 @@ class AuthorizationInterceptor: ApolloInterceptor {
         Task {
             do {
                 let accessToken = try await Database.client.auth.session.accessToken
-
                 request.addHeader(name: "Authorization", value: "Bearer \(accessToken)")
-
                 chain.proceedAsync(request: request, response: response, interceptor: self, completion: completion)
-            }
-            catch {
+            } catch {
                 completion(.failure(error))
             }
         }
