@@ -5,7 +5,7 @@
 
 public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
   public static var fragmentDefinition: StaticString {
-    #"fragment PieceDetails on Pieces { __typename id nodeId workName composer { __typename name } movements: movementsCollection(orderBy: [{ number: DescNullsLast }]) { __typename edges { __typename node { __typename id name number } } } }"#
+    #"fragment PieceDetails on Pieces { __typename id workName composer { __typename name } movements: movementsCollection(orderBy: [{ number: DescNullsLast }]) { __typename edges { __typename node { __typename id name number } } } }"#
   }
 
   public let __data: DataDict
@@ -15,15 +15,12 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
   public static var __selections: [ApolloAPI.Selection] { [
     .field("__typename", String.self),
     .field("id", ApolloGQL.UUID.self),
-    .field("nodeId", ApolloGQL.ID.self),
     .field("workName", String.self),
     .field("composer", Composer?.self),
     .field("movementsCollection", alias: "movements", Movements?.self, arguments: ["orderBy": [["number": "DescNullsLast"]]]),
   ] }
 
   public var id: ApolloGQL.UUID { __data["id"] }
-  /// Globally Unique Record Identifier
-  public var nodeId: ApolloGQL.ID { __data["nodeId"] }
   public var workName: String { __data["workName"] }
   public var composer: Composer? { __data["composer"] }
   public var movements: Movements? { __data["movements"] }

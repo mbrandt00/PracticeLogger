@@ -31,10 +31,10 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
     case "MovementsInsertResponse": return ApolloGQL.Objects.MovementsInsertResponse
     case "PiecesInsertResponse": return ApolloGQL.Objects.PiecesInsertResponse
     case "Query": return ApolloGQL.Objects.Query
-    case "PracticeSessionsConnection": return ApolloGQL.Objects.PracticeSessionsConnection
-    case "PracticeSessionsEdge": return ApolloGQL.Objects.PracticeSessionsEdge
     case "PiecesConnection": return ApolloGQL.Objects.PiecesConnection
     case "PiecesEdge": return ApolloGQL.Objects.PiecesEdge
+    case "PracticeSessionsConnection": return ApolloGQL.Objects.PracticeSessionsConnection
+    case "PracticeSessionsEdge": return ApolloGQL.Objects.PracticeSessionsEdge
     default: return nil
     }
   }

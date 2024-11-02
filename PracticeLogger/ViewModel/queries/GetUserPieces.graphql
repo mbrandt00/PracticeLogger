@@ -1,9 +1,0 @@
-query GetUserPieces($userId: UUIDFilter!) {
-  piecesCollection(filter: { userId: $userId }) {
-    edges {
-      node {
-        ...PieceDetails
-      }
-    }
-  }
-}

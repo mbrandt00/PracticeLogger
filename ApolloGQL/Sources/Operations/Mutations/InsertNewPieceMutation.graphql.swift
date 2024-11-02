@@ -61,8 +61,6 @@ public class InsertNewPieceMutation: GraphQLMutation {
         ] }
 
         public var id: ApolloGQL.UUID { __data["id"] }
-        /// Globally Unique Record Identifier
-        public var nodeId: ApolloGQL.ID { __data["nodeId"] }
         public var workName: String { __data["workName"] }
         public var composer: Composer? { __data["composer"] }
         public var movements: Movements? { __data["movements"] }

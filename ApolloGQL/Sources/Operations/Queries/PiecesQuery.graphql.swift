@@ -3,11 +3,11 @@
 
 @_exported import ApolloAPI
 
-public class PieceQuery: GraphQLQuery {
-  public static let operationName: String = "PieceQuery"
+public class PiecesQuery: GraphQLQuery {
+  public static let operationName: String = "PiecesQuery"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query PieceQuery($pieceFilter: PiecesFilter!) { piecesCollection(filter: $pieceFilter) { __typename edges { __typename node { __typename ...PieceDetails } } } }"#,
+      #"query PiecesQuery($pieceFilter: PiecesFilter!) { piecesCollection(filter: $pieceFilter) { __typename edges { __typename node { __typename ...PieceDetails } } } }"#,
       fragments: [PieceDetails.self]
     ))
 
@@ -75,8 +75,6 @@ public class PieceQuery: GraphQLQuery {
           ] }
 
           public var id: ApolloGQL.UUID { __data["id"] }
-          /// Globally Unique Record Identifier
-          public var nodeId: ApolloGQL.ID { __data["nodeId"] }
           public var workName: String { __data["workName"] }
           public var composer: Composer? { __data["composer"] }
           public var movements: Movements? { __data["movements"] }

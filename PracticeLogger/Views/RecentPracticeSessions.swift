@@ -64,6 +64,8 @@ struct RecentPracticeSessions: View {
 
     private func sessionRow(session: RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge) -> some View {
         VStack(alignment: .leading) {
+            Text(session.node.piece.workName)
+                .font(.title3)
             if let movement = session.node.movement, let name = movement.name {
                 Text(name)
                     .font(.body)
