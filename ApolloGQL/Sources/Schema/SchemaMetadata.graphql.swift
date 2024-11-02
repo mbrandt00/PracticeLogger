@@ -28,6 +28,7 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
     case "Pieces": return ApolloGQL.Objects.Pieces
     case "MovementsConnection": return ApolloGQL.Objects.MovementsConnection
     case "MovementsEdge": return ApolloGQL.Objects.MovementsEdge
+    case "MovementsInsertResponse": return ApolloGQL.Objects.MovementsInsertResponse
     case "PiecesInsertResponse": return ApolloGQL.Objects.PiecesInsertResponse
     case "Query": return ApolloGQL.Objects.Query
     case "PracticeSessionsConnection": return ApolloGQL.Objects.PracticeSessionsConnection

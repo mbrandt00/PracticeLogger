@@ -1,0 +1,9 @@
+mutation CreateMovementsMutation($input: [MovementsInsertInput!]!) {
+  insertIntoMovementsCollection(objects: $input) {
+    records {
+      number
+      name
+      id
+    }
+  }
+}

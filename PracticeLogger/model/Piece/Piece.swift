@@ -378,9 +378,7 @@ extension Piece {
             workName: .some(workName),
             composerId: composer?.id != nil ? .some(BigInt(composer!.id)) : .null,
             format: format != nil ? .some(GraphQLEnum(format!.rawValue)) : .null,
-
-            keySignature: key_signature != nil ? .some(GraphQLEnum(key_signature!.rawValue)) : .null,
-
+//            keySignature: key_signature != nil ? .some(GraphQLEnum(key_signature!.rawValue.lowercased())) : .null,
             tonality: tonality != nil ? .some(GraphQLEnum(tonality!.rawValue.lowercased())) : .null, // TODO: make this consistent
             catalogueType: catalogue_type != nil ? .some(GraphQLEnum(catalogue_type!.rawValue)) : .null,
             catalogueNumber: catalogue_number != nil ? .some(catalogue_number!) : .null,

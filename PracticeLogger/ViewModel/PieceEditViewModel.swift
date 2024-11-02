@@ -27,26 +27,63 @@ class PieceEditViewModel: ObservableObject {
             piece.composer?.id = composer.id
             let inputObject = piece.toGraphQLInput()
 
-            let pieceDetails = try await withCheckedThrowingContinuation { continuation in
-
+            // Use a continuation to handle async mutation and fetch
+            return try await withCheckedThrowingContinuation { continuation in
                 Network.shared.apollo.perform(mutation: InsertNewPieceMutation(input: [inputObject])) { result in
                     switch result {
                     case .success(let graphQlResult):
                         if let insertedPiece = graphQlResult.data?.insertIntoPiecesCollection?.records.first {
                             let pieceDetails = insertedPiece.fragments.pieceDetails
-                            // TODO: - Insert movements as well here.
-                            continuation.resume(returning: pieceDetails) // Return the piece details
+                            let pieceId = pieceDetails.id
+                            let movementsInput = piece.movements.map { movement in
+                                MovementsInsertInput(
+                                    pieceId: .some(pieceDetails.id),
+                                    name: .some(movement.name),
+                                    number: .some(movement.number)
+                                )
+                            }
+
+                            // Perform the movement mutation
+                            Network.shared.apollo.perform(mutation: CreateMovementsMutation(input: movementsInput)) { result in
+                                switch result {
+                                case .success(let movementResult):
+                                    print(movementResult)
+                                    if let _ = movementResult.data?.insertIntoMovementsCollection?.records {
+                                        // Fetch the complete piece after movements are created
+                                        Network.shared.apollo.fetch(query: PieceQuery(pieceFilter: PiecesFilter(id: .some(UUIDFilter(eq: .some(pieceId)))))) { result in
+                                            switch result {
+                                            case .success(let pieceResult):
+                                                if let completePiece = pieceResult.data?.piecesCollection?.edges.first {
+                                                    let completePieceDetails = completePiece.node.fragments.pieceDetails
+                                                    continuation.resume(returning: completePieceDetails)
+                                                } else {
+                                                    continuation.resume(throwing: RuntimeError("Complete piece not found"))
+                                                }
+                                            case .failure(let error):
+                                                print("Error fetching complete piece:", error)
+                                                continuation.resume(throwing: RuntimeError(error.localizedDescription))
+                                            }
+                                        }
+                                    } else {
+                                        continuation.resume(throwing: RuntimeError("No movement details inserted"))
+                                    }
+                                case .failure(let error):
+                                    print("Error creating movements:", error)
+                                    continuation.resume(throwing: RuntimeError(error.localizedDescription))
+                                }
+                            }
                         } else {
-                            print("ERROR IN PIECE INPUT", result)
+                            print("No pieces were inserted")
                             continuation.resume(throwing: RuntimeError("No pieces were inserted"))
                         }
                     case .failure(let error):
-                        print(error)
+                        print("Error inserting piece:", error)
+                        continuation.resume(throwing: RuntimeError(error.localizedDescription))
                     }
                 }
             }
-
-            return pieceDetails
+        } catch {
+            throw error
         }
     }
 

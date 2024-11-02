@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS pieces (
 );
 CREATE TABLE IF NOT EXISTS movements (
     id BIGSERIAL PRIMARY KEY,
-    piece_id BIGSERIAL NOT NULL,
+    piece_id BIGINT NOT NULL,
     name varchar(255),
     number INT,
     FOREIGN KEY (piece_id) REFERENCES pieces(id)

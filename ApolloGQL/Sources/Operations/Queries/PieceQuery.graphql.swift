@@ -3,21 +3,21 @@
 
 @_exported import ApolloAPI
 
-public class GetUserPiecesQuery: GraphQLQuery {
-  public static let operationName: String = "GetUserPieces"
+public class PieceQuery: GraphQLQuery {
+  public static let operationName: String = "PieceQuery"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query GetUserPieces($userId: UUIDFilter!) { piecesCollection(filter: { userId: $userId }) { __typename edges { __typename node { __typename ...PieceDetails } } } }"#,
+      #"query PieceQuery($pieceFilter: PiecesFilter!) { piecesCollection(filter: $pieceFilter) { __typename edges { __typename node { __typename ...PieceDetails } } } }"#,
       fragments: [PieceDetails.self]
     ))
 
-  public var userId: UUIDFilter
+  public var pieceFilter: PiecesFilter
 
-  public init(userId: UUIDFilter) {
-    self.userId = userId
+  public init(pieceFilter: PiecesFilter) {
+    self.pieceFilter = pieceFilter
   }
 
-  public var __variables: Variables? { ["userId": userId] }
+  public var __variables: Variables? { ["pieceFilter": pieceFilter] }
 
   public struct Data: ApolloGQL.SelectionSet {
     public let __data: DataDict
@@ -25,7 +25,7 @@ public class GetUserPiecesQuery: GraphQLQuery {
 
     public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Query }
     public static var __selections: [ApolloAPI.Selection] { [
-      .field("piecesCollection", PiecesCollection?.self, arguments: ["filter": ["userId": .variable("userId")]]),
+      .field("piecesCollection", PiecesCollection?.self, arguments: ["filter": .variable("pieceFilter")]),
     ] }
 
     /// A pagable collection of type `Pieces`

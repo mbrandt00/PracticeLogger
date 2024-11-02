@@ -8,6 +8,9 @@
 import ApolloGQL
 import SwiftUI
 
+import ApolloGQL
+import SwiftUI
+
 struct RecentPracticeSessions: View {
     @ObservedObject var practiceSessionViewModel: PracticeSessionViewModel
     @State private var recentSessions = [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge]()
@@ -34,26 +37,7 @@ struct RecentPracticeSessions: View {
 
                                 ForEach(daySessions, id: \.node.id) { session in
                                     NavigationLink(destination: PracticeSessionView(session: session)) {
-                                        VStack(alignment: .leading) {
-                                            if let movement = session.node.movement {
-                                                if let name = movement.name {
-                                                    Text(name)
-                                                        .font(.body)
-                                                        .fontWeight(.medium)
-                                                }
-                                            }
-
-                                            Text(session.node.startTime.formatted(
-                                                .dateTime.hour().minute()
-                                            ))
-                                            .font(.subheadline)
-                                            .fontWeight(.regular)
-
-                                            Text(session.node.durationSeconds?.formattedTimeDuration ?? "")
-                                                .font(.subheadline)
-                                                .fontWeight(.regular)
-                                        }
-                                        .padding(.vertical, 2)
+                                        sessionRow(session: session)
                                     }
                                 }
                             }
@@ -64,32 +48,63 @@ struct RecentPracticeSessions: View {
                 .navigationTitle("Recent Sessions")
                 .autocorrectionDisabled()
                 .onAppear {
-                    Task {
-                        do {
-                            recentSessions = try await practiceSessionViewModel.getRecentUserPracticeSessions()
-                        } catch {
-                            print("Error fetching recent sessions: \(error)")
-                        }
-                    }
+                    loadRecentSessions()
                 }
 
                 if isSearching {
-                    VStack {
-                        SearchView(searchViewModel: searchViewModel)
-                            .background(Color.white) // Add a background to distinguish the view
-                    }
-                    .padding(.vertical, 2)
+                    SearchViewContainer()
                 }
             }
             .navigationDestination(for: PieceNavigationContext.self) { context in
-                switch context {
-                case .newPiece(let piece):
-                    PieceEdit(piece: piece, path: $path)
-                case .userPiece(let piece):
-                    PieceShow(piece: piece)
-                }
+                destination(for: context)
             }
         }
         .searchable(text: $searchViewModel.searchTerm, isPresented: $isSearching)
+    }
+
+    private func sessionRow(session: RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge) -> some View {
+        VStack(alignment: .leading) {
+            if let movement = session.node.movement, let name = movement.name {
+                Text(name)
+                    .font(.body)
+                    .fontWeight(.medium)
+            }
+
+            Text(session.node.startTime.formatted(.dateTime.hour().minute()))
+                .font(.subheadline)
+                .fontWeight(.regular)
+
+            Text(session.node.durationSeconds?.formattedTimeDuration ?? "")
+                .font(.subheadline)
+                .fontWeight(.regular)
+        }
+        .padding(.vertical, 2)
+    }
+
+    private func loadRecentSessions() {
+        Task {
+            do {
+                recentSessions = try await practiceSessionViewModel.getRecentUserPracticeSessions()
+            } catch {
+                print("Error fetching recent sessions: \(error)")
+            }
+        }
+    }
+
+    private func destination(for context: PieceNavigationContext) -> some View {
+        switch context {
+        case .newPiece(let piece):
+            return AnyView(PieceEdit(piece: piece, path: $path))
+        case .userPiece(let piece):
+            return AnyView(PieceShow(piece: piece, sessionManager: practiceSessionViewModel))
+        }
+    }
+
+    private func SearchViewContainer() -> some View {
+        VStack {
+            SearchView(searchViewModel: searchViewModel)
+                .background(Color.white) // Add a background to distinguish the view
+        }
+        .padding(.vertical, 2)
     }
 }
