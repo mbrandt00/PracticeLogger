@@ -13,7 +13,7 @@ struct SearchView: View {
 
     var body: some View {
         Picker("Key Signature", selection: $searchViewModel.selectedKeySignature) {
-            Text("Key Signature").tag(KeySignatureType?.none) // Default value
+            Text("Key Signature").tag(KeySignatureType?.none)
             ForEach(KeySignatureType.allCases) { keySignature in
                 Text(keySignature.rawValue).tag(KeySignatureType?(keySignature))
             }

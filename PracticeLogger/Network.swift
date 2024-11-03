@@ -31,19 +31,34 @@ class AuthorizationInterceptor: ApolloInterceptor {
 }
 
 // NetworkInterceptorProvider to insert AuthorizationInterceptor
-class NetworkInterceptorProvider: DefaultInterceptorProvider {
+class NetworkInterceptorProvider: InterceptorProvider {
     let store: ApolloStore
+
+    private let client: URLSessionClient
 
     init(store: ApolloStore, client: URLSessionClient) {
         self.store = store
-        super.init(client: client, store: store)
+        self.client = client
     }
 
-    override func interceptors<Operation>(for operation: Operation) -> [ApolloInterceptor] where Operation: GraphQLOperation {
-        var interceptors = super.interceptors(for: operation)
-        interceptors.insert(AuthorizationInterceptor(), at: 0) // Insert at the beginning
-        return interceptors
+    func interceptors<Operation: GraphQLOperation>(for operation: Operation) -> [ApolloInterceptor] {
+        return [
+            AuthorizationInterceptor(),
+            MaxRetryInterceptor(),
+            CacheReadInterceptor(store: store),
+            NetworkFetchInterceptor(client: client),
+            ResponseCodeInterceptor(),
+            JSONResponseParsingInterceptor(),
+            AutomaticPersistedQueryInterceptor(),
+            CacheWriteInterceptor(store: store)
+        ]
     }
+
+//    override func interceptors<Operation>(for operation: Operation) -> [ApolloInterceptor] where Operation: GraphQLOperation {
+//        var interceptors = super.interceptors(for: operation)
+//        interceptors.insert(AuthorizationInterceptor(), at: 0) // Insert at the beginning
+//        return interceptors
+//    }
 }
 
 class Network {
