@@ -11,7 +11,7 @@ public struct MovementsInsertInput: InputObject {
   }
 
   public init(
-    pieceId: GraphQLNullable<UUID> = nil,
+    pieceId: GraphQLNullable<BigInt> = nil,
     name: GraphQLNullable<String> = nil,
     number: GraphQLNullable<Int> = nil
   ) {
@@ -22,7 +22,7 @@ public struct MovementsInsertInput: InputObject {
     ])
   }
 
-  public var pieceId: GraphQLNullable<UUID> {
+  public var pieceId: GraphQLNullable<BigInt> {
     get { __data["pieceId"] }
     set { __data["pieceId"] = newValue }
   }

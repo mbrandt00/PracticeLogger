@@ -11,7 +11,7 @@ public struct PiecesFilter: InputObject {
   }
 
   public init(
-    id: GraphQLNullable<UUIDFilter> = nil,
+    id: GraphQLNullable<BigIntFilter> = nil,
     workName: GraphQLNullable<StringFilter> = nil,
     composerId: GraphQLNullable<BigIntFilter> = nil,
     userId: GraphQLNullable<UUIDFilter> = nil,
@@ -23,6 +23,7 @@ public struct PiecesFilter: InputObject {
     updatedAt: GraphQLNullable<DatetimeFilter> = nil,
     createdAt: GraphQLNullable<DatetimeFilter> = nil,
     nickname: GraphQLNullable<StringFilter> = nil,
+    fts: GraphQLNullable<OpaqueFilter> = nil,
     nodeId: GraphQLNullable<IDFilter> = nil,
     and: GraphQLNullable<[PiecesFilter]> = nil,
     or: GraphQLNullable<[PiecesFilter]> = nil,
@@ -41,6 +42,7 @@ public struct PiecesFilter: InputObject {
       "updatedAt": updatedAt,
       "createdAt": createdAt,
       "nickname": nickname,
+      "fts": fts,
       "nodeId": nodeId,
       "and": and,
       "or": or,
@@ -48,7 +50,7 @@ public struct PiecesFilter: InputObject {
     ])
   }
 
-  public var id: GraphQLNullable<UUIDFilter> {
+  public var id: GraphQLNullable<BigIntFilter> {
     get { __data["id"] }
     set { __data["id"] = newValue }
   }
@@ -106,6 +108,11 @@ public struct PiecesFilter: InputObject {
   public var nickname: GraphQLNullable<StringFilter> {
     get { __data["nickname"] }
     set { __data["nickname"] = newValue }
+  }
+
+  public var fts: GraphQLNullable<OpaqueFilter> {
+    get { __data["fts"] }
+    set { __data["fts"] = newValue }
   }
 
   public var nodeId: GraphQLNullable<IDFilter> {

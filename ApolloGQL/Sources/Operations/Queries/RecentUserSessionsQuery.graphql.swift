@@ -74,7 +74,7 @@ public class RecentUserSessionsQuery: GraphQLQuery {
           public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.PracticeSessions }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
-            .field("id", ApolloGQL.UUID.self),
+            .field("id", ApolloGQL.BigInt.self),
             .field("startTime", ApolloGQL.Datetime.self),
             .field("durationSeconds", Int?.self),
             .field("piece", Piece.self),
@@ -82,7 +82,7 @@ public class RecentUserSessionsQuery: GraphQLQuery {
             .field("movement", Movement?.self),
           ] }
 
-          public var id: ApolloGQL.UUID { __data["id"] }
+          public var id: ApolloGQL.BigInt { __data["id"] }
           public var startTime: ApolloGQL.Datetime { __data["startTime"] }
           public var durationSeconds: Int? { __data["durationSeconds"] }
           public var piece: Piece { __data["piece"] }
@@ -102,7 +102,7 @@ public class RecentUserSessionsQuery: GraphQLQuery {
               .fragment(PieceDetails.self),
             ] }
 
-            public var id: ApolloGQL.UUID { __data["id"] }
+            public var id: ApolloGQL.BigInt { __data["id"] }
             public var workName: String { __data["workName"] }
             public var composer: Composer? { __data["composer"] }
             public var movements: Movements? { __data["movements"] }

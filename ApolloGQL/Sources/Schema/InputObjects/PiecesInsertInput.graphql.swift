@@ -11,7 +11,6 @@ public struct PiecesInsertInput: InputObject {
   }
 
   public init(
-    id: GraphQLNullable<UUID> = nil,
     workName: GraphQLNullable<String> = nil,
     composerId: GraphQLNullable<BigInt> = nil,
     userId: GraphQLNullable<UUID> = nil,
@@ -22,10 +21,10 @@ public struct PiecesInsertInput: InputObject {
     catalogueNumber: GraphQLNullable<Int> = nil,
     updatedAt: GraphQLNullable<Datetime> = nil,
     createdAt: GraphQLNullable<Datetime> = nil,
-    nickname: GraphQLNullable<String> = nil
+    nickname: GraphQLNullable<String> = nil,
+    fts: GraphQLNullable<Opaque> = nil
   ) {
     __data = InputDict([
-      "id": id,
       "workName": workName,
       "composerId": composerId,
       "userId": userId,
@@ -36,13 +35,9 @@ public struct PiecesInsertInput: InputObject {
       "catalogueNumber": catalogueNumber,
       "updatedAt": updatedAt,
       "createdAt": createdAt,
-      "nickname": nickname
+      "nickname": nickname,
+      "fts": fts
     ])
-  }
-
-  public var id: GraphQLNullable<UUID> {
-    get { __data["id"] }
-    set { __data["id"] = newValue }
   }
 
   public var workName: GraphQLNullable<String> {
@@ -98,5 +93,10 @@ public struct PiecesInsertInput: InputObject {
   public var nickname: GraphQLNullable<String> {
     get { __data["nickname"] }
     set { __data["nickname"] = newValue }
+  }
+
+  public var fts: GraphQLNullable<Opaque> {
+    get { __data["fts"] }
+    set { __data["fts"] = newValue }
   }
 }

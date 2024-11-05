@@ -60,7 +60,7 @@ public class InsertNewPieceMutation: GraphQLMutation {
           .fragment(PieceDetails.self),
         ] }
 
-        public var id: ApolloGQL.UUID { __data["id"] }
+        public var id: ApolloGQL.BigInt { __data["id"] }
         public var workName: String { __data["workName"] }
         public var composer: Composer? { __data["composer"] }
         public var movements: Movements? { __data["movements"] }

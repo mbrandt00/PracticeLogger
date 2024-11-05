@@ -14,13 +14,13 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
   public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Pieces }
   public static var __selections: [ApolloAPI.Selection] { [
     .field("__typename", String.self),
-    .field("id", ApolloGQL.UUID.self),
+    .field("id", ApolloGQL.BigInt.self),
     .field("workName", String.self),
     .field("composer", Composer?.self),
     .field("movementsCollection", alias: "movements", Movements?.self, arguments: ["orderBy": [["number": "DescNullsLast"]]]),
   ] }
 
-  public var id: ApolloGQL.UUID { __data["id"] }
+  public var id: ApolloGQL.BigInt { __data["id"] }
   public var workName: String { __data["workName"] }
   public var composer: Composer? { __data["composer"] }
   public var movements: Movements? { __data["movements"] }

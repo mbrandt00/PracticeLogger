@@ -60,7 +60,7 @@ public class CreatePracticeSessionMutation: GraphQLMutation {
           .fragment(PracticeSessionDetails.self),
         ] }
 
-        public var id: ApolloGQL.UUID { __data["id"] }
+        public var id: ApolloGQL.BigInt { __data["id"] }
         public var startTime: ApolloGQL.Datetime { __data["startTime"] }
         public var endTime: ApolloGQL.Datetime? { __data["endTime"] }
         public var movement: Movement? { __data["movement"] }
