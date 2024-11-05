@@ -405,7 +405,7 @@ type Movements implements Node {
   """Globally Unique Record Identifier"""
   nodeId: ID!
   id: BigInt!
-  pieceId: UUID!
+  pieceId: BigInt!
   name: String
   number: Int
   piece: Pieces!
@@ -455,7 +455,7 @@ type MovementsEdge {
 
 input MovementsFilter {
   id: BigIntFilter
-  pieceId: UUIDFilter
+  pieceId: BigIntFilter
   name: StringFilter
   number: IntFilter
   nodeId: IDFilter
@@ -475,7 +475,7 @@ input MovementsFilter {
 }
 
 input MovementsInsertInput {
-  pieceId: UUID
+  pieceId: BigInt
   name: String
   number: Int
 }
@@ -496,7 +496,7 @@ input MovementsOrderBy {
 }
 
 input MovementsUpdateInput {
-  pieceId: UUID
+  pieceId: BigInt
   name: String
   number: Int
 }
@@ -600,6 +600,7 @@ type Mutation {
     """
     atMost: Int! = 1
   ): MovementsUpdateResponse!
+  updatePieceFts(targetId: BigInt!): Opaque
 
   """Updates zero or more records in the `Pieces` collection"""
   updatePiecesCollection(
@@ -728,7 +729,7 @@ input PieceFormatFilter {
 type Pieces implements Node {
   """Globally Unique Record Identifier"""
   nodeId: ID!
-  id: UUID!
+  id: BigInt!
   workName: String!
   composerId: BigInt
   userId: UUID!
@@ -740,6 +741,7 @@ type Pieces implements Node {
   updatedAt: Datetime
   createdAt: Datetime
   nickname: String
+  fts: Opaque
   composer: Composers
   movementsCollection(
     """Query the first `n` records in the collection"""
@@ -811,7 +813,7 @@ type PiecesEdge {
 }
 
 input PiecesFilter {
-  id: UUIDFilter
+  id: BigIntFilter
   workName: StringFilter
   composerId: BigIntFilter
   userId: UUIDFilter
@@ -823,6 +825,7 @@ input PiecesFilter {
   updatedAt: DatetimeFilter
   createdAt: DatetimeFilter
   nickname: StringFilter
+  fts: OpaqueFilter
   nodeId: IDFilter
 
   """
@@ -840,7 +843,6 @@ input PiecesFilter {
 }
 
 input PiecesInsertInput {
-  id: UUID
   workName: String
   composerId: BigInt
   userId: UUID
@@ -852,6 +854,7 @@ input PiecesInsertInput {
   updatedAt: Datetime
   createdAt: Datetime
   nickname: String
+  fts: Opaque
 }
 
 type PiecesInsertResponse {
@@ -875,10 +878,10 @@ input PiecesOrderBy {
   updatedAt: OrderByDirection
   createdAt: OrderByDirection
   nickname: OrderByDirection
+  fts: OrderByDirection
 }
 
 input PiecesUpdateInput {
-  id: UUID
   workName: String
   composerId: BigInt
   userId: UUID
@@ -890,6 +893,7 @@ input PiecesUpdateInput {
   updatedAt: Datetime
   createdAt: Datetime
   nickname: String
+  fts: Opaque
 }
 
 type PiecesUpdateResponse {
@@ -903,10 +907,10 @@ type PiecesUpdateResponse {
 type PracticeSessions implements Node {
   """Globally Unique Record Identifier"""
   nodeId: ID!
-  id: UUID!
+  id: BigInt!
   startTime: Datetime!
   endTime: Datetime
-  pieceId: UUID!
+  pieceId: BigInt!
   movementId: BigInt
   userId: UUID!
   durationSeconds: Int
@@ -933,10 +937,10 @@ type PracticeSessionsEdge {
 }
 
 input PracticeSessionsFilter {
-  id: UUIDFilter
+  id: BigIntFilter
   startTime: DatetimeFilter
   endTime: DatetimeFilter
-  pieceId: UUIDFilter
+  pieceId: BigIntFilter
   movementId: BigIntFilter
   userId: UUIDFilter
   durationSeconds: IntFilter
@@ -957,10 +961,9 @@ input PracticeSessionsFilter {
 }
 
 input PracticeSessionsInsertInput {
-  id: UUID
   startTime: Datetime
   endTime: Datetime
-  pieceId: UUID
+  pieceId: BigInt
   movementId: BigInt
   userId: UUID
 }
@@ -984,10 +987,9 @@ input PracticeSessionsOrderBy {
 }
 
 input PracticeSessionsUpdateInput {
-  id: UUID
   startTime: Datetime
   endTime: Datetime
-  pieceId: UUID
+  pieceId: BigInt
   movementId: BigInt
   userId: UUID
 }
