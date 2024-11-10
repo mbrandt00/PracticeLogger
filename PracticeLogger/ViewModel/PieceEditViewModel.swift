@@ -50,7 +50,7 @@ class PieceEditViewModel: ObservableObject {
                                     print(movementResult)
                                     if let movementInsertResult = movementResult.data?.insertIntoMovementsCollection?.records {
                                         // Fetch the complete piece after movements are created
-                                        Network.shared.apollo.fetch(query: PiecesQuery(pieceFilter: PiecesFilter(id: .some(UUIDFilter(eq: .some(pieceId)))))) { result in
+                                        Network.shared.apollo.fetch(query: PiecesQuery(pieceFilter: PiecesFilter(id: .some(BigIntFilter(eq: .some(pieceId)))))) { result in
                                             switch result {
                                             case .success(let pieceResult):
                                                 if let completePiece = pieceResult.data?.piecesCollection?.edges.first {
@@ -58,10 +58,9 @@ class PieceEditViewModel: ObservableObject {
                                                     Task {
                                                         do {
                                                             let result = try await Database.client
-                                                                .rpc("update_piece_fts", params: ["target_id": pieceId])
+                                                                .rpc("update_piece_fts_manual", params: ["target_id": pieceId])
                                                                 .execute()
 
-                                                            print(result)
                                                             continuation.resume(returning: completePieceDetails)
                                                         } catch {
                                                             continuation.resume(throwing: RuntimeError("Error updating FTS: \(error.localizedDescription)"))

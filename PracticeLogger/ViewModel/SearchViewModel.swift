@@ -14,7 +14,7 @@ class SearchViewModel: ObservableObject {
     @Published var searchTerm = ""
     @Published var isFocused: Bool = false
     @Published var selectedKeySignature: KeySignatureType?
-    @Published var userPieces: [PiecesQuery.Data.PiecesCollection.Edge.Node] = []
+    @Published var userPieces: [PieceDetails] = []
     @Published var newPieces: [Piece] = []
     private var cancellables = Set<AnyCancellable>()
 
@@ -45,15 +45,15 @@ class SearchViewModel: ObservableObject {
         }
     }
 
-    func getUserPieces() async throws -> [PiecesQuery.Data.PiecesCollection.Edge.Node] {
+    func getUserPieces() async throws -> [PieceDetails] {
         let userId = try await Database.client.auth.user().id.uuidString
 
         return try await withCheckedThrowingContinuation { continuation in
-            Network.shared.apollo.fetch(query: PiecesQuery(pieceFilter: PiecesFilter(id: .some(UUIDFilter(eq: .some(userId)))))) { result in
+            Network.shared.apollo.fetch(query: SearchPiecesQuery(query: searchTerm, pieceFilter: .some(PiecesFilter(userId: .some(UUIDFilter(eq: .some(userId))))))) { result in
                 switch result {
                 case .success(let graphQlResult):
-                    if let pieces = graphQlResult.data?.piecesCollection?.edges {
-                        let nodes = pieces.compactMap { $0.node }
+                    if let pieces = graphQlResult.data?.searchPieceWithAssociations?.edges {
+                        let nodes = pieces.compactMap { $0.node.fragments.pieceDetails }
                         continuation.resume(returning: nodes)
                     } else {
                         continuation.resume(returning: [])

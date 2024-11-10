@@ -30,7 +30,7 @@ struct SearchView: View {
                 Section(header: Text("Pieces")) {
                     ForEach(searchViewModel.userPieces, id: \.id) { piece in
                         NavigationLink(
-                            value: PieceNavigationContext.userPiece(piece.fragments.pieceDetails),
+                            value: PieceNavigationContext.userPiece(piece),
                             label: {
                                 RepertoireRow(piece: piece)
                             }

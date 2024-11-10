@@ -9,7 +9,7 @@ import ApolloGQL
 import SwiftUI
 
 struct RepertoireRow: View {
-    var piece: PiecesQuery.Data.PiecesCollection.Edge.Node
+    var piece: PieceDetails
     var body: some View {
         Text(piece.workName)
         if let composerName = piece.composer?.name {

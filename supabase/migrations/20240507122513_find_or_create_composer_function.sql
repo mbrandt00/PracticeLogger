@@ -18,6 +18,4 @@ BEGIN
     -- Return the composer record
     RETURN composer_record;
 END;
-$$ LANGUAGE plpgsql;
-
-GRANT EXECUTE ON FUNCTION find_or_create_composer(TEXT) TO authenticated;
+$$ LANGUAGE plpgsql SECURITY DEFINER;

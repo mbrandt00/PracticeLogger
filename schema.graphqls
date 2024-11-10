@@ -600,7 +600,7 @@ type Mutation {
     """
     atMost: Int! = 1
   ): MovementsUpdateResponse!
-  updatePieceFts(targetId: BigInt!): Opaque
+  updatePieceFtsManual(targetId: BigInt!): Opaque
 
   """Updates zero or more records in the `Pieces` collection"""
   updatePiecesCollection(
@@ -1113,6 +1113,32 @@ type Query {
     """Sort order to apply to the collection"""
     orderBy: [PracticeSessionsOrderBy!]
   ): PracticeSessionsConnection
+  searchPieceWithAssociations(
+    query: String!
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """
+    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
+    """
+    offset: Int
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: PiecesFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [PiecesOrderBy!]
+  ): PiecesConnection
 }
 
 """

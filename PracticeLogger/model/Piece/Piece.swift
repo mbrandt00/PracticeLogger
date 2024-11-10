@@ -210,7 +210,6 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
     static func addMetadata(_ piece: Piece) async -> Piece? {
         do {
             if let response: MetadataInformation = try await Database.client.rpc("parse_piece_metadata", params: ["work_name": piece.workName]).select().single().execute().value {
-                dump(piece)
                 return Piece(
                     workName: piece.workName,
                     composer: Composer(name: piece.composer?.name ?? ""),
