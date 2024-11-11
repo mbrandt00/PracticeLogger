@@ -1,6 +1,9 @@
 fragment PieceDetails on Pieces {
   id
   workName
+  catalogueType
+  catalogueNumber
+  nickname
   composer {
     name
   }

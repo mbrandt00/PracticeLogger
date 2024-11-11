@@ -6,9 +6,7 @@
 //
 
 import ApolloGQL
-import SwiftUI
 
-import ApolloGQL
 import SwiftUI
 
 struct RecentPracticeSessions: View {
@@ -105,7 +103,7 @@ struct RecentPracticeSessions: View {
     private func SearchViewContainer() -> some View {
         VStack {
             SearchView(searchViewModel: searchViewModel)
-                .background(Color.white) // Add a background to distinguish the view
+                .background(Color.white)
         }
         .padding(.vertical, 2)
     }

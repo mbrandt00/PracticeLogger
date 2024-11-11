@@ -33,8 +33,12 @@ class SearchViewModel: ObservableObject {
                         if let selectedKeySignature = selectedKeySignature {
                             fetchedPieces = fetchedPieces.filter { $0.key_signature == selectedKeySignature }
                         }
-//                        userPieces = userPieces
-                        newPieces = fetchedPieces
+                        newPieces = fetchedPieces.filter { newPiece in
+                            !userPieces.contains { userPiece in
+                                newPiece.catalogue_type?.rawValue == userPiece.catalogueType?.rawValue &&
+                                    newPiece.catalogue_number == userPiece.catalogueNumber
+                            }
+                        }
                     }
                 } catch {
                     print("Error fetching pieces: \(error)")
@@ -65,84 +69,4 @@ class SearchViewModel: ObservableObject {
             }
         }
     }
-
-//    func addKeySignatureToken(_ keySignature: KeySignatureType) {
-//        // Remove any existing tokens of type keySignature
-//        tokens.removeAll {
-//            if case .keySignature = $0.filterType {
-//                return true
-//            }
-//            return false
-//        }
-//
-//        // Add the new token
-//        let newToken = FilterToken(filterType: .keySignature(keySignature))
-//        tokens.append(newToken)
-//    }
-
-//    func removeKeySignatureToken() {
-//        tokens.removeAll {
-//            if case .keySignature = $0.filterType {
-//                return true
-//            }
-//            return false
-//        }
-//    }
 }
-
-// struct KeySignatureToken: Identifiable, Hashable {
-//    var id: UUID = .init()
-//    var type: KeySignatureType?
-//    var tonality: KeySignatureTonality?
-//
-//    var displayText: String {
-//        if let type = type, let tonality = tonality {
-//            return "\(type.rawValue) \(tonality.rawValue)"
-//        } else if let type = type {
-//            return type.rawValue
-//        } else if let tonality = tonality {
-//            return tonality.rawValue
-//        } else {
-//            return ""
-//        }
-//    }
-//
-//    mutating func updateTonality(_ newTonality: KeySignatureTonality) {
-//        tonality = newTonality
-//    }
-//
-//    static func from(type: KeySignatureType?, tonality: KeySignatureTonality?) -> KeySignatureToken? {
-//        if let type = type {
-//            if let tonality = tonality {
-//                return KeySignatureToken(type: type, tonality: tonality)
-//            } else {
-//                return KeySignatureToken(type: type, tonality: nil)
-//            }
-//        } else if let tonality = tonality {
-//            return KeySignatureToken(type: nil, tonality: tonality)
-//        } else {
-//            return nil
-//        }
-//    }
-// }
-
-// struct FilterToken: Identifiable {
-//    var id: UUID = .init()
-//    var filterType: FilterType
-//    func displayText() -> String {
-//        switch filterType {
-//        case .keySignature(let keySignatureType):
-//            return keySignatureType.rawValue
-//        case .composer(let composer):
-//            return composer.name
-//        case .tonality(let tonality):
-//            return tonality.rawValue
-//        }
-//    }
-// }
-//
-// enum FilterType {
-//    case keySignature(KeySignatureType)
-//    case composer(Composer)
-//    case tonality(KeySignatureTonality)
-// }

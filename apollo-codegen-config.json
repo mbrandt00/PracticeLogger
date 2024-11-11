@@ -46,7 +46,9 @@
       }
     },
     "testMocks": {
-      "none": {}
+      "swiftPackage": {
+        "targetName": "Mocks"
+      }
     }
   }
 }
