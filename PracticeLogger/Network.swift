@@ -69,8 +69,12 @@ class Network {
         let cache = InMemoryNormalizedCache()
         let store = ApolloStore(cache: cache)
         let provider = NetworkInterceptorProvider(store: store, client: client)
-        let url = URL(string: "http://127.0.0.1:54321/graphql/v1")!
-        let transport = RequestChainNetworkTransport(interceptorProvider: provider, endpointURL: url)
+        guard let supabaseUrlString = Bundle.main.infoDictionary?["SUPABASE_URL"] as? String
+        else {
+            fatalError("Missing SUPABASE_URL for Graphql URL")
+        }
+        let url = URL(string: "\(supabaseUrlString)/graphql/v1")
+        let transport = RequestChainNetworkTransport(interceptorProvider: provider, endpointURL: url!)
 
         return ApolloClient(networkTransport: transport, store: store)
     }()
