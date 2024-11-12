@@ -11,7 +11,7 @@ import Supabase
 
 class PracticeSessionViewModel: ObservableObject {
     @Published var activeSession: PracticeSessionDetails?
-    @Published private var recentSessions: [PracticeSession] = []
+    @Published private var recentSessions: [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge] = []
 
     func startSession(pieceId: Int, movementId: Int?) async throws {
         let graphqlInsertObject = PracticeSessionsInsertInput(
@@ -43,6 +43,7 @@ class PracticeSessionViewModel: ObservableObject {
                 switch result {
                 case .success(let graphQlResult):
                     if let practiceSessions = graphQlResult.data?.practiceSessionsCollection?.edges {
+                        self.recentSessions = practiceSessions
                         continuation.resume(returning: practiceSessions)
                     } else {
                         continuation.resume(returning: [])
