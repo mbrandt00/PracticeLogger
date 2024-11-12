@@ -13,7 +13,7 @@ class PracticeSession: ObservableObject, Identifiable, Codable, Equatable, Hasha
     @Published var endTime: Date?
     @Published var piece: Piece?
     @Published var composer: Composer?
-    @Published var pieceId: UUID
+    @Published var pieceId: Int
     @Published var durationSeconds: Int?
     @Published var movementId: Int?
     var userId: UUID?
@@ -36,7 +36,7 @@ class PracticeSession: ObservableObject, Identifiable, Codable, Equatable, Hasha
         self.movement = movement
         movementId = movement?.id
         self.piece = movement?.piece ?? piece
-        pieceId = movement?.piece?.id ?? piece?.id ?? UUID()
+        pieceId = movement?.piece?.id ?? 6
         self.durationSeconds = durationSeconds
     }
 
@@ -64,7 +64,7 @@ class PracticeSession: ObservableObject, Identifiable, Codable, Equatable, Hasha
         }
 
         // Decode pieceId, movementId, userId
-        pieceId = try container.decodeIfPresent(UUID.self, forKey: .pieceId) ?? UUID()
+        pieceId = try container.decode(Int.self, forKey: .pieceId)
         movementId = try container.decodeIfPresent(Int.self, forKey: .movementId)
         userId = try container.decodeIfPresent(UUID.self, forKey: .userId)
         durationSeconds = try container.decodeIfPresent(Int.self, forKey: .durationSeconds)
@@ -94,12 +94,12 @@ class PracticeSession: ObservableObject, Identifiable, Codable, Equatable, Hasha
         hasher.combine(id)
     }
 
-    static let inProgressExample = PracticeSession(startTime: Date(), piece: Piece.examplePieces.randomElement(), movement: Piece.examplePieces.randomElement()?.movements.first)
-    static let endedExample = PracticeSession(
-        startTime: Calendar.current.date(byAdding: .hour, value: -2, to: Date())!,
-        endTime: Calendar.current.date(byAdding: .hour, value: -1, to: Date())!,
-        piece: Piece.examplePieces.randomElement(),
-        durationSeconds: 200,
-        movement: Piece.examplePieces.randomElement()?.movements.randomElement()
-    )
+//    static let inProgressExample = PracticeSession(startTime: Date(), piece: Piece.examplePieces.randomElement(), movement: Piece.examplePieces.randomElement()?.movements.first)
+//    static let endedExample = PracticeSession(
+//        startTime: Calendar.current.date(byAdding: .hour, value: -2, to: Date())!,
+//        endTime: Calendar.current.date(byAdding: .hour, value: -1, to: Date())!,
+//        piece: Piece.examplePieces.randomElement(),
+//        durationSeconds: 200,
+//        movement: Piece.examplePieces.randomElement()?.movements.randomElement()
+//    )
 }

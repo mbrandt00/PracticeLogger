@@ -1,0 +1,54 @@
+{
+  "schemaNamespace": "ApolloGQL",
+  "input": {
+    "operationSearchPaths": ["**/*.graphql"],
+    "schemaSearchPaths": ["**/*.graphqls"]
+  },
+  "schemaDownload": {
+    "downloadMethod": {
+      "introspection": {
+        "endpointURL": "http://localhost:54321/graphql/v1",
+        "httpMethod": {
+          "POST": {}
+        },
+        "includeDeprecatedInputValues": false,
+        "outputFormat": "SDL"
+      }
+    },
+    "downloadTimeout": 60,
+    "headers": [
+      {
+        "key": "apikey",
+        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0"
+      }
+    ],
+    "outputPath": "./schema.graphqls"
+  },
+  "output": {
+    "schemaTypes": {
+      "moduleType": {
+        "swiftPackageManager": {}
+      },
+      "path": "./ApolloGQL/"
+    },
+    "operations": {
+      "inSchemaModule": {},
+      "operationManifest": {
+        "path": "./OperationManifest.json",
+        "generateOperations": {
+          "relative": [],
+          "prepend": ["query", "mutation"],
+          "precision": "operations",
+          "style": {
+            "normalizeCasing": true
+          }
+        }
+      }
+    },
+    "testMocks": {
+      "swiftPackage": {
+        "targetName": "Mocks"
+      }
+    }
+  }
+}

@@ -13,9 +13,12 @@ struct PieceEdit: View {
     @State private var showToast: Bool = false
     @State private var errorMessage: String = ""
     @State private var duplicatePiece: Piece?
+    @Environment(\.presentationMode) var presentationMode
+    @Binding var path: NavigationPath
 
-    init(piece: Piece) {
+    init(piece: Piece, path: Binding<NavigationPath>) {
         _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
+        _path = path
     }
 
     var body: some View {
@@ -23,12 +26,12 @@ struct PieceEdit: View {
             Form {
                 Text(viewModel.piece.workName)
                     .font(.title)
-                    .foregroundColor(.primary) // Adapts to light and dark mode
+                    .foregroundColor(.primary)
 
                 if duplicatePiece != nil {
                     Text("Duplicate Piece Found!")
                         .font(.subheadline)
-                        .foregroundColor(.red) // Red text for emphasis
+                        .foregroundColor(.red)
                 }
 
                 Section(header: Text("Movements").foregroundColor(.primary)) {
@@ -166,9 +169,12 @@ struct PieceEdit: View {
             trailing: Button(action: {
                 Task {
                     do {
-                        _ = try await viewModel.insertPiece(piece: viewModel.piece)
-                        // toast success/redirect
+                        let piece = try await viewModel.insertPiece(piece: viewModel.piece)
+
+                        path.removeLast() // remove edit page
+                        path.append(PieceNavigationContext.userPiece(piece))
                     } catch {
+                        print(error.localizedDescription)
                         if let supabaseError = error as? SupabaseError {
                             print(supabaseError)
                             switch supabaseError {
@@ -191,9 +197,9 @@ struct PieceEdit: View {
     }
 }
 
-struct PieceEdit_Previews: PreviewProvider {
-    static var previews: some View {
-        PieceEdit(piece: Piece.examplePieces.randomElement()!)
-            .environment(\.colorScheme, .dark) // Preview in dark mode
-    }
-}
+// struct PieceEdit_Previews: PreviewProvider {
+//    static var previews: some View {
+//        PieceEdit(piece: Piece.examplePieces.randomElement()!)
+//            .environment(\.colorScheme, .dark) // Preview in dark mode
+//    }
+// }

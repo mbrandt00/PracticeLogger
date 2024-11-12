@@ -57,7 +57,7 @@ struct Profile: View {
                 user = try viewModel.getCurrentUser()
                 sessionInfo = "Email: \(session.user.email ?? "")"
             } catch {
-                sessionInfo = "Error fetching session: \(error)"
+                sessionInfo = "Error in getInfo(): \(error.localizedDescription)"
             }
         }
     }

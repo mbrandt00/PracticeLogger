@@ -5,12 +5,9 @@
 //  Created by Michael Brandt on 2/24/24.
 //
 
+import ApolloGQL
 import Combine
 import SwiftUI
-
-enum Tabs {
-    case progress, start, profile
-}
 
 struct TabBar: View {
     @Binding var selectedTab: Tabs
@@ -20,50 +17,27 @@ struct TabBar: View {
     @ObservedObject private var keyboardResponder = KeyboardResponder()
 
     var body: some View {
-        VStack {
-            TabView(selection: $selectedTab) {
-                Text("")
-                    .tabItem {
-                        Image(systemName: "chart.xyaxis.line")
-                        Text("Progress")
-                    }
-                    .tag(Tabs.progress)
-
-                Text("")
-                    .tabItem {
-                        Image(systemName: "metronome")
-                        Text("Practice")
-                    }
-                    .tag(Tabs.start)
-
-                Text("")
-                    .tabItem {
-                        Image(systemName: "person")
-                        Text("Profile")
-                    }
-                    .tag(Tabs.profile)
-            }
-            .safeAreaInset(edge: .bottom) {
-                if let activeSession = sessionManager.activeSession {
-                    BottomSheet(animation: animation, expandedSheet: $expandedSheet, activeSession: activeSession)
-                        .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .move(edge: .bottom).combined(with: .opacity)))
-                        .animation(.easeInOut(duration: 0.3))
-                }
-            }
-            .frame(height: sessionManager.activeSession != nil ? 90 : 35)
-            .toolbarBackground(.ultraThickMaterial, for: .tabBar)
-            .toolbar(expandedSheet ? .hidden : .visible, for: .tabBar)
-            .opacity(keyboardResponder.isKeyboardVisible ? 0 : 1)
-            .offset(y: keyboardResponder.isKeyboardVisible ? 100 : 0)
-        }
-        .animation(.easeInOut, value: keyboardResponder.isKeyboardVisible)
+//        .safeAreaInset(edge: .bottom) {
+//            if let activeSession = sessionManager.activeSession {
+//                BottomSheet(animation: animation, expandedSheet: $expandedSheet, activeSession: activeSession)
+//                    .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .move(edge: .bottom).combined(with: .opacity)))
+//                    .animation(.easeInOut(duration: 0.3))
+//            }
+//        }
+//        .frame(height: sessionManager.activeSession != nil ? 90 : 35)
+//        .toolbarBackground(.ultraThickMaterial, for: .tabBar)
+//        .toolbar(expandedSheet ? .hidden : .visible, for: .tabBar)
+//        .opacity(keyboardResponder.isKeyboardVisible ? 0 : 1)
+//        .offset(y: keyboardResponder.isKeyboardVisible ? 100 : 0)
+//        .animation(.easeInOut, value: keyboardResponder.isKeyboardVisible)
+        Text("body")
     }
 }
 
 struct BottomSheet: View {
     var animation: Namespace.ID
     @Binding var expandedSheet: Bool
-    var activeSession: PracticeSession
+    var activeSession: PracticeSessionDetails
 
     var body: some View {
         ZStack {
@@ -85,13 +59,12 @@ struct BottomSheet: View {
                 .fill(Color.accentColor.opacity(0.8))
                 .frame(height: 2)
         })
-        .offset(y: -49)
     }
 }
 
 struct MusicInfo: View {
     @Binding var expandedSheet: Bool
-    @ObservedObject var activeSession: PracticeSession
+    @State var activeSession: PracticeSessionDetails
     var animation: Namespace.ID
     @State private var elapsedTime: String = "00:00"
     @EnvironmentObject var sessionManager: PracticeSessionViewModel
@@ -103,13 +76,12 @@ struct MusicInfo: View {
                     Text(elapsedTime)
                         .font(.headline.bold())
                 }
-                if let workName = activeSession.piece?.workName {
-                    Text(workName)
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .lineLimit(2)
-                        .foregroundColor(Color.secondary)
-                }
+
+                Text(activeSession.piece.workName)
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .lineLimit(2)
+                    .foregroundColor(Color.secondary)
                 HStack {
                     if let movementName = activeSession.movement?.name {
                         if let movementNumber = activeSession.movement?.number {
@@ -125,7 +97,7 @@ struct MusicInfo: View {
                         }
                     }
 
-                    if let composerName = activeSession.piece?.composer?.name {
+                    if let composerName = activeSession.piece.composer?.name {
                         if activeSession.movement?.name != nil {
                             Divider()
                         }
@@ -181,17 +153,18 @@ struct MusicInfo: View {
     }
 }
 
-#Preview {
-    @Namespace var animation
-    let vm = PracticeSessionViewModel()
-    vm.activeSession = PracticeSession.inProgressExample
-    return TabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(vm).preferredColorScheme(.light)
-}
-
-#Preview {
-    let vm = PracticeSessionViewModel()
-    vm.activeSession = PracticeSession.inProgressExample
-
-    @Namespace var animation
-    return TabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(vm).preferredColorScheme(.dark)
-}
+//
+// #Preview {
+//    @Namespace var animation
+//    let vm = PracticeSessionViewModel()
+//    vm.activeSession = PracticeSession.inProgressExample
+//    return TabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(vm).preferredColorScheme(.light)
+// }
+//
+// #Preview {
+//    let vm = PracticeSessionViewModel()
+//    vm.activeSession = PracticeSession.inProgressExample
+//
+//    @Namespace var animation
+//    return TabBar(selectedTab: .constant(.start), expandedSheet: .constant(false), animation: animation).environmentObject(vm).preferredColorScheme(.dark)
+// }

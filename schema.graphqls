@@ -1,0 +1,1224 @@
+"""
+A directive used by the Apollo iOS client to annotate operations or fragments that should be used exclusively for generating local cache mutations instead of as standard operations.
+"""
+directive @apollo_client_ios_localCacheMutation on QUERY | MUTATION | SUBSCRIPTION | FRAGMENT_DEFINITION
+
+"""
+A directive used by the Apollo iOS code generation engine to generate custom import statements in operation or fragment definition files. An import statement to import a module with the name provided in the `module` argument will be added to the generated definition file.
+"""
+directive @import(
+  """The name of the module to import."""
+  module: String!
+) repeatable on QUERY | MUTATION | SUBSCRIPTION | FRAGMENT_DEFINITION
+
+"""
+Directs the executor to defer this fragment when the `if` argument is true or undefined.
+"""
+directive @defer(
+  """Deferred when true or undefined."""
+  if: Boolean
+
+  """Unique name"""
+  label: String
+) on FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+"""A high precision floating point value represented as a string"""
+scalar BigFloat
+
+"""
+Boolean expression comparing fields on type "BigFloat"
+"""
+input BigFloatFilter {
+  eq: BigFloat
+  gt: BigFloat
+  gte: BigFloat
+  in: [BigFloat!]
+  is: FilterIs
+  lt: BigFloat
+  lte: BigFloat
+  neq: BigFloat
+}
+
+"""
+Boolean expression comparing fields on type "BigFloatList"
+"""
+input BigFloatListFilter {
+  containedBy: [BigFloat!]
+  contains: [BigFloat!]
+  eq: [BigFloat!]
+  is: FilterIs
+  overlaps: [BigFloat!]
+}
+
+"""An arbitrary size integer represented as a string"""
+scalar BigInt
+
+"""
+Boolean expression comparing fields on type "BigInt"
+"""
+input BigIntFilter {
+  eq: BigInt
+  gt: BigInt
+  gte: BigInt
+  in: [BigInt!]
+  is: FilterIs
+  lt: BigInt
+  lte: BigInt
+  neq: BigInt
+}
+
+"""
+Boolean expression comparing fields on type "BigIntList"
+"""
+input BigIntListFilter {
+  containedBy: [BigInt!]
+  contains: [BigInt!]
+  eq: [BigInt!]
+  is: FilterIs
+  overlaps: [BigInt!]
+}
+
+"""
+Boolean expression comparing fields on type "Boolean"
+"""
+input BooleanFilter {
+  eq: Boolean
+  is: FilterIs
+}
+
+"""
+Boolean expression comparing fields on type "BooleanList"
+"""
+input BooleanListFilter {
+  containedBy: [Boolean!]
+  contains: [Boolean!]
+  eq: [Boolean!]
+  is: FilterIs
+  overlaps: [Boolean!]
+}
+
+enum CatalogueType {
+  Op
+  K
+  BWV
+  D
+  L
+  WoO
+  B
+  Wq
+  CPEB
+  VB
+  DD
+  H
+  WD
+  WAB
+  T
+  FMW
+  EG
+  S
+  TH
+}
+
+"""
+Boolean expression comparing fields on type "CatalogueType"
+"""
+input CatalogueTypeFilter {
+  eq: CatalogueType
+  in: [CatalogueType!]
+  is: FilterIs
+  neq: CatalogueType
+}
+
+type Composers implements Node {
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  id: BigInt!
+  name: String!
+  piecesCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """
+    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
+    """
+    offset: Int
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: PiecesFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [PiecesOrderBy!]
+  ): PiecesConnection
+}
+
+type ComposersConnection {
+  edges: [ComposersEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ComposersDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [Composers!]!
+}
+
+type ComposersEdge {
+  cursor: String!
+  node: Composers!
+}
+
+input ComposersFilter {
+  id: BigIntFilter
+  name: StringFilter
+  nodeId: IDFilter
+
+  """
+  Returns true only if all its inner filters are true, otherwise returns false
+  """
+  and: [ComposersFilter!]
+
+  """
+  Returns true if at least one of its inner filters is true, otherwise returns false
+  """
+  or: [ComposersFilter!]
+
+  """Negates a filter"""
+  not: ComposersFilter
+}
+
+input ComposersInsertInput {
+  name: String
+}
+
+type ComposersInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [Composers!]!
+}
+
+input ComposersOrderBy {
+  id: OrderByDirection
+  name: OrderByDirection
+}
+
+input ComposersUpdateInput {
+  name: String
+}
+
+type ComposersUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [Composers!]!
+}
+
+"""
+An opaque string using for tracking a position in results during pagination
+"""
+scalar Cursor
+
+"""A date wihout time information"""
+scalar Date
+
+"""
+Boolean expression comparing fields on type "Date"
+"""
+input DateFilter {
+  eq: Date
+  gt: Date
+  gte: Date
+  in: [Date!]
+  is: FilterIs
+  lt: Date
+  lte: Date
+  neq: Date
+}
+
+"""
+Boolean expression comparing fields on type "DateList"
+"""
+input DateListFilter {
+  containedBy: [Date!]
+  contains: [Date!]
+  eq: [Date!]
+  is: FilterIs
+  overlaps: [Date!]
+}
+
+"""A date and time"""
+scalar Datetime
+
+"""
+Boolean expression comparing fields on type "Datetime"
+"""
+input DatetimeFilter {
+  eq: Datetime
+  gt: Datetime
+  gte: Datetime
+  in: [Datetime!]
+  is: FilterIs
+  lt: Datetime
+  lte: Datetime
+  neq: Datetime
+}
+
+"""
+Boolean expression comparing fields on type "DatetimeList"
+"""
+input DatetimeListFilter {
+  containedBy: [Datetime!]
+  contains: [Datetime!]
+  eq: [Datetime!]
+  is: FilterIs
+  overlaps: [Datetime!]
+}
+
+enum FilterIs {
+  NULL
+  NOT_NULL
+}
+
+"""
+Boolean expression comparing fields on type "Float"
+"""
+input FloatFilter {
+  eq: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  is: FilterIs
+  lt: Float
+  lte: Float
+  neq: Float
+}
+
+"""
+Boolean expression comparing fields on type "FloatList"
+"""
+input FloatListFilter {
+  containedBy: [Float!]
+  contains: [Float!]
+  eq: [Float!]
+  is: FilterIs
+  overlaps: [Float!]
+}
+
+"""
+Boolean expression comparing fields on type "ID"
+"""
+input IDFilter {
+  eq: ID
+}
+
+"""
+Boolean expression comparing fields on type "Int"
+"""
+input IntFilter {
+  eq: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  is: FilterIs
+  lt: Int
+  lte: Int
+  neq: Int
+}
+
+"""
+Boolean expression comparing fields on type "IntList"
+"""
+input IntListFilter {
+  containedBy: [Int!]
+  contains: [Int!]
+  eq: [Int!]
+  is: FilterIs
+  overlaps: [Int!]
+}
+
+"""A Javascript Object Notation value serialized as a string"""
+scalar JSON
+
+enum KeySignatureTonality {
+  major
+  minor
+}
+
+"""
+Boolean expression comparing fields on type "KeySignatureTonality"
+"""
+input KeySignatureTonalityFilter {
+  eq: KeySignatureTonality
+  in: [KeySignatureTonality!]
+  is: FilterIs
+  neq: KeySignatureTonality
+}
+
+enum KeySignatureType {
+  C
+  Csharp
+  Cflat
+  D
+  Dsharp
+  Dflat
+  E
+  Esharp
+  Eflat
+  F
+  Fsharp
+  Fflat
+  G
+  Gsharp
+  Gflat
+  A
+  Asharp
+  Aflat
+  B
+  Bsharp
+  Bflat
+}
+
+"""
+Boolean expression comparing fields on type "KeySignatureType"
+"""
+input KeySignatureTypeFilter {
+  eq: KeySignatureType
+  in: [KeySignatureType!]
+  is: FilterIs
+  neq: KeySignatureType
+}
+
+type Movements implements Node {
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  id: BigInt!
+  pieceId: BigInt!
+  name: String
+  number: Int
+  piece: Pieces!
+  practiceSessionsCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """
+    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
+    """
+    offset: Int
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: PracticeSessionsFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [PracticeSessionsOrderBy!]
+  ): PracticeSessionsConnection
+}
+
+type MovementsConnection {
+  edges: [MovementsEdge!]!
+  pageInfo: PageInfo!
+}
+
+type MovementsDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [Movements!]!
+}
+
+type MovementsEdge {
+  cursor: String!
+  node: Movements!
+}
+
+input MovementsFilter {
+  id: BigIntFilter
+  pieceId: BigIntFilter
+  name: StringFilter
+  number: IntFilter
+  nodeId: IDFilter
+
+  """
+  Returns true only if all its inner filters are true, otherwise returns false
+  """
+  and: [MovementsFilter!]
+
+  """
+  Returns true if at least one of its inner filters is true, otherwise returns false
+  """
+  or: [MovementsFilter!]
+
+  """Negates a filter"""
+  not: MovementsFilter
+}
+
+input MovementsInsertInput {
+  pieceId: BigInt
+  name: String
+  number: Int
+}
+
+type MovementsInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [Movements!]!
+}
+
+input MovementsOrderBy {
+  id: OrderByDirection
+  pieceId: OrderByDirection
+  name: OrderByDirection
+  number: OrderByDirection
+}
+
+input MovementsUpdateInput {
+  pieceId: BigInt
+  name: String
+  number: Int
+}
+
+type MovementsUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [Movements!]!
+}
+
+"""The root type for creating and mutating data"""
+type Mutation {
+  """Deletes zero or more records from the `Composers` collection"""
+  deleteFromComposersCollection(
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: ComposersFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): ComposersDeleteResponse!
+
+  """Deletes zero or more records from the `Movements` collection"""
+  deleteFromMovementsCollection(
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: MovementsFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): MovementsDeleteResponse!
+
+  """Deletes zero or more records from the `Pieces` collection"""
+  deleteFromPiecesCollection(
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: PiecesFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): PiecesDeleteResponse!
+
+  """Deletes zero or more records from the `PracticeSessions` collection"""
+  deleteFromPracticeSessionsCollection(
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: PracticeSessionsFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): PracticeSessionsDeleteResponse!
+  findOrCreateComposer(name: String!): Composers
+
+  """Adds one or more `Composers` records to the collection"""
+  insertIntoComposersCollection(objects: [ComposersInsertInput!]!): ComposersInsertResponse
+
+  """Adds one or more `Movements` records to the collection"""
+  insertIntoMovementsCollection(objects: [MovementsInsertInput!]!): MovementsInsertResponse
+
+  """Adds one or more `Pieces` records to the collection"""
+  insertIntoPiecesCollection(objects: [PiecesInsertInput!]!): PiecesInsertResponse
+
+  """Adds one or more `PracticeSessions` records to the collection"""
+  insertIntoPracticeSessionsCollection(objects: [PracticeSessionsInsertInput!]!): PracticeSessionsInsertResponse
+  parsePieceNickname(workName: String!): String
+
+  """Updates zero or more records in the `Composers` collection"""
+  updateComposersCollection(
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: ComposersUpdateInput!
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: ComposersFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): ComposersUpdateResponse!
+
+  """Updates zero or more records in the `Movements` collection"""
+  updateMovementsCollection(
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: MovementsUpdateInput!
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: MovementsFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): MovementsUpdateResponse!
+  updatePieceFtsManual(targetId: BigInt!): Opaque
+
+  """Updates zero or more records in the `Pieces` collection"""
+  updatePiecesCollection(
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: PiecesUpdateInput!
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: PiecesFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): PiecesUpdateResponse!
+
+  """Updates zero or more records in the `PracticeSessions` collection"""
+  updatePracticeSessionsCollection(
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: PracticeSessionsUpdateInput!
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: PracticeSessionsFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): PracticeSessionsUpdateResponse!
+}
+
+interface Node {
+  """Retrieves a record by `ID`"""
+  nodeId: ID!
+}
+
+"""Any type not handled by the type system"""
+scalar Opaque
+
+"""
+Boolean expression comparing fields on type "Opaque"
+"""
+input OpaqueFilter {
+  eq: Opaque
+  is: FilterIs
+}
+
+"""Defines a per-field sorting order"""
+enum OrderByDirection {
+  """Ascending order, nulls first"""
+  AscNullsFirst
+
+  """Ascending order, nulls last"""
+  AscNullsLast
+
+  """Descending order, nulls first"""
+  DescNullsFirst
+
+  """Descending order, nulls last"""
+  DescNullsLast
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+enum PieceFormat {
+  bagatelle
+  ballade
+  canon
+  caprice
+  chorale
+  concerto
+  dance
+  etude
+  fantasy
+  fugue
+  gavotte
+  gigue
+  impromptu
+  intermezzo
+  lied
+  march
+  mazurka
+  mass
+  minuet
+  nocturne
+  overture
+  opera
+  oratorio
+  pastiche
+  prelude
+  polonaise
+  rhapsody
+  requiem
+  rondo
+  sarabande
+  scherzo
+  seranade
+  sonata
+  string_quartet
+  suite
+  symphony
+  tarantella
+  toccata
+  variations
+  waltz
+}
+
+"""
+Boolean expression comparing fields on type "PieceFormat"
+"""
+input PieceFormatFilter {
+  eq: PieceFormat
+  in: [PieceFormat!]
+  is: FilterIs
+  neq: PieceFormat
+}
+
+type Pieces implements Node {
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  id: BigInt!
+  workName: String!
+  composerId: BigInt
+  userId: UUID!
+  format: PieceFormat
+  keySignature: KeySignatureType
+  tonality: KeySignatureTonality
+  catalogueType: CatalogueType
+  catalogueNumber: Int
+  updatedAt: Datetime
+  createdAt: Datetime
+  nickname: String
+  fts: Opaque
+  composer: Composers
+  movementsCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """
+    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
+    """
+    offset: Int
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: MovementsFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [MovementsOrderBy!]
+  ): MovementsConnection
+  practiceSessionsCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """
+    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
+    """
+    offset: Int
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: PracticeSessionsFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [PracticeSessionsOrderBy!]
+  ): PracticeSessionsConnection
+  searchPiecesF: String
+}
+
+type PiecesConnection {
+  edges: [PiecesEdge!]!
+  pageInfo: PageInfo!
+}
+
+type PiecesDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [Pieces!]!
+}
+
+type PiecesEdge {
+  cursor: String!
+  node: Pieces!
+}
+
+input PiecesFilter {
+  id: BigIntFilter
+  workName: StringFilter
+  composerId: BigIntFilter
+  userId: UUIDFilter
+  format: PieceFormatFilter
+  keySignature: KeySignatureTypeFilter
+  tonality: KeySignatureTonalityFilter
+  catalogueType: CatalogueTypeFilter
+  catalogueNumber: IntFilter
+  updatedAt: DatetimeFilter
+  createdAt: DatetimeFilter
+  nickname: StringFilter
+  fts: OpaqueFilter
+  nodeId: IDFilter
+
+  """
+  Returns true only if all its inner filters are true, otherwise returns false
+  """
+  and: [PiecesFilter!]
+
+  """
+  Returns true if at least one of its inner filters is true, otherwise returns false
+  """
+  or: [PiecesFilter!]
+
+  """Negates a filter"""
+  not: PiecesFilter
+}
+
+input PiecesInsertInput {
+  workName: String
+  composerId: BigInt
+  userId: UUID
+  format: PieceFormat
+  keySignature: KeySignatureType
+  tonality: KeySignatureTonality
+  catalogueType: CatalogueType
+  catalogueNumber: Int
+  updatedAt: Datetime
+  createdAt: Datetime
+  nickname: String
+  fts: Opaque
+}
+
+type PiecesInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [Pieces!]!
+}
+
+input PiecesOrderBy {
+  id: OrderByDirection
+  workName: OrderByDirection
+  composerId: OrderByDirection
+  userId: OrderByDirection
+  format: OrderByDirection
+  keySignature: OrderByDirection
+  tonality: OrderByDirection
+  catalogueType: OrderByDirection
+  catalogueNumber: OrderByDirection
+  updatedAt: OrderByDirection
+  createdAt: OrderByDirection
+  nickname: OrderByDirection
+  fts: OrderByDirection
+}
+
+input PiecesUpdateInput {
+  workName: String
+  composerId: BigInt
+  userId: UUID
+  format: PieceFormat
+  keySignature: KeySignatureType
+  tonality: KeySignatureTonality
+  catalogueType: CatalogueType
+  catalogueNumber: Int
+  updatedAt: Datetime
+  createdAt: Datetime
+  nickname: String
+  fts: Opaque
+}
+
+type PiecesUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [Pieces!]!
+}
+
+type PracticeSessions implements Node {
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  id: BigInt!
+  startTime: Datetime!
+  endTime: Datetime
+  pieceId: BigInt!
+  movementId: BigInt
+  userId: UUID!
+  durationSeconds: Int
+  movement: Movements
+  piece: Pieces!
+}
+
+type PracticeSessionsConnection {
+  edges: [PracticeSessionsEdge!]!
+  pageInfo: PageInfo!
+}
+
+type PracticeSessionsDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [PracticeSessions!]!
+}
+
+type PracticeSessionsEdge {
+  cursor: String!
+  node: PracticeSessions!
+}
+
+input PracticeSessionsFilter {
+  id: BigIntFilter
+  startTime: DatetimeFilter
+  endTime: DatetimeFilter
+  pieceId: BigIntFilter
+  movementId: BigIntFilter
+  userId: UUIDFilter
+  durationSeconds: IntFilter
+  nodeId: IDFilter
+
+  """
+  Returns true only if all its inner filters are true, otherwise returns false
+  """
+  and: [PracticeSessionsFilter!]
+
+  """
+  Returns true if at least one of its inner filters is true, otherwise returns false
+  """
+  or: [PracticeSessionsFilter!]
+
+  """Negates a filter"""
+  not: PracticeSessionsFilter
+}
+
+input PracticeSessionsInsertInput {
+  startTime: Datetime
+  endTime: Datetime
+  pieceId: BigInt
+  movementId: BigInt
+  userId: UUID
+}
+
+type PracticeSessionsInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [PracticeSessions!]!
+}
+
+input PracticeSessionsOrderBy {
+  id: OrderByDirection
+  startTime: OrderByDirection
+  endTime: OrderByDirection
+  pieceId: OrderByDirection
+  movementId: OrderByDirection
+  userId: OrderByDirection
+  durationSeconds: OrderByDirection
+}
+
+input PracticeSessionsUpdateInput {
+  startTime: Datetime
+  endTime: Datetime
+  pieceId: BigInt
+  movementId: BigInt
+  userId: UUID
+}
+
+type PracticeSessionsUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [PracticeSessions!]!
+}
+
+"""The root type for querying data"""
+type Query {
+  """A pagable collection of type `Composers`"""
+  composersCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """
+    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
+    """
+    offset: Int
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: ComposersFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [ComposersOrderBy!]
+  ): ComposersConnection
+
+  """A pagable collection of type `Movements`"""
+  movementsCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """
+    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
+    """
+    offset: Int
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: MovementsFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [MovementsOrderBy!]
+  ): MovementsConnection
+
+  """Retrieve a record by its `ID`"""
+  node(
+    """The record's `ID`"""
+    nodeId: ID!
+  ): Node
+
+  """A pagable collection of type `Pieces`"""
+  piecesCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """
+    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
+    """
+    offset: Int
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: PiecesFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [PiecesOrderBy!]
+  ): PiecesConnection
+
+  """A pagable collection of type `PracticeSessions`"""
+  practiceSessionsCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """
+    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
+    """
+    offset: Int
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: PracticeSessionsFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [PracticeSessionsOrderBy!]
+  ): PracticeSessionsConnection
+  searchPieceWithAssociations(
+    query: String!
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """
+    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
+    """
+    offset: Int
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: PiecesFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [PiecesOrderBy!]
+  ): PiecesConnection
+}
+
+"""
+Boolean expression comparing fields on type "String"
+"""
+input StringFilter {
+  eq: String
+  gt: String
+  gte: String
+  ilike: String
+  in: [String!]
+  iregex: String
+  is: FilterIs
+  like: String
+  lt: String
+  lte: String
+  neq: String
+  regex: String
+  startsWith: String
+}
+
+"""
+Boolean expression comparing fields on type "StringList"
+"""
+input StringListFilter {
+  containedBy: [String!]
+  contains: [String!]
+  eq: [String!]
+  is: FilterIs
+  overlaps: [String!]
+}
+
+"""A time without date information"""
+scalar Time
+
+"""
+Boolean expression comparing fields on type "Time"
+"""
+input TimeFilter {
+  eq: Time
+  gt: Time
+  gte: Time
+  in: [Time!]
+  is: FilterIs
+  lt: Time
+  lte: Time
+  neq: Time
+}
+
+"""
+Boolean expression comparing fields on type "TimeList"
+"""
+input TimeListFilter {
+  containedBy: [Time!]
+  contains: [Time!]
+  eq: [Time!]
+  is: FilterIs
+  overlaps: [Time!]
+}
+
+"""A universally unique identifier"""
+scalar UUID
+
+"""
+Boolean expression comparing fields on type "UUID"
+"""
+input UUIDFilter {
+  eq: UUID
+  in: [UUID!]
+  is: FilterIs
+  neq: UUID
+}
+
+"""
+Boolean expression comparing fields on type "UUIDList"
+"""
+input UUIDListFilter {
+  containedBy: [UUID!]
+  contains: [UUID!]
+  eq: [UUID!]
+  is: FilterIs
+  overlaps: [UUID!]
+}

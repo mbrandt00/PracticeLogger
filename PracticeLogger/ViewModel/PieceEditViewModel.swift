@@ -5,6 +5,8 @@
 //  Created by Michael Brandt on 4/28/24.
 //
 
+import ApolloAPI
+import ApolloGQL
 import Foundation
 import Supabase
 
@@ -14,38 +16,84 @@ class PieceEditViewModel: ObservableObject {
         self.piece = piece
     }
 
-    func insertPiece(piece: Piece) async throws -> Piece? {
+    func insertPiece(piece: Piece) async throws -> PieceDetails {
         do {
+            // Find or create composer
             let composer: Composer = try await Database.client
                 .rpc("find_or_create_composer", params: ["name": piece.composer?.name])
                 .execute()
                 .value
 
             piece.composer?.id = composer.id
+            let inputObject = piece.toGraphQLInput()
 
-            let insertedPiece: Piece = try await Database.client.from("pieces")
-                .insert(piece)
-                .select()
-                .single()
-                .execute()
-                .value
+            // Use a continuation to handle async mutation and fetch
+            return try await withCheckedThrowingContinuation { continuation in
+                Network.shared.apollo.perform(mutation: InsertNewPieceMutation(input: [inputObject])) { result in
+                    switch result {
+                    case .success(let graphQlResult):
+                        if let insertedPiece = graphQlResult.data?.insertIntoPiecesCollection?.records.first {
+                            let pieceDetails = insertedPiece.fragments.pieceDetails
+                            let pieceId = pieceDetails.id
+                            let movementsInput = piece.movements.map { movement in
+                                MovementsInsertInput(
+                                    pieceId: .some(pieceDetails.id),
+                                    name: .some(movement.name),
+                                    number: .some(movement.number)
+                                )
+                            }
 
-            let newPieceId = insertedPiece.id
-            piece.movements.forEach { $0.pieceId = newPieceId }
-            try await Database.client
-                .from("movements")
-                .insert(piece.movements)
-                .execute()
+                            // Perform the movement mutation
+                            Network.shared.apollo.perform(mutation: CreateMovementsMutation(input: movementsInput)) { result in
+                                switch result {
+                                case .success(let movementResult):
+                                    print(movementResult)
+                                    if let movementInsertResult = movementResult.data?.insertIntoMovementsCollection?.records {
+                                        // Fetch the complete piece after movements are created
+                                        Network.shared.apollo.fetch(query: PiecesQuery(pieceFilter: PiecesFilter(id: .some(BigIntFilter(eq: .some(pieceId)))))) { result in
+                                            switch result {
+                                            case .success(let pieceResult):
+                                                if let completePiece = pieceResult.data?.piecesCollection?.edges.first {
+                                                    let completePieceDetails = completePiece.node.fragments.pieceDetails
+                                                    Task {
+                                                        do {
+                                                            let result = try await Database.client
+                                                                .rpc("update_piece_fts_manual", params: ["target_id": pieceId])
+                                                                .execute()
 
-            return insertedPiece
-
-        } catch let error as PostgrestError {
-            print("INSERT ERROR", error)
-
-            if error.message.contains("pieces_catalogue_unique") {
-                throw SupabaseError.pieceAlreadyExists
+                                                            continuation.resume(returning: completePieceDetails)
+                                                        } catch {
+                                                            continuation.resume(throwing: RuntimeError("Error updating FTS: \(error.localizedDescription)"))
+                                                        }
+                                                    }
+                                                } else {
+                                                    continuation.resume(throwing: RuntimeError("Complete piece not found"))
+                                                }
+                                            case .failure(let error):
+                                                print("Error fetching complete piece:", error)
+                                                continuation.resume(throwing: RuntimeError(error.localizedDescription))
+                                            }
+                                        }
+                                    } else {
+                                        continuation.resume(throwing: RuntimeError("No movement details inserted"))
+                                    }
+                                case .failure(let error):
+                                    print("Error creating movements:", error)
+                                    continuation.resume(throwing: RuntimeError(error.localizedDescription))
+                                }
+                            }
+                        } else {
+                            print("No pieces were inserted")
+                            continuation.resume(throwing: RuntimeError("No pieces were inserted"))
+                        }
+                    case .failure(let error):
+                        print("Error inserting piece:", error)
+                        continuation.resume(throwing: RuntimeError(error.localizedDescription))
+                    }
+                }
             }
-            return nil
+        } catch {
+            throw error
         }
     }
 

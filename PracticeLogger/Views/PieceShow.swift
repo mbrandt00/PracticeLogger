@@ -5,11 +5,13 @@
 //  Created by Michael Brandt on 6/8/24.
 //
 
+import ApolloGQL
 import SwiftUI
 
 struct PieceShow: View {
-    var piece: Piece
-    @EnvironmentObject var sessionManager: PracticeSessionViewModel
+    var piece: PieceDetails
+
+    @ObservedObject var sessionManager: PracticeSessionViewModel
 
     var body: some View {
         HStack {
@@ -21,14 +23,14 @@ struct PieceShow: View {
 
             Button(action: {
                 Task {
-                    if sessionManager.activeSession?.pieceId == piece.id && sessionManager.activeSession?.movementId == nil {
+                    if sessionManager.activeSession?.piece.id == piece.id && sessionManager.activeSession?.movement?.id == nil {
                         await sessionManager.stopSession()
                     } else {
-                        _ = try await sessionManager.startSession(record: .piece(piece))
+                        _ = try? await sessionManager.startSession(pieceId: Int(piece.id) ?? 0, movementId: nil)
                     }
                 }
             }, label: {
-                Image(systemName: sessionManager.activeSession?.movementId == nil && sessionManager.activeSession?.pieceId == piece.id ?
+                Image(systemName: sessionManager.activeSession?.movement?.id == nil && sessionManager.activeSession?.piece.id == piece.id ?
                     "stop.circle.fill" : "play.circle.fill")
                     .font(.title)
                     .foregroundColor(Color.accentColor)
@@ -37,34 +39,45 @@ struct PieceShow: View {
         .padding(.horizontal)
 
         ScrollView(showsIndicators: false) {
-            ForEach(piece.movements, id: \.self) { movement in
-                HStack {
-                    Text(movement.name)
-                        .font(.body)
-
-                    Spacer()
-
-                    Button(action: {
-                        Task {
-                            if sessionManager.activeSession?.movementId == movement.id {
-                                await sessionManager.stopSession()
-                            } else {
-                                _ = try await sessionManager.startSession(record: .movement(movement))
-                            }
-                        }
-                    }, label: {
-                        Image(systemName: sessionManager.activeSession?.movementId == movement.id ? "stop.circle.fill" : "play.circle.fill")
-                            .foregroundColor(Color.accentColor)
-                    })
+            if let movementsEdges = piece.movements?.edges {
+                ForEach(movementsEdges, id: \.node.id) { movement in
+                    MovementRow(movement: movement)
                 }
-                .padding(.vertical, 10)
+                .padding()
             }
         }
-        .padding()
-        .navigationBarTitleDisplayMode(.inline) // Set the title display mode
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func MovementRow(movement: PieceDetails.Movements.Edge) -> some View {
+        HStack {
+            if let movementName = movement.node.name {
+                Text(movementName)
+                    .font(.body)
+            }
+
+            Spacer()
+
+            Button(action: {
+                Task {
+                    if let movementId = sessionManager.activeSession?.movement?.id {
+                        if movementId == movement.node.id {
+                            await sessionManager.stopSession()
+                        }
+                    } else {
+                        _ = try? await sessionManager.startSession(pieceId: Int(piece.id) ?? 0, movementId: Int(movement.node.id) ?? 0)
+                    }
+                }
+            }, label: {
+                let isActiveMovement = sessionManager.activeSession?.movement?.id == movement.node.id
+                Image(systemName: isActiveMovement ? "stop.circle.fill" : "play.circle.fill")
+                    .foregroundColor(Color.accentColor)
+            })
+        }
+        .padding(.vertical, 10)
     }
 }
 
-#Preview {
-    PieceShow(piece: Piece.examplePieces.randomElement()!).environmentObject(PracticeSessionViewModel())
-}
+// #Preview {
+//    PieceShow(piece: Piece.examplePieces.randomElement()!).environmentObject(PracticeSessionViewModel())
+// }

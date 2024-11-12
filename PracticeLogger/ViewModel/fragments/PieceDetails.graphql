@@ -1,0 +1,19 @@
+fragment PieceDetails on Pieces {
+  id
+  workName
+  catalogueType
+  catalogueNumber
+  nickname
+  composer {
+    name
+  }
+  movements: movementsCollection(orderBy: [{ number: DescNullsLast }]) {
+    edges {
+      node {
+        id
+        name
+        number
+      }
+    }
+  }
+}

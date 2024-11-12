@@ -1,0 +1,9 @@
+query PiecesQuery($pieceFilter: PiecesFilter!) {
+  piecesCollection(filter: $pieceFilter) {
+    edges {
+      node {
+        ...PieceDetails
+      }
+    }
+  }
+}

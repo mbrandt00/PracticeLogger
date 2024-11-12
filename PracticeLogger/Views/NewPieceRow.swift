@@ -34,11 +34,12 @@ struct NewPieceRow: View {
     }
 }
 
-struct NewPieceRow_Previews: PreviewProvider {
-    static var previews: some View {
-        let piece = Piece.examplePieces.randomElement()!
-
-        return NewPieceRow(piece: piece)
-            .previewLayout(.sizeThatFits)
-    }
-}
+//
+// struct NewPieceRow_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let piece = Piece.examplePieces.randomElement()!
+//
+//        return NewPieceRow(piece: piece)
+//            .previewLayout(.sizeThatFits)
+//    }
+// }

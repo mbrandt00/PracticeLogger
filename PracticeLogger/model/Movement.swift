@@ -13,9 +13,9 @@ class Movement: Identifiable, ObservableObject, Codable, Hashable {
     @Published var name: String
     var number: Int
     var piece: Piece?
-    var pieceId: UUID?
+    var pieceId: Int?
 
-    init(id: Int = Int.random(in: 1 ... Int.max), name: String, number: Int, piece: Piece? = nil, pieceId: UUID? = nil) {
+    init(id: Int = Int.random(in: 1 ... Int.max), name: String, number: Int, piece: Piece? = nil, pieceId: Int? = nil) {
         self.id = id
         self.name = name
         self.number = number
@@ -53,6 +53,6 @@ class Movement: Identifiable, ObservableObject, Codable, Hashable {
         id = try container.decode(Int.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
         number = try container.decode(Int.self, forKey: .number)
-        pieceId = try container.decodeIfPresent(UUID.self, forKey: .pieceId)
+        pieceId = try container.decodeIfPresent(Int.self, forKey: .pieceId)
     }
 }
