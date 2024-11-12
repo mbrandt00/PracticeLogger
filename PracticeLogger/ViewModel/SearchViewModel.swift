@@ -48,7 +48,6 @@ class SearchViewModel: ObservableObject {
             }
         }
     }
-
     func getUserPieces() async throws -> [PieceDetails] {
         let userId = try await Database.client.auth.user().id.uuidString
 
@@ -69,4 +68,5 @@ class SearchViewModel: ObservableObject {
             }
         }
     }
+
 }
