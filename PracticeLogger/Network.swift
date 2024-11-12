@@ -20,11 +20,15 @@ class AuthorizationInterceptor: ApolloInterceptor {
     ) where Operation: GraphQLOperation {
         Task {
             do {
-                let accessToken = try await Database.client.auth.session.accessToken
+                guard let accessToken = Database.client.auth.currentSession?.accessToken else {
+                    fatalError("NO ACCESS TOKEN FOR GQL")
+                }
+                guard let supabaseKey = Bundle.main.infoDictionary?["SUPABASE_KEY"] as? String else {
+                    fatalError("SUPABASE_KEY in Info.plist is missing!")
+                }
                 request.addHeader(name: "Authorization", value: "Bearer \(accessToken)")
+                request.addHeader(name: "apiKey", value: supabaseKey)
                 chain.proceedAsync(request: request, response: response, interceptor: self, completion: completion)
-            } catch {
-                completion(.failure(error))
             }
         }
     }
@@ -53,12 +57,6 @@ class NetworkInterceptorProvider: InterceptorProvider {
             CacheWriteInterceptor(store: store)
         ]
     }
-
-//    override func interceptors<Operation>(for operation: Operation) -> [ApolloInterceptor] where Operation: GraphQLOperation {
-//        var interceptors = super.interceptors(for: operation)
-//        interceptors.insert(AuthorizationInterceptor(), at: 0) // Insert at the beginning
-//        return interceptors
-//    }
 }
 
 class Network {
