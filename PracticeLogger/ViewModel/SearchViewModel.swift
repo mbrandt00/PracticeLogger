@@ -66,6 +66,18 @@ class SearchViewModel: ObservableObject {
                     print("GraphQL query failed: \(error)")
                     continuation.resume(throwing: error)
                 }
+
+            case .denied:
+                print("Music authorization denied.")
+
+            case .notDetermined:
+                print("Music authorization not determined.")
+
+            case .restricted:
+                print("Music authorization restricted.")
+
+            default:
+                print("Unknown music authorization status.")
             }
         }
     }
