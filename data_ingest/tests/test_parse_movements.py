@@ -16,7 +16,7 @@ def test_parse_key_signature(test_input, expected):
     assert parse_key_signature(test_input) == expected
 
 def test_parse_movements():
-    with open("tests/scrape_responses/pieces.html", "r") as file:
+    with open("tests/scrape_responses/rachmaninoff_preludes_op_32.html", "r") as file:
         html_content = file.read()
         soup = BeautifulSoup(html_content, "html.parser")
         general_info_div = soup.find("div", class_="wi_body")
