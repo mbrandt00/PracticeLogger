@@ -1,0 +1,13 @@
+[project]
+name = "data-ingest"
+version = "0.1.0"
+description = "Scripts to scrape data and insert into database"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "imslp>=0.2.3",
+    "pytest>=8.3.3",
+    "ruff>=0.7.4",
+]
+[tool.pytest.ini_options]
+pythonpath = ["."]
