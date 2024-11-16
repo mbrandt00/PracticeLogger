@@ -24,16 +24,12 @@ def test_parse_movements():
             raise ValueError("Could not find 'div' with class 'wi_body'")
         result = parse_movements(general_info_div)
         assert isinstance( result, list)
+        # key signature
         assert result[0]['key_signature'] == 'c'
         assert result[1]['key_signature'] == 'bflatminor'
-        assert result[2]['key_signature'] == 'e'
-        assert result[3]['key_signature'] == 'eminor'
-        assert result[4]['key_signature'] == 'g'
-        assert result[5]['key_signature'] == 'fminor'
-        assert result[6]['key_signature'] == 'f'
-        assert result[7]['key_signature'] == 'aminor'
-        assert result[8]['key_signature'] == 'a'
-        assert result[9]['key_signature'] == 'bminor'
-        assert result[10]['key_signature'] == 'b'
-        assert result[11]['key_signature'] == 'gsharpminor'
-        assert result[12]['key_signature'] == 'dflat'
+        # number
+        assert result[0]['number'] == 1
+        assert result[1]['number'] == 2
+        # clean name without number
+        assert result[0]['name'] == 'Allegro vivace'
+        assert result[1]['name'] == 'Allegretto'

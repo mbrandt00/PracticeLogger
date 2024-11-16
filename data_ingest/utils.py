@@ -66,13 +66,21 @@ def parse_movements(data: Tag | NavigableString):
             line = dd.get_text(strip=True).replace("\xa0", " ")
             number = index + 1
 
+            number_title_pattern = r"(\d+).\s*([A-Za-z ]+)"
             if "(" in line and line.endswith(")"): # key signature exists
                 name, key_signature = line.rsplit("(", 1)
+                cleansed_name = re.search(number_title_pattern, name)
+
+                if cleansed_name:
+                    cleansed_title = cleansed_name.group(2).strip()
+                else:
+                    cleansed_title = name.strip()  # Fallback to the original name if no match             
+                print(f"NAME TO USE: {cleansed_title}")
                 movements.append(
                     {
                         "type": "piece",
                         "number": number,
-                        "name": name.strip(),
+                        "name": cleansed_title,
                         "key_signature": parse_key_signature(key_signature.strip()),
                     }
                 )
@@ -81,7 +89,7 @@ def parse_movements(data: Tag | NavigableString):
                     {
                         "type": "piece",
                         "number": number,
-                        "name": line.strip(),
+                        "name": re.search(number_title_pattern, line.strip()),
                         "key_signature": None,
                     }
                 )
