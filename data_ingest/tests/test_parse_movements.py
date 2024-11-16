@@ -1,7 +1,7 @@
 import pytest
 from bs4 import BeautifulSoup
 
-from utils import parse_key_signature, parse_movements
+from utils import parse_key_signature, parse_movements, section_download_link
 
 
 @pytest.mark.parametrize("test_input,expected", [
@@ -19,10 +19,7 @@ def test_parse_movements():
     with open("tests/scrape_responses/rachmaninoff_preludes_op_32.html", "r") as file:
         html_content = file.read()
         soup = BeautifulSoup(html_content, "html.parser")
-        general_info_div = soup.find("div", class_="wi_body")
-        if general_info_div is None:
-            raise ValueError("Could not find 'div' with class 'wi_body'")
-        result = parse_movements(general_info_div)
+        result = parse_movements(soup)
         assert isinstance( result, list)
         # key signature
         assert result[0]['key_signature'] == 'c'
@@ -33,3 +30,16 @@ def test_parse_movements():
         # clean name without number
         assert result[0]['name'] == 'Allegro vivace'
         assert result[1]['name'] == 'Allegretto'
+
+        # url
+        print(result)
+        assert result[0]['download_url'] == 'https://imslp.org/wiki/Special:ImagefromIndex/309270'
+        assert result[1]['download_url'] == 'https://imslp.org/wiki/Special:ImagefromIndex/309271'
+
+def test_section_download_links():
+    with open("tests/scrape_responses/rachmaninoff_preludes_op_32.html", "r") as file:
+        html_content = file.read()
+        soup = BeautifulSoup(html_content, "html.parser")
+        result = section_download_link(soup, piece_name='1. Allegro Vivace')
+        assert result == 'https://imslp.org/wiki/Special:ImagefromIndex/309270'
+
