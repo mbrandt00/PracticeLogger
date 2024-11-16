@@ -68,13 +68,12 @@ def parse_movements(data: Tag | NavigableString):
 
             if "(" in line and line.endswith(")"): # key signature exists
                 name, key_signature = line.rsplit("(", 1)
-                key_signature = key_signature.rstrip(")").replace("\xa0", " ")
                 movements.append(
                     {
                         "type": "piece",
                         "number": number,
                         "name": name.strip(),
-                        "key_signature": key_signature.strip(),
+                        "key_signature": parse_key_signature(key_signature.strip()),
                     }
                 )
             else:
