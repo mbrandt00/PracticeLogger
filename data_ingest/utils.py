@@ -62,73 +62,40 @@ def section_download_link(data: Tag, piece_name: str) -> str | None:
     else:
         return None
     
-    
 
-def parse_movements(data: Tag):
+def parse_movements(data: Tag) -> list:
     movements = []
-
+    number_title_pattern = r"(\d+).\s*([A-Za-z ]+)"
     general_info_div = data.find("div", class_="wi_body")
     if not general_info_div or not isinstance(general_info_div, Tag):
         raise ValueError("Could not find 'div' with class 'wi_body'")
-    # movement_list = data.find("ol")
-    # if movement_list:
-    #     print("movement list")
-    #     print(movement_list)
-    #     for _, li in enumerate(movement_list.find_all("li")):
-    #         line = li.get_text(strip=True).replace("\xa0", " ")
-    #         number = 3
-    #
-    #         if "(" in line and line.endswith(")"):
-    #             name, key_signature = line.rsplit("(", 1)
-    #             key_signature = key_signature.rstrip(")").replace("\xa0", " ")
-    #             movements.append(
-    #                 {
-    #                     "type": "movement",
-    #                     "number": number,
-    #                     "name": name.strip(),
-    #                     "key_signature": key_signature.strip(),
-    #                 }
-    #             )
-    #         else:
-    #             movements.append(
-    #                 {
-    #                     "type": "movement",
-    #                     "number": number,
-    #                     "name": line.strip(),
-    #                     "key_signature": None,
-    #                 }
-    #             )
-    piece_list = general_info_div.find("dl")
-    if piece_list and isinstance(piece_list, Tag):
-        for index, dd in enumerate(piece_list.find_all("dd")):
-            line = dd.get_text(strip=True).replace("\xa0", " ")
-            number = index + 1
 
-            number_title_pattern = r"(\d+).\s*([A-Za-z ]+)"
-            if "(" in line and line.endswith(")"): # key signature exists
-                name, key_signature = line.rsplit("(", 1)
-                cleansed_name = re.search(number_title_pattern, name)
+    # Process both movement list (ol/li) and piece list (dl/dd)
+    for container, item_tag, movement_type in [
+        (data.find("ol"), "li", "movement"),
+        (general_info_div.find("dl"), "dd", "piece")
+    ]:
+        if container and isinstance(container, Tag):
+            for index, item in enumerate(container.find_all(item_tag)):
+                line = item.get_text(strip=True).replace("\xa0", " ")
+                movement = {
+                    "type": movement_type,
+                    "number": index + 1,
+                    "name": line.strip(),
+                    "key_signature": None
+                }
 
-                if cleansed_name:
-                    cleansed_title = cleansed_name.group(2).strip()
-                else:
-                    cleansed_title = name.strip()  # Fallback to the original name if no match             
-                movements.append(
-                    {
-                        "type": "piece",
-                        "number": number,
-                        "name": cleansed_title,
-                        "download_url": section_download_link(data, cleansed_title),
+                if "(" in line and line.endswith(")"):
+                    name, key_signature = line.rsplit("(", 1)
+                    cleansed_name = re.search(number_title_pattern, name)
+                    cleansed_title = cleansed_name.group(2).strip() if cleansed_name else name.strip()
+                    
+                    movement.update({
+                        "name": cleansed_title if movement_type == "piece" else name.strip(),
                         "key_signature": parse_key_signature(key_signature.strip()),
-                    }
-                )
-            else:
-                movements.append(
-                    {
-                        "type": "piece",
-                        "number": number,
-                        "name": re.search(number_title_pattern, line.strip()),
-                        "key_signature": None,
-                    }
-                )
+                        "download_url": section_download_link(data, cleansed_title)
+                    })
+                
+                movements.append(movement)
+
     return movements
