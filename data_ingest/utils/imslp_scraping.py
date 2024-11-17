@@ -1,9 +1,12 @@
+import os
+import sys
 import time
 from typing import List
 from urllib.parse import quote, urlparse
 
 import requests
 from bs4 import BeautifulSoup
+from pieces import create_piece
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -12,8 +15,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
-from utils.pieces import create_piece
-
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 def get_collection_url(composer_name: str) -> str:
     base_url = "https://imslp.org/wiki/Category:"
