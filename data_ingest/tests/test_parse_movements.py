@@ -20,7 +20,6 @@ def test_parse_piece_sections():
         assert result[1]["name"] == "Allegretto"
 
         # url
-        print(result)
         assert (
             result[0]["download_url"]
             == "https://imslp.org/wiki/Special:ImagefromIndex/309270"
@@ -46,6 +45,5 @@ def test_parse_piece_movements():
         assert result[1]["name"] == "Scherzo"
 
         # url
-        print(result)
         assert result[0]["download_url"] is None
         assert result[1]["download_url"] is None
