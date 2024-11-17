@@ -1,4 +1,3 @@
-import pytest
 from bs4 import BeautifulSoup
 
 from utils import parse_movements
@@ -9,38 +8,44 @@ def test_parse_piece_sections():
         html_content = file.read()
         soup = BeautifulSoup(html_content, "html.parser")
         result = parse_movements(soup)
-        assert isinstance( result, list)
+        assert isinstance(result, list)
         # key signature
-        assert result[0]['key_signature'] == 'c'
-        assert result[1]['key_signature'] == 'bflatminor'
+        assert result[0]["key_signature"] == "c"
+        assert result[1]["key_signature"] == "bflatminor"
         # number
-        assert result[0]['number'] == 1
-        assert result[1]['number'] == 2
+        assert result[0]["number"] == 1
+        assert result[1]["number"] == 2
         # clean name without number
-        assert result[0]['name'] == 'Allegro vivace'
-        assert result[1]['name'] == 'Allegretto'
+        assert result[0]["name"] == "Allegro vivace"
+        assert result[1]["name"] == "Allegretto"
 
         # url
         print(result)
-        assert result[0]['download_url'] == 'https://imslp.org/wiki/Special:ImagefromIndex/309270'
-        assert result[1]['download_url'] == 'https://imslp.org/wiki/Special:ImagefromIndex/309271'
+        assert (
+            result[0]["download_url"]
+            == "https://imslp.org/wiki/Special:ImagefromIndex/309270"
+        )
+        assert (
+            result[1]["download_url"]
+            == "https://imslp.org/wiki/Special:ImagefromIndex/309271"
+        )
+
 
 def test_parse_piece_movements():
-    with open('tests/scrape_responses/chopin_cello_sonata.html') as file:
+    with open("tests/scrape_responses/chopin_cello_sonata.html") as file:
         html_content = file.read()
         soup = BeautifulSoup(html_content, "html.parser")
         result = parse_movements(soup)
-        assert result[0]['key_signature'] == 'gminor'
-        assert result[1]['key_signature'] == 'dminor'
+        assert result[0]["key_signature"] == "gminor"
+        assert result[1]["key_signature"] == "dminor"
         # number
-        assert result[0]['number'] == 1
-        assert result[1]['number'] == 2
+        assert result[0]["number"] == 1
+        assert result[1]["number"] == 2
         # clean name without number
-        assert result[0]['name'] == 'Allegro moderato'
-        assert result[1]['name'] == 'Scherzo'
+        assert result[0]["name"] == "Allegro moderato"
+        assert result[1]["name"] == "Scherzo"
 
         # url
         print(result)
-        assert result[0]['download_url'] is None
-        assert result[1]['download_url'] is None
-
+        assert result[0]["download_url"] is None
+        assert result[1]["download_url"] is None
