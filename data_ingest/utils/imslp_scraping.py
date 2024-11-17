@@ -12,6 +12,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
+from utils.pieces import create_piece
+
 
 def get_collection_url(composer_name: str) -> str:
     base_url = "https://imslp.org/wiki/Category:"
@@ -111,7 +113,25 @@ def get_composer_collection_objects(base_url: str) -> List[str]:
 
     return list(set(collection_objects))
 
+def create_piece_collection(url: str): 
+    data = requests.get(url)
+    soup = BeautifulSoup(data.text, 'html.parser')
+    tables = soup.find_all('table')
+    second_table = tables[1] if len(tables) > 1 else None
+    if second_table:
+        piece_count_text = second_table.find('td').text
+        links = soup.select('tr td ul li a[title]')
+        if not links:
+            raise ValueError("No piece urls found for collection")
+        base_url = "https://imslp.org"
 
-# Example usage:
-# url = "https://imslp.org/wiki/Category:Beethoven,_Ludwig_van"
-# collection_objects = get_composer_collection_objects(url)
+        urls = [base_url + str(link['href']) for link in links if 'href' in link.attrs]
+        for piece_url in urls:
+            data = requests.get(piece_url)
+            piece_soup = BeautifulSoup(data.text, 'html.parser')
+            test = create_piece(piece_soup)
+            print(test)
+
+        # print(links)
+
+create_piece_collection('https://imslp.org/wiki/Complete_Piano_Sonatas_(Beethoven%2C_Ludwig_van)')

@@ -1,8 +1,16 @@
 import re
+from dataclasses import dataclass, field
+from typing import Dict, List, Optional, Set
 
 from bs4 import BeautifulSoup, Tag
 
 
+@dataclass
+class Movement:
+    id: str
+    title: str
+    number: int
+    key_signature: Optional[str] = None
 def parse_movements(data: Tag) -> list:
     movements = []
     number_title_pattern = r"(\d+).\s*([A-Za-z ]+)"
@@ -39,10 +47,10 @@ def parse_movements(data: Tag) -> list:
                             "name": cleansed_title
                             if movement_type == "piece"
                             else name.strip(),
-                            "key_signature": _parse_key_signature(
+                            "key_signature": parse_key_signature(
                                 key_signature.strip()
                             ),
-                            "download_url": _section_download_link(
+                            "download_url": section_download_link(
                                 data, cleansed_title
                             ),
                         }
@@ -53,7 +61,7 @@ def parse_movements(data: Tag) -> list:
     return movements
 
 
-def _parse_key_signature(raw_string: str) -> str:
+def parse_key_signature(raw_string: str) -> str:
     """Parses a key signature string and returns the root note with its quality (e.g., 'csharp', 'dflat')."""
     soup = BeautifulSoup(raw_string, "html.parser")
 
@@ -84,7 +92,7 @@ def _parse_key_signature(raw_string: str) -> str:
         raise ValueError("Invalid key signature format")
 
 
-def _section_download_link(data: Tag, piece_name: str) -> str | None:
+def section_download_link(data: Tag, piece_name: str) -> str | None:
     """Return the download URL of the file with the most downloads for a piece that matches"""
     matching_files = []
     parent_div = data.find("div", id="wpscore_tabs")
