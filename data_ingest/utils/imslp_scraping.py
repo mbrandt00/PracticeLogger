@@ -133,6 +133,7 @@ def create_piece_collection(url: str):
             piece_soup = BeautifulSoup(data.text, 'html.parser')
             test = create_piece(piece_soup)
             print(test)
+            break
 
         # print(links)
 
