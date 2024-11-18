@@ -44,25 +44,20 @@ def parse_metadata(data: dict):
     :param data: Dictionary containing raw metadata.
     :return: Processed metadata dictionary with standardized keys and renamed attributes.
     """
-    desired_attributes = ['Composition Years']
-    rename_map = {"movements_sections_mov'ts_sec's": 'movement_sections_count'}
+    # Mapping for renaming keys
+    rename_map = {"movements_sections_mov_ts_sec_s": 'movement_sections_count'}
     
     # Standardize dictionary: Convert keys to snake_case and replace empty strings with None
     metadata_dict = convert_empty_vals_to_none(data)
-    metadata_dict = standardize_dict_keys(metadata_dict)
-    # 
-    # # Filter for desired attributes
+    metadata_dict = standardize_dict_keys(metadata_dict) 
+    
+    # Check if there are keys to rename
     if metadata_dict: 
-        metadata_dict = {
-            key: metadata_dict[key]
-            for key in metadata_dict.keys()
-            if key in [standardize_dict_keys(attr) for attr in desired_attributes]
-        }
-    # 
-    # # Rename keys based on rename_map
-    # renamed_metadata = {
-    #     rename_map.get(key, key): value
-    #     for key, value in filtered_metadata.items()
-    # }
-
+        for key in list(metadata_dict.keys()):  # We use list() to avoid runtime error while modifying dict during iteration
+            if key in rename_map:
+                print(f"Renaming key: {key} to {rename_map[key]}")
+                # Assign the new value to the new key
+                metadata_dict[rename_map[key]] = metadata_dict.pop(key)
+    else:
+        raise ValueError("No data to parse")
     return metadata_dict
