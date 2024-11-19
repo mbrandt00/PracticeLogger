@@ -6,7 +6,7 @@ from urllib.parse import quote, urlparse
 
 import requests
 from bs4 import BeautifulSoup
-from pieces import create_piece
+from pieces import Piece, create_piece
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -117,11 +117,12 @@ def get_composer_collection_objects(base_url: str) -> List[str]:
     return list(set(collection_objects))
 
 
-def create_piece_collection(url: str):
+def create_piece_collection(url: str) -> List[Piece]:
     data = requests.get(url)
     soup = BeautifulSoup(data.text, "html.parser")
     tables = soup.find_all("table")
     second_table = tables[1] if len(tables) > 1 else None
+    pieces = []
     if second_table:
         piece_count_text = second_table.find("td").text
         links = soup.select("tr td ul li a[title]")
@@ -134,13 +135,12 @@ def create_piece_collection(url: str):
             print(piece_url)
             data = requests.get(piece_url)
             piece_soup = BeautifulSoup(data.text, "html.parser")
-            test = create_piece(piece_soup)
-            print(test)
-            break
+            pieces.append(create_piece(piece_soup))
 
-        # print(links)
+    # print(pieces)
+    return pieces
 
 
-create_piece_collection(
-    "https://imslp.org/wiki/Complete_Piano_Sonatas_(Beethoven%2C_Ludwig_van)"
-)
+# create_piece_collection(
+#     "https://imslp.org/wiki/Complete_Piano_Sonatas_(Beethoven%2C_Ludwig_van)"
+# )
