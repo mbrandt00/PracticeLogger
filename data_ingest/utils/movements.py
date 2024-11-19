@@ -14,7 +14,7 @@ class Movement:
     key_signature: Optional[str] = None
 
 
-def parse_movements(data: Tag) -> Optional[List[Movement]]:
+def parse_movements(data: Tag) -> List[Movement]:
     movements = []
     number_title_pattern = r"(\d+).\s*([A-Za-z ]+)"
     general_info_div = data.find("div", class_="wi_body")
@@ -56,4 +56,4 @@ def parse_movements(data: Tag) -> Optional[List[Movement]]:
                     )
 
                 movements.append(movement)
-    return movements if movements else None
+    return movements
