@@ -1,6 +1,6 @@
 import re
 from dataclasses import dataclass
-from typing import Optional
+from typing import List, Optional
 
 from bs4 import Tag
 from helpers import parse_key_signature, section_download_link
@@ -12,7 +12,9 @@ class Movement:
     title: str
     number: int
     key_signature: Optional[str] = None
-def parse_movements(data: Tag) -> list:
+
+
+def parse_movements(data: Tag) -> Optional[List[Movement]]:
     movements = []
     number_title_pattern = r"(\d+).\s*([A-Za-z ]+)"
     general_info_div = data.find("div", class_="wi_body")
@@ -48,18 +50,10 @@ def parse_movements(data: Tag) -> list:
                             "name": cleansed_title
                             if movement_type == "piece"
                             else name.strip(),
-                            "key_signature": parse_key_signature(
-                                key_signature.strip()
-                            ),
-                            "download_url": section_download_link(
-                                data, cleansed_title
-                            ),
+                            "key_signature": parse_key_signature(key_signature.strip()),
+                            "download_url": section_download_link(data, cleansed_title),
                         }
                     )
 
                 movements.append(movement)
-
-    return movements
-
-
-
+    return movements if movements else None

@@ -29,23 +29,30 @@ def standardize_dict_keys(data: dict) -> Optional[Dict]:
     :return: A processed dictionary with snake_case keys and no empty strings
     :raises ValueError: If the input is not a dictionary
     """
+
     def process_key(key: str) -> str:
         # Replace spaces and special characters with underscores
         key = key.strip().replace(" ", "_")
-        key = re.sub(r'(?<!^)(?=[A-Z])', '_', key)  # Convert CamelCase to snake_case
-        key = re.sub(r'[^\w]', '_', key)  # Replace non-alphanumeric chars with _
-        key = re.sub(r'_+', '_', key)  # Collapse multiple underscores to one
-        return key.lower().strip('_')  # Ensure lowercase and remove trailing underscores
+        key = re.sub(r"(?<!^)(?=[A-Z])", "_", key)  # Convert CamelCase to snake_case
+        key = re.sub(r"[^\w]", "_", key)  # Replace non-alphanumeric chars with _
+        key = re.sub(r"_+", "_", key)  # Collapse multiple underscores to one
+        return key.lower().strip(
+            "_"
+        )  # Ensure lowercase and remove trailing underscores
 
     if not isinstance(data, dict):
         raise ValueError("TESTSEKLTJ:LKJ")
-    
+
     # Recursively process the dictionary
-    return {process_key(k): standardize_dict_keys(v) if isinstance(v, dict) else (None if v == '' else v) 
-            for k, v in data.items()}
+    return {
+        process_key(k): standardize_dict_keys(v)
+        if isinstance(v, dict)
+        else (None if v == "" else v)
+        for k, v in data.items()
+    }
+
 
 def parse_key_signature(raw_string: str) -> str:
-
     """Parses a key signature string and returns the root note with its quality (e.g., 'csharp', 'dflat')."""
     soup = BeautifulSoup(raw_string, "html.parser")
 
@@ -74,6 +81,7 @@ def parse_key_signature(raw_string: str) -> str:
         return root
     else:
         raise ValueError("Invalid key signature format")
+
 
 def section_download_link(data: Tag, piece_name: str) -> str | None:
     """Return the download URL of the file with the most downloads for a piece that matches"""

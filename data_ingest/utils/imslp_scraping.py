@@ -15,7 +15,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 
 def get_collection_url(composer_name: str) -> str:
     base_url = "https://imslp.org/wiki/Category:"
@@ -115,26 +116,31 @@ def get_composer_collection_objects(base_url: str) -> List[str]:
 
     return list(set(collection_objects))
 
-def create_piece_collection(url: str): 
+
+def create_piece_collection(url: str):
     data = requests.get(url)
-    soup = BeautifulSoup(data.text, 'html.parser')
-    tables = soup.find_all('table')
+    soup = BeautifulSoup(data.text, "html.parser")
+    tables = soup.find_all("table")
     second_table = tables[1] if len(tables) > 1 else None
     if second_table:
-        piece_count_text = second_table.find('td').text
-        links = soup.select('tr td ul li a[title]')
+        piece_count_text = second_table.find("td").text
+        links = soup.select("tr td ul li a[title]")
         if not links:
             raise ValueError("No piece urls found for collection")
         base_url = "https://imslp.org"
 
-        urls = [base_url + str(link['href']) for link in links if 'href' in link.attrs]
+        urls = [base_url + str(link["href"]) for link in links if "href" in link.attrs]
         for piece_url in urls:
+            print(piece_url)
             data = requests.get(piece_url)
-            piece_soup = BeautifulSoup(data.text, 'html.parser')
+            piece_soup = BeautifulSoup(data.text, "html.parser")
             test = create_piece(piece_soup)
             print(test)
             break
 
         # print(links)
 
-create_piece_collection('https://imslp.org/wiki/Complete_Piano_Sonatas_(Beethoven%2C_Ludwig_van)')
+
+create_piece_collection(
+    "https://imslp.org/wiki/Complete_Piano_Sonatas_(Beethoven%2C_Ludwig_van)"
+)
