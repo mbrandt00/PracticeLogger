@@ -35,10 +35,12 @@ def test_parse_metadata():
                 "composition_year": 1846,
                 "key_signature": "gminor",
                 "movements_count": 4,
+                "nickname": None,
+                "instrumentation": ["cello", "piano"]
             },
         ),
         (
-            "tests/scrape_responses/appasionata_piece.html",
+            "tests/scrape_responses/appassionata_piece.html",
             {
                 "catalogue_number": 57,
                 "title": "Piano Sonata No.23",
@@ -47,6 +49,8 @@ def test_parse_metadata():
                 "composition_year": 1804,
                 "key_signature": "fminor",
                 "movements_count": 3,
+                "nickname": "Appassionata",
+                "instrumentation": ["piano"]
             },
         ),
     ],
@@ -63,3 +67,5 @@ def test_create_piece(html_file, expected_data):
     assert data.composition_year == expected_data["composition_year"]
     assert len(data.movements) == expected_data["movements_count"]
     assert data.key_signature == expected_data["key_signature"]
+    assert data.nickname == expected_data['nickname']
+    assert data.instrumentation == expected_data['instrumentation']
