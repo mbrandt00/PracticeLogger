@@ -20,6 +20,7 @@ class Piece:
     movements: List[Movement] = field(default_factory=list)
     instrumentation: Optional[List[str]] = field(default_factory=list)
     nickname: Optional[str] = None
+    piece_style: Optional[str] = None
 
 
 def create_piece(data: Tag) -> Piece:
@@ -50,7 +51,8 @@ def create_piece(data: Tag) -> Piece:
         opus_catalogue_number_op_cat_no=meta_attributes[
             "opus_catalogue_number_op_cat_no"
         ],
-        nickname = meta_attributes['nickname']
+        nickname = meta_attributes['nickname'],
+        piece_style= meta_attributes['piece_style']
     )
 
 
@@ -65,6 +67,7 @@ class PieceMetadata(TypedDict):
     instrumentation: Optional[List[str]]
     movement_sections_count: Optional[str]
     nickname: Optional[str]
+    piece_style: Optional[str]
 
 
 def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
@@ -93,6 +96,7 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
 
     if not metadata_dict:
         raise ValueError("no metadata dict")
+    print("KEYS", metadata_dict)
 
     # Initialize the processed metadata with default values
     processed_metadata: PieceMetadata = {
@@ -106,6 +110,7 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
         "key_signature": None,
         "movement_sections_count": None,
         "nickname": metadata_dict.get("alternative_title"),
+        "piece_style":None
     }
 
     # Handle key renaming
@@ -143,9 +148,8 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
             if "," in instrumentation else
             [instrumentation.strip()]
         )
-    # Process remaining fields
-    # for key in metadata_dict:
-    #     processed_metadata[key] = metadata_dict[key]
+    if piece_style := metadata_dict.get('piece_style'):
+        processed_metadata['piece_style'] = piece_style.lower()
 
     # Ensure work_title is present
     if not processed_metadata["work_title"]:

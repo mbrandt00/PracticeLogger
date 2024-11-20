@@ -36,7 +36,8 @@ def test_parse_metadata():
                 "key_signature": "gminor",
                 "movements_count": 4,
                 "nickname": None,
-                "instrumentation": ["cello", "piano"]
+                "instrumentation": ["cello", "piano"],
+                "piece_style": "romantic"
             },
         ),
         (
@@ -50,7 +51,9 @@ def test_parse_metadata():
                 "key_signature": "fminor",
                 "movements_count": 3,
                 "nickname": "Appassionata",
-                "instrumentation": ["piano"]
+                "instrumentation": ["piano"],
+                "piece_style": "classical"
+
             },
         ),
     ],
@@ -69,3 +72,4 @@ def test_create_piece(html_file, expected_data):
     assert data.key_signature == expected_data["key_signature"]
     assert data.nickname == expected_data['nickname']
     assert data.instrumentation == expected_data['instrumentation']
+    assert data.piece_style == expected_data['piece_style']
