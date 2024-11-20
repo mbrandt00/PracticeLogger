@@ -2,11 +2,8 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional, TypedDict
 
 from bs4 import Tag
-from helpers import (
-    convert_empty_vals_to_none,
-    parse_key_signature,
-    standardize_dict_keys,
-)
+from helpers import (convert_empty_vals_to_none, parse_key_signature,
+                     standardize_dict_keys)
 from movements import Movement, parse_movements
 
 
@@ -22,6 +19,7 @@ class Piece:
     key_signature: Optional[str] = None
     movements: List[Movement] = field(default_factory=list)
     instrumentation: Optional[List[str]] = field(default_factory=list)
+    nickname: Optional[str] = None
 
 
 def create_piece(data: Tag) -> Piece:
@@ -52,6 +50,7 @@ def create_piece(data: Tag) -> Piece:
         opus_catalogue_number_op_cat_no=meta_attributes[
             "opus_catalogue_number_op_cat_no"
         ],
+        nickname = meta_attributes['nickname']
     )
 
 
@@ -65,6 +64,7 @@ class PieceMetadata(TypedDict):
     composition_year: Optional[int]
     instrumentation: Optional[List[str]]
     movement_sections_count: Optional[str]
+    nickname: Optional[str]
 
 
 def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
@@ -105,6 +105,7 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
         "catalogue_number": None,
         "key_signature": None,
         "movement_sections_count": None,
+        "nickname": metadata_dict.get("alternative_title"),
     }
 
     # Handle key renaming
@@ -136,10 +137,15 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
         processed_metadata["composition_year"] = (
             int(comp_year[:4]) if comp_year else None
         )
-
+    if instrumentation := metadata_dict.get('instrumentation'):
+        processed_metadata['instrumentation'] = (
+            [instr.strip() for instr in instrumentation.split(",")]
+            if "," in instrumentation else
+            [instrumentation.strip()]
+        )
     # Process remaining fields
-    for key in metadata_dict:
-        processed_metadata[key] = metadata_dict[key]
+    # for key in metadata_dict:
+    #     processed_metadata[key] = metadata_dict[key]
 
     # Ensure work_title is present
     if not processed_metadata["work_title"]:
