@@ -17,7 +17,7 @@ class Piece:
     catalogue_desc_str: Optional[str] = None
     catalogue_type: Optional[str] = None  # op, bmv, etc
     catalogue_number: Optional[int] = None
-    
+    catalogue_number_secondary: Optional[int] = None
     catalogue_id: Optional[int] = None
     composition_year: Optional[int] = None
     composition_year_string: Optional[str] = None
@@ -65,6 +65,7 @@ def create_piece(data: Tag = None, url: str = None) -> Piece:
         composition_year=meta_attributes["composition_year"],
         catalogue_type=meta_attributes["catalogue_type"],
         catalogue_number=meta_attributes["catalogue_number"],
+        catalogue_number_secondary=meta_attributes["catalogue_number_secondary"],
         key_signature=meta_attributes["key_signature"],
         instrumentation=meta_attributes["instrumentation"],
         catalogue_desc_str=meta_attributes["opus_catalogue_number_op_cat_no"],
@@ -84,6 +85,7 @@ class PieceMetadata(TypedDict):
     catalogue_type: Optional[str]
     composer_name: str
     catalogue_number: Optional[int]
+    catalogue_number_secondary: Optional[int]
     key_signature: Optional[str]
     composition_year_string: Optional[str]
     composition_year: Optional[int]
@@ -131,6 +133,7 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
         "composition_year": None,
         "catalogue_type": None,
         "catalogue_number": None,
+        "catalogue_number_secondary": None,
         "key_signature": None,
         "movement_sections_count": None,
         "nickname": metadata_dict.get("alternative_title"),
@@ -150,13 +153,27 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
 
     if opus_value := metadata_dict.get("opus_catalogue_number_op_cat_no"):
         processed_metadata["opus_catalogue_number_op_cat_no"] = opus_value
-        catalogue_string = opus_value.replace(".", " ").split()
-        if len(catalogue_string) >= 2:
-            processed_metadata["catalogue_type"] = catalogue_string[0]
+        split_catalogue_string = opus_value.replace(".", " ").split()
+    # raise ValueError(split_catalogue_string)
+        if len(split_catalogue_string) >= 2:
+            processed_metadata["catalogue_type"] = split_catalogue_string[0]
             try:
-                processed_metadata["catalogue_number"] = int(catalogue_string[1])
+                processed_metadata["catalogue_number"] = int(split_catalogue_string[1])
+                print(processed_metadata)
             except ValueError:
                 processed_metadata["catalogue_number"] = None
+
+            # Look for "No" and extract the value after it
+            if "No" in split_catalogue_string:
+                no_index = split_catalogue_string.index("No")
+                if no_index + 1 < len(split_catalogue_string):
+                    try:
+                        processed_metadata["catalogue_number_secondary"] = int(split_catalogue_string[no_index + 1])
+                    except ValueError:
+                        processed_metadata["catalogue_number_secondary"] = None
+            else:
+                processed_metadata["catalogue_number_secondary"] = None
+
 
     if key_sig := metadata_dict.get("key_signature"):
         parsed_key = parse_key_signature(key_sig)

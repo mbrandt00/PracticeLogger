@@ -87,6 +87,7 @@ def test_create_piece_from_tag(html_file, expected_data):
                 "nickname": None,
                 "instrumentation": ["violin", "piano"],
                 "piece_style": "classical",
+                "catalogue_number_secondary": 1
             }),
         # Add more test cases as needed
     ]
@@ -103,3 +104,11 @@ def test_create_piece_from_url(url, expected_data):
     assert data.nickname == expected_data["nickname"]
     assert data.instrumentation == expected_data["instrumentation"]
     assert data.piece_style == expected_data["piece_style"]
+    assert data.catalogue_number_secondary == expected_data["catalogue_number_secondary"]
+"""
+
+Movements/Sections	3 movements:
+Allegro con brio (D major, 226 bars)
+Tema con variazioni. Andante con moto (A major, 32 bars) + 4 variations (105 bars)
+Rondo. Allegro (D major, 230 bars)
+"""
