@@ -1,18 +1,23 @@
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, TypedDict
-
-from bs4 import Tag
-from helpers import (convert_empty_vals_to_none, parse_key_signature,
-                     standardize_dict_keys)
+import requests
+from bs4 import Tag, BeautifulSoup
+from helpers import (
+    convert_empty_vals_to_none,
+    parse_key_signature,
+    standardize_dict_keys,
+)
 from movements import Movement, parse_movements
 
 
 @dataclass
 class Piece:
-    title: str
-    opus_catalogue_number_op_cat_no: Optional[str] = None
+    work_name: str
+    composer_name: str
+    catalogue_desc_str: Optional[str] = None
     catalogue_type: Optional[str] = None  # op, bmv, etc
     catalogue_number: Optional[int] = None
+    
     catalogue_id: Optional[int] = None
     composition_year: Optional[int] = None
     composition_year_string: Optional[str] = None
@@ -21,26 +26,40 @@ class Piece:
     instrumentation: Optional[List[str]] = field(default_factory=list)
     nickname: Optional[str] = None
     piece_style: Optional[str] = None
+    imslp_url: Optional[str] = None
+    wikipedia_url: Optional[str] = None
 
 
-def create_piece(data: Tag) -> Piece:
+def create_piece(data: Tag = None, url: str = None) -> Piece:
+    if not data and not url:
+        raise ValueError("No data or url argument found")
+    if url:
+        data = requests.get(url, timeout=10)
+        data = BeautifulSoup(data.text, "html.parser")
+        
     general_info_div = data.find("div", class_="wi_body")
 
+
     metadata = {}
+    wiki_url = None
     if general_info_div and isinstance(general_info_div, Tag):
         for row in general_info_div.find_all("tr"):
             th = row.find("th")
             td = row.find("td")
+            if th.get_text(strip=True) == "External Links" and td:
+                for link in td.find_all("a", href=True):
+                    href = link["href"]
+                    if "wikipedia" in href:
+                        wiki_url = href
 
             if th and td:
-                # Strip any extra spaces and add the data to the metadata dictionary
                 metadata[th.get_text(strip=True)] = td.get_text(strip=True)
 
     meta_attributes = parse_metadata(metadata)
-
     movements = parse_movements(data)
-    return Piece(
-        title=meta_attributes["work_title"],
+    piece = Piece(
+        work_name=meta_attributes["work_title"],
+        composer_name=meta_attributes["composer"],
         movements=movements,
         composition_year_string=meta_attributes["composition_year_string"],
         composition_year=meta_attributes["composition_year"],
@@ -48,18 +67,22 @@ def create_piece(data: Tag) -> Piece:
         catalogue_number=meta_attributes["catalogue_number"],
         key_signature=meta_attributes["key_signature"],
         instrumentation=meta_attributes["instrumentation"],
-        opus_catalogue_number_op_cat_no=meta_attributes[
-            "opus_catalogue_number_op_cat_no"
-        ],
-        nickname = meta_attributes['nickname'],
-        piece_style= meta_attributes['piece_style']
+        catalogue_desc_str=meta_attributes["opus_catalogue_number_op_cat_no"],
+        nickname=meta_attributes["nickname"],
+        piece_style=meta_attributes["piece_style"],
+        wikipedia_url=wiki_url,
     )
+    
+    if url:
+        piece.imslp_url = url
+    return piece
 
 
 class PieceMetadata(TypedDict):
     work_title: str
     opus_catalogue_number_op_cat_no: Optional[str]
     catalogue_type: Optional[str]
+    composer_name: str
     catalogue_number: Optional[int]
     key_signature: Optional[str]
     composition_year_string: Optional[str]
@@ -72,7 +95,8 @@ class PieceMetadata(TypedDict):
 
 def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
     """
-    Parse and standardize metadata from the input dictionary.
+    Parse and standardize metadata from the input dictionary with data from general info
+    table.
 
     Args:
         data: Dictionary containing raw metadata with string keys and values
@@ -88,6 +112,7 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
         "movements_sections_mov_ts_sec_s": "movement_sections_count",
         "key": "key_signature",
         "year_date_of_composition_y_d_of_comp": "composition_year_string",
+        "composer": "composer",
     }
 
     # Standardize dictionary: Convert keys to snake_case and replace empty strings with None
@@ -96,7 +121,6 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
 
     if not metadata_dict:
         raise ValueError("no metadata dict")
-    print("KEYS", metadata_dict)
 
     # Initialize the processed metadata with default values
     processed_metadata: PieceMetadata = {
@@ -110,7 +134,8 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
         "key_signature": None,
         "movement_sections_count": None,
         "nickname": metadata_dict.get("alternative_title"),
-        "piece_style":None
+        "composer": metadata_dict.get("composer"),
+        "piece_style": None,
     }
 
     # Handle key renaming
@@ -140,16 +165,20 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
     if comp_year := metadata_dict.get("composition_year_string"):
         processed_metadata["composition_year_string"] = comp_year
         processed_metadata["composition_year"] = (
-            int(comp_year[:4]) if comp_year else None
+            int(comp_year[:4]) if comp_year and comp_year[:4].isdigit() else None
         )
-    if instrumentation := metadata_dict.get('instrumentation'):
-        processed_metadata['instrumentation'] = (
+    if instrumentation := metadata_dict.get("instrumentation"):
+        processed_metadata["instrumentation"] = (
             [instr.strip() for instr in instrumentation.split(",")]
-            if "," in instrumentation else
-            [instrumentation.strip()]
+            if "," in instrumentation
+            else [instrumentation.strip()]
         )
-    if piece_style := metadata_dict.get('piece_style'):
-        processed_metadata['piece_style'] = piece_style.lower()
+    if piece_style := metadata_dict.get("piece_style"):
+        processed_metadata["piece_style"] = piece_style.lower()
+    if work_title := metadata_dict.get('work_title'):
+        if " in " in work_title:
+            work_title = work_title.split(" in ", 1)[0]
+        processed_metadata['work_title'] = work_title
 
     # Ensure work_title is present
     if not processed_metadata["work_title"]:

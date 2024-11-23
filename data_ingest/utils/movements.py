@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass
 from typing import List, Optional
-
+import logging
 from bs4 import Tag
 from helpers import parse_key_signature, section_download_link
 
@@ -44,16 +44,23 @@ def parse_movements(data: Tag) -> List[Movement]:
                         if cleansed_name
                         else name.strip()
                     )
-
-                    movement.update(
-                        {
-                            "name": cleansed_title
-                            if movement_type == "piece"
-                            else name.strip(),
-                            "key_signature": parse_key_signature(key_signature.strip()),
-                            "download_url": section_download_link(data, cleansed_title),
-                        }
-                    )
+                    try:
+                        movement.update(
+                            {
+                                "name": cleansed_title
+                                if movement_type == "piece"
+                                else name.strip(),
+                                "key_signature": parse_key_signature(
+                                    key_signature.strip()
+                                ),
+                                "download_url": section_download_link(
+                                    data, cleansed_title
+                                ),
+                            }
+                        )
+                    except ValueError as e:
+                        # logging.exception('in movements, container: %s, e: %s', container, e)
+                        return None
 
                 movements.append(movement)
     return movements

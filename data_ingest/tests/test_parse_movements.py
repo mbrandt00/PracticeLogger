@@ -57,6 +57,7 @@ def test_parse_piece_movements():
         ("D ♭", "dflat"),
         ("E♯", "esharp"),
         ("C flat", "cflat"),
+        ('E-flat major', 'eflat'),
         (
             "D<span class=\"music-symbol\" style='font-family: Arial Unicode MS, Lucida Sans Unicode; font-size:110%'>♭</span> major)",
             "dflat",

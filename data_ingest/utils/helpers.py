@@ -1,4 +1,6 @@
 import re
+import logging
+
 from typing import Dict, Optional
 
 from bs4 import BeautifulSoup, Tag
@@ -52,7 +54,7 @@ def standardize_dict_keys(data: dict) -> Optional[Dict]:
     }
 
 
-def parse_key_signature(raw_string: str) -> str:
+def parse_key_signature(raw_string: str) -> Optional[str]:
     """Parses a key signature string and returns the root note with its quality (e.g., 'csharp', 'dflat')."""
     soup = BeautifulSoup(raw_string, "html.parser")
 
@@ -61,6 +63,7 @@ def parse_key_signature(raw_string: str) -> str:
         .replace("\xa0", "")
         .replace("♯", "sharp")
         .replace("♭", "flat")
+        .replace("-", " ")
         .strip()
     )
     # Regular expression pattern to match root notes and qualities
@@ -80,11 +83,13 @@ def parse_key_signature(raw_string: str) -> str:
             return root
         return root
     else:
+        # logging.exception("Invalid key signature %s", raw_string)
         raise ValueError("Invalid key signature format")
 
 
 def section_download_link(data: Tag, piece_name: str) -> str | None:
     """Return the download URL of the file with the most downloads for a piece that matches"""
+    # TODO: Under 10 mb for single movement, Beethoven No. 32 (ii) returns 130 mb file
     matching_files = []
     parent_div = data.find("div", id="wpscore_tabs")
 

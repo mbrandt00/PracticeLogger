@@ -1,9 +1,11 @@
+import logging
 import os
 import sys
 import time
-from typing import List
+from typing import List, Literal, Optional, Union
 from urllib.parse import quote, urlparse
 
+import polars as pl
 import requests
 from bs4 import BeautifulSoup
 from pieces import Piece, create_piece
@@ -13,12 +15,13 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from supabase_database import SupabaseDatabase
 from webdriver_manager.chrome import ChromeDriverManager
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
-def get_collection_url(composer_name: str) -> str:
+def get_composer_url(composer_name: str) -> str:
     base_url = "https://imslp.org/wiki/Category:"
     # Encode the composer name correctly using quote
     encoded_name = quote(
@@ -28,25 +31,36 @@ def get_collection_url(composer_name: str) -> str:
     return f"{base_url}{encoded_name}"
 
 
-def get_composer_collection_objects(base_url: str) -> List[str]:
+def base_imslp_iterator(
+    base_url: str,
+    tab: Literal[
+        "Collections",
+        "Compositions",
+        "Collaborations",
+        "Pasticcios",
+        "As Arranger",
+        "As Copyist",
+        "As Dedicatee",
+        "Books",
+    ],
+) -> List[str]:
+    """iterates through an IMSLP compose base_url with filters on tab and returns hrefs"""
     options = Options()
     options.add_argument("--headless")
     driver = webdriver.Chrome(
         service=Service(ChromeDriverManager().install()), options=options
     )
+    collection_objects = []
     try:
         # Open the URL directly in Selenium
         driver.get(base_url)
         wait = WebDriverWait(
             driver, 10
         )  # Initialize wait object with 10 second timeout
-        collection_objects = []
 
         # Find and click the Collections link
         collection_link = wait.until(
-            EC.element_to_be_clickable(
-                (By.XPATH, "//a[contains(text(), 'Collections')]")
-            )
+            EC.element_to_be_clickable((By.XPATH, f"//a[contains(text(), '{tab}')]"))
         )
         collection_container_id = urlparse(
             collection_link.get_attribute("href")
@@ -114,33 +128,92 @@ def get_composer_collection_objects(base_url: str) -> List[str]:
     finally:
         driver.quit()
 
+    if not collection_objects: 
+        raise ValueError("No hrefs found")
+
     return list(set(collection_objects))
 
 
-def create_piece_collection(url: str) -> List[Piece]:
-    data = requests.get(url)
-    soup = BeautifulSoup(data.text, "html.parser")
-    tables = soup.find_all("table")
-    second_table = tables[1] if len(tables) > 1 else None
+def get_all_composer_pieces(base_url: str) -> List[str]:
+    return base_imslp_iterator(base_url, tab="Compositions")
+
+
+def get_composer_collection_objects(base_url: str) -> List[str]:
+    return base_imslp_iterator(base_url, tab="Collections")
+
+
+# def create_table_from_dataclass(dataclass, schema, table_name):
+#     columns = []
+#     for field in dataclass.__annotations__.items():
+#         name, typ = field
+#         # Mapping Python types to SQL types
+#         if typ is int:
+#             columns.append(f"{name} INT")
+#         elif typ is str:
+#             columns.append(f"{name} VARCHAR(255)")
+#         elif typ is Optional[int]:
+#             columns.append(f"{name} INT")  # Assuming INT for Optional[int]
+#         elif typ is Optional[str]:
+#             columns.append(f"{name} VARCHAR(255)")  # Assuming VARCHAR for Optional[str]
+#         else:
+#             columns.append(f"{name} VARCHAR(255)")  # Default to VARCHAR
+#     columns_sql = ", ".join(columns)
+#     create_statement = (
+#         f"CREATE TABLE IF NOT EXISTS {schema}.{table_name} ({columns_sql});"
+#     )
+#     return create_statement
+
+
+# need to add id to pieces, movements
+
+if __name__ == "__main__":
+    url = get_composer_url("Beethoven, Ludwig van")
+    data = get_all_composer_pieces(url)
     pieces = []
-    if second_table:
-        piece_count_text = second_table.find("td").text
-        links = soup.select("tr td ul li a[title]")
-        if not links:
-            raise ValueError("No piece urls found for collection")
-        base_url = "https://imslp.org"
+    for piece_url in data[:5]:
+        piece = create_piece(url=piece_url)
+        piece.imslp_url = piece_url
+        pieces.append(piece)
+    df = pl.DataFrame(pieces)
+    print(df.columns)
+    print(df.select('imslp_url').head(5))
+    # db = SupabaseDatabase()
+    # try:
+    #     # Run a query
+    #     results = db.cur.execute(
+    #         """
+    #         CREATE SCHEMA IF NOT EXISTS imslp;
+    #         CREATE TABLE IF NOT EXISTS imslp.pieces (
+    #             id BIGSERIAL,
+    #             work_name varchar,
+    #             composer_id BIGINT,
+    #             format public.piece_format,
+    #             key_signature public.key_signature_type,
+    #             catalogue_type public.catalogue_type,
+    #             catalogue_number int,
+    #             nickname varchar,
+    #             catalogue_type_num_desc varchar,
+    #             composition_year int,
+    #             composition_year_desc int,
+    #             piece_style varchar,
+    #             wikipedia_url varchar,
+    #             instrumentation text[]
+    #         );
+    #         """
+    #     )
+    #     db.conn.commit()
+    #     # # Fetch results (if needed)
+    #     # results = db.query("SELECT * FROM auth.users;")
+    #     # print(results)
+    # except Exception as e:
+    #     print("ERROR", e)
+    # finally:
+    #     # Ensure the connection is closed
+    #     db.close()
+    # write_df(df)
+    #
+    # print("DATA")
+    # print(df)
+    #
 
-        urls = [base_url + str(link["href"]) for link in links if "href" in link.attrs]
-        for piece_url in urls:
-            print(piece_url)
-            data = requests.get(piece_url)
-            piece_soup = BeautifulSoup(data.text, "html.parser")
-            pieces.append(create_piece(piece_soup))
 
-    # print(pieces)
-    return pieces
-
-
-# create_piece_collection(
-#     "https://imslp.org/wiki/Complete_Piano_Sonatas_(Beethoven%2C_Ludwig_van)"
-# )

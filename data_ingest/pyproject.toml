@@ -5,10 +5,16 @@ description = "Scripts to scrape data and insert into database"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "beautifulsoup4>=4.12.3",
     "imslp>=0.2.3",
+    "polars>=1.14.0",
+    "psycopg2-binary>=2.9.10",
+    "psycopg2>=2.9.10",
     "pytest>=8.3.3",
     "ruff>=0.7.4",
     "selenium>=4.26.1",
+    "webdriver-manager>=4.0.2",
+    "ipykernel>=6.29.5",
 ]
 [tool.pytest.ini_options]
 pythonpath = ["."]

@@ -37,7 +37,7 @@ def test_parse_metadata():
                 "movements_count": 4,
                 "nickname": None,
                 "instrumentation": ["cello", "piano"],
-                "piece_style": "romantic"
+                "piece_style": "romantic",
             },
         ),
         (
@@ -52,24 +52,54 @@ def test_parse_metadata():
                 "movements_count": 3,
                 "nickname": "Appassionata",
                 "instrumentation": ["piano"],
-                "piece_style": "classical"
-
+                "piece_style": "classical",
             },
         ),
     ],
 )
-def test_create_piece(html_file, expected_data):
+def test_create_piece_from_tag(html_file, expected_data):
     with open(html_file) as file:
         soup = BeautifulSoup(file, "html.parser")
         data = create_piece(soup)
 
     assert data.catalogue_number == expected_data["catalogue_number"]
-    assert data.title == expected_data["title"]
+    assert data.work_name == expected_data["title"]
     assert data.catalogue_type == expected_data["catalogue_type"]
     assert data.composition_year_string == expected_data["composition_year_string"]
     assert data.composition_year == expected_data["composition_year"]
     assert len(data.movements) == expected_data["movements_count"]
     assert data.key_signature == expected_data["key_signature"]
-    assert data.nickname == expected_data['nickname']
-    assert data.instrumentation == expected_data['instrumentation']
-    assert data.piece_style == expected_data['piece_style']
+    assert data.nickname == expected_data["nickname"]
+    assert data.instrumentation == expected_data["instrumentation"]
+    assert data.piece_style == expected_data["piece_style"]
+  
+@pytest.mark.parametrize(
+    "url, expected_data",
+    [
+        ("https://imslp.org/wiki/Violin_Sonata_No.1%2C_Op.12_No.1_(Beethoven%2C_Ludwig_van)", {
+                "catalogue_number": 12,
+                "title": "Violin Sonata No.1",
+                "catalogue_type": "Op",
+                "composition_year_string": "1797-98",
+                "composition_year": 1797,
+                "key_signature": "d",
+                "movements_count": 3,
+                "nickname": None,
+                "instrumentation": ["violin", "piano"],
+                "piece_style": "classical",
+            }),
+        # Add more test cases as needed
+    ]
+)
+def test_create_piece_from_url(url, expected_data):
+    data = create_piece(url=url)
+    assert data.catalogue_number == expected_data["catalogue_number"]
+    assert data.work_name == expected_data["title"]
+    assert data.catalogue_type == expected_data["catalogue_type"]
+    assert data.composition_year_string == expected_data["composition_year_string"]
+    assert data.composition_year == expected_data["composition_year"]
+    assert len(data.movements) == expected_data["movements_count"]
+    assert data.key_signature == expected_data["key_signature"]
+    assert data.nickname == expected_data["nickname"]
+    assert data.instrumentation == expected_data["instrumentation"]
+    assert data.piece_style == expected_data["piece_style"]
