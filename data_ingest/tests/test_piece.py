@@ -1,7 +1,8 @@
 import pytest
 from bs4 import BeautifulSoup
-
+from typing import List
 from utils.pieces import create_piece, parse_metadata
+from utils.movements import Movement
 
 
 def test_parse_metadata():
@@ -16,7 +17,6 @@ def test_parse_metadata():
     keys_to_check = ["composition_year"]
 
     assert all(key in parsed for key in keys_to_check)
-    print(f"parsed: {parsed}")
     assert parsed["composition_year_string"] == "1793-95"
     assert parsed["composition_year"] == 1793
 
@@ -98,6 +98,39 @@ def test_create_piece_from_tag(html_file, expected_data):
                 "catalogue_number_secondary": 1,
             },
         ),
+        (
+            "https://imslp.org/wiki/Scherzo_No.1%2C_Op.20_(Chopin%2C_Fr%C3%A9d%C3%A9ric)",
+            {
+                "catalogue_number": 20,
+                "title": "Scherzo No.1",
+                "catalogue_type": "Op",
+                "composition_year_string": "1833",
+                "composition_year": 1833,
+                "key_signature": "bminor",
+                "movements_count": 0, # no movements here
+                "nickname": None,
+                "instrumentation": ["piano"],
+                "piece_style": "romantic",
+                "catalogue_number_secondary": None,
+
+            },
+        ),
+        (
+            "https://imslp.org/index.php?title=Scherzo_No.3%2C_Op.39_%28Chopin%2C_Fr%C3%A9d%C3%A9ric%29",
+            {
+                "catalogue_number": 39,
+                "title": "Scherzo No.3",
+                "catalogue_type": "Op",
+                "composition_year_string": "1839",
+                "composition_year": 1839,
+                "key_signature": "csharpminor",
+                "movements_count": 0, # no movements here
+                "nickname": None,
+                "instrumentation": ["piano"],
+                "piece_style": "romantic",
+                "catalogue_number_secondary": None
+            },
+        ),
     ],
 )
 def test_create_piece_from_url(url, expected_data):
@@ -112,15 +145,12 @@ def test_create_piece_from_url(url, expected_data):
     assert data.nickname == expected_data["nickname"]
     assert data.instrumentation == expected_data["instrumentation"]
     assert data.piece_style == expected_data["piece_style"]
-    assert (
-        data.catalogue_number_secondary == expected_data["catalogue_number_secondary"]
-    )
+    assert data.catalogue_number_secondary == expected_data["catalogue_number_secondary"]
 
 
 def test_create_piece_with_sub_pieces():
     data = create_piece(
         url="https://imslp.org/wiki/Mazurkas,_Op.6_(Chopin,_Fr%C3%A9d%C3%A9ric)"
     )  # Chopin op 6 mazurkas
-    print(data)
     assert data.sub_piece_type == "pieces"
     assert data.sub_piece_count == 4

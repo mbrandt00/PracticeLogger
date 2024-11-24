@@ -3,11 +3,8 @@ from typing import Dict, List, Optional, TypedDict
 
 import requests
 from bs4 import BeautifulSoup, Tag
-from helpers import (
-    convert_empty_vals_to_none,
-    parse_key_signature,
-    standardize_dict_keys,
-)
+from helpers import (convert_empty_vals_to_none, parse_key_signature,
+                     standardize_dict_keys)
 from movements import Movement, parse_movements
 
 
@@ -96,13 +93,17 @@ def create_piece(data: Optional[Tag] = None, url: Optional[str] = None) -> Piece
                 if "Movements/Sections" in th_text:
                     td_text = td.get_text(strip=True)
                     parsed_data = td_text.split()
-                    if len(parsed_data) > 2:
-                        raise ValueError(
-                            f"parsed data for movement section sub type analsyis is greater than 2: {parsed_data}"
-                        )
-                    else:
-                        piece.sub_piece_count = int(parsed_data[0])
-                        piece.sub_piece_type = parsed_data[1]
+                    if len(parsed_data) >= 2:
+                        try:
+                            piece.sub_piece_count = int(parsed_data[0])
+                            piece.sub_piece_type = parsed_data[1]
+                        except Exception as e:
+                            if not piece.movements:
+                                continue
+                            # if len(piece.movements) == 1:
+                            #     next
+                            raise ValueError(piece, e)
+
 
     return piece
 
@@ -148,7 +149,6 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
     # Standardize dictionary: Convert keys to snake_case and replace empty strings with None
     metadata_dict = convert_empty_vals_to_none(data)
     metadata_dict = standardize_dict_keys(metadata_dict)
-    print("METADATA_DICT", metadata_dict)
 
     if not metadata_dict:
         raise ValueError("no metadata dict")

@@ -29,7 +29,6 @@ def parse_movements(data: Tag) -> List[Movement]:
         (general_info_div.find("ol"), "li", "movement"),
         (general_info_div.find("dl"), "dd", "piece"),
     ]:
-        print(container, item_tag, movement_type)
         if container and isinstance(container, Tag):
             for index, item in enumerate(container.find_all(item_tag)):
                 line = item.get_text(strip=True).replace("\xa0", " ")
@@ -64,6 +63,14 @@ def parse_movements(data: Tag) -> List[Movement]:
 
                 # Set movement properties
                 movement.title = cleansed_title if movement_type == "piece" else name
+
+                # Check for bad characters before appending
+                bad_characters = ['{', 'p.', 'monatsbericht']
+                if any(bad in movement.title.lower() for bad in bad_characters):
+                    logging.warning("Title for movement malformed, skipping: %s", movement.title)
+                    continue  # Skip this movement if a bad character is found
+
+                # If we found a valid key signature, set it
                 if valid_key_signature:
                     movement.key_signature = valid_key_signature
                     movement.download_url = section_download_link(data, cleansed_title)
