@@ -37,6 +37,8 @@ def test_parse_metadata():
                 "nickname": None,
                 "instrumentation": ["cello", "piano"],
                 "piece_style": "romantic",
+                "sub_piece_type": "movements",
+                "sub_piece_count": 4,
             },
         ),
         (
@@ -52,6 +54,8 @@ def test_parse_metadata():
                 "nickname": "Appassionata",
                 "instrumentation": ["piano"],
                 "piece_style": "classical",
+                "sub_piece_type": "movements",
+                "sub_piece_count": 3,
             },
         ),
     ],
@@ -71,11 +75,16 @@ def test_create_piece_from_tag(html_file, expected_data):
     assert data.nickname == expected_data["nickname"]
     assert data.instrumentation == expected_data["instrumentation"]
     assert data.piece_style == expected_data["piece_style"]
-  
+    assert data.sub_piece_type == expected_data["sub_piece_type"]
+    assert data.sub_piece_count == expected_data["sub_piece_count"]
+
+
 @pytest.mark.parametrize(
     "url, expected_data",
     [
-        ("https://imslp.org/wiki/Violin_Sonata_No.1%2C_Op.12_No.1_(Beethoven%2C_Ludwig_van)", {
+        (
+            "https://imslp.org/wiki/Violin_Sonata_No.1%2C_Op.12_No.1_(Beethoven%2C_Ludwig_van)",
+            {
                 "catalogue_number": 12,
                 "title": "Violin Sonata No.1",
                 "catalogue_type": "Op",
@@ -86,10 +95,10 @@ def test_create_piece_from_tag(html_file, expected_data):
                 "nickname": None,
                 "instrumentation": ["violin", "piano"],
                 "piece_style": "classical",
-                "catalogue_number_secondary": 1
-            }),
-        # Add more test cases as needed
-    ]
+                "catalogue_number_secondary": 1,
+            },
+        ),
+    ],
 )
 def test_create_piece_from_url(url, expected_data):
     data = create_piece(url=url)
@@ -103,9 +112,15 @@ def test_create_piece_from_url(url, expected_data):
     assert data.nickname == expected_data["nickname"]
     assert data.instrumentation == expected_data["instrumentation"]
     assert data.piece_style == expected_data["piece_style"]
-    assert data.catalogue_number_secondary == expected_data["catalogue_number_secondary"]
-def test_create_piece_with_sub_pieces():
-    data = create_piece(url = 'https://imslp.org/wiki/Mazurkas,_Op.6_(Chopin,_Fr%C3%A9d%C3%A9ric)') # Chopin op 6 mazurkas
-    assert data.sub_piece_type == 'pieces'
-    assert data.sub_piece_count == 4
+    assert (
+        data.catalogue_number_secondary == expected_data["catalogue_number_secondary"]
+    )
 
+
+def test_create_piece_with_sub_pieces():
+    data = create_piece(
+        url="https://imslp.org/wiki/Mazurkas,_Op.6_(Chopin,_Fr%C3%A9d%C3%A9ric)"
+    )  # Chopin op 6 mazurkas
+    print(data)
+    assert data.sub_piece_type == "pieces"
+    assert data.sub_piece_count == 4

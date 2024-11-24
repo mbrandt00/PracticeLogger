@@ -20,7 +20,7 @@ def parse_movements(data: Tag) -> List[Movement]:
     number_title_pattern = r"(\d+)\.\s*([A-Za-z ]+)"
     # Pattern to match key signature information within parentheses
     key_signature_pattern = r"\(([^)]*(?:major|minor)[^)]*)\)"
-    
+
     general_info_div = data.find("div", class_="wi_body")
     if not general_info_div or not isinstance(general_info_div, Tag):
         raise ValueError("Could not find 'div' with class 'wi_body'")
@@ -29,11 +29,14 @@ def parse_movements(data: Tag) -> List[Movement]:
         (general_info_div.find("ol"), "li", "movement"),
         (general_info_div.find("dl"), "dd", "piece"),
     ]:
+        print(container, item_tag, movement_type)
         if container and isinstance(container, Tag):
             for index, item in enumerate(container.find_all(item_tag)):
                 line = item.get_text(strip=True).replace("\xa0", " ")
-                movement = Movement(key_signature=None, number=index + 1, title=line.strip())
-                
+                movement = Movement(
+                    key_signature=None, number=index + 1, title=line.strip()
+                )
+
                 # Find all parenthetical expressions that might contain key signatures
                 key_signature_matches = re.finditer(key_signature_pattern, line)
                 valid_key_signature = None
@@ -43,10 +46,12 @@ def parse_movements(data: Tag) -> List[Movement]:
                 for match in key_signature_matches:
                     potential_key_signature = match.group(1).strip()
                     try:
-                        parsed_key_signature = parse_key_signature(potential_key_signature)
+                        parsed_key_signature = parse_key_signature(
+                            potential_key_signature
+                        )
                         valid_key_signature = parsed_key_signature
                         # Remove the matched parenthetical expression from the name
-                        name = name.replace(match.group(0), '').strip()
+                        name = name.replace(match.group(0), "").strip()
                         break  # Stop after finding the first valid key signature
                     except ValueError:
                         continue
@@ -54,9 +59,7 @@ def parse_movements(data: Tag) -> List[Movement]:
                 # Clean up the title
                 cleansed_name = re.search(number_title_pattern, name)
                 cleansed_title = (
-                    cleansed_name.group(2).strip()
-                    if cleansed_name
-                    else name.strip()
+                    cleansed_name.group(2).strip() if cleansed_name else name.strip()
                 )
 
                 # Set movement properties
@@ -66,9 +69,7 @@ def parse_movements(data: Tag) -> List[Movement]:
                     movement.download_url = section_download_link(data, cleansed_title)
                     movements.append(movement)
                 else:
-                    logging.warning(
-                        "No valid key signature found in line: %s", line
-                    )
+                    logging.warning("No valid key signature found in line: %s", line)
                     movements.append(movement)
 
     return movements

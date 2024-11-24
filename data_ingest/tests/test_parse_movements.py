@@ -1,8 +1,7 @@
 import pytest
 from bs4 import BeautifulSoup
 
-from utils.movements import (parse_key_signature, parse_movements,
-                             section_download_link)
+from utils.movements import parse_key_signature, parse_movements, section_download_link
 
 
 def test_parse_piece_sections():
@@ -58,7 +57,7 @@ def test_parse_piece_movements():
         ("D ♭", "dflat"),
         ("E♯", "esharp"),
         ("C flat", "cflat"),
-        ('E-flat major', 'eflat'),
+        ("E-flat major", "eflat"),
         (
             "D<span class=\"music-symbol\" style='font-family: Arial Unicode MS, Lucida Sans Unicode; font-size:110%'>♭</span> major)",
             "dflat",
@@ -115,7 +114,6 @@ class TestParseMovements:
             # print(result)
             assert result[0].download_url is None
             assert result[1].download_url is None
-
 
     def test_parse_piece_with_parens(self):
         with open("tests/scrape_responses/beethoven_violin_sonata.html", "r") as file:

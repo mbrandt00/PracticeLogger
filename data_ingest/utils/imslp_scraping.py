@@ -128,7 +128,7 @@ def base_imslp_iterator(
     finally:
         driver.quit()
 
-    if not collection_objects: 
+    if not collection_objects:
         raise ValueError("No hrefs found")
 
     return list(set(collection_objects))
@@ -176,7 +176,7 @@ if __name__ == "__main__":
         pieces.append(piece)
     df = pl.DataFrame(pieces)
     print(df.columns)
-    print(df.select('imslp_url').head(5))
+    print(df.select("imslp_url").head(5))
     # db = SupabaseDatabase()
     # try:
     #     # Run a query
@@ -215,5 +215,3 @@ if __name__ == "__main__":
     # print("DATA")
     # print(df)
     #
-
-

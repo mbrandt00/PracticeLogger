@@ -3,8 +3,11 @@ from typing import Dict, List, Optional, TypedDict
 
 import requests
 from bs4 import BeautifulSoup, Tag
-from helpers import (convert_empty_vals_to_none, parse_key_signature,
-                     standardize_dict_keys)
+from helpers import (
+    convert_empty_vals_to_none,
+    parse_key_signature,
+    standardize_dict_keys,
+)
 from movements import Movement, parse_movements
 
 
@@ -20,9 +23,9 @@ class Piece:
     composition_year: Optional[int] = None
     composition_year_string: Optional[str] = None
     key_signature: Optional[str] = None
-    movements: List[Movement] = field(default_factory=list) # change to sub-piece
+    movements: List[Movement] = field(default_factory=list)  # change to sub-piece
     sub_piece_type: Optional[str] = None
-    sub_piece_count:  Optional[int] = None
+    sub_piece_count: Optional[int] = None
     instrumentation: Optional[List[str]] = field(default_factory=list)
     nickname: Optional[str] = None
     piece_style: Optional[str] = None
@@ -33,7 +36,7 @@ class Piece:
 def create_piece(data: Optional[Tag] = None, url: Optional[str] = None) -> Piece:
     if not data and not url:
         raise ValueError("No data or url argument found")
-    
+
     if url:
         response = requests.get(url, timeout=10)
         data = BeautifulSoup(response.text, "html.parser")
@@ -41,9 +44,7 @@ def create_piece(data: Optional[Tag] = None, url: Optional[str] = None) -> Piece
     if not data:
         raise ValueError("Beautiful soup object could not be initialized")
 
-    
     general_info_div = data.find("div", class_="wi_body")
-
 
     metadata = {}
     wiki_url = None
@@ -66,8 +67,8 @@ def create_piece(data: Optional[Tag] = None, url: Optional[str] = None) -> Piece
         work_name=meta_attributes["work_title"],
         composer_name=meta_attributes["composer_name"],
         movements=movements,
-        sub_piece_type= meta_attributes['sub_piece_type'],
-        sub_piece_count = meta_attributes['sub_piece_count'],
+        sub_piece_type=meta_attributes["sub_piece_type"],
+        sub_piece_count=meta_attributes["sub_piece_count"],
         composition_year_string=meta_attributes["composition_year_string"],
         composition_year=meta_attributes["composition_year"],
         catalogue_type=meta_attributes["catalogue_type"],
@@ -80,28 +81,29 @@ def create_piece(data: Optional[Tag] = None, url: Optional[str] = None) -> Piece
         piece_style=meta_attributes["piece_style"],
         wikipedia_url=wiki_url,
     )
-    
+
     if url:
         piece.imslp_url = url
 
     top_header = data.find("div", class_="wp_header")
 
     if isinstance(top_header, Tag):
-        for row in top_header.find_all('tr'):
+        for row in top_header.find_all("tr"):
             th = row.find("th")
             td = row.find("td")
             if th and td:
-               th_text = th.get_text(strip=True)
-               if "Movements/Sections" in th_text:
+                th_text = th.get_text(strip=True)
+                if "Movements/Sections" in th_text:
                     td_text = td.get_text(strip=True)
-                    parsed_data = td_text.split() 
-                    if len(parsed_data) > 2: 
-                        raise ValueError(f"parsed data for movement section sub type analsyis is greater than 2: {parsed_data}")
+                    parsed_data = td_text.split()
+                    if len(parsed_data) > 2:
+                        raise ValueError(
+                            f"parsed data for movement section sub type analsyis is greater than 2: {parsed_data}"
+                        )
                     else:
                         piece.sub_piece_count = int(parsed_data[0])
                         piece.sub_piece_type = parsed_data[1]
 
-        
     return piece
 
 
@@ -117,7 +119,7 @@ class PieceMetadata(TypedDict):
     composition_year: Optional[int]
     instrumentation: Optional[List[str]]
     sub_piece_type: Optional[str]
-    sub_piece_count:  Optional[int]
+    sub_piece_count: Optional[int]
     nickname: Optional[str]
     piece_style: Optional[str]
 
@@ -194,12 +196,13 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
                 no_index = split_catalogue_string.index("No")
                 if no_index + 1 < len(split_catalogue_string):
                     try:
-                        processed_metadata["catalogue_number_secondary"] = int(split_catalogue_string[no_index + 1])
+                        processed_metadata["catalogue_number_secondary"] = int(
+                            split_catalogue_string[no_index + 1]
+                        )
                     except ValueError:
                         processed_metadata["catalogue_number_secondary"] = None
             else:
                 processed_metadata["catalogue_number_secondary"] = None
-
 
     if key_sig := metadata_dict.get("key_signature"):
         parsed_key = parse_key_signature(key_sig)
@@ -218,10 +221,10 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
         )
     if piece_style := metadata_dict.get("piece_style"):
         processed_metadata["piece_style"] = piece_style.lower()
-    if work_title := metadata_dict.get('work_title'):
+    if work_title := metadata_dict.get("work_title"):
         if " in " in work_title:
             work_title = work_title.split(" in ", 1)[0]
-        processed_metadata['work_title'] = work_title
+        processed_metadata["work_title"] = work_title
 
     # Ensure work_title is present
     if not processed_metadata["work_title"]:

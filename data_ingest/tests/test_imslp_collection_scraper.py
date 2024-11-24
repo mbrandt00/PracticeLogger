@@ -1,7 +1,6 @@
 import pytest
 
-from utils.imslp_scraping import (get_composer_collection_objects,
-                                  get_composer_url)
+from utils.imslp_scraping import get_composer_collection_objects, get_composer_url
 
 
 @pytest.mark.skip
