@@ -1,12 +1,10 @@
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, TypedDict
+
 import requests
-from bs4 import Tag, BeautifulSoup
-from helpers import (
-    convert_empty_vals_to_none,
-    parse_key_signature,
-    standardize_dict_keys,
-)
+from bs4 import BeautifulSoup, Tag
+from helpers import (convert_empty_vals_to_none, parse_key_signature,
+                     standardize_dict_keys)
 from movements import Movement, parse_movements
 
 
@@ -30,12 +28,16 @@ class Piece:
     wikipedia_url: Optional[str] = None
 
 
-def create_piece(data: Tag = None, url: str = None) -> Piece:
+def create_piece(data: Optional[Tag] = None, url: Optional[str] = None) -> Piece:
     if not data and not url:
         raise ValueError("No data or url argument found")
+    
     if url:
-        data = requests.get(url, timeout=10)
-        data = BeautifulSoup(data.text, "html.parser")
+        response = requests.get(url, timeout=10)
+        data = BeautifulSoup(response.text, "html.parser")
+
+    if not data:
+        raise ValueError("Beautiful soup object could not be initialized")
         
     general_info_div = data.find("div", class_="wi_body")
 
@@ -59,7 +61,7 @@ def create_piece(data: Tag = None, url: str = None) -> Piece:
     movements = parse_movements(data)
     piece = Piece(
         work_name=meta_attributes["work_title"],
-        composer_name=meta_attributes["composer"],
+        composer_name=meta_attributes["composer_name"],
         movements=movements,
         composition_year_string=meta_attributes["composition_year_string"],
         composition_year=meta_attributes["composition_year"],
@@ -137,7 +139,7 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
         "key_signature": None,
         "movement_sections_count": None,
         "nickname": metadata_dict.get("alternative_title"),
-        "composer": metadata_dict.get("composer"),
+        "composer_name": metadata_dict.get("composer", ""),
         "piece_style": None,
     }
 
