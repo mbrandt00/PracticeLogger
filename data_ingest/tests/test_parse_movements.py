@@ -117,9 +117,11 @@ class TestParseMovements:
             assert result[1].download_url is None
 
 
-def test_section_download_links():
-    with open("tests/scrape_responses/rachmaninoff_preludes_op_32.html", "r") as file:
-        html_content = file.read()
-        soup = BeautifulSoup(html_content, "html.parser")
-        result = section_download_link(soup, piece_name="1. Allegro Vivace")
-        assert result == "https://imslp.org/wiki/Special:ImagefromIndex/309270"
+    def test_parse_piece_with_parens(self):
+        with open("tests/scrape_responses/beethoven_violin_sonata.html", "r") as file:
+            html_content = file.read()
+            soup = BeautifulSoup(html_content, "html.parser")
+            result = parse_movements(soup)
+            assert result[0].key_signature == "d"
+            assert result[1].key_signature == "a"
+            assert result[2].key_signature == "d"

@@ -18,11 +18,13 @@ class Movement:
 def parse_movements(data: Tag) -> List[Movement]:
     movements = []
     number_title_pattern = r"(\d+)\.\s*([A-Za-z ]+)"
+    # Pattern to match key signature information within parentheses
+    key_signature_pattern = r"\(([^)]*(?:major|minor)[^)]*)\)"
+    
     general_info_div = data.find("div", class_="wi_body")
     if not general_info_div or not isinstance(general_info_div, Tag):
         raise ValueError("Could not find 'div' with class 'wi_body'")
 
-    # Process both movement list (ol/li) and piece list (dl/dd)
     for container, item_tag, movement_type in [
         (general_info_div.find("ol"), "li", "movement"),
         (general_info_div.find("dl"), "dd", "piece"),
@@ -32,33 +34,41 @@ def parse_movements(data: Tag) -> List[Movement]:
                 line = item.get_text(strip=True).replace("\xa0", " ")
                 movement = Movement(key_signature=None, number=index + 1, title=line.strip())
                 
-                if "(" in line and line.endswith(")"):
-                    name, key_signature = line.rsplit("(", 1)
-                    key_signature = key_signature.rstrip(")")  # Remove trailing parenthesis
-                    cleansed_name = re.search(number_title_pattern, name)
-                    cleansed_title = (
-                        cleansed_name.group(2).strip()
-                        if cleansed_name
-                        else name.strip()
-                    )
-                    
-                    try:
-                        # Parse the key signature from the key_signature string
-                        parsed_key_signature = parse_key_signature(key_signature.strip())
-                        # Set the title and key signature for the movement
-                        movement.title = cleansed_title if movement_type == "piece" else name.strip()
-                        movement.key_signature = parsed_key_signature
+                # Find all parenthetical expressions that might contain key signatures
+                key_signature_matches = re.finditer(key_signature_pattern, line)
+                valid_key_signature = None
+                name = line
 
-                        movement.download_url = section_download_link(data, cleansed_title)
-                        
-                        movements.append(movement)  # Append the populated movement object to the list
+                # Try each parenthetical expression until we find a valid key signature
+                for match in key_signature_matches:
+                    potential_key_signature = match.group(1).strip()
+                    try:
+                        parsed_key_signature = parse_key_signature(potential_key_signature)
+                        valid_key_signature = parsed_key_signature
+                        # Remove the matched parenthetical expression from the name
+                        name = name.replace(match.group(0), '').strip()
+                        break  # Stop after finding the first valid key signature
                     except ValueError:
-                        # Log exception but continue processing other movements
-                        logging.exception(
-                            "Invalid key signature '%s' in line: %s", key_signature, line
-                        )
-            else:
-                print("Continuing")
-                continue
+                        continue
+
+                # Clean up the title
+                cleansed_name = re.search(number_title_pattern, name)
+                cleansed_title = (
+                    cleansed_name.group(2).strip()
+                    if cleansed_name
+                    else name.strip()
+                )
+
+                # Set movement properties
+                movement.title = cleansed_title if movement_type == "piece" else name
+                if valid_key_signature:
+                    movement.key_signature = valid_key_signature
+                    movement.download_url = section_download_link(data, cleansed_title)
+                    movements.append(movement)
+                else:
+                    logging.warning(
+                        "No valid key signature found in line: %s", line
+                    )
+                    movements.append(movement)
 
     return movements
