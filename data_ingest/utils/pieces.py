@@ -20,7 +20,9 @@ class Piece:
     composition_year: Optional[int] = None
     composition_year_string: Optional[str] = None
     key_signature: Optional[str] = None
-    movements: List[Movement] = field(default_factory=list)
+    movements: List[Movement] = field(default_factory=list) # change to sub-piece
+    sub_piece_type: Optional[str] = None
+    sub_piece_count:  Optional[int] = None
     instrumentation: Optional[List[str]] = field(default_factory=list)
     nickname: Optional[str] = None
     piece_style: Optional[str] = None
@@ -38,13 +40,14 @@ def create_piece(data: Optional[Tag] = None, url: Optional[str] = None) -> Piece
 
     if not data:
         raise ValueError("Beautiful soup object could not be initialized")
-        
+
+    
     general_info_div = data.find("div", class_="wi_body")
 
 
     metadata = {}
     wiki_url = None
-    if general_info_div and isinstance(general_info_div, Tag):
+    if isinstance(general_info_div, Tag):
         for row in general_info_div.find_all("tr"):
             th = row.find("th")
             td = row.find("td")
@@ -63,6 +66,8 @@ def create_piece(data: Optional[Tag] = None, url: Optional[str] = None) -> Piece
         work_name=meta_attributes["work_title"],
         composer_name=meta_attributes["composer_name"],
         movements=movements,
+        sub_piece_type= meta_attributes['sub_piece_type'],
+        sub_piece_count = meta_attributes['sub_piece_count'],
         composition_year_string=meta_attributes["composition_year_string"],
         composition_year=meta_attributes["composition_year"],
         catalogue_type=meta_attributes["catalogue_type"],
@@ -78,6 +83,25 @@ def create_piece(data: Optional[Tag] = None, url: Optional[str] = None) -> Piece
     
     if url:
         piece.imslp_url = url
+
+    top_header = data.find("div", class_="wp_header")
+
+    if isinstance(top_header, Tag):
+        for row in top_header.find_all('tr'):
+            th = row.find("th")
+            td = row.find("td")
+            if th and td:
+               th_text = th.get_text(strip=True)
+               if "Movements/Sections" in th_text:
+                    td_text = td.get_text(strip=True)
+                    parsed_data = td_text.split() 
+                    if len(parsed_data) > 2: 
+                        raise ValueError(f"parsed data for movement section sub type analsyis is greater than 2: {parsed_data}")
+                    else:
+                        piece.sub_piece_count = int(parsed_data[0])
+                        piece.sub_piece_type = parsed_data[1]
+
+        
     return piece
 
 
@@ -92,7 +116,8 @@ class PieceMetadata(TypedDict):
     composition_year_string: Optional[str]
     composition_year: Optional[int]
     instrumentation: Optional[List[str]]
-    movement_sections_count: Optional[str]
+    sub_piece_type: Optional[str]
+    sub_piece_count:  Optional[int]
     nickname: Optional[str]
     piece_style: Optional[str]
 
@@ -113,7 +138,6 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
     """
     # Mapping for renaming keys
     rename_map = {
-        "movements_sections_mov_ts_sec_s": "movement_sections_count",
         "key": "key_signature",
         "year_date_of_composition_y_d_of_comp": "composition_year_string",
         "composer": "composer",
@@ -122,6 +146,7 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
     # Standardize dictionary: Convert keys to snake_case and replace empty strings with None
     metadata_dict = convert_empty_vals_to_none(data)
     metadata_dict = standardize_dict_keys(metadata_dict)
+    print("METADATA_DICT", metadata_dict)
 
     if not metadata_dict:
         raise ValueError("no metadata dict")
@@ -130,6 +155,8 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
     processed_metadata: PieceMetadata = {
         "work_title": metadata_dict.get("work_title", ""),
         "opus_catalogue_number_op_cat_no": None,
+        "sub_piece_type": None,
+        "sub_piece_count": None,
         "instrumentation": None,
         "composition_year_string": None,
         "composition_year": None,
@@ -137,7 +164,6 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
         "catalogue_number": None,
         "catalogue_number_secondary": None,
         "key_signature": None,
-        "movement_sections_count": None,
         "nickname": metadata_dict.get("alternative_title"),
         "composer_name": metadata_dict.get("composer", ""),
         "piece_style": None,
@@ -156,12 +182,10 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
     if opus_value := metadata_dict.get("opus_catalogue_number_op_cat_no"):
         processed_metadata["opus_catalogue_number_op_cat_no"] = opus_value
         split_catalogue_string = opus_value.replace(".", " ").split()
-    # raise ValueError(split_catalogue_string)
         if len(split_catalogue_string) >= 2:
             processed_metadata["catalogue_type"] = split_catalogue_string[0]
             try:
                 processed_metadata["catalogue_number"] = int(split_catalogue_string[1])
-                print(processed_metadata)
             except ValueError:
                 processed_metadata["catalogue_number"] = None
 

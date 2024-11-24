@@ -13,11 +13,10 @@ def test_parse_metadata():
     }
     # print(type(sample_data))
     parsed = parse_metadata(sample_data)
-    keys_to_check = ["movement_sections_count", "composition_year"]
+    keys_to_check = ["composition_year"]
 
     assert all(key in parsed for key in keys_to_check)
     print(f"parsed: {parsed}")
-    assert parsed["movement_sections_count"] == "4 movements"
     assert parsed["composition_year_string"] == "1793-95"
     assert parsed["composition_year"] == 1793
 
@@ -105,10 +104,8 @@ def test_create_piece_from_url(url, expected_data):
     assert data.instrumentation == expected_data["instrumentation"]
     assert data.piece_style == expected_data["piece_style"]
     assert data.catalogue_number_secondary == expected_data["catalogue_number_secondary"]
-"""
+def test_create_piece_with_sub_pieces():
+    data = create_piece(url = 'https://imslp.org/wiki/Mazurkas,_Op.6_(Chopin,_Fr%C3%A9d%C3%A9ric)') # Chopin op 6 mazurkas
+    assert data.sub_piece_type == 'pieces'
+    assert data.sub_piece_count == 4
 
-Movements/Sections	3 movements:
-Allegro con brio (D major, 226 bars)
-Tema con variazioni. Andante con moto (A major, 32 bars) + 4 variations (105 bars)
-Rondo. Allegro (D major, 230 bars)
-"""
