@@ -1,3 +1,4 @@
+import logging
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, TypedDict
 
@@ -98,11 +99,12 @@ def create_piece(data: Optional[Tag] = None, url: Optional[str] = None) -> Piece
                             piece.sub_piece_count = int(parsed_data[0])
                             piece.sub_piece_type = parsed_data[1]
                         except Exception as e:
-                            if not piece.movements:
-                                continue
+                            # if not piece.movements:
+                            #     continue
+                            logging.warning("Could not parse movement sections %s", parsed_data)
                             # if len(piece.movements) == 1:
                             #     next
-                            raise ValueError(piece, e)
+                            # raise ValueError(piece, e)
 
 
     return piece

@@ -1,8 +1,10 @@
+from typing import List
+
 import pytest
 from bs4 import BeautifulSoup
-from typing import List
-from utils.pieces import create_piece, parse_metadata
+
 from utils.movements import Movement
+from utils.pieces import create_piece, parse_metadata
 
 
 def test_parse_metadata():
@@ -154,3 +156,23 @@ def test_create_piece_with_sub_pieces():
     )  # Chopin op 6 mazurkas
     assert data.sub_piece_type == "pieces"
     assert data.sub_piece_count == 4
+
+def test_create_piece_with_sub_piece_and_nickname():
+    data = create_piece(url="https://imslp.org/wiki/%C3%89tudes,_Op.25_(Chopin,_Fr%C3%A9d%C3%A9ric)") # chopin op 25 etudes
+    print(data)
+    assert len(data.movements) == 12
+    assert data.movements[0].nickname == 'Aeolian Harp'
+    assert data.movements[1].nickname == 'The Bees'
+    assert data.movements[2].nickname == 'The Horseman'
+    assert data.movements[3].nickname == 'Paganini'
+    assert data.movements[4].nickname == 'Wrong Note'
+    assert data.movements[5].nickname == 'Thirds'
+    assert data.movements[6].nickname == 'Cello'
+
+    assert data.movements[0].key_signature == 'aflat'
+    assert data.movements[1].key_signature == 'fminor'
+    assert data.movements[2].key_signature == 'f'
+    assert data.movements[3].key_signature == 'aminor'
+    assert data.movements[4].key_signature == 'eminor'
+    assert data.movements[5].key_signature == 'gsharpminor'
+    assert data.movements[6].key_signature == 'csharpminor'
