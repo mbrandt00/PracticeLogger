@@ -65,8 +65,15 @@ def parse_key_signature(raw_string: str) -> Optional[str]:
         .replace("-", " ")
         .strip()
     )
-    # Regular expression pattern to match root notes and qualities
-    pattern = r"([A-Ga-g])\s*(sharp|flat|)?\s*(major|minor)?"
+
+    # Look for key signature in parentheses first
+    paren_pattern = r"\((.*?)\)"
+    paren_match = re.search(paren_pattern, clean_string)
+    if paren_match:
+        clean_string = paren_match.group(1)
+
+    # Modified pattern to be more specific about key signatures
+    pattern = r"([A-G])\s*(sharp|flat|)?\s*(major|minor)?"
     match = re.search(pattern, clean_string)
 
     if match:
@@ -81,46 +88,44 @@ def parse_key_signature(raw_string: str) -> Optional[str]:
                 return root + "minor"
             return root
         return root
-    else:
-        # logging.exception("Invalid key signature %s", raw_string)
-        raise ValueError("Invalid key signature format")
+
+    raise ValueError(f"Invalid key signature format: {raw_string}")
 
 
 def section_download_link(data: Tag, piece_name: str) -> str | None:
     """Return the download URL of the file with the most downloads for a piece that matches"""
-    # TODO: Under 10 mb for single movement, Beethoven No. 32 (ii) returns 130 mb file
-    matching_files = []
+    # Early return if parent div doesn't exist or is wrong type
     parent_div = data.find("div", id="wpscore_tabs")
-
-    if parent_div and isinstance(parent_div, Tag):
-        file_download_divs = parent_div.find_all(
-            "div", class_="we_file_download plainlinks"
-        )
-
-        for div in file_download_divs:
-            download_text = div.find("a", class_="external text").get_text(strip=True)
-            if piece_name.lower() in download_text.lower():
-                # Extract the number of downloads
-                downloads_text = div.find("span", title="Total number of downloads")
-                if downloads_text:
-                    # Extract the actual number from the text (e.g., "3694×" -> 3694)
-                    try:
-                        downloads = int(
-                            downloads_text.get_text(strip=True).replace("×", "").strip()
-                        )
-                    except ValueError:
-                        downloads = 0  # If there's no valid number, assume 0 downloads
-                    matching_files.append((div, downloads))
-                else:
-                    # If no download count is found, treat it as 0 downloads
-                    matching_files.append((div, 0))
-
-        if matching_files:
-            # Sort the files by number of downloads in descending order
-            best_file = max(matching_files, key=lambda x: x[1])
-            # Extract the URL of the file with the most downloads
-            best_file_url = best_file[0].find("a", class_="external text")["href"]
-            return best_file_url
-
-    else:
+    if not parent_div or not isinstance(parent_div, Tag):
         return None
+
+    matching_files = []
+    file_download_divs = parent_div.find_all(
+        "div", class_="we_file_download plainlinks"
+    )
+
+    # Process each download div
+    for div in file_download_divs:
+        download_text = div.find("a", class_="external text").get_text(strip=True)
+        if piece_name.lower() not in download_text.lower():
+            continue
+
+        # Get download count
+        downloads = 0
+        downloads_text = div.find("span", title="Total number of downloads")
+        if downloads_text:
+            try:
+                downloads = int(
+                    downloads_text.get_text(strip=True).replace("×", "").strip()
+                )
+            except ValueError:
+                pass  # Keep downloads as 0 if parsing fails
+
+        matching_files.append((div, downloads))
+
+    # Return best matching file URL or None if no matches
+    if not matching_files:
+        return None
+
+    best_file = max(matching_files, key=lambda x: x[1])
+    return best_file[0].find("a", class_="external text")["href"]

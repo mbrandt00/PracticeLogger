@@ -26,6 +26,7 @@ def test_parse_piece_movements():
         ("E♯", "esharp"),
         ("C flat", "cflat"),
         ("E-flat major", "eflat"),
+        ("Presto  = 192-200 (D♭ major)", "dflat"),
         (
             "D<span class=\"music-symbol\" style='font-family: Arial Unicode MS, Lucida Sans Unicode; font-size:110%'>♭</span> major)",
             "dflat",
