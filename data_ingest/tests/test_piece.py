@@ -1,9 +1,6 @@
-from typing import List
-
 import pytest
 from bs4 import BeautifulSoup
 
-from utils.movements import Movement
 from utils.pieces import create_piece, parse_metadata
 
 
@@ -98,6 +95,7 @@ def test_create_piece_from_tag(html_file, expected_data):
                 "instrumentation": ["violin", "piano"],
                 "piece_style": "classical",
                 "catalogue_number_secondary": 1,
+                "sub_piece_type": "movements",
             },
         ),
         (
@@ -109,12 +107,12 @@ def test_create_piece_from_tag(html_file, expected_data):
                 "composition_year_string": "1833",
                 "composition_year": 1833,
                 "key_signature": "bminor",
-                "movements_count": 0, # no movements here
+                "movements_count": 0,
                 "nickname": None,
                 "instrumentation": ["piano"],
                 "piece_style": "romantic",
                 "catalogue_number_secondary": None,
-
+                "sub_piece_type": None,
             },
         ),
         (
@@ -126,17 +124,36 @@ def test_create_piece_from_tag(html_file, expected_data):
                 "composition_year_string": "1839",
                 "composition_year": 1839,
                 "key_signature": "csharpminor",
-                "movements_count": 0, # no movements here
+                "movements_count": 0,
                 "nickname": None,
                 "instrumentation": ["piano"],
                 "piece_style": "romantic",
-                "catalogue_number_secondary": None
+                "catalogue_number_secondary": None,
+                "sub_piece_type": None,
+            },
+        ),
+        (
+            "https://imslp.org/wiki/8_Etudes,_Op.42_(Scriabin,_Aleksandr)",
+            {
+                "catalogue_number": 42,
+                "title": "Eight Etudes",
+                "catalogue_type": "Op",
+                "composition_year_string": "1903",
+                "composition_year": 1903,
+                "key_signature": None,
+                "movements_count": 8,
+                "nickname": "Восемь этюдов",  #
+                "instrumentation": ["piano"],
+                "piece_style": "romantic",
+                "catalogue_number_secondary": None,
+                "sub_piece_type": "etudes",
             },
         ),
     ],
 )
 def test_create_piece_from_url(url, expected_data):
     data = create_piece(url=url)
+    print(data)
     assert data.catalogue_number == expected_data["catalogue_number"]
     assert data.work_name == expected_data["title"]
     assert data.catalogue_type == expected_data["catalogue_type"]
@@ -147,7 +164,10 @@ def test_create_piece_from_url(url, expected_data):
     assert data.nickname == expected_data["nickname"]
     assert data.instrumentation == expected_data["instrumentation"]
     assert data.piece_style == expected_data["piece_style"]
-    assert data.catalogue_number_secondary == expected_data["catalogue_number_secondary"]
+    assert (
+        data.catalogue_number_secondary == expected_data["catalogue_number_secondary"]
+    )
+    assert data.sub_piece_type == expected_data["sub_piece_type"]
 
 
 def test_create_piece_with_sub_pieces():
@@ -157,22 +177,5 @@ def test_create_piece_with_sub_pieces():
     assert data.sub_piece_type == "pieces"
     assert data.sub_piece_count == 4
 
-def test_create_piece_with_sub_piece_and_nickname():
-    data = create_piece(url="https://imslp.org/wiki/%C3%89tudes,_Op.25_(Chopin,_Fr%C3%A9d%C3%A9ric)") # chopin op 25 etudes
-    print(data)
-    assert len(data.movements) == 12
-    assert data.movements[0].nickname == 'Aeolian Harp'
-    assert data.movements[1].nickname == 'The Bees'
-    assert data.movements[2].nickname == 'The Horseman'
-    assert data.movements[3].nickname == 'Paganini'
-    assert data.movements[4].nickname == 'Wrong Note'
-    assert data.movements[5].nickname == 'Thirds'
-    assert data.movements[6].nickname == 'Cello'
 
-    assert data.movements[0].key_signature == 'aflat'
-    assert data.movements[1].key_signature == 'fminor'
-    assert data.movements[2].key_signature == 'f'
-    assert data.movements[3].key_signature == 'aminor'
-    assert data.movements[4].key_signature == 'eminor'
-    assert data.movements[5].key_signature == 'gsharpminor'
-    assert data.movements[6].key_signature == 'csharpminor'
+# problematic urls: https://imslp.org/index.php?title=Romance_for_Horn_and_Piano_%28Scriabin%2C_Aleksandr%29

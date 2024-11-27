@@ -1,34 +1,7 @@
 import pytest
 from bs4 import BeautifulSoup
 
-from utils.movements import parse_key_signature, parse_movements, section_download_link
-
-
-def test_parse_piece_sections():
-    with open("tests/scrape_responses/rachmaninoff_preludes_op_32.html", "r") as file:
-        html_content = file.read()
-        soup = BeautifulSoup(html_content, "html.parser")
-        result = parse_movements(soup)
-        assert isinstance(result, list)
-        # key signature
-        assert result[0].key_signature == "c"
-        assert result[1].key_signature == "bflatminor"
-        # number
-        assert result[0].number == 1
-        assert result[1].number == 2
-        # clean name without number
-        assert result[0].title == "Allegro vivace"
-        assert result[1].title == "Allegretto"
-
-        # url
-        # assert (
-        #     result[0].download_url
-        #     == "https://imslp.org/wiki/Special:ImagefromIndex/309270"
-        # )
-        # assert (
-        #     result[1].download_url
-        #     == "https://imslp.org/wiki/Special:ImagefromIndex/309271"
-        # )
+from utils.movements import parse_key_signature, parse_movements
 
 
 def test_parse_piece_movements():
@@ -70,56 +43,49 @@ def test_parse_key_signature(test_input, expected):
 
 class TestParseMovements:
     def test_parse_piece_sections(self):
-        with open(
-            "tests/scrape_responses/rachmaninoff_preludes_op_32.html", "r"
-        ) as file:
-            html_content = file.read()
-            soup = BeautifulSoup(html_content, "html.parser")
-            result = parse_movements(soup)
-            assert isinstance(result, list)
-            # key signature
-            assert result[0].key_signature == "c"
-            assert result[1].key_signature == "bflatminor"
-            # number
-            assert result[0].number == 1
-            assert result[1].number == 2
-            # clean name without number
-            assert result[0].title == "Allegro vivace"
-            assert result[1].title == "Allegretto"
-            # url
-            print(result)
-            assert (
-                result[0].download_url
-                == "https://imslp.org/wiki/Special:ImagefromIndex/309270"
-            )
-            assert (
-                result[1].download_url
-                == "https://imslp.org/wiki/Special:ImagefromIndex/309271"
-            )
+        result = parse_movements(
+            url="https://imslp.org/wiki/13_Preludes,_Op.32_(Rachmaninoff,_Sergei)"
+        )
+        assert isinstance(result, list)
+        # key signature
+        assert result[0].key_signature == "c"
+        assert result[1].key_signature == "bflatminor"
+        # number
+        assert result[0].number == 1
+        assert result[1].number == 2
+        # clean name without number
+        assert result[0].title == "Allegro vivace"
+        assert result[1].title == "Allegretto"
+        # url
+        print(result)
+        assert (
+            result[0].download_url
+            == "https://imslp.org/wiki/Special:ImagefromIndex/309270"
+        )
+        assert (
+            result[1].download_url
+            == "https://imslp.org/wiki/Special:ImagefromIndex/309271"
+        )
 
-    def test_parse_piece_movements(self):
-        with open("tests/scrape_responses/chopin_cello_sonata.html") as file:
-            html_content = file.read()
-            soup = BeautifulSoup(html_content, "html.parser")
-            result = parse_movements(soup)
-            assert result[0].key_signature == "gminor"
-            assert result[1].key_signature == "dminor"
-            # number
-            assert result[0].number == 1
-            assert result[1].number == 2
-            # clean name without number
-            assert result[0].title == "Allegro moderato"
-            assert result[1].title == "Scherzo"
-            # url
-            # print(result)
-            assert result[0].download_url is None
-            assert result[1].download_url is None
 
-    def test_parse_piece_with_parens(self):
-        with open("tests/scrape_responses/beethoven_violin_sonata.html", "r") as file:
-            html_content = file.read()
-            soup = BeautifulSoup(html_content, "html.parser")
-            result = parse_movements(soup)
-            assert result[0].key_signature == "d"
-            assert result[1].key_signature == "a"
-            assert result[2].key_signature == "d"
+def test_create_piece_with_sub_piece_and_nickname():
+    data = parse_movements(
+        url="https://imslp.org/wiki/%C3%89tudes,_Op.25_(Chopin,_Fr%C3%A9d%C3%A9ric)"
+    )
+    print(data)
+    assert len(data) == 12
+    assert data[0].nickname == "Aeolian Harp"
+    assert data[1].nickname == "The Bees"
+    assert data[2].nickname == "The Horseman"
+    assert data[3].nickname == "Paganini"
+    assert data[4].nickname == "Wrong Note"
+    assert data[5].nickname == "Thirds"
+    assert data[6].nickname == "Cello"
+
+    assert data[0].key_signature == "aflat"
+    assert data[1].key_signature == "fminor"
+    assert data[2].key_signature == "f"
+    assert data[3].key_signature == "aminor"
+    assert data[4].key_signature == "eminor"
+    assert data[5].key_signature == "gsharpminor"
+    assert data[6].key_signature == "csharpminor"
