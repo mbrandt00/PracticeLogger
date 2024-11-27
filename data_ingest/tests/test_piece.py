@@ -21,10 +21,10 @@ def test_parse_metadata():
 
 
 @pytest.mark.parametrize(
-    "html_file, expected_data",
+    "url, expected_data",
     [
         (
-            "tests/scrape_responses/chopin_cello_sonata.html",
+            "https://imslp.org/wiki/Cello_Sonata,_Op.65_(Chopin,_Fr%C3%A9d%C3%A9ric)",
             {
                 "catalogue_number": 65,
                 "title": "Cello Sonata",
@@ -41,7 +41,7 @@ def test_parse_metadata():
             },
         ),
         (
-            "tests/scrape_responses/appassionata_piece.html",
+            "https://imslp.org/wiki/Piano_Sonata_No.23,_Op.57_(Beethoven,_Ludwig_van)",
             {
                 "catalogue_number": 57,
                 "title": "Piano Sonata No.23",
@@ -59,10 +59,8 @@ def test_parse_metadata():
         ),
     ],
 )
-def test_create_piece_from_tag(html_file, expected_data):
-    with open(html_file) as file:
-        soup = BeautifulSoup(file, "html.parser")
-        data = create_piece(soup)
+def test_create_piece_from_tag(url, expected_data):
+    data = create_piece(url=url)
 
     assert data.catalogue_number == expected_data["catalogue_number"]
     assert data.work_name == expected_data["title"]

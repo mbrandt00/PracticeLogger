@@ -5,22 +5,17 @@ from utils.movements import parse_key_signature, parse_movements
 
 
 def test_parse_piece_movements():
-    with open("tests/scrape_responses/chopin_cello_sonata.html") as file:
-        html_content = file.read()
-        soup = BeautifulSoup(html_content, "html.parser")
-        result = parse_movements(soup)
-        assert result[0].key_signature == "gminor"
-        assert result[1].key_signature == "dminor"
-        # number
-        assert result[0].number == 1
-        assert result[1].number == 2
-        # clean name without number
-        assert result[0].title == "Allegro moderato"
-        assert result[1].title == "Scherzo"
-
-        # # url
-        # assert result[0].download_url is None
-        # assert result[1].download_url is None
+    result = parse_movements(
+        url="https://imslp.org/wiki/Cello_Sonata,_Op.65_(Chopin,_Fr%C3%A9d%C3%A9ric)"
+    )
+    assert result[0].key_signature == "gminor"
+    assert result[1].key_signature == "dminor"
+    # number
+    assert result[0].number == 1
+    assert result[1].number == 2
+    # clean name without number
+    assert result[0].title == "Allegro moderato"
+    assert result[1].title == "Scherzo"
 
 
 @pytest.mark.parametrize(
