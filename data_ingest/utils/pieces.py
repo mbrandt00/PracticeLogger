@@ -4,8 +4,11 @@ from typing import Dict, List, Optional, TypedDict
 
 import requests
 from bs4 import BeautifulSoup, Tag
-from helpers import (convert_empty_vals_to_none, parse_key_signature,
-                     standardize_dict_keys)
+from helpers import (
+    convert_empty_vals_to_none,
+    parse_key_signature,
+    standardize_dict_keys,
+)
 from movements import Movement, parse_movements
 
 
@@ -101,11 +104,12 @@ def create_piece(data: Optional[Tag] = None, url: Optional[str] = None) -> Piece
                         except Exception as e:
                             # if not piece.movements:
                             #     continue
-                            logging.warning("Could not parse movement sections %s", parsed_data)
+                            logging.warning(
+                                "Could not parse movement sections %s", parsed_data
+                            )
                             # if len(piece.movements) == 1:
                             #     next
                             # raise ValueError(piece, e)
-
 
     return piece
 
@@ -210,17 +214,25 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
         parsed_key = parse_key_signature(key_sig)
         processed_metadata["key_signature"] = parsed_key
         metadata_dict.pop("key_signature")
+    else:
+        logging.warning("no key signature found %s", metadata_dict)
     if comp_year := metadata_dict.get("composition_year_string"):
         processed_metadata["composition_year_string"] = comp_year
         processed_metadata["composition_year"] = (
             int(comp_year[:4]) if comp_year and comp_year[:4].isdigit() else None
         )
     if instrumentation := metadata_dict.get("instrumentation"):
-        processed_metadata["instrumentation"] = (
-            [instr.strip() for instr in instrumentation.split(",")]
-            if "," in instrumentation
-            else [instrumentation.strip()]
-        )
+        if "and" in instrumentation:
+            # Store as a list in the dictionary
+            processed_metadata["instrumentation"] = [
+                item.strip() for item in instrumentation.split("and")
+            ]
+        else:
+            processed_metadata["instrumentation"] = (
+                [instr.strip() for instr in instrumentation.split(",")]
+                if "," in instrumentation
+                else [instrumentation.strip()]
+            )
     if piece_style := metadata_dict.get("piece_style"):
         processed_metadata["piece_style"] = piece_style.lower()
     if work_title := metadata_dict.get("work_title"):

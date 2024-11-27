@@ -35,34 +35,11 @@ def parse_movements(
     movements = []
     number_title_pattern = r"(\d+)\.\s*([A-Za-z ]+)"
 
-    def normalize_key_signature(text: str) -> str:
-        # Replace dashes with spaces within parentheses
-        in_parentheses = False
-        result = []
-        for char in text:
-            if char == "(":
-                in_parentheses = True
-            elif char == ")":
-                in_parentheses = False
-            elif char == "-" and in_parentheses:
-                result.append(" ")
-            else:
-                result.append(char)
-        return "".join(result)
-
     def clean_title(title: str) -> str:
         # Remove empty parentheses and clean up extra whitespace
         cleaned = re.sub(r"\(\s*\)", "", title)
         cleaned = re.sub(r"\s+", " ", cleaned)
         return cleaned.strip()
-
-    # Updated patterns to handle both formats
-    key_signature_parentheses_pattern = (
-        r"\((\b[A-Ga-g][♭#]?(?:(?:-|\s+)(?:sharp|flat))?\s*(?:major|minor)\b)\)"
-    )
-    key_signature_inline_pattern = (
-        r"\b([A-Ga-g][♭#]?(?:(?:-|\s+)(?:sharp|flat))?\s*(?:major|minor))\b"
-    )
 
     if not general_info_div or not isinstance(general_info_div, Tag):
         raise ValueError("Could not find 'div' with class 'wi_body'")
@@ -73,79 +50,36 @@ def parse_movements(
     ]:
         if container and isinstance(container, Tag):
             for index, item in enumerate(container.find_all(item_tag)):
-                line = item.get_text(strip=True).replace("\xa0", " ")
-                # Normalize the line for key signature matching
-                normalized_line = normalize_key_signature(line)
-
+                # Process the raw HTML directly for key signature parsing
+                raw_html = str(item)
                 movement = Movement(
-                    key_signature=None, number=index + 1, title=line.strip()
+                    key_signature=None, number=index + 1, title=item.get_text(strip=True)
                 )
 
-                valid_key_signature = None
+                # Try to parse key signature
+                try:
+                    valid_key_signature = parse_key_signature(raw_html)
+                    if valid_key_signature:
+                        movement.key_signature = valid_key_signature
+                except ValueError:
+                    logging.warning(f"Could not parse key signature from: {raw_html}")
+
+                # Get clean text version for other processing
+                line = item.get_text(strip=True).replace("\xa0", " ")
                 name = line
 
-                # Step 1: Check for key signature in parentheses
-                match_parentheses = re.search(
-                    key_signature_parentheses_pattern, normalized_line
-                )
-                if match_parentheses:
-                    potential_key_signature = match_parentheses.group(1).strip()
-                    try:
-                        valid_key_signature = parse_key_signature(
-                            potential_key_signature
-                        )
-                        # Remove the matched parenthetical expression from the name
-                        name = name.replace(match_parentheses.group(0), "").strip()
-                    except ValueError:
-                        logging.warning(
-                            f"Invalid key signature in parentheses: {potential_key_signature}"
-                        )
+                # Remove any parenthetical key signatures from the name
+                key_sig_pattern = r"\([^)]*(?:major|minor)[^)]*\)"
+                name = re.sub(key_sig_pattern, "", name).strip()
 
-                # Step 2: If no valid parentheses match, check inline key signature
-                if not valid_key_signature:
-                    match_inline = re.search(
-                        key_signature_inline_pattern, normalized_line
-                    )
-                    if match_inline:
-                        potential_key_signature = match_inline.group(1).strip()
-                        try:
-                            valid_key_signature = parse_key_signature(
-                                potential_key_signature
-                            )
-                            # Extract the matched text from the original line for removal
-                            original_match = re.search(
-                                rf"\b{re.escape(match_inline.group(0))}\b", line
-                            )
-                            if original_match:
-                                name = name.replace(original_match.group(0), "").strip()
-                        except ValueError:
-                            logging.warning(
-                                f"Invalid inline key signature: {potential_key_signature}"
-                            )
-
-                # Also check for "in X minor/major" format
-                if not valid_key_signature:
-                    in_key_pattern = r"in\s+([A-Ga-g][♭#]?(?:(?:-|\s+)(?:sharp|flat))?\s*(?:major|minor))"
-                    match_in_key = re.search(in_key_pattern, normalized_line)
-                    if match_in_key:
-                        potential_key_signature = match_in_key.group(1).strip()
-                        try:
-                            valid_key_signature = parse_key_signature(
-                                potential_key_signature
-                            )
-                        except ValueError:
-                            logging.warning(
-                                f"Invalid 'in key' signature: {potential_key_signature}"
-                            )
-
+                # Extract base title without additional text in brackets
+                base_title = re.sub(r'\s*\[.*?\].*$', '', name).strip()
+                
                 # Clean up the title
-                cleansed_name = re.search(number_title_pattern, name)
-                cleansed_title = (
-                    cleansed_name.group(2).strip() if cleansed_name else name.strip()
-                )
-                # Clean up any remaining empty parentheses
-                cleansed_title = clean_title(cleansed_title)
+                cleansed_name = re.search(number_title_pattern, base_title)
+                movement.title = cleansed_name.group(2).strip() if cleansed_name else base_title
 
+                # Process nickname
                 nickname_pattern = r"['\"](.*?)['\"]"
                 nickname_potential = re.findall(nickname_pattern, line)
                 if len(nickname_potential) > 1:
@@ -155,11 +89,6 @@ def parse_movements(
                 elif len(nickname_potential) == 1:
                     movement.nickname = nickname_potential[0]
 
-                # Set movement properties
-                movement.title = (
-                    cleansed_title if movement_type == "piece" else clean_title(name)
-                )
-
                 # Check for bad characters before appending
                 bad_characters = ["{", "p.", "monatsbericht"]
                 if any(bad in movement.title.lower() for bad in bad_characters):
@@ -168,13 +97,10 @@ def parse_movements(
                     )
                     continue
 
-                # If we found a valid key signature, set it
-                if valid_key_signature:
-                    movement.key_signature = valid_key_signature
-                    movement.download_url = section_download_link(data, cleansed_title)
-                    movements.append(movement)
-                else:
-                    logging.warning(f"No valid key signature found in line: {line}")
-                    movements.append(movement)
+                # Set download URL if we have a key signature
+                if movement.key_signature:
+                    movement.download_url = section_download_link(data, movement.title)
+
+                movements.append(movement)
 
     return movements

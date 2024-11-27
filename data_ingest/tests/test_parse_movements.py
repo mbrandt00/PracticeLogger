@@ -26,7 +26,10 @@ def test_parse_piece_movements():
         ("E♯", "esharp"),
         ("C flat", "cflat"),
         ("E-flat major", "eflat"),
+        ("Allegretto non tanto in F♯ minor", "fsharpminor"),
+        ("Doloroso in D♯ minor", "dsharpminor"),
         ("Presto  = 192-200 (D♭ major)", "dflat"),
+        ("F♯ major", "fsharp"),
         (
             "D<span class=\"music-symbol\" style='font-family: Arial Unicode MS, Lucida Sans Unicode; font-size:110%'>♭</span> major)",
             "dflat",
@@ -85,3 +88,15 @@ def test_create_piece_with_sub_piece_and_nickname():
     assert data[4].key_signature == "eminor"
     assert data[5].key_signature == "gsharpminor"
     assert data[6].key_signature == "csharpminor"
+    
+
+@pytest.mark.parametrize("test_input,expected",
+    [("Prelude [Прелюдия]", 'Prelude')]
+)
+def test_parse_nickname(test_input, expected):
+    data = parse_movements(
+        url="https://imslp.org/wiki/4_Pieces%2C_Op.56_(Scriabin%2C_Aleksandr)"
+    )
+    print(data)
+    assert data[0].title == "Prelude"
+    
