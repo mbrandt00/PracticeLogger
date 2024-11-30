@@ -1,13 +1,15 @@
 import pytest
 
-from utils.imslp_scraping import get_composer_collection_objects, get_composer_url
+from utils.imslp_scraping import (get_all_composer_pieces,
+                                  get_composer_collection_objects,
+                                  get_composer_url)
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_get_composer_collection_objects():
-    url = get_composer_url("Beethoven, Ludwig van")
-    collection_objects = get_composer_collection_objects(url)
-    assert len(collection_objects) > 200  # pagination
+    url = get_composer_url("Mendelssohn, Felix")
+    collection_objects = get_all_composer_pieces(url)
+    assert len(collection_objects) == 246  # pagination
 
 
 def test_collection_to_pieces():

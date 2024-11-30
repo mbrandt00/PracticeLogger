@@ -42,7 +42,7 @@ def standardize_dict_keys(data: dict) -> Optional[Dict]:
         )  # Ensure lowercase and remove trailing underscores
 
     if not isinstance(data, dict):
-        raise ValueError("TESTSEKLTJ:LKJ")
+        raise ValueError("Data is not a dict")
 
     # Recursively process the dictionary
     return {
@@ -116,7 +116,7 @@ def parse_key_signature(raw_string: str) -> Optional[str]:
         if quality and quality.lower() == "minor":
             result += "minor"
         return result
-    logging.warning("No valid key signature found %s", raw_string)
+    # logging.warning("No valid key signature found %s", raw_string)
     return None
 
 def section_download_link(data: Tag, piece_name: str) -> str | None:

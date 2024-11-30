@@ -97,20 +97,23 @@ def create_piece(data: Optional[Tag] = None, url: Optional[str] = None) -> Piece
                 if "Movements/Sections" in th_text:
                     td_text = td.get_text(strip=True)
                     parsed_data = td_text.split()
-                    if len(parsed_data) >= 2:
+                    
+                    # Iterate through the list with index to check next word
+                    for i, item in enumerate(parsed_data):
                         try:
-                            piece.sub_piece_count = int(parsed_data[0])
-                            piece.sub_piece_type = parsed_data[1]
-                        except Exception as e:
-                            # if not piece.movements:
-                            #     continue
-                            logging.warning(
-                                "Could not parse movement sections %s", parsed_data
-                            )
-                            # if len(piece.movements) == 1:
-                            #     next
-                            # raise ValueError(piece, e)
-
+                            number = int(item)  # Try to convert the raw string to number
+                            # Check if there's a next word after the number
+                            if i + 1 < len(parsed_data):
+                                piece.sub_piece_count = number
+                                piece.sub_piece_type = parsed_data[i + 1].strip()
+                                break
+                        except ValueError:
+                            continue
+                    # else:  # Only executed if no break occurred
+                    #     logging.warning(
+                    #         "Could not find numeric value followed by type in movement sections %s", 
+                    #         parsed_data
+                    #     )
     return piece
 
 
@@ -157,7 +160,7 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
     metadata_dict = standardize_dict_keys(metadata_dict)
 
     if not metadata_dict:
-        raise ValueError("no metadata dict")
+        return
 
     # Initialize the processed metadata with default values
     processed_metadata: PieceMetadata = {
@@ -214,8 +217,8 @@ def parse_metadata(data: Dict[str, str]) -> PieceMetadata:
         parsed_key = parse_key_signature(key_sig)
         processed_metadata["key_signature"] = parsed_key
         metadata_dict.pop("key_signature")
-    else:
-        logging.warning("no key signature found %s", metadata_dict)
+    # else:
+    #     logging.warning("no key signature found %s", metadata_dict)
     if comp_year := metadata_dict.get("composition_year_string"):
         processed_metadata["composition_year_string"] = comp_year
         processed_metadata["composition_year"] = (

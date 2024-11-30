@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import sys
@@ -52,76 +53,84 @@ def base_imslp_iterator(
     )
     collection_objects = []
     try:
-        # Open the URL directly in Selenium
         driver.get(base_url)
-        wait = WebDriverWait(
-            driver, 10
-        )  # Initialize wait object with 10 second timeout
+        wait = WebDriverWait(driver, 20)  
 
-        # Find and click the Collections link
-        collection_link = wait.until(
-            EC.element_to_be_clickable((By.XPATH, f"//a[contains(text(), '{tab}')]"))
-        )
+        # Find the tab
+        tab_xpath_patterns = [
+            f"//a[contains(text(), '{tab}')]",
+            f"//a[normalize-space()='{tab}']",
+            f"//div[contains(@class, 'tabpanel')]//a[contains(text(), '{tab}')]"
+        ]
+        
+        collection_link = None
+        for xpath in tab_xpath_patterns:
+            try:
+                collection_link = wait.until(
+                    EC.element_to_be_clickable((By.XPATH, xpath))
+                )
+                break
+            except Exception:
+                continue
+
+        if not collection_link:
+            return []
+
+        # Get the container ID and click the tab
         collection_container_id = urlparse(
             collection_link.get_attribute("href")
         ).fragment
+        
+        if not collection_container_id:
+            return []
+            
         driver.execute_script("arguments[0].click();", collection_link)
+        time.sleep(2)  # Wait for content to load
 
-        # Wait for the initial collection content to load
-        if collection_container_id and isinstance(collection_container_id, str):
-            wait.until(EC.presence_of_element_located((By.ID, collection_container_id)))
+        # Wait for the specific container to be present
+        try:
+            container = wait.until(
+                EC.presence_of_element_located((By.ID, collection_container_id))
+            )
+        except Exception:
+            return []
 
-        while True:
+        # Function to get links from the current container
+        def get_container_links():
             try:
-                # Wait for the collection links to be present
-                wait.until(
-                    EC.presence_of_all_elements_located(
-                        (
-                            By.CSS_SELECTOR,
-                            f"#{collection_container_id} a.categorypagelink",
-                        )
-                    )
-                )
-
-                # Get the current page's links
-                links = driver.find_elements(
-                    By.CSS_SELECTOR, f"#{collection_container_id} a.categorypagelink"
-                )
-
-                # Extract hrefs
+                # Only look for links within the specific container
+                container = driver.find_element(By.ID, collection_container_id)
+                links = container.find_elements(By.TAG_NAME, "a")
+                valid_hrefs = []
                 for link in links:
                     href = link.get_attribute("href")
-                    if href:
-                        collection_objects.append(href)
+                    if href and "/wiki/" in href:
+                        valid_hrefs.append(href)
+                return valid_hrefs
+            except Exception:
+                return []
 
-                # Look for the next page link
-                try:
-                    next_page = wait.until(
-                        EC.presence_of_element_located(
-                            (
-                                By.XPATH,
-                                "//a[contains(@class, 'categorypaginglink') and contains(text(), 'next') and not(contains(text(), 'no next'))]",
-                            )
-                        )
-                    )
+        # Get initial links
+        collection_objects.extend(get_container_links())
 
-                    # Use JavaScript click instead of regular click
-                    driver.execute_script("arguments[0].click();", next_page)
-
-                    # Wait for the page content to update
-                    time.sleep(1)  # Short sleep to allow for any animations
-
-                    # Wait for the content to change
-                    # We can do this by waiting for the staleness of one of the current links
-                    if links:
-                        try:
-                            wait.until(EC.staleness_of(links[0]))
-                        except Exception:
-                            pass
-
-                except Exception:
+        # Handle pagination within the container
+        while True:
+            try:
+                # Look for next page link within the container
+                container = driver.find_element(By.ID, collection_container_id)
+                next_page = container.find_element(
+                    By.XPATH,
+                    ".//a[contains(@class, 'categorypaginglink') and contains(text(), 'next') and not(contains(text(), 'no next'))]"
+                )
+                driver.execute_script("arguments[0].click();", next_page)
+                time.sleep(2)
+                
+                # Get links from the new page
+                new_links = get_container_links()
+                if not new_links:
                     break
-
+                collection_objects.extend(new_links)
+                
             except Exception:
                 break
 
@@ -129,10 +138,10 @@ def base_imslp_iterator(
         driver.quit()
 
     if not collection_objects:
-        raise ValueError("No hrefs found")
+        print(f"Warning: No hrefs found for {base_url}")
+        return []
 
     return list(set(collection_objects))
-
 
 def get_all_composer_pieces(base_url: str) -> List[str]:
     return base_imslp_iterator(base_url, tab="Compositions")
@@ -165,18 +174,38 @@ def get_composer_collection_objects(base_url: str) -> List[str]:
 
 
 # need to add id to pieces, movements
+def piece_to_dict(new_piece):
+    try:
+        piece_dict = vars(new_piece).copy()
+        piece_dict["movements"] = json.dumps([vars(m) for m in new_piece.movements])
+        return piece_dict
+    except Exception as e:
+        print("ERROR", e)
+        print(new_piece)
+        raise e
+
 
 if __name__ == "__main__":
-    url = get_composer_url("Beethoven, Ludwig van")
-    data = get_all_composer_pieces(url)
+    from pathlib import Path
+
+    file = Path("test_df.parquet")
+    # testing
+    # if file.is_file():
+    #     df = pl.read_parquet(file)
+    #     print(df.head(5))
+    # else:
+    logging.info("pulling data to parquet")
+    composers = ["Beethoven, Ludwig van", "Chopin, Frédéric", "Scriabin, Aleksandr"]
     pieces = []
-    for piece_url in data[:5]:
-        piece = create_piece(url=piece_url)
-        piece.imslp_url = piece_url
-        pieces.append(piece)
-    df = pl.DataFrame(pieces)
-    print(df.columns)
-    print(df.select("imslp_url").head(5))
+    for composer in composers:
+        url = get_composer_url(composer)
+        data = get_all_composer_pieces(url)
+        for piece_url in data[:100]:
+            piece = create_piece(url=piece_url)
+            pieces.append(piece)
+    pieces_dict = [piece_to_dict(piece) for piece in pieces]
+    df = pl.DataFrame(pieces_dict, strict=False)
+    # df.write_parquet("test_df.parquet")
     # db = SupabaseDatabase()
     # try:
     #     # Run a query

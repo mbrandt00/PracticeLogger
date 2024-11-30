@@ -147,6 +147,23 @@ def test_create_piece_from_tag(url, expected_data):
                 "sub_piece_type": "etudes",
             },
         ),
+        (
+            "https://imslp.org/wiki/Rhapsody_on_a_Theme_of_Paganini%2C_Op.43_(Rachmaninoff%2C_Sergei)",
+            {
+                "catalogue_number": 43,
+                "title": "Rhapsody on a Theme of Paganini",
+                "catalogue_type": "Op",
+                "composition_year_string": "1934",
+                "composition_year": 1934,
+                "key_signature": 'aminor',
+                "movements_count": 25,
+                "nickname": "Рапсодия на тему Паганини (Rapsodiya na temu Paganini)",  #
+                "instrumentation": ["piano", "orchestra"],
+                "piece_style": "romantic",
+                "catalogue_number_secondary": None,
+                "sub_piece_type": "variations",
+            },
+        ),
     ],
 )
 def test_create_piece_from_url(url, expected_data):
@@ -177,3 +194,6 @@ def test_create_piece_with_sub_pieces():
 
 
 # problematic urls: https://imslp.org/index.php?title=Romance_for_Horn_and_Piano_%28Scriabin%2C_Aleksandr%29
+
+# key signature wrong
+# https://imslp.org/wiki/Concerto_in_G_minor%2C_BWV_985_(Bach%2C_Johann_Sebastian)

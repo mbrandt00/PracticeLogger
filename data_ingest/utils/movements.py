@@ -82,19 +82,15 @@ def parse_movements(
                 # Process nickname
                 nickname_pattern = r"['\"](.*?)['\"]"
                 nickname_potential = re.findall(nickname_pattern, line)
-                if len(nickname_potential) > 1:
-                    raise ValueError(
-                        f"found two potential nicknames: {nickname_potential}"
-                    )
-                elif len(nickname_potential) == 1:
+                if len(nickname_potential) == 1:
                     movement.nickname = nickname_potential[0]
 
                 # Check for bad characters before appending
                 bad_characters = ["{", "p.", "monatsbericht"]
                 if any(bad in movement.title.lower() for bad in bad_characters):
-                    logging.warning(
-                        f"Title for movement malformed, skipping: {movement.title}"
-                    )
+                    # logging.warning(
+                    #     f"Title for movement malformed, skipping: {movement.title}"
+                    # )
                     continue
 
                 # Set download URL if we have a key signature
