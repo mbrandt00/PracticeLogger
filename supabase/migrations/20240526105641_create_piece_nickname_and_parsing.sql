@@ -19,8 +19,6 @@ CREATE TYPE PieceMetadata AS (
     catalogue_type catalogue_type,
     catalogue_number INT,
     format piece_format,
-    key_signature key_signature_type,
-    tonality key_signature_tonality,
     nickname text
 );
 
@@ -29,7 +27,7 @@ RETURNS PieceMetadata AS $$
 DECLARE
     opus_info opus_information;
     format piece_format;
-    key_signature_value key_signature;
+    key_signature_value key_signature_type;
     nickname text;
     metadata PieceMetadata;
 BEGIN
@@ -37,7 +35,7 @@ BEGIN
 
     format := parse_piece_format(work_name);
 
-    key_signature_value := parse_piece_key_signature(work_name);
+    -- key_signature_value := parse_piece_key_signature(work_name);
 
     nickname := parse_piece_nickname(work_name);
 
@@ -45,8 +43,8 @@ BEGIN
         opus_info.catalogue_type,
         opus_info.catalogue_number,
         format,
-        key_signature_value.key,
-        key_signature_value.tonality,
+        -- key_signature_value.key,
+        -- key_signature_value.tonality,
         nickname
     )::PieceMetadata;
 
