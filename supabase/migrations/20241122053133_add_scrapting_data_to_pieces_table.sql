@@ -36,7 +36,7 @@ BEGIN
     UPDATE imslp.pieces
     SET fts = to_tsvector('english', 
                          unaccent(NEW.work_name) || ' ' || 
-                         COALESCE(unaccent(NEW.nickname), ''))
+                         COALESCE(unaccent(regexp_replace(NEW.nickname, '/', ' ', 'g')), ''))
     WHERE imslp.pieces.id = NEW.id;
     RETURN NEW;
 END;
@@ -48,10 +48,10 @@ BEGIN
     UPDATE imslp.pieces
     SET fts = to_tsvector('english',
                          unaccent(work_name) || ' ' ||
-                         COALESCE(unaccent(nickname), '') || ' ' ||
+                         COALESCE(unaccent(regexp_replace(nickname, '/', ' ', 'g')), '') || ' ' ||
                          COALESCE((SELECT string_agg(
-                             unaccent(COALESCE(m.name, '')) || ' ' || 
-                             unaccent(COALESCE(m.nickname, '')), ' ')
+                             unaccent(regexp_replace(COALESCE(m.name, ''), '/', ' ', 'g')) || ' ' || 
+                             unaccent(regexp_replace(COALESCE(m.nickname, ''), '/', ' ', 'g')), ' ')
                              FROM imslp.movements m 
                              WHERE m.piece_id = NEW.piece_id), ''))
     WHERE id = NEW.piece_id;
