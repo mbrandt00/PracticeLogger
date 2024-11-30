@@ -1,5 +1,4 @@
 import pytest
-from bs4 import BeautifulSoup
 
 from utils.pieces import create_piece, parse_metadata
 
@@ -15,6 +14,7 @@ def test_parse_metadata():
     parsed = parse_metadata(sample_data)
     keys_to_check = ["composition_year"]
 
+    assert parsed is not None
     assert all(key in parsed for key in keys_to_check)
     assert parsed["composition_year_string"] == "1793-95"
     assert parsed["composition_year"] == 1793
@@ -61,7 +61,7 @@ def test_parse_metadata():
 )
 def test_create_piece_from_tag(url, expected_data):
     data = create_piece(url=url)
-
+    assert data is not None
     assert data.catalogue_number == expected_data["catalogue_number"]
     assert data.work_name == expected_data["title"]
     assert data.catalogue_type == expected_data["catalogue_type"]
@@ -164,11 +164,63 @@ def test_create_piece_from_tag(url, expected_data):
                 "sub_piece_type": "variations",
             },
         ),
+        (
+            "https://imslp.org/wiki/Pr%C3%A9ludes,_Livre_1_(Debussy,_Claude)",
+            {
+                "catalogue_number": 125,
+                "title": "Préludes, Premier Livre",
+                "catalogue_type": "cd",
+                "composition_year_string": "1909-10",
+                "composition_year": 1909,
+                "key_signature":None,
+                "movements_count": 12,
+                "nickname":None,
+                "instrumentation": ["piano"],
+                "piece_style": "romantic",
+                "catalogue_number_secondary": None,
+                "sub_piece_type": "preludes",
+            },
+        ),
+        (
+            "https://imslp.org/wiki/Violin_Sonata_in_F_major,_MWV_Q_7_(Mendelssohn,_Felix) ",
+            {
+                "catalogue_number": 7,
+                "title": "Violin Sonata",
+                "catalogue_type": "mwvq",
+                "composition_year_string": "1820",
+                "composition_year": 1820,
+                "key_signature":'f',
+                "movements_count": 3,
+                "nickname":None,  
+                "instrumentation": ["violin", "piano"],
+                "piece_style": "romantic",
+                "catalogue_number_secondary": None,
+                "sub_piece_type": "movements",
+            },
+        ),
+        (
+            "https://imslp.org/wiki/Le_temple_universel,_H_137_(Berlioz,_Hector)",
+            {
+                "catalogue_number": 137,
+                "title": "Le temple universel",
+                "catalogue_type": "h",
+                "composition_year_string": "1861, rev. 1868",
+                "composition_year": 1861,
+                "key_signature":None,
+                "movements_count": 0,
+                "nickname":None,  
+                "instrumentation":  ['TTBB—TTBB', 'organTTBB a capella'],
+                "piece_style": "romantic",
+                "catalogue_number_secondary": None,
+                "sub_piece_type": None
+            },
+        ),
     ],
 )
 def test_create_piece_from_url(url, expected_data):
     data = create_piece(url=url)
     print(data)
+    assert data is not None
     assert data.catalogue_number == expected_data["catalogue_number"]
     assert data.work_name == expected_data["title"]
     assert data.catalogue_type == expected_data["catalogue_type"]

@@ -125,18 +125,17 @@ class PieceMetadata(TypedDict):
     nickname: Optional[str]
     piece_style: Optional[str]
 
-
 def parse_catalogue_number(opus_value: str) -> tuple[str | None, int | None, int | None]:
     """
     Parse a catalogue number string into its components.
-    Prioritizes BWV numbers for Bach works when present anywhere in the string.
+    Prioritizes BWV numbers for Bach works and H numbers when present anywhere in the string.
     
     Args:
-        opus_value: The catalogue number string (e.g. "BWV 1234", "K.466", "Op. 27 No. 2")
+        opus_value: The catalogue number string (e.g. "BWV 1234", "K.466", "Op. 27 No. 2", "Œuvre 28 ; H 137")
         
     Returns:
         tuple containing:
-        - catalogue_type (str or None): The type of catalogue (e.g. "bwv", "k", "op")
+        - catalogue_type (str or None): The type of catalogue (e.g. "bwv", "h", "k", "op")
         - catalogue_number (int or None): The primary number
         - catalogue_number_secondary (int or None): The secondary number (e.g. the number after "No.")
     """
@@ -154,6 +153,18 @@ def parse_catalogue_number(opus_value: str) -> tuple[str | None, int | None, int
                 return "bwv", bwv_number, None
             except ValueError:
                 pass
+    
+    # Check for H catalogue numbers anywhere in the string
+    if " h " in normalized_value or ";h" in normalized_value or normalized_value.startswith("h"):
+        # Split on common delimiters and look for the H number
+        parts = normalized_value.replace(";", " ").replace(",", " ").replace(".", " ").split()
+        for i, part in enumerate(parts):
+            if part == "h" and i + 1 < len(parts):
+                try:
+                    h_number = int(''.join(c for c in parts[i + 1] if c.isdigit()))
+                    return "h", h_number, None
+                except ValueError:
+                    pass
     
     # Handle special cases with numbers in catalogue types
     special_prefixes = ["k2", "k3", "k6", "k9", "k046", "k030", "k008"]
@@ -208,6 +219,7 @@ def parse_catalogue_number(opus_value: str) -> tuple[str | None, int | None, int
             break
             
     return catalogue_type, catalogue_number, catalogue_number_secondary
+
 def parse_metadata(data: Dict[str, str]) -> Optional[PieceMetadata]:
     """
     Parse and standardize metadata from the input dictionary with data from general info

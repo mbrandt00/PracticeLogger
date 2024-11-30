@@ -1,7 +1,9 @@
+import json
 import os
+
 import polars as pl
 import psycopg2
-import json
+
 
 class SupabaseDatabase:
     def __init__(self, db=None, user=None, password=None, host=None, port=None):
@@ -75,7 +77,7 @@ class SupabaseDatabase:
                     composer_id,  # Add composer_id as first parameter
                     row['work_name'],
                     row['catalogue_desc_str'],
-                    row['catalogue_type'].lower(),
+                    row.get('catalogue_type', '').lower() if row.get('catalogue_type') else None,
                     row['catalogue_number'],
                     row['catalogue_number_secondary'],
                     row['composition_year'],
