@@ -45,28 +45,50 @@ def parse_movements_section(td_text: str) -> Tuple[Optional[int], Optional[str]]
     numbers = []
     current_type = None
     
+    # First check for common types at the end of the first line
+    first_line = td_text.split('\n')[0].strip().lower()
+    for type_word in ['movements', 'pieces', 'preludes', 'variations']:
+        if first_line.endswith(type_word):
+            current_type = type_word
+            break
+    
     # Iterate through words to find numbers and potential types
+    in_parentheses = False
     for i, word in enumerate(parsed_data):
+        # Skip content in parentheses
+        if '(' in word:
+            in_parentheses = True
+            continue
+        if ')' in word:
+            in_parentheses = False
+            continue
+        if in_parentheses:
+            continue
+            
         # Try to parse number
         try:
             num = int(word)
             numbers.append(num)
-            # Look ahead for type if there's a next word
-            if i + 1 < len(parsed_data):
+            # Only look for type if we haven't already found it
+            if not current_type and i + 1 < len(parsed_data):
                 next_word = parsed_data[i + 1].lower().rstrip(',:')
-                if next_word != 'or':  # Skip if next word is "or"
+                if next_word != 'or' and '(' not in next_word:
                     current_type = next_word
         except ValueError:
             # If word is "or", continue looking
             if word.lower() == 'or':
                 continue
             # If we already found numbers but no type yet, this might be the type
-            elif numbers and not current_type:
-                current_type = word.lower().rstrip(',:')
+            elif numbers and not current_type and '(' not in word and ')' not in word:
+                current_type = word.lower().strip(',:')
+    
+    # Clean up the type - remove any trailing characters
+    if current_type:
+        current_type = current_type.rstrip('o')  # Remove any trailing 'o'
+        current_type = current_type.strip()      # Remove any whitespace
     
     count = max(numbers) if numbers else None
     return count, current_type
-
 
 def create_piece(data: Optional[Tag] = None, url: Optional[str] = None) -> Optional[Piece]:
     if not data and not url:

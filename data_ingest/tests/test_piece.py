@@ -74,10 +74,45 @@ def test_parse_metadata():
                 "sub_piece_count": 7,
             },
         ),
+        (
+            "https://imslp.org/wiki/French_Suite_No.2_in_C_minor%2C_BWV_813_(Bach%2C_Johann_Sebastian)",
+            {
+                "catalogue_number": 813,
+                "title": "French Suite No.2",
+                "catalogue_type": "bwv",
+                "composition_year_string": "1722 ca. from theNotebooks for Anna Magdalena Bach(Nos.2, 9, 31)",
+                "composition_year": 1722,
+                "key_signature": "cminor",
+                "movements_count": 7,
+                "nickname": None,
+                "instrumentation": ["keyboard"],
+                "piece_style": "baroque",
+                "sub_piece_type": "movements",
+                "sub_piece_count": 7,
+            },
+        ),
+        (
+            "https://imslp.org/wiki/French_Suite_No.1_(Godowsky%2C_Leopold)",
+            {
+                "catalogue_number": None,
+                "title": "French Suite No.1",
+                "catalogue_type": None,
+                "composition_year_string": None,
+                "composition_year": None,
+                "key_signature": None,
+                "movements_count": 3,
+                "nickname": "Bergerettes",
+                "instrumentation": ["Piano (solo)"],
+                "piece_style": "romantic",
+                "sub_piece_type": "pieces",
+                "sub_piece_count": 3,
+            },
+        ),
     ],
 )
 def test_create_piece_from_tag(url, expected_data):
     data = create_piece(url=url)
+    print("DATA", data)
     assert data is not None
     assert data.catalogue_number == expected_data["catalogue_number"]
     assert data.work_name == expected_data["title"]
