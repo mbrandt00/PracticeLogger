@@ -57,6 +57,23 @@ def test_parse_metadata():
                 "sub_piece_count": 3,
             },
         ),
+        (
+            "https://imslp.org/wiki/French_Suite_No.4_in_E-flat_major%2C_BWV_815a_(Bach%2C_Johann_Sebastian)",
+            {
+                "catalogue_number": 815,
+                "title": "French Suite No.4",
+                "catalogue_type": "bwv",
+                "composition_year_string": "1722-25 from theNotebooks for Anna Magdalena Bach(No.4)",
+                "composition_year": 1722,
+                "key_signature": "eflat",
+                "movements_count": 6,
+                "nickname": None,
+                "instrumentation": ["keyboard"],
+                "piece_style": "baroque",
+                "sub_piece_type": "movements",
+                "sub_piece_count": 7,
+            },
+        ),
     ],
 )
 def test_create_piece_from_tag(url, expected_data):

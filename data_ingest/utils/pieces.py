@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, TypedDict
+from typing import Dict, List, Optional, TypedDict, Tuple
 
 import requests
 from bs4 import BeautifulSoup, Tag
@@ -28,6 +28,44 @@ class Piece:
     piece_style: Optional[str] = None
     imslp_url: Optional[str] = None
     wikipedia_url: Optional[str] = None
+
+def parse_movements_section(td_text: str) -> Tuple[Optional[int], Optional[str]]:
+    """
+    Parse the Movements/Sections text to extract count and type.
+    
+    Args:
+        td_text: The text content from the table cell containing movements/sections info
+        
+    Returns:
+        Tuple containing:
+        - count: The number of movements/sections (largest number if multiple found)
+        - type: The type of sections (e.g. 'movements', 'preludes', 'variations')
+    """
+    parsed_data = td_text.split()
+    numbers = []
+    current_type = None
+    
+    # Iterate through words to find numbers and potential types
+    for i, word in enumerate(parsed_data):
+        # Try to parse number
+        try:
+            num = int(word)
+            numbers.append(num)
+            # Look ahead for type if there's a next word
+            if i + 1 < len(parsed_data):
+                next_word = parsed_data[i + 1].lower().rstrip(',:')
+                if next_word != 'or':  # Skip if next word is "or"
+                    current_type = next_word
+        except ValueError:
+            # If word is "or", continue looking
+            if word.lower() == 'or':
+                continue
+            # If we already found numbers but no type yet, this might be the type
+            elif numbers and not current_type:
+                current_type = word.lower().rstrip(',:')
+    
+    count = max(numbers) if numbers else None
+    return count, current_type
 
 
 def create_piece(data: Optional[Tag] = None, url: Optional[str] = None) -> Optional[Piece]:
@@ -93,19 +131,10 @@ def create_piece(data: Optional[Tag] = None, url: Optional[str] = None) -> Optio
                     th_text = th.get_text(strip=True)
                     if "Movements/Sections" in th_text:
                         td_text = td.get_text(strip=True)
-                        parsed_data = td_text.split()
-                        
-                        # Iterate through the list with index to check next word
-                        for i, item in enumerate(parsed_data):
-                            try:
-                                number = int(item)  # Try to convert the raw string to number
-                                # Check if there's a next word after the number
-                                if i + 1 < len(parsed_data):
-                                    piece.sub_piece_count = number
-                                    piece.sub_piece_type = parsed_data[i + 1].strip()
-                                    break
-                            except ValueError:
-                                continue
+                        count, section_type = parse_movements_section(td_text)
+                        piece.sub_piece_count = count
+                        piece.sub_piece_type = section_type
+                            
         return piece
 
 
