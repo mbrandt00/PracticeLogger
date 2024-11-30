@@ -23,18 +23,20 @@ CREATE TABLE imslp.movements (LIKE public.movements INCLUDING ALL);
 
 
 
--- Add the correct foreign key constraint pointing to imslp.pieces
+
 ALTER TABLE imslp.movements
 ADD CONSTRAINT movements_piece_id_fkey 
 FOREIGN KEY (piece_id) 
-REFERENCES imslp.pieces(id);
+REFERENCES imslp.pieces(id)
+ON DELETE CASCADE;
+
 -- trigger index on insert of piece
 CREATE OR REPLACE FUNCTION imslp.trigger_piece_fts() RETURNS trigger AS $$
 BEGIN
     UPDATE imslp.pieces
     SET fts = to_tsvector('english', 
-                         NEW.work_name || ' ' || 
-                         COALESCE(NEW.nickname, ''))
+                         unaccent(NEW.work_name) || ' ' || 
+                         COALESCE(unaccent(NEW.nickname), ''))
     WHERE imslp.pieces.id = NEW.id;
     RETURN NEW;
 END;
@@ -45,11 +47,13 @@ CREATE OR REPLACE FUNCTION imslp.trigger_movement_update_piece_fts() RETURNS tri
 BEGIN
     UPDATE imslp.pieces
     SET fts = to_tsvector('english',
-                         work_name || ' ' ||
-                         COALESCE(nickname, '') || ' ' ||
-                         COALESCE((SELECT string_agg(COALESCE(m.name, '') || ' ' || COALESCE(m.nickname, ''), ' ')
-                                 FROM imslp.movements m 
-                                 WHERE m.piece_id = NEW.piece_id), ''))
+                         unaccent(work_name) || ' ' ||
+                         COALESCE(unaccent(nickname), '') || ' ' ||
+                         COALESCE((SELECT string_agg(
+                             unaccent(COALESCE(m.name, '')) || ' ' || 
+                             unaccent(COALESCE(m.nickname, '')), ' ')
+                             FROM imslp.movements m 
+                             WHERE m.piece_id = NEW.piece_id), ''))
     WHERE id = NEW.piece_id;
     RETURN NEW;
 END;
