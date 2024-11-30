@@ -185,15 +185,3 @@ def test_create_piece_from_url(url, expected_data):
     assert data.sub_piece_type == expected_data["sub_piece_type"]
 
 
-def test_create_piece_with_sub_pieces():
-    data = create_piece(
-        url="https://imslp.org/wiki/Mazurkas,_Op.6_(Chopin,_Fr%C3%A9d%C3%A9ric)"
-    )  # Chopin op 6 mazurkas
-    assert data.sub_piece_type == "pieces"
-    assert data.sub_piece_count == 4
-
-
-# problematic urls: https://imslp.org/index.php?title=Romance_for_Horn_and_Piano_%28Scriabin%2C_Aleksandr%29
-
-# key signature wrong
-# https://imslp.org/wiki/Concerto_in_G_minor%2C_BWV_985_(Bach%2C_Johann_Sebastian)

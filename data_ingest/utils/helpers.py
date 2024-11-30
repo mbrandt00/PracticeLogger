@@ -52,11 +52,12 @@ def standardize_dict_keys(data: dict) -> Optional[Dict]:
         for k, v in data.items()
     }
 
-
 def parse_key_signature(raw_string: str) -> Optional[str]:
     """Parses a key signature string and returns the root note with its quality (e.g., 'csharp', 'dflat')."""
-    soup = BeautifulSoup(raw_string, "html.parser")
-
+    # First, remove any Cyrillic text in parentheses to avoid false matches
+    clean_raw = re.sub(r'\([^)]*[А-Яа-я][^)]*\)', '', raw_string)
+    
+    soup = BeautifulSoup(clean_raw, "html.parser")
     clean_string = (
         soup.get_text()
         .replace("\xa0", " ")
@@ -68,13 +69,12 @@ def parse_key_signature(raw_string: str) -> Optional[str]:
     )
 
     # First check for "in X" format
-    in_key_pattern = r"in\s+([A-G])\s*(sharp|flat|♯|♭)?\s*(major|minor)"
+    in_key_pattern = r"in\s+([A-G])\s*(sharp|flat|♯|♭)?\s*(major|minor)?"
     in_match = re.search(in_key_pattern, clean_string, re.IGNORECASE)
     if in_match:
         root = in_match.group(1).lower()
         accidental = in_match.group(2)
         quality = in_match.group(3)
-
         result = root
         if accidental:
             accidental = (
@@ -87,24 +87,29 @@ def parse_key_signature(raw_string: str) -> Optional[str]:
             result += "minor"
         return result
 
-    # Try to find key signature in parentheses
+    # Try to find key signature in parentheses first
     paren_pattern = r"\((.*?)\)"
     paren_match = re.search(paren_pattern, clean_string)
     key_string = paren_match.group(1).strip() if paren_match else clean_string
 
-    # Main pattern to match key signatures
-    pattern = r"([A-G])\s*(sharp|flat|♯|♭)?\s*(major|minor)?"
+    # Check if the string contains any Cyrillic characters
+    if re.search('[А-Яа-я]', key_string):
+        # If it contains Cyrillic, require explicit major/minor
+        pattern = r"(?:^|\b)([A-G])\s*(sharp|flat|♯|♭)?\s*(major|minor)(?:\b|$)"
+    else:
+        # If no Cyrillic, allow more relaxed matching
+        pattern = r"(?:^|\b)([A-G])\s*(sharp|flat|♯|♭)?(?:\s*(major|minor))?(?:\b|$)"
+    
     match = re.search(pattern, key_string, re.IGNORECASE)
     
-    if not match:
+    if not match and not paren_match:
         # Try the full string if parentheses match didn't work
         match = re.search(pattern, clean_string, re.IGNORECASE)
-
+    
     if match:
         root = match.group(1).lower()
         accidental = match.group(2)
         quality = match.group(3)
-
         result = root
         if accidental:
             accidental = (
@@ -116,8 +121,10 @@ def parse_key_signature(raw_string: str) -> Optional[str]:
         if quality and quality.lower() == "minor":
             result += "minor"
         return result
-    # logging.warning("No valid key signature found %s", raw_string)
+
     return None
+
+
 
 def section_download_link(data: Tag, piece_name: str) -> str | None:
     """Return the download URL of the file with the most downloads for a piece that matches"""
