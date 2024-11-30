@@ -28,4 +28,40 @@ ALTER TABLE imslp.movements
 ADD CONSTRAINT movements_piece_id_fkey 
 FOREIGN KEY (piece_id) 
 REFERENCES imslp.pieces(id);
+-- trigger index on insert of piece
+CREATE OR REPLACE FUNCTION imslp.trigger_piece_fts() RETURNS trigger AS $$
+BEGIN
+    UPDATE imslp.pieces
+    SET fts = to_tsvector('english', 
+                         NEW.work_name || ' ' || 
+                         COALESCE(NEW.nickname, ''))
+    WHERE imslp.pieces.id = NEW.id;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
+-- Second trigger for when movements are inserted/updated
+CREATE OR REPLACE FUNCTION imslp.trigger_movement_update_piece_fts() RETURNS trigger AS $$
+BEGIN
+    UPDATE imslp.pieces
+    SET fts = to_tsvector('english',
+                         work_name || ' ' ||
+                         COALESCE(nickname, '') || ' ' ||
+                         COALESCE((SELECT string_agg(COALESCE(m.name, '') || ' ' || COALESCE(m.nickname, ''), ' ')
+                                 FROM imslp.movements m 
+                                 WHERE m.piece_id = NEW.piece_id), ''))
+    WHERE id = NEW.piece_id;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Create both triggers
+CREATE TRIGGER piece_fts_update
+    AFTER INSERT ON imslp.pieces
+    FOR EACH ROW
+    EXECUTE FUNCTION imslp.trigger_piece_fts();
+
+CREATE TRIGGER movement_update_piece_fts
+    AFTER INSERT OR UPDATE ON imslp.movements
+    FOR EACH ROW
+    EXECUTE FUNCTION imslp.trigger_movement_update_piece_fts();

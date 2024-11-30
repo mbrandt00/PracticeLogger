@@ -1,4 +1,10 @@
-CREATE TYPE catalogue_type AS ENUM ('op', 'k', 'bwv', 'd', 'l', 'woo', 'b', 'wq', 'cpeb', 'vb', 'dd', 'h', 'wd', 'wab', 't', 'fmw', 'eg', 's', 'th', 'twv', 'rv');
+CREATE TYPE catalogue_type AS ENUM (
+    'op', 'k', 'bwv', 'd', 'l', 'woo', 'b', 'wq', 'cpeb', 'vb', 'dd', 
+    'h', 'wd', 'wab', 't', 'fmw', 'eg', 's', 'th', 'twv', 'rv', 
+    'hwv', 'hob', 'cff', 'wwv', 'trv', 'sz', 'fp', 'j', 'ms', 'jb', 
+    'gb', 'opp', 'do', 'bv', 'jw', 'cnw', 'lwv', 'tn', 'kk', 'anh', 
+    'cd', 'mwv', 'm', 'kochs', 'js', 'r', 'f', 'fwv', 'wo'
+);
 
 CREATE TYPE opus_information AS (
     catalogue_type catalogue_type,

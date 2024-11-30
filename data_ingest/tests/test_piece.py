@@ -28,7 +28,7 @@ def test_parse_metadata():
             {
                 "catalogue_number": 65,
                 "title": "Cello Sonata",
-                "catalogue_type": "Op",
+                "catalogue_type": "op",
                 "composition_year_string": "1846-1847 (summer)",
                 "composition_year": 1846,
                 "key_signature": "gminor",
@@ -45,7 +45,7 @@ def test_parse_metadata():
             {
                 "catalogue_number": 57,
                 "title": "Piano Sonata No.23",
-                "catalogue_type": "Op",
+                "catalogue_type": "op",
                 "composition_year_string": "1804–06",
                 "composition_year": 1804,
                 "key_signature": "fminor",
@@ -84,7 +84,7 @@ def test_create_piece_from_tag(url, expected_data):
             {
                 "catalogue_number": 12,
                 "title": "Violin Sonata No.1",
-                "catalogue_type": "Op",
+                "catalogue_type": "op",
                 "composition_year_string": "1797-98",
                 "composition_year": 1797,
                 "key_signature": "d",
@@ -101,7 +101,7 @@ def test_create_piece_from_tag(url, expected_data):
             {
                 "catalogue_number": 20,
                 "title": "Scherzo No.1",
-                "catalogue_type": "Op",
+                "catalogue_type": "op",
                 "composition_year_string": "1833",
                 "composition_year": 1833,
                 "key_signature": "bminor",
@@ -118,7 +118,7 @@ def test_create_piece_from_tag(url, expected_data):
             {
                 "catalogue_number": 39,
                 "title": "Scherzo No.3",
-                "catalogue_type": "Op",
+                "catalogue_type": "op",
                 "composition_year_string": "1839",
                 "composition_year": 1839,
                 "key_signature": "csharpminor",
@@ -135,7 +135,7 @@ def test_create_piece_from_tag(url, expected_data):
             {
                 "catalogue_number": 42,
                 "title": "Eight Etudes",
-                "catalogue_type": "Op",
+                "catalogue_type": "op",
                 "composition_year_string": "1903",
                 "composition_year": 1903,
                 "key_signature": None,
@@ -152,7 +152,7 @@ def test_create_piece_from_tag(url, expected_data):
             {
                 "catalogue_number": 43,
                 "title": "Rhapsody on a Theme of Paganini",
-                "catalogue_type": "Op",
+                "catalogue_type": "op",
                 "composition_year_string": "1934",
                 "composition_year": 1934,
                 "key_signature": 'aminor',
