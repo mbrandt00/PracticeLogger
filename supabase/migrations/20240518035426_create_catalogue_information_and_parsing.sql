@@ -11,7 +11,7 @@ CREATE TYPE catalogue_type AS ENUM (
     -- Mozart catalog variations
     'k2', 'k3', 'k6', 'k9', 'k046', 'k030', 'k008',
     -- Additional catalog types
-    'krebs-wv', 'br-cpeb', 'beckmann', 'emans', 'engk', 'howv', 'durg',
+    'beckmann', 'emans', 'engk', 'howv', 'durg',
     'gwv', 'jlb', 'sc', 'dlr', 'heilb', 'variant', 'tvwv', 'sno', 'angsa',
     'hess', 'wn', 'arco', 'ath', 'opus', 'rism', 'fs', 'add', 'fawv',
     'whie', 'eisen'
