@@ -11,33 +11,58 @@ public struct PiecesInsertInput: InputObject {
   }
 
   public init(
+    id: GraphQLNullable<BigInt> = nil,
     workName: GraphQLNullable<String> = nil,
     composerId: GraphQLNullable<BigInt> = nil,
-    userId: GraphQLNullable<UUID> = nil,
+    nickname: GraphQLNullable<String> = nil,
     format: GraphQLNullable<GraphQLEnum<PieceFormat>> = nil,
     keySignature: GraphQLNullable<GraphQLEnum<KeySignatureType>> = nil,
-    tonality: GraphQLNullable<GraphQLEnum<KeySignatureTonality>> = nil,
     catalogueType: GraphQLNullable<GraphQLEnum<CatalogueType>> = nil,
     catalogueNumber: GraphQLNullable<Int> = nil,
     updatedAt: GraphQLNullable<Datetime> = nil,
     createdAt: GraphQLNullable<Datetime> = nil,
-    nickname: GraphQLNullable<String> = nil,
-    fts: GraphQLNullable<Opaque> = nil
+    searchableText: GraphQLNullable<String> = nil,
+    catalogueTypeNumDesc: GraphQLNullable<String> = nil,
+    catalogueNumberSecondary: GraphQLNullable<Int> = nil,
+    compositionYear: GraphQLNullable<Int> = nil,
+    compositionYearDesc: GraphQLNullable<String> = nil,
+    pieceStyle: GraphQLNullable<String> = nil,
+    wikipediaUrl: GraphQLNullable<String> = nil,
+    instrumentation: GraphQLNullable<[String?]> = nil,
+    compositionYearString: GraphQLNullable<String> = nil,
+    subPieceType: GraphQLNullable<String> = nil,
+    subPieceCount: GraphQLNullable<Int> = nil,
+    imslpUrl: GraphQLNullable<String> = nil
   ) {
     __data = InputDict([
+      "id": id,
       "workName": workName,
       "composerId": composerId,
-      "userId": userId,
+      "nickname": nickname,
       "format": format,
       "keySignature": keySignature,
-      "tonality": tonality,
       "catalogueType": catalogueType,
       "catalogueNumber": catalogueNumber,
       "updatedAt": updatedAt,
       "createdAt": createdAt,
-      "nickname": nickname,
-      "fts": fts
+      "searchableText": searchableText,
+      "catalogueTypeNumDesc": catalogueTypeNumDesc,
+      "catalogueNumberSecondary": catalogueNumberSecondary,
+      "compositionYear": compositionYear,
+      "compositionYearDesc": compositionYearDesc,
+      "pieceStyle": pieceStyle,
+      "wikipediaUrl": wikipediaUrl,
+      "instrumentation": instrumentation,
+      "compositionYearString": compositionYearString,
+      "subPieceType": subPieceType,
+      "subPieceCount": subPieceCount,
+      "imslpUrl": imslpUrl
     ])
+  }
+
+  public var id: GraphQLNullable<BigInt> {
+    get { __data["id"] }
+    set { __data["id"] = newValue }
   }
 
   public var workName: GraphQLNullable<String> {
@@ -50,9 +75,9 @@ public struct PiecesInsertInput: InputObject {
     set { __data["composerId"] = newValue }
   }
 
-  public var userId: GraphQLNullable<UUID> {
-    get { __data["userId"] }
-    set { __data["userId"] = newValue }
+  public var nickname: GraphQLNullable<String> {
+    get { __data["nickname"] }
+    set { __data["nickname"] = newValue }
   }
 
   public var format: GraphQLNullable<GraphQLEnum<PieceFormat>> {
@@ -63,11 +88,6 @@ public struct PiecesInsertInput: InputObject {
   public var keySignature: GraphQLNullable<GraphQLEnum<KeySignatureType>> {
     get { __data["keySignature"] }
     set { __data["keySignature"] = newValue }
-  }
-
-  public var tonality: GraphQLNullable<GraphQLEnum<KeySignatureTonality>> {
-    get { __data["tonality"] }
-    set { __data["tonality"] = newValue }
   }
 
   public var catalogueType: GraphQLNullable<GraphQLEnum<CatalogueType>> {
@@ -90,13 +110,63 @@ public struct PiecesInsertInput: InputObject {
     set { __data["createdAt"] = newValue }
   }
 
-  public var nickname: GraphQLNullable<String> {
-    get { __data["nickname"] }
-    set { __data["nickname"] = newValue }
+  public var searchableText: GraphQLNullable<String> {
+    get { __data["searchableText"] }
+    set { __data["searchableText"] = newValue }
   }
 
-  public var fts: GraphQLNullable<Opaque> {
-    get { __data["fts"] }
-    set { __data["fts"] = newValue }
+  public var catalogueTypeNumDesc: GraphQLNullable<String> {
+    get { __data["catalogueTypeNumDesc"] }
+    set { __data["catalogueTypeNumDesc"] = newValue }
+  }
+
+  public var catalogueNumberSecondary: GraphQLNullable<Int> {
+    get { __data["catalogueNumberSecondary"] }
+    set { __data["catalogueNumberSecondary"] = newValue }
+  }
+
+  public var compositionYear: GraphQLNullable<Int> {
+    get { __data["compositionYear"] }
+    set { __data["compositionYear"] = newValue }
+  }
+
+  public var compositionYearDesc: GraphQLNullable<String> {
+    get { __data["compositionYearDesc"] }
+    set { __data["compositionYearDesc"] = newValue }
+  }
+
+  public var pieceStyle: GraphQLNullable<String> {
+    get { __data["pieceStyle"] }
+    set { __data["pieceStyle"] = newValue }
+  }
+
+  public var wikipediaUrl: GraphQLNullable<String> {
+    get { __data["wikipediaUrl"] }
+    set { __data["wikipediaUrl"] = newValue }
+  }
+
+  public var instrumentation: GraphQLNullable<[String?]> {
+    get { __data["instrumentation"] }
+    set { __data["instrumentation"] = newValue }
+  }
+
+  public var compositionYearString: GraphQLNullable<String> {
+    get { __data["compositionYearString"] }
+    set { __data["compositionYearString"] = newValue }
+  }
+
+  public var subPieceType: GraphQLNullable<String> {
+    get { __data["subPieceType"] }
+    set { __data["subPieceType"] = newValue }
+  }
+
+  public var subPieceCount: GraphQLNullable<Int> {
+    get { __data["subPieceCount"] }
+    set { __data["subPieceCount"] = newValue }
+  }
+
+  public var imslpUrl: GraphQLNullable<String> {
+    get { __data["imslpUrl"] }
+    set { __data["imslpUrl"] = newValue }
   }
 }

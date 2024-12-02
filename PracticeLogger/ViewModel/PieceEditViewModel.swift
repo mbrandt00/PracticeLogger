@@ -144,6 +144,5 @@ struct MetadataInformation: Decodable {
     var catalogue_type: CatalogueType?
     var format: Format?
     var key_signature: KeySignatureType?
-    var tonality: KeySignatureTonality?
     var nickname: String?
 }

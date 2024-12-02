@@ -129,6 +129,8 @@ RETURNS SETOF imslp.pieces AS $$
     ORDER BY similarity(p.searchable_text, unaccent(query)) DESC;
 $$ LANGUAGE sql STABLE SECURITY DEFINER;
 
+
+
 CREATE OR REPLACE FUNCTION imslp.update_piece_searchable_text() RETURNS trigger AS $$
 BEGIN
     NEW.searchable_text := imslp.get_piece_searchable_text(NEW.id);
@@ -183,3 +185,8 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA imslp
 
 ALTER DATABASE postgres SET search_path TO public,imslp;
 
+
+ALTER SCHEMA imslp OWNER TO postgres;
+GRANT USAGE ON SCHEMA imslp TO postgres, anon, authenticated;
+GRANT ALL ON ALL TABLES IN SCHEMA imslp TO postgres, anon, authenticated;
+GRANT ALL ON ALL FUNCTIONS IN SCHEMA imslp TO postgres, anon, authenticated;

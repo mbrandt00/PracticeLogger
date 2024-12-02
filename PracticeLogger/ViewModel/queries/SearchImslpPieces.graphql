@@ -1,0 +1,24 @@
+query SearchImslpPieces($query: String!) {
+  searchImslpPieces(query: $query) {
+    edges {
+      node {
+        id
+        workName
+        ...PieceDetails
+        catalogueNumber
+        catalogueType
+        composerId
+        keySignature
+        movementsCollection {
+          edges {
+            node {
+              nickname
+              number
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+}

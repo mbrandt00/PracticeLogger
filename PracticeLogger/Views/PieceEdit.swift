@@ -100,21 +100,21 @@ struct PieceEdit: View {
                             }
                         }
 
-                        HStack {
-                            Picker("Tonality", selection: Binding(
-                                get: {
-                                    viewModel.piece.tonality?.rawValue ?? ""
-                                },
-                                set: { newValue in
-                                    viewModel.piece.tonality = KeySignatureTonality(rawValue: newValue)
-                                }
-                            )) {
-                                ForEach(KeySignatureTonality.allCases, id: \.self) { tonality in
-                                    Text(tonality.rawValue).tag(tonality.rawValue)
-                                }
-                            }
-                            .pickerStyle(.segmented)
-                        }
+//                        HStack {
+//                            Picker("Tonality", selection: Binding(
+//                                get: {
+//                                    viewModel.piece.tonality?.rawValue ?? ""
+//                                },
+//                                set: { newValue in
+//                                    viewModel.piece.tonality = KeySignatureTonality(rawValue: newValue)
+//                                }
+//                            )) {
+//                                ForEach(KeySignatureTonality.allCases, id: \.self) { tonality in
+//                                    Text(tonality.rawValue).tag(tonality.rawValue)
+//                                }
+//                            }
+//                            .pickerStyle(.segmented)
+//                        }
                     }
 
                     Picker("Format", selection: Binding(

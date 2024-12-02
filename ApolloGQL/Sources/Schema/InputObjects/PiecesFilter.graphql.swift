@@ -14,16 +14,25 @@ public struct PiecesFilter: InputObject {
     id: GraphQLNullable<BigIntFilter> = nil,
     workName: GraphQLNullable<StringFilter> = nil,
     composerId: GraphQLNullable<BigIntFilter> = nil,
-    userId: GraphQLNullable<UUIDFilter> = nil,
+    nickname: GraphQLNullable<StringFilter> = nil,
     format: GraphQLNullable<PieceFormatFilter> = nil,
     keySignature: GraphQLNullable<KeySignatureTypeFilter> = nil,
-    tonality: GraphQLNullable<KeySignatureTonalityFilter> = nil,
     catalogueType: GraphQLNullable<CatalogueTypeFilter> = nil,
     catalogueNumber: GraphQLNullable<IntFilter> = nil,
     updatedAt: GraphQLNullable<DatetimeFilter> = nil,
     createdAt: GraphQLNullable<DatetimeFilter> = nil,
-    nickname: GraphQLNullable<StringFilter> = nil,
-    fts: GraphQLNullable<OpaqueFilter> = nil,
+    searchableText: GraphQLNullable<StringFilter> = nil,
+    catalogueTypeNumDesc: GraphQLNullable<StringFilter> = nil,
+    catalogueNumberSecondary: GraphQLNullable<IntFilter> = nil,
+    compositionYear: GraphQLNullable<IntFilter> = nil,
+    compositionYearDesc: GraphQLNullable<StringFilter> = nil,
+    pieceStyle: GraphQLNullable<StringFilter> = nil,
+    wikipediaUrl: GraphQLNullable<StringFilter> = nil,
+    instrumentation: GraphQLNullable<StringListFilter> = nil,
+    compositionYearString: GraphQLNullable<StringFilter> = nil,
+    subPieceType: GraphQLNullable<StringFilter> = nil,
+    subPieceCount: GraphQLNullable<IntFilter> = nil,
+    imslpUrl: GraphQLNullable<StringFilter> = nil,
     nodeId: GraphQLNullable<IDFilter> = nil,
     and: GraphQLNullable<[PiecesFilter]> = nil,
     or: GraphQLNullable<[PiecesFilter]> = nil,
@@ -33,16 +42,25 @@ public struct PiecesFilter: InputObject {
       "id": id,
       "workName": workName,
       "composerId": composerId,
-      "userId": userId,
+      "nickname": nickname,
       "format": format,
       "keySignature": keySignature,
-      "tonality": tonality,
       "catalogueType": catalogueType,
       "catalogueNumber": catalogueNumber,
       "updatedAt": updatedAt,
       "createdAt": createdAt,
-      "nickname": nickname,
-      "fts": fts,
+      "searchableText": searchableText,
+      "catalogueTypeNumDesc": catalogueTypeNumDesc,
+      "catalogueNumberSecondary": catalogueNumberSecondary,
+      "compositionYear": compositionYear,
+      "compositionYearDesc": compositionYearDesc,
+      "pieceStyle": pieceStyle,
+      "wikipediaUrl": wikipediaUrl,
+      "instrumentation": instrumentation,
+      "compositionYearString": compositionYearString,
+      "subPieceType": subPieceType,
+      "subPieceCount": subPieceCount,
+      "imslpUrl": imslpUrl,
       "nodeId": nodeId,
       "and": and,
       "or": or,
@@ -65,9 +83,9 @@ public struct PiecesFilter: InputObject {
     set { __data["composerId"] = newValue }
   }
 
-  public var userId: GraphQLNullable<UUIDFilter> {
-    get { __data["userId"] }
-    set { __data["userId"] = newValue }
+  public var nickname: GraphQLNullable<StringFilter> {
+    get { __data["nickname"] }
+    set { __data["nickname"] = newValue }
   }
 
   public var format: GraphQLNullable<PieceFormatFilter> {
@@ -78,11 +96,6 @@ public struct PiecesFilter: InputObject {
   public var keySignature: GraphQLNullable<KeySignatureTypeFilter> {
     get { __data["keySignature"] }
     set { __data["keySignature"] = newValue }
-  }
-
-  public var tonality: GraphQLNullable<KeySignatureTonalityFilter> {
-    get { __data["tonality"] }
-    set { __data["tonality"] = newValue }
   }
 
   public var catalogueType: GraphQLNullable<CatalogueTypeFilter> {
@@ -105,14 +118,64 @@ public struct PiecesFilter: InputObject {
     set { __data["createdAt"] = newValue }
   }
 
-  public var nickname: GraphQLNullable<StringFilter> {
-    get { __data["nickname"] }
-    set { __data["nickname"] = newValue }
+  public var searchableText: GraphQLNullable<StringFilter> {
+    get { __data["searchableText"] }
+    set { __data["searchableText"] = newValue }
   }
 
-  public var fts: GraphQLNullable<OpaqueFilter> {
-    get { __data["fts"] }
-    set { __data["fts"] = newValue }
+  public var catalogueTypeNumDesc: GraphQLNullable<StringFilter> {
+    get { __data["catalogueTypeNumDesc"] }
+    set { __data["catalogueTypeNumDesc"] = newValue }
+  }
+
+  public var catalogueNumberSecondary: GraphQLNullable<IntFilter> {
+    get { __data["catalogueNumberSecondary"] }
+    set { __data["catalogueNumberSecondary"] = newValue }
+  }
+
+  public var compositionYear: GraphQLNullable<IntFilter> {
+    get { __data["compositionYear"] }
+    set { __data["compositionYear"] = newValue }
+  }
+
+  public var compositionYearDesc: GraphQLNullable<StringFilter> {
+    get { __data["compositionYearDesc"] }
+    set { __data["compositionYearDesc"] = newValue }
+  }
+
+  public var pieceStyle: GraphQLNullable<StringFilter> {
+    get { __data["pieceStyle"] }
+    set { __data["pieceStyle"] = newValue }
+  }
+
+  public var wikipediaUrl: GraphQLNullable<StringFilter> {
+    get { __data["wikipediaUrl"] }
+    set { __data["wikipediaUrl"] = newValue }
+  }
+
+  public var instrumentation: GraphQLNullable<StringListFilter> {
+    get { __data["instrumentation"] }
+    set { __data["instrumentation"] = newValue }
+  }
+
+  public var compositionYearString: GraphQLNullable<StringFilter> {
+    get { __data["compositionYearString"] }
+    set { __data["compositionYearString"] = newValue }
+  }
+
+  public var subPieceType: GraphQLNullable<StringFilter> {
+    get { __data["subPieceType"] }
+    set { __data["subPieceType"] = newValue }
+  }
+
+  public var subPieceCount: GraphQLNullable<IntFilter> {
+    get { __data["subPieceCount"] }
+    set { __data["subPieceCount"] = newValue }
+  }
+
+  public var imslpUrl: GraphQLNullable<StringFilter> {
+    get { __data["imslpUrl"] }
+    set { __data["imslpUrl"] = newValue }
   }
 
   public var nodeId: GraphQLNullable<IDFilter> {

@@ -40,7 +40,7 @@ struct SearchView: View {
             }
             if !searchViewModel.newPieces.isEmpty {
                 Section(header: Text("New Pieces")) {
-                    ForEach(searchViewModel.newPieces) { piece in
+                    ForEach(searchViewModel.newPieces, id: \.id) { piece in
                         NavigationLink(
                             value: PieceNavigationContext.newPiece(piece), label: {
 //                                RepertoireRow(piece: piece)
@@ -65,5 +65,5 @@ struct SearchView: View {
 
 enum PieceNavigationContext: Hashable {
     case userPiece(PieceDetails)
-    case newPiece(Piece) // new piece
+    case newPiece(PieceDetails) // new piece
 }
