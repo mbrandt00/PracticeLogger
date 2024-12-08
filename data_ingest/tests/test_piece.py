@@ -108,6 +108,23 @@ def test_parse_metadata():
                 "sub_piece_count": 3,
             },
         ),
+        (
+            "https://imslp.org/wiki/Piano_Sonata_No.29,_Op.106_(Beethoven,_Ludwig_van)",
+            {
+                "catalogue_number": 106,
+                "title": "Piano Sonata No.29",
+                "catalogue_type": "op",
+                "composition_year_string": '1817–18',
+                "composition_year": 1817,
+                "key_signature": 'bflat',
+                "movements_count": 4,
+                "nickname": "Hammerklavier, Große Sonate für das Hammerklavier",
+                "instrumentation": ["piano"],
+                "piece_style": "romantic",
+                "sub_piece_type": "movements",
+                "sub_piece_count": 4,
+            },
+        ),
     ],
 )
 def test_create_piece_from_tag(url, expected_data):

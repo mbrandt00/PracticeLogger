@@ -16,6 +16,8 @@ from utils.movements import parse_key_signature, parse_movements
         ("Doloroso in D♯ minor", "dsharpminor"),
         ("Presto  = 192-200 (D♭ major)", "dflat"),
         ("F♯ major", "fsharp"),
+        ('Allegro (B♭ major.  = 138)', 'bflat'), # hammerklavier
+        ('Introduzione. Largo ( = 76) - Fuga: Allegro risoluto (B♭ major.  = 144))', 'bflat'), # hammerklavier
         (
             "D<span class=\"music-symbol\" style='font-family: Arial Unicode MS, Lucida Sans Unicode; font-size:110%'>♭</span> major)",
             "dflat",

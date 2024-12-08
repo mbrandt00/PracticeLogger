@@ -506,6 +506,30 @@ type Movements implements Node {
   nickname: String
   downloadUrl: String
   piece: Pieces!
+  practiceSessionsCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """
+    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
+    """
+    offset: Int
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: PracticeSessionsFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [PracticeSessionsOrderBy!]
+  ): PracticeSessionsConnection
 }
 
 type MovementsConnection {
@@ -551,7 +575,6 @@ input MovementsFilter {
 }
 
 input MovementsInsertInput {
-  id: BigInt
   pieceId: BigInt
   name: String
   number: Int
@@ -579,7 +602,6 @@ input MovementsOrderBy {
 }
 
 input MovementsUpdateInput {
-  id: BigInt
   pieceId: BigInt
   name: String
   number: Int

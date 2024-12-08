@@ -87,10 +87,14 @@ def parse_key_signature(raw_string: str) -> Optional[str]:
             result += "minor"
         return result
 
-    # Try to find key signature in parentheses first
-    paren_pattern = r"\((.*?)\)"
-    paren_match = re.search(paren_pattern, clean_string)
-    key_string = paren_match.group(1).strip() if paren_match else clean_string
+    # Try to find key signature in parentheses containing "major" or "minor"
+    paren_pattern = r"\(([^)]*(?:major|minor)[^)]*)\)"
+    paren_matches = list(re.finditer(paren_pattern, clean_string, re.IGNORECASE))
+    key_string = clean_string
+    
+    if paren_matches:
+        # Take the last parenthetical expression containing major/minor
+        key_string = paren_matches[-1].group(1).strip()
 
     # Check if the string contains any Cyrillic characters
     if re.search('[А-Яа-я]', key_string):
@@ -102,7 +106,7 @@ def parse_key_signature(raw_string: str) -> Optional[str]:
     
     match = re.search(pattern, key_string, re.IGNORECASE)
     
-    if not match and not paren_match:
+    if not match and not paren_matches:
         # Try the full string if parentheses match didn't work
         match = re.search(pattern, clean_string, re.IGNORECASE)
     
