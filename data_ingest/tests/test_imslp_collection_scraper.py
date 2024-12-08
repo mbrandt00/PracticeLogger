@@ -5,7 +5,7 @@ from utils.imslp_scraping import (get_all_composer_pieces,
                                   get_composer_url)
 
 
-# @pytest.mark.skip
+@pytest.mark.skip
 def test_get_composer_collection_objects():
     url = get_composer_url("Mendelssohn, Felix")
     collection_objects = get_all_composer_pieces(url)

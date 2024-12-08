@@ -7,7 +7,8 @@
 
 import Foundation
 
-enum Format: String, Decodable, Encodable, CaseIterable, Identifiable, Hashable {
+import ApolloAPI
+enum Format: String, Decodable, Encodable, CaseIterable, Identifiable, Hashable, ApolloAPI.EnumType{
     case bagatelle
     case ballade
     case canon

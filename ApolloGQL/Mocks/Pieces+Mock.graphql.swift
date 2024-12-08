@@ -14,6 +14,7 @@ public class Pieces: MockObject {
     @Field<GraphQLEnum<ApolloGQL.CatalogueType>>("catalogueType") public var catalogueType
     @Field<Composers>("composer") public var composer
     @Field<ApolloGQL.BigInt>("composerId") public var composerId
+    @Field<GraphQLEnum<ApolloGQL.PieceFormat>>("format") public var format
     @Field<ApolloGQL.BigInt>("id") public var id
     @Field<GraphQLEnum<ApolloGQL.KeySignatureType>>("keySignature") public var keySignature
     @Field<MovementsConnection>("movements") public var movements
@@ -29,6 +30,7 @@ public extension Mock where O == Pieces {
     catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? = nil,
     composer: Mock<Composers>? = nil,
     composerId: ApolloGQL.BigInt? = nil,
+    format: GraphQLEnum<ApolloGQL.PieceFormat>? = nil,
     id: ApolloGQL.BigInt? = nil,
     keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? = nil,
     movements: Mock<MovementsConnection>? = nil,
@@ -41,6 +43,7 @@ public extension Mock where O == Pieces {
     _setScalar(catalogueType, for: \.catalogueType)
     _setEntity(composer, for: \.composer)
     _setScalar(composerId, for: \.composerId)
+    _setScalar(format, for: \.format)
     _setScalar(id, for: \.id)
     _setScalar(keySignature, for: \.keySignature)
     _setEntity(movements, for: \.movements)

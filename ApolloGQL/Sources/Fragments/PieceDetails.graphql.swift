@@ -5,7 +5,7 @@
 
 public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
   public static var fragmentDefinition: StaticString {
-    #"fragment PieceDetails on Pieces { __typename id workName catalogueType catalogueNumber nickname composer { __typename name } movements: movementsCollection(orderBy: [{ number: DescNullsLast }]) { __typename edges { __typename node { __typename id name number } } } }"#
+    #"fragment PieceDetails on Pieces { __typename id workName catalogueType keySignature format catalogueNumber nickname composer { __typename name } movements: movementsCollection(orderBy: [{ number: DescNullsLast }]) { __typename edges { __typename node { __typename id name number } } } }"#
   }
 
   public let __data: DataDict
@@ -17,6 +17,8 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
     .field("id", ApolloGQL.BigInt.self),
     .field("workName", String.self),
     .field("catalogueType", GraphQLEnum<ApolloGQL.CatalogueType>?.self),
+    .field("keySignature", GraphQLEnum<ApolloGQL.KeySignatureType>?.self),
+    .field("format", GraphQLEnum<ApolloGQL.PieceFormat>?.self),
     .field("catalogueNumber", Int?.self),
     .field("nickname", String?.self),
     .field("composer", Composer?.self),
@@ -26,6 +28,8 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
   public var id: ApolloGQL.BigInt { __data["id"] }
   public var workName: String { __data["workName"] }
   public var catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? { __data["catalogueType"] }
+  public var keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? { __data["keySignature"] }
+  public var format: GraphQLEnum<ApolloGQL.PieceFormat>? { __data["format"] }
   public var catalogueNumber: Int? { __data["catalogueNumber"] }
   public var nickname: String? { __data["nickname"] }
   public var composer: Composer? { __data["composer"] }

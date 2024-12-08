@@ -65,7 +65,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         try container.encodeIfPresent(nickname, forKey: .nickname)
         try container.encodeIfPresent(catalogue_number, forKey: .catalogue_number)
         try container.encodeIfPresent(format, forKey: .format)
-        try container.encodeIfPresent(key_signature, forKey: .key_signature)
+//        try container.encodeIfPresent(key_signature, forKey: .key_signature)
     }
     
     required init(from decoder: Decoder) throws {
@@ -77,7 +77,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         catalogue_type = try container.decodeIfPresent(CatalogueType.self, forKey: .catalogue_type)
         catalogue_number = try container.decodeIfPresent(Int.self, forKey: .catalogue_number)
         format = try container.decodeIfPresent(Format.self, forKey: .format)
-        key_signature = try container.decodeIfPresent(KeySignatureType.self, forKey: .key_signature)
+//        key_signature = try container.decodeIfPresent(KeySignatureType.self, forKey: .key_signature)
         nickname = try container.decodeIfPresent(String.self, forKey: .nickname)
     }
     

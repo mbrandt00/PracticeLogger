@@ -87,6 +87,7 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
           public var composerId: ApolloGQL.BigInt? { __data["composerId"] }
           public var keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? { __data["keySignature"] }
           public var movementsCollection: MovementsCollection? { __data["movementsCollection"] }
+          public var format: GraphQLEnum<ApolloGQL.PieceFormat>? { __data["format"] }
           public var nickname: String? { __data["nickname"] }
           public var composer: Composer? { __data["composer"] }
           public var movements: Movements? { __data["movements"] }

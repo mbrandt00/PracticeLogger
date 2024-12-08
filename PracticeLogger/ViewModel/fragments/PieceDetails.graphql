@@ -2,6 +2,9 @@ fragment PieceDetails on Pieces {
   id
   workName
   catalogueType
+  keySignature
+  format
+
   catalogueNumber
   nickname
   composer {

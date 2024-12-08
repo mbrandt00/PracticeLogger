@@ -105,6 +105,8 @@ public class RecentUserSessionsQuery: GraphQLQuery {
             public var id: ApolloGQL.BigInt { __data["id"] }
             public var workName: String { __data["workName"] }
             public var catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? { __data["catalogueType"] }
+            public var keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? { __data["keySignature"] }
+            public var format: GraphQLEnum<ApolloGQL.PieceFormat>? { __data["format"] }
             public var catalogueNumber: Int? { __data["catalogueNumber"] }
             public var nickname: String? { __data["nickname"] }
             public var composer: Composer? { __data["composer"] }
