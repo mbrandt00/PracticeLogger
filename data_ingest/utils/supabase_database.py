@@ -1,13 +1,10 @@
 import json
 import os
-
 import polars as pl
 import psycopg2
 
-
 class SupabaseDatabase:
     def __init__(self, db=None, user=None, password=None, host=None, port=None):
-        # Your existing initialization code
         self.conn = psycopg2.connect(
             dbname=db or os.getenv("DB_NAME", "postgres"),
             user=user or os.getenv("DB_USER", "postgres"),
@@ -42,6 +39,21 @@ class SupabaseDatabase:
         ) VALUES (
             %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
         )
+        ON CONFLICT (composer_id, catalogue_type, catalogue_number)
+        DO UPDATE SET
+            work_name = EXCLUDED.work_name,
+            catalogue_type_num_desc = EXCLUDED.catalogue_type_num_desc,
+            catalogue_number_secondary = EXCLUDED.catalogue_number_secondary,
+            composition_year = EXCLUDED.composition_year,
+            composition_year_string = EXCLUDED.composition_year_string,
+            key_signature = EXCLUDED.key_signature,
+            sub_piece_type = EXCLUDED.sub_piece_type,
+            sub_piece_count = EXCLUDED.sub_piece_count,
+            instrumentation = EXCLUDED.instrumentation,
+            nickname = EXCLUDED.nickname,
+            piece_style = EXCLUDED.piece_style,
+            imslp_url = EXCLUDED.imslp_url,
+            wikipedia_url = EXCLUDED.wikipedia_url
         RETURNING id;
         """
 
@@ -93,6 +105,9 @@ class SupabaseDatabase:
                 ))
                 piece_id = self.cur.fetchone()[0]
                 
+                # For existing pieces, we might want to clear old movements before inserting new ones
+                self.cur.execute("DELETE FROM imslp.movements WHERE piece_id = %s", (piece_id,))
+                
                 # Insert movements for this piece
                 for movement in movements:
                     self.cur.execute(movement_insert_sql, (
@@ -113,6 +128,7 @@ class SupabaseDatabase:
                 continue
         
         return successful_inserts, failed_inserts
+
     def close(self):
         self.cur.close()
         self.conn.close()
