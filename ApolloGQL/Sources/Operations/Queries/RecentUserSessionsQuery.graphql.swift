@@ -34,6 +34,20 @@ public class RecentUserSessionsQuery: GraphQLQuery {
     /// A pagable collection of type `PracticeSessions`
     public var practiceSessionsCollection: PracticeSessionsCollection? { __data["practiceSessionsCollection"] }
 
+    public init(
+      practiceSessionsCollection: PracticeSessionsCollection? = nil
+    ) {
+      self.init(_dataDict: DataDict(
+        data: [
+          "__typename": ApolloGQL.Objects.Query.typename,
+          "practiceSessionsCollection": practiceSessionsCollection._fieldData,
+        ],
+        fulfilledFragments: [
+          ObjectIdentifier(RecentUserSessionsQuery.Data.self)
+        ]
+      ))
+    }
+
     /// PracticeSessionsCollection
     ///
     /// Parent Type: `PracticeSessionsConnection`
@@ -49,6 +63,20 @@ public class RecentUserSessionsQuery: GraphQLQuery {
 
       public var edges: [Edge] { __data["edges"] }
 
+      public init(
+        edges: [Edge]
+      ) {
+        self.init(_dataDict: DataDict(
+          data: [
+            "__typename": ApolloGQL.Objects.PracticeSessionsConnection.typename,
+            "edges": edges._fieldData,
+          ],
+          fulfilledFragments: [
+            ObjectIdentifier(RecentUserSessionsQuery.Data.PracticeSessionsCollection.self)
+          ]
+        ))
+      }
+
       /// PracticeSessionsCollection.Edge
       ///
       /// Parent Type: `PracticeSessionsEdge`
@@ -63,6 +91,20 @@ public class RecentUserSessionsQuery: GraphQLQuery {
         ] }
 
         public var node: Node { __data["node"] }
+
+        public init(
+          node: Node
+        ) {
+          self.init(_dataDict: DataDict(
+            data: [
+              "__typename": ApolloGQL.Objects.PracticeSessionsEdge.typename,
+              "node": node._fieldData,
+            ],
+            fulfilledFragments: [
+              ObjectIdentifier(RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.self)
+            ]
+          ))
+        }
 
         /// PracticeSessionsCollection.Edge.Node
         ///
@@ -88,6 +130,30 @@ public class RecentUserSessionsQuery: GraphQLQuery {
           public var piece: Piece { __data["piece"] }
           public var endTime: ApolloGQL.Datetime? { __data["endTime"] }
           public var movement: Movement? { __data["movement"] }
+
+          public init(
+            id: ApolloGQL.BigInt,
+            startTime: ApolloGQL.Datetime,
+            durationSeconds: Int? = nil,
+            piece: Piece,
+            endTime: ApolloGQL.Datetime? = nil,
+            movement: Movement? = nil
+          ) {
+            self.init(_dataDict: DataDict(
+              data: [
+                "__typename": ApolloGQL.Objects.PracticeSessions.typename,
+                "id": id,
+                "startTime": startTime,
+                "durationSeconds": durationSeconds,
+                "piece": piece._fieldData,
+                "endTime": endTime,
+                "movement": movement._fieldData,
+              ],
+              fulfilledFragments: [
+                ObjectIdentifier(RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.Node.self)
+              ]
+            ))
+          }
 
           /// PracticeSessionsCollection.Edge.Node.Piece
           ///
@@ -119,6 +185,37 @@ public class RecentUserSessionsQuery: GraphQLQuery {
               public var pieceDetails: PieceDetails { _toFragment() }
             }
 
+            public init(
+              id: ApolloGQL.BigInt,
+              workName: String,
+              catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? = nil,
+              keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? = nil,
+              format: GraphQLEnum<ApolloGQL.PieceFormat>? = nil,
+              catalogueNumber: Int? = nil,
+              nickname: String? = nil,
+              composer: Composer? = nil,
+              movements: Movements? = nil
+            ) {
+              self.init(_dataDict: DataDict(
+                data: [
+                  "__typename": ApolloGQL.Objects.Pieces.typename,
+                  "id": id,
+                  "workName": workName,
+                  "catalogueType": catalogueType,
+                  "keySignature": keySignature,
+                  "format": format,
+                  "catalogueNumber": catalogueNumber,
+                  "nickname": nickname,
+                  "composer": composer._fieldData,
+                  "movements": movements._fieldData,
+                ],
+                fulfilledFragments: [
+                  ObjectIdentifier(RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.Node.Piece.self),
+                  ObjectIdentifier(PieceDetails.self)
+                ]
+              ))
+            }
+
             public typealias Composer = PieceDetails.Composer
 
             public typealias Movements = PieceDetails.Movements
@@ -138,6 +235,20 @@ public class RecentUserSessionsQuery: GraphQLQuery {
             ] }
 
             public var name: String? { __data["name"] }
+
+            public init(
+              name: String? = nil
+            ) {
+              self.init(_dataDict: DataDict(
+                data: [
+                  "__typename": ApolloGQL.Objects.Movements.typename,
+                  "name": name,
+                ],
+                fulfilledFragments: [
+                  ObjectIdentifier(RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.Node.Movement.self)
+                ]
+              ))
+            }
           }
         }
       }

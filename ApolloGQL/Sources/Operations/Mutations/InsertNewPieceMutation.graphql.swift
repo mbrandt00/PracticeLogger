@@ -31,6 +31,20 @@ public class InsertNewPieceMutation: GraphQLMutation {
     /// Adds one or more `Pieces` records to the collection
     public var insertIntoPiecesCollection: InsertIntoPiecesCollection? { __data["insertIntoPiecesCollection"] }
 
+    public init(
+      insertIntoPiecesCollection: InsertIntoPiecesCollection? = nil
+    ) {
+      self.init(_dataDict: DataDict(
+        data: [
+          "__typename": ApolloGQL.Objects.Mutation.typename,
+          "insertIntoPiecesCollection": insertIntoPiecesCollection._fieldData,
+        ],
+        fulfilledFragments: [
+          ObjectIdentifier(InsertNewPieceMutation.Data.self)
+        ]
+      ))
+    }
+
     /// InsertIntoPiecesCollection
     ///
     /// Parent Type: `PiecesInsertResponse`
@@ -46,6 +60,20 @@ public class InsertNewPieceMutation: GraphQLMutation {
 
       /// Array of records impacted by the mutation
       public var records: [Record] { __data["records"] }
+
+      public init(
+        records: [Record]
+      ) {
+        self.init(_dataDict: DataDict(
+          data: [
+            "__typename": ApolloGQL.Objects.PiecesInsertResponse.typename,
+            "records": records._fieldData,
+          ],
+          fulfilledFragments: [
+            ObjectIdentifier(InsertNewPieceMutation.Data.InsertIntoPiecesCollection.self)
+          ]
+        ))
+      }
 
       /// InsertIntoPiecesCollection.Record
       ///
@@ -75,6 +103,37 @@ public class InsertNewPieceMutation: GraphQLMutation {
           public init(_dataDict: DataDict) { __data = _dataDict }
 
           public var pieceDetails: PieceDetails { _toFragment() }
+        }
+
+        public init(
+          id: ApolloGQL.BigInt,
+          workName: String,
+          catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? = nil,
+          keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? = nil,
+          format: GraphQLEnum<ApolloGQL.PieceFormat>? = nil,
+          catalogueNumber: Int? = nil,
+          nickname: String? = nil,
+          composer: Composer? = nil,
+          movements: Movements? = nil
+        ) {
+          self.init(_dataDict: DataDict(
+            data: [
+              "__typename": ApolloGQL.Objects.Pieces.typename,
+              "id": id,
+              "workName": workName,
+              "catalogueType": catalogueType,
+              "keySignature": keySignature,
+              "format": format,
+              "catalogueNumber": catalogueNumber,
+              "nickname": nickname,
+              "composer": composer._fieldData,
+              "movements": movements._fieldData,
+            ],
+            fulfilledFragments: [
+              ObjectIdentifier(InsertNewPieceMutation.Data.InsertIntoPiecesCollection.Record.self),
+              ObjectIdentifier(PieceDetails.self)
+            ]
+          ))
         }
 
         public typealias Composer = PieceDetails.Composer

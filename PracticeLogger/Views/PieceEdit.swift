@@ -205,3 +205,55 @@ struct PieceEdit: View {
         // }
         //    }
 }
+
+struct PieceEdit_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            PieceEdit(
+                piece: PieceDetails(
+                    id: "12345",
+                    workName: "Symphony No. 5",
+                    catalogueType: GraphQLEnum(CatalogueType.Op.rawValue),
+                    keySignature: GraphQLEnum(KeySignatureType.cminor),
+                    format: GraphQLEnum(Format.symphony.rawValue),
+                    catalogueNumber: 67,
+                    nickname: "Fate",
+                    composer: PieceDetails.Composer(name: "Ludwig van Beethoven"),
+                    movements: PieceDetails.Movements(
+                        edges: [
+                            PieceDetails.Movements.Edge(
+                                node: PieceDetails.Movements.Edge.Node(
+                                    id: "1",
+                                    name: "Allegro con brio",
+                                    number: 1
+                                )
+                            ),
+                            PieceDetails.Movements.Edge(
+                                node: PieceDetails.Movements.Edge.Node(
+                                    id: "2",
+                                    name: "Andante con moto",
+                                    number: 2
+                                )
+                            ),
+                            PieceDetails.Movements.Edge(
+                                node: PieceDetails.Movements.Edge.Node(
+                                    id: "3",
+                                    name: "Scherzo: Allegro",
+                                    number: 3
+                                )
+                            ),
+                            PieceDetails.Movements.Edge(
+                                node: PieceDetails.Movements.Edge.Node(
+                                    id: "4",
+                                    name: "Allegro - Presto",
+                                    number: 4
+                                )
+                            )
+                        ]
+                    )
+                ),
+                path: .constant(NavigationPath())
+            )
+        }
+    }
+}

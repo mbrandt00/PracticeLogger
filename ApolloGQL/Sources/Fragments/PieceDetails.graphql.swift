@@ -35,6 +35,36 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
   public var composer: Composer? { __data["composer"] }
   public var movements: Movements? { __data["movements"] }
 
+  public init(
+    id: ApolloGQL.BigInt,
+    workName: String,
+    catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? = nil,
+    keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? = nil,
+    format: GraphQLEnum<ApolloGQL.PieceFormat>? = nil,
+    catalogueNumber: Int? = nil,
+    nickname: String? = nil,
+    composer: Composer? = nil,
+    movements: Movements? = nil
+  ) {
+    self.init(_dataDict: DataDict(
+      data: [
+        "__typename": ApolloGQL.Objects.Pieces.typename,
+        "id": id,
+        "workName": workName,
+        "catalogueType": catalogueType,
+        "keySignature": keySignature,
+        "format": format,
+        "catalogueNumber": catalogueNumber,
+        "nickname": nickname,
+        "composer": composer._fieldData,
+        "movements": movements._fieldData,
+      ],
+      fulfilledFragments: [
+        ObjectIdentifier(PieceDetails.self)
+      ]
+    ))
+  }
+
   /// Composer
   ///
   /// Parent Type: `Composers`
@@ -49,6 +79,20 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
     ] }
 
     public var name: String { __data["name"] }
+
+    public init(
+      name: String
+    ) {
+      self.init(_dataDict: DataDict(
+        data: [
+          "__typename": ApolloGQL.Objects.Composers.typename,
+          "name": name,
+        ],
+        fulfilledFragments: [
+          ObjectIdentifier(PieceDetails.Composer.self)
+        ]
+      ))
+    }
   }
 
   /// Movements
@@ -66,6 +110,20 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
 
     public var edges: [Edge] { __data["edges"] }
 
+    public init(
+      edges: [Edge]
+    ) {
+      self.init(_dataDict: DataDict(
+        data: [
+          "__typename": ApolloGQL.Objects.MovementsConnection.typename,
+          "edges": edges._fieldData,
+        ],
+        fulfilledFragments: [
+          ObjectIdentifier(PieceDetails.Movements.self)
+        ]
+      ))
+    }
+
     /// Movements.Edge
     ///
     /// Parent Type: `MovementsEdge`
@@ -80,6 +138,20 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
       ] }
 
       public var node: Node { __data["node"] }
+
+      public init(
+        node: Node
+      ) {
+        self.init(_dataDict: DataDict(
+          data: [
+            "__typename": ApolloGQL.Objects.MovementsEdge.typename,
+            "node": node._fieldData,
+          ],
+          fulfilledFragments: [
+            ObjectIdentifier(PieceDetails.Movements.Edge.self)
+          ]
+        ))
+      }
 
       /// Movements.Edge.Node
       ///
@@ -99,6 +171,24 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
         public var id: ApolloGQL.BigInt { __data["id"] }
         public var name: String? { __data["name"] }
         public var number: Int? { __data["number"] }
+
+        public init(
+          id: ApolloGQL.BigInt,
+          name: String? = nil,
+          number: Int? = nil
+        ) {
+          self.init(_dataDict: DataDict(
+            data: [
+              "__typename": ApolloGQL.Objects.Movements.typename,
+              "id": id,
+              "name": name,
+              "number": number,
+            ],
+            fulfilledFragments: [
+              ObjectIdentifier(PieceDetails.Movements.Edge.Node.self)
+            ]
+          ))
+        }
       }
     }
   }

@@ -30,6 +30,20 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
 
     public var searchImslpPieces: SearchImslpPieces? { __data["searchImslpPieces"] }
 
+    public init(
+      searchImslpPieces: SearchImslpPieces? = nil
+    ) {
+      self.init(_dataDict: DataDict(
+        data: [
+          "__typename": ApolloGQL.Objects.Query.typename,
+          "searchImslpPieces": searchImslpPieces._fieldData,
+        ],
+        fulfilledFragments: [
+          ObjectIdentifier(SearchImslpPiecesQuery.Data.self)
+        ]
+      ))
+    }
+
     /// SearchImslpPieces
     ///
     /// Parent Type: `PiecesConnection`
@@ -45,6 +59,20 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
 
       public var edges: [Edge] { __data["edges"] }
 
+      public init(
+        edges: [Edge]
+      ) {
+        self.init(_dataDict: DataDict(
+          data: [
+            "__typename": ApolloGQL.Objects.PiecesConnection.typename,
+            "edges": edges._fieldData,
+          ],
+          fulfilledFragments: [
+            ObjectIdentifier(SearchImslpPiecesQuery.Data.SearchImslpPieces.self)
+          ]
+        ))
+      }
+
       /// SearchImslpPieces.Edge
       ///
       /// Parent Type: `PiecesEdge`
@@ -59,6 +87,20 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
         ] }
 
         public var node: Node { __data["node"] }
+
+        public init(
+          node: Node
+        ) {
+          self.init(_dataDict: DataDict(
+            data: [
+              "__typename": ApolloGQL.Objects.PiecesEdge.typename,
+              "node": node._fieldData,
+            ],
+            fulfilledFragments: [
+              ObjectIdentifier(SearchImslpPiecesQuery.Data.SearchImslpPieces.Edge.self)
+            ]
+          ))
+        }
 
         /// SearchImslpPieces.Edge.Node
         ///
@@ -99,6 +141,41 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
             public var pieceDetails: PieceDetails { _toFragment() }
           }
 
+          public init(
+            id: ApolloGQL.BigInt,
+            workName: String,
+            catalogueNumber: Int? = nil,
+            catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? = nil,
+            composerId: ApolloGQL.BigInt? = nil,
+            keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? = nil,
+            movementsCollection: MovementsCollection? = nil,
+            format: GraphQLEnum<ApolloGQL.PieceFormat>? = nil,
+            nickname: String? = nil,
+            composer: Composer? = nil,
+            movements: Movements? = nil
+          ) {
+            self.init(_dataDict: DataDict(
+              data: [
+                "__typename": ApolloGQL.Objects.Pieces.typename,
+                "id": id,
+                "workName": workName,
+                "catalogueNumber": catalogueNumber,
+                "catalogueType": catalogueType,
+                "composerId": composerId,
+                "keySignature": keySignature,
+                "movementsCollection": movementsCollection._fieldData,
+                "format": format,
+                "nickname": nickname,
+                "composer": composer._fieldData,
+                "movements": movements._fieldData,
+              ],
+              fulfilledFragments: [
+                ObjectIdentifier(SearchImslpPiecesQuery.Data.SearchImslpPieces.Edge.Node.self),
+                ObjectIdentifier(PieceDetails.self)
+              ]
+            ))
+          }
+
           /// SearchImslpPieces.Edge.Node.MovementsCollection
           ///
           /// Parent Type: `MovementsConnection`
@@ -114,6 +191,20 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
 
             public var edges: [Edge] { __data["edges"] }
 
+            public init(
+              edges: [Edge]
+            ) {
+              self.init(_dataDict: DataDict(
+                data: [
+                  "__typename": ApolloGQL.Objects.MovementsConnection.typename,
+                  "edges": edges._fieldData,
+                ],
+                fulfilledFragments: [
+                  ObjectIdentifier(SearchImslpPiecesQuery.Data.SearchImslpPieces.Edge.Node.MovementsCollection.self)
+                ]
+              ))
+            }
+
             /// SearchImslpPieces.Edge.Node.MovementsCollection.Edge
             ///
             /// Parent Type: `MovementsEdge`
@@ -128,6 +219,20 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
               ] }
 
               public var node: Node { __data["node"] }
+
+              public init(
+                node: Node
+              ) {
+                self.init(_dataDict: DataDict(
+                  data: [
+                    "__typename": ApolloGQL.Objects.MovementsEdge.typename,
+                    "node": node._fieldData,
+                  ],
+                  fulfilledFragments: [
+                    ObjectIdentifier(SearchImslpPiecesQuery.Data.SearchImslpPieces.Edge.Node.MovementsCollection.Edge.self)
+                  ]
+                ))
+              }
 
               /// SearchImslpPieces.Edge.Node.MovementsCollection.Edge.Node
               ///
@@ -147,6 +252,24 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
                 public var nickname: String? { __data["nickname"] }
                 public var number: Int? { __data["number"] }
                 public var name: String? { __data["name"] }
+
+                public init(
+                  nickname: String? = nil,
+                  number: Int? = nil,
+                  name: String? = nil
+                ) {
+                  self.init(_dataDict: DataDict(
+                    data: [
+                      "__typename": ApolloGQL.Objects.Movements.typename,
+                      "nickname": nickname,
+                      "number": number,
+                      "name": name,
+                    ],
+                    fulfilledFragments: [
+                      ObjectIdentifier(SearchImslpPiecesQuery.Data.SearchImslpPieces.Edge.Node.MovementsCollection.Edge.Node.self)
+                    ]
+                  ))
+                }
               }
             }
           }

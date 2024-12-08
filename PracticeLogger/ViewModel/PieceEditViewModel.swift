@@ -100,3 +100,4 @@ class EditableComposer {
         self.name = composer.name
     }
 }
+

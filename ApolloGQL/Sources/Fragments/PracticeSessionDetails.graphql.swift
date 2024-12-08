@@ -27,6 +27,28 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
   public var movement: Movement? { __data["movement"] }
   public var piece: Piece { __data["piece"] }
 
+  public init(
+    id: ApolloGQL.BigInt,
+    startTime: ApolloGQL.Datetime,
+    endTime: ApolloGQL.Datetime? = nil,
+    movement: Movement? = nil,
+    piece: Piece
+  ) {
+    self.init(_dataDict: DataDict(
+      data: [
+        "__typename": ApolloGQL.Objects.PracticeSessions.typename,
+        "id": id,
+        "startTime": startTime,
+        "endTime": endTime,
+        "movement": movement._fieldData,
+        "piece": piece._fieldData,
+      ],
+      fulfilledFragments: [
+        ObjectIdentifier(PracticeSessionDetails.self)
+      ]
+    ))
+  }
+
   /// Movement
   ///
   /// Parent Type: `Movements`
@@ -45,6 +67,24 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
     public var id: ApolloGQL.BigInt { __data["id"] }
     public var name: String? { __data["name"] }
     public var number: Int? { __data["number"] }
+
+    public init(
+      id: ApolloGQL.BigInt,
+      name: String? = nil,
+      number: Int? = nil
+    ) {
+      self.init(_dataDict: DataDict(
+        data: [
+          "__typename": ApolloGQL.Objects.Movements.typename,
+          "id": id,
+          "name": name,
+          "number": number,
+        ],
+        fulfilledFragments: [
+          ObjectIdentifier(PracticeSessionDetails.Movement.self)
+        ]
+      ))
+    }
   }
 
   /// Piece
@@ -75,6 +115,37 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
       public init(_dataDict: DataDict) { __data = _dataDict }
 
       public var pieceDetails: PieceDetails { _toFragment() }
+    }
+
+    public init(
+      id: ApolloGQL.BigInt,
+      workName: String,
+      catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? = nil,
+      keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? = nil,
+      format: GraphQLEnum<ApolloGQL.PieceFormat>? = nil,
+      catalogueNumber: Int? = nil,
+      nickname: String? = nil,
+      composer: Composer? = nil,
+      movements: Movements? = nil
+    ) {
+      self.init(_dataDict: DataDict(
+        data: [
+          "__typename": ApolloGQL.Objects.Pieces.typename,
+          "id": id,
+          "workName": workName,
+          "catalogueType": catalogueType,
+          "keySignature": keySignature,
+          "format": format,
+          "catalogueNumber": catalogueNumber,
+          "nickname": nickname,
+          "composer": composer._fieldData,
+          "movements": movements._fieldData,
+        ],
+        fulfilledFragments: [
+          ObjectIdentifier(PracticeSessionDetails.Piece.self),
+          ObjectIdentifier(PieceDetails.self)
+        ]
+      ))
     }
 
     public typealias Composer = PieceDetails.Composer

@@ -30,6 +30,20 @@ public class CreateMovementsMutation: GraphQLMutation {
     /// Adds one or more `Movements` records to the collection
     public var insertIntoMovementsCollection: InsertIntoMovementsCollection? { __data["insertIntoMovementsCollection"] }
 
+    public init(
+      insertIntoMovementsCollection: InsertIntoMovementsCollection? = nil
+    ) {
+      self.init(_dataDict: DataDict(
+        data: [
+          "__typename": ApolloGQL.Objects.Mutation.typename,
+          "insertIntoMovementsCollection": insertIntoMovementsCollection._fieldData,
+        ],
+        fulfilledFragments: [
+          ObjectIdentifier(CreateMovementsMutation.Data.self)
+        ]
+      ))
+    }
+
     /// InsertIntoMovementsCollection
     ///
     /// Parent Type: `MovementsInsertResponse`
@@ -45,6 +59,20 @@ public class CreateMovementsMutation: GraphQLMutation {
 
       /// Array of records impacted by the mutation
       public var records: [Record] { __data["records"] }
+
+      public init(
+        records: [Record]
+      ) {
+        self.init(_dataDict: DataDict(
+          data: [
+            "__typename": ApolloGQL.Objects.MovementsInsertResponse.typename,
+            "records": records._fieldData,
+          ],
+          fulfilledFragments: [
+            ObjectIdentifier(CreateMovementsMutation.Data.InsertIntoMovementsCollection.self)
+          ]
+        ))
+      }
 
       /// InsertIntoMovementsCollection.Record
       ///
@@ -64,6 +92,24 @@ public class CreateMovementsMutation: GraphQLMutation {
         public var number: Int? { __data["number"] }
         public var name: String? { __data["name"] }
         public var id: ApolloGQL.BigInt { __data["id"] }
+
+        public init(
+          number: Int? = nil,
+          name: String? = nil,
+          id: ApolloGQL.BigInt
+        ) {
+          self.init(_dataDict: DataDict(
+            data: [
+              "__typename": ApolloGQL.Objects.Movements.typename,
+              "number": number,
+              "name": name,
+              "id": id,
+            ],
+            fulfilledFragments: [
+              ObjectIdentifier(CreateMovementsMutation.Data.InsertIntoMovementsCollection.Record.self)
+            ]
+          ))
+        }
       }
     }
   }

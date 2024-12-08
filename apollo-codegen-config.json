@@ -50,5 +50,11 @@
         "targetName": "Mocks"
       }
     }
+  },
+  "options": {
+    "selectionSetInitializers": {
+      "operations": true,
+      "namedFragments": true
+    }
   }
 }
