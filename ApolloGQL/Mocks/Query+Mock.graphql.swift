@@ -12,6 +12,7 @@ public class Query: MockObject {
   public struct MockFields {
     @Field<PiecesConnection>("piecesCollection") public var piecesCollection
     @Field<PracticeSessionsConnection>("practiceSessionsCollection") public var practiceSessionsCollection
+    @Field<PiecesConnection>("searchImslpPieces") public var searchImslpPieces
     @Field<PiecesConnection>("searchPieceWithAssociations") public var searchPieceWithAssociations
   }
 }
@@ -20,11 +21,13 @@ public extension Mock where O == Query {
   convenience init(
     piecesCollection: Mock<PiecesConnection>? = nil,
     practiceSessionsCollection: Mock<PracticeSessionsConnection>? = nil,
+    searchImslpPieces: Mock<PiecesConnection>? = nil,
     searchPieceWithAssociations: Mock<PiecesConnection>? = nil
   ) {
     self.init()
     _setEntity(piecesCollection, for: \.piecesCollection)
     _setEntity(practiceSessionsCollection, for: \.practiceSessionsCollection)
+    _setEntity(searchImslpPieces, for: \.searchImslpPieces)
     _setEntity(searchPieceWithAssociations, for: \.searchPieceWithAssociations)
   }
 }

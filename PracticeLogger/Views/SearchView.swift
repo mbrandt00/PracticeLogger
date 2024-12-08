@@ -12,18 +12,18 @@ struct SearchView: View {
     @ObservedObject var searchViewModel: SearchViewModel
 
     var body: some View {
-        Picker("Key Signature", selection: $searchViewModel.selectedKeySignature) {
-            Text("Key Signature").tag(KeySignatureType?.none)
-            ForEach(KeySignatureType.allCases) { keySignature in
-                Text(keySignature.rawValue).tag(KeySignatureType?(keySignature))
-            }
-        }
-        .pickerStyle(MenuPickerStyle())
-        .onChange(of: searchViewModel.selectedKeySignature) {
-            Task {
-                await searchViewModel.searchPieces()
-            }
-        }
+//        Picker("Key Signature", selection: $searchViewModel.selectedKeySignature) {
+//            Text("Key Signature").tag(KeySignatureType?.none)
+//            ForEach(KeySignatureType.allCases) { keySignature in
+//                Text(keySignature.rawValue).tag(KeySignatureType?(keySignature))
+//            }
+//        }
+//        .pickerStyle(MenuPickerStyle())
+//        .onChange(of: searchViewModel.selectedKeySignature) {
+//            Task {
+//                await searchViewModel.searchPieces()
+//            }
+//        }
 
         List {
             if !searchViewModel.userPieces.isEmpty {
@@ -40,7 +40,7 @@ struct SearchView: View {
             }
             if !searchViewModel.newPieces.isEmpty {
                 Section(header: Text("New Pieces")) {
-                    ForEach(searchViewModel.newPieces) { piece in
+                    ForEach(searchViewModel.newPieces, id: \.id) { piece in
                         NavigationLink(
                             value: PieceNavigationContext.newPiece(piece), label: {
 //                                RepertoireRow(piece: piece)
@@ -65,5 +65,5 @@ struct SearchView: View {
 
 enum PieceNavigationContext: Hashable {
     case userPiece(PieceDetails)
-    case newPiece(Piece) // new piece
+    case newPiece(PieceDetails) // new piece
 }

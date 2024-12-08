@@ -37,6 +37,20 @@ public class ActiveUserSessionQuery: GraphQLQuery {
     /// A pagable collection of type `PracticeSessions`
     public var practiceSessionsCollection: PracticeSessionsCollection? { __data["practiceSessionsCollection"] }
 
+    public init(
+      practiceSessionsCollection: PracticeSessionsCollection? = nil
+    ) {
+      self.init(_dataDict: DataDict(
+        data: [
+          "__typename": ApolloGQL.Objects.Query.typename,
+          "practiceSessionsCollection": practiceSessionsCollection._fieldData,
+        ],
+        fulfilledFragments: [
+          ObjectIdentifier(ActiveUserSessionQuery.Data.self)
+        ]
+      ))
+    }
+
     /// PracticeSessionsCollection
     ///
     /// Parent Type: `PracticeSessionsConnection`
@@ -52,6 +66,20 @@ public class ActiveUserSessionQuery: GraphQLQuery {
 
       public var edges: [Edge] { __data["edges"] }
 
+      public init(
+        edges: [Edge]
+      ) {
+        self.init(_dataDict: DataDict(
+          data: [
+            "__typename": ApolloGQL.Objects.PracticeSessionsConnection.typename,
+            "edges": edges._fieldData,
+          ],
+          fulfilledFragments: [
+            ObjectIdentifier(ActiveUserSessionQuery.Data.PracticeSessionsCollection.self)
+          ]
+        ))
+      }
+
       /// PracticeSessionsCollection.Edge
       ///
       /// Parent Type: `PracticeSessionsEdge`
@@ -66,6 +94,20 @@ public class ActiveUserSessionQuery: GraphQLQuery {
         ] }
 
         public var node: Node { __data["node"] }
+
+        public init(
+          node: Node
+        ) {
+          self.init(_dataDict: DataDict(
+            data: [
+              "__typename": ApolloGQL.Objects.PracticeSessionsEdge.typename,
+              "node": node._fieldData,
+            ],
+            fulfilledFragments: [
+              ObjectIdentifier(ActiveUserSessionQuery.Data.PracticeSessionsCollection.Edge.self)
+            ]
+          ))
+        }
 
         /// PracticeSessionsCollection.Edge.Node
         ///
@@ -91,6 +133,29 @@ public class ActiveUserSessionQuery: GraphQLQuery {
             public init(_dataDict: DataDict) { __data = _dataDict }
 
             public var practiceSessionDetails: PracticeSessionDetails { _toFragment() }
+          }
+
+          public init(
+            id: ApolloGQL.BigInt,
+            startTime: ApolloGQL.Datetime,
+            endTime: ApolloGQL.Datetime? = nil,
+            movement: Movement? = nil,
+            piece: Piece
+          ) {
+            self.init(_dataDict: DataDict(
+              data: [
+                "__typename": ApolloGQL.Objects.PracticeSessions.typename,
+                "id": id,
+                "startTime": startTime,
+                "endTime": endTime,
+                "movement": movement._fieldData,
+                "piece": piece._fieldData,
+              ],
+              fulfilledFragments: [
+                ObjectIdentifier(ActiveUserSessionQuery.Data.PracticeSessionsCollection.Edge.Node.self),
+                ObjectIdentifier(PracticeSessionDetails.self)
+              ]
+            ))
           }
 
           public typealias Movement = PracticeSessionDetails.Movement

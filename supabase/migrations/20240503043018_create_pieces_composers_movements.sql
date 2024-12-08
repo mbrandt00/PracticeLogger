@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS pieces (
     id BIGSERIAL PRIMARY KEY,
     work_name varchar(255) NOT NULL,
     composer_id BIGINT,
+    nickname text,
     user_id UUID NOT NULL DEFAULT auth.uid(),
     FOREIGN KEY (user_id) REFERENCES auth.users(id),
     FOREIGN KEY (composer_id) REFERENCES composers(id)
