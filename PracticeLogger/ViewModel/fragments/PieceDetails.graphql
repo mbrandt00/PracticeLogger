@@ -4,6 +4,10 @@ fragment PieceDetails on Pieces {
   catalogueType
   keySignature
   format
+  instrumentation
+  wikipediaUrl
+  imslpUrl
+  compositionYear
 
   catalogueNumber
   nickname

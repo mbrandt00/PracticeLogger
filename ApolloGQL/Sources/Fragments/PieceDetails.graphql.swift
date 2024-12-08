@@ -5,7 +5,7 @@
 
 public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
   public static var fragmentDefinition: StaticString {
-    #"fragment PieceDetails on Pieces { __typename id workName catalogueType keySignature format catalogueNumber nickname composer { __typename name } movements: movementsCollection(orderBy: [{ number: DescNullsLast }]) { __typename edges { __typename node { __typename id name number } } } }"#
+    #"fragment PieceDetails on Pieces { __typename id workName catalogueType keySignature format instrumentation wikipediaUrl imslpUrl compositionYear catalogueNumber nickname composer { __typename name } movements: movementsCollection(orderBy: [{ number: DescNullsLast }]) { __typename edges { __typename node { __typename id name number } } } }"#
   }
 
   public let __data: DataDict
@@ -19,6 +19,10 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
     .field("catalogueType", GraphQLEnum<ApolloGQL.CatalogueType>?.self),
     .field("keySignature", GraphQLEnum<ApolloGQL.KeySignatureType>?.self),
     .field("format", GraphQLEnum<ApolloGQL.PieceFormat>?.self),
+    .field("instrumentation", [String?]?.self),
+    .field("wikipediaUrl", String?.self),
+    .field("imslpUrl", String?.self),
+    .field("compositionYear", Int?.self),
     .field("catalogueNumber", Int?.self),
     .field("nickname", String?.self),
     .field("composer", Composer?.self),
@@ -30,6 +34,10 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
   public var catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? { __data["catalogueType"] }
   public var keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? { __data["keySignature"] }
   public var format: GraphQLEnum<ApolloGQL.PieceFormat>? { __data["format"] }
+  public var instrumentation: [String?]? { __data["instrumentation"] }
+  public var wikipediaUrl: String? { __data["wikipediaUrl"] }
+  public var imslpUrl: String? { __data["imslpUrl"] }
+  public var compositionYear: Int? { __data["compositionYear"] }
   public var catalogueNumber: Int? { __data["catalogueNumber"] }
   public var nickname: String? { __data["nickname"] }
   public var composer: Composer? { __data["composer"] }
@@ -41,6 +49,10 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
     catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? = nil,
     keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? = nil,
     format: GraphQLEnum<ApolloGQL.PieceFormat>? = nil,
+    instrumentation: [String?]? = nil,
+    wikipediaUrl: String? = nil,
+    imslpUrl: String? = nil,
+    compositionYear: Int? = nil,
     catalogueNumber: Int? = nil,
     nickname: String? = nil,
     composer: Composer? = nil,
@@ -54,6 +66,10 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
         "catalogueType": catalogueType,
         "keySignature": keySignature,
         "format": format,
+        "instrumentation": instrumentation,
+        "wikipediaUrl": wikipediaUrl,
+        "imslpUrl": imslpUrl,
+        "compositionYear": compositionYear,
         "catalogueNumber": catalogueNumber,
         "nickname": nickname,
         "composer": composer._fieldData,

@@ -105,6 +105,10 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
     public var catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? { __data["catalogueType"] }
     public var keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? { __data["keySignature"] }
     public var format: GraphQLEnum<ApolloGQL.PieceFormat>? { __data["format"] }
+    public var instrumentation: [String?]? { __data["instrumentation"] }
+    public var wikipediaUrl: String? { __data["wikipediaUrl"] }
+    public var imslpUrl: String? { __data["imslpUrl"] }
+    public var compositionYear: Int? { __data["compositionYear"] }
     public var catalogueNumber: Int? { __data["catalogueNumber"] }
     public var nickname: String? { __data["nickname"] }
     public var composer: Composer? { __data["composer"] }
@@ -123,6 +127,10 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
       catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? = nil,
       keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? = nil,
       format: GraphQLEnum<ApolloGQL.PieceFormat>? = nil,
+      instrumentation: [String?]? = nil,
+      wikipediaUrl: String? = nil,
+      imslpUrl: String? = nil,
+      compositionYear: Int? = nil,
       catalogueNumber: Int? = nil,
       nickname: String? = nil,
       composer: Composer? = nil,
@@ -136,6 +144,10 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
           "catalogueType": catalogueType,
           "keySignature": keySignature,
           "format": format,
+          "instrumentation": instrumentation,
+          "wikipediaUrl": wikipediaUrl,
+          "imslpUrl": imslpUrl,
+          "compositionYear": compositionYear,
           "catalogueNumber": catalogueNumber,
           "nickname": nickname,
           "composer": composer._fieldData,

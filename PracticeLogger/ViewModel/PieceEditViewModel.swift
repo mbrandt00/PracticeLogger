@@ -18,6 +18,7 @@ class PieceEditViewModel: ObservableObject {
     
     func insertPiece() async throws -> PieceDetails {
         // Will implement this later when needed
+        print(editablePiece)
         fatalError("Not implemented")
     }
     
@@ -48,15 +49,18 @@ class PieceEditViewModel: ObservableObject {
 
 class EditablePiece: ObservableObject {
     let id: ApolloGQL.BigInt
-    let workName: String
-    var catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>?
-    var catalogueNumber: Int?
-    var nickname: String?
-    var keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>?
-    var format: GraphQLEnum<Format>?
-    var movements: [EditableMovement]?
-    var composer: EditableComposer?
-    
+    @Published var workName: String
+    @Published var catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>?
+    @Published var catalogueNumber: Int?
+    @Published var nickname: String?
+    @Published var keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>?
+    @Published var format: GraphQLEnum<PieceFormat>?
+    @Published var movements: [EditableMovement]?
+    @Published var composer: EditableComposer?
+    @Published var compositionYear: Int?
+    @Published var imslpUrl: String?
+    @Published var wikipediaUrl: String?
+    @Published var instrumentation:  [String?]?
     init(from piece: PieceDetails) {
         self.id = piece.id
         self.workName = piece.workName
@@ -64,6 +68,11 @@ class EditablePiece: ObservableObject {
         self.catalogueNumber = piece.catalogueNumber
         self.nickname = piece.nickname
         self.keySignature = piece.keySignature
+        self.instrumentation = piece.instrumentation
+        self.format = piece.format
+        self.compositionYear = piece.compositionYear
+        self.wikipediaUrl = piece.wikipediaUrl
+        self.imslpUrl = piece.imslpUrl
         self.movements = piece.movements?.edges.map { EditableMovement(from: $0.node) }
         if let composer = piece.composer {
             self.composer = EditableComposer(from: composer)
@@ -93,11 +102,14 @@ class EditableMovement {
 }
 
 class EditableComposer {
-    let name: String
+    var name: String
     var id: ApolloGQL.BigInt?
     
     init(from composer: PieceDetails.Composer) {
         self.name = composer.name
     }
+    
+    init(name: String) {
+        self.name = name
+    }
 }
-

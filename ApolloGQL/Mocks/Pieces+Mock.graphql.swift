@@ -14,12 +14,16 @@ public class Pieces: MockObject {
     @Field<GraphQLEnum<ApolloGQL.CatalogueType>>("catalogueType") public var catalogueType
     @Field<Composers>("composer") public var composer
     @Field<ApolloGQL.BigInt>("composerId") public var composerId
+    @Field<Int>("compositionYear") public var compositionYear
     @Field<GraphQLEnum<ApolloGQL.PieceFormat>>("format") public var format
     @Field<ApolloGQL.BigInt>("id") public var id
+    @Field<String>("imslpUrl") public var imslpUrl
+    @Field<[String?]>("instrumentation") public var instrumentation
     @Field<GraphQLEnum<ApolloGQL.KeySignatureType>>("keySignature") public var keySignature
     @Field<MovementsConnection>("movements") public var movements
     @Field<MovementsConnection>("movementsCollection") public var movementsCollection
     @Field<String>("nickname") public var nickname
+    @Field<String>("wikipediaUrl") public var wikipediaUrl
     @Field<String>("workName") public var workName
   }
 }
@@ -30,12 +34,16 @@ public extension Mock where O == Pieces {
     catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? = nil,
     composer: Mock<Composers>? = nil,
     composerId: ApolloGQL.BigInt? = nil,
+    compositionYear: Int? = nil,
     format: GraphQLEnum<ApolloGQL.PieceFormat>? = nil,
     id: ApolloGQL.BigInt? = nil,
+    imslpUrl: String? = nil,
+    instrumentation: [String]? = nil,
     keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? = nil,
     movements: Mock<MovementsConnection>? = nil,
     movementsCollection: Mock<MovementsConnection>? = nil,
     nickname: String? = nil,
+    wikipediaUrl: String? = nil,
     workName: String? = nil
   ) {
     self.init()
@@ -43,12 +51,16 @@ public extension Mock where O == Pieces {
     _setScalar(catalogueType, for: \.catalogueType)
     _setEntity(composer, for: \.composer)
     _setScalar(composerId, for: \.composerId)
+    _setScalar(compositionYear, for: \.compositionYear)
     _setScalar(format, for: \.format)
     _setScalar(id, for: \.id)
+    _setScalar(imslpUrl, for: \.imslpUrl)
+    _setScalarList(instrumentation, for: \.instrumentation)
     _setScalar(keySignature, for: \.keySignature)
     _setEntity(movements, for: \.movements)
     _setEntity(movementsCollection, for: \.movementsCollection)
     _setScalar(nickname, for: \.nickname)
+    _setScalar(wikipediaUrl, for: \.wikipediaUrl)
     _setScalar(workName, for: \.workName)
   }
 }

@@ -130,6 +130,10 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
           public var keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? { __data["keySignature"] }
           public var movementsCollection: MovementsCollection? { __data["movementsCollection"] }
           public var format: GraphQLEnum<ApolloGQL.PieceFormat>? { __data["format"] }
+          public var instrumentation: [String?]? { __data["instrumentation"] }
+          public var wikipediaUrl: String? { __data["wikipediaUrl"] }
+          public var imslpUrl: String? { __data["imslpUrl"] }
+          public var compositionYear: Int? { __data["compositionYear"] }
           public var nickname: String? { __data["nickname"] }
           public var composer: Composer? { __data["composer"] }
           public var movements: Movements? { __data["movements"] }
@@ -150,6 +154,10 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
             keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? = nil,
             movementsCollection: MovementsCollection? = nil,
             format: GraphQLEnum<ApolloGQL.PieceFormat>? = nil,
+            instrumentation: [String?]? = nil,
+            wikipediaUrl: String? = nil,
+            imslpUrl: String? = nil,
+            compositionYear: Int? = nil,
             nickname: String? = nil,
             composer: Composer? = nil,
             movements: Movements? = nil
@@ -165,6 +173,10 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
                 "keySignature": keySignature,
                 "movementsCollection": movementsCollection._fieldData,
                 "format": format,
+                "instrumentation": instrumentation,
+                "wikipediaUrl": wikipediaUrl,
+                "imslpUrl": imslpUrl,
+                "compositionYear": compositionYear,
                 "nickname": nickname,
                 "composer": composer._fieldData,
                 "movements": movements._fieldData,

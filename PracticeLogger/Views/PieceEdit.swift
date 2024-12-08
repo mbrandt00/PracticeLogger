@@ -10,11 +10,11 @@ import SwiftUI
 import ApolloGQL
 struct PieceEdit: View {
     @StateObject private var viewModel: PieceEditViewModel
-    @State private var showToast: Bool = false
-    @State private var errorMessage: String = ""
+    @State private var showToast = false
+    @State private var errorMessage = ""
     @State private var duplicatePiece: PieceDetails?
-    @Environment(\.presentationMode) var presentationMode
     @Binding var path: NavigationPath
+    @State private var newInstrument = ""
     
     init(piece: PieceDetails, path: Binding<NavigationPath>) {
         _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
@@ -22,188 +22,259 @@ struct PieceEdit: View {
     }
     
     var body: some View {
-        VStack {
-            Form {
-                Text(viewModel.editablePiece.workName)
-                    .font(.title)
-                    .foregroundColor(.primary)
-                //
-                Section(header: Text("Movements").foregroundColor(.primary)) {
-                    if let movements = viewModel.editablePiece.movements {
-                        ForEach(movements, id: \.id) { movement in
-                            Text(movement.name ?? "")
-                        }
-                    }
-                }
-                Section(header: Text("Catalogue Information").foregroundColor(.primary)) {
-                    
-                    Picker("Identifier", selection: Binding<String>(
-                        get: {
-                            if let catalogueType = viewModel.editablePiece.catalogueType?.rawValue {
-                                // Ensure we're using the exact case from the enum
-                                if let matchingCase = CatalogueType.allCases.first(where: { $0.rawValue.lowercased() == catalogueType.lowercased() }) {
-                                    return matchingCase.rawValue
-                                }
-                                return ""
-                            }
-                            return ""
-                        },
-                        set: { newValue in
-                            if let catalogueType = CatalogueType(rawValue: newValue) {
-                                viewModel.editablePiece.catalogueType = GraphQLEnum(catalogueType.rawValue)
-                            } else {
-                                viewModel.editablePiece.catalogueType = nil
-                            }
-                        }
-                    )) {
-                        Text("None").tag("")
-                        ForEach(CatalogueType.allCases, id: \.self) { catalogueType in
-                            Text(catalogueType.rawValue).tag(catalogueType.rawValue)
-                        }
-                    }
-                    
-                    HStack {
-                        Text("Number")
-                            .foregroundColor(.primary)
-                        Spacer()
-                        TextField("", text: Binding(
-                            get: {
-                                if let catalogue_number = viewModel.editablePiece.catalogueNumber {
-                                    return String(catalogue_number)
-                                } else {
-                                    return ""
-                                }
-                            },
-                            set: { newValue in
-                                viewModel.editablePiece.catalogueNumber = newValue.isEmpty ? nil : Int(newValue)
-                            }
-                        ))
-                        .frame(width: 200)
-                        .multilineTextAlignment(.trailing)
-                        .textFieldStyle(PlainTextFieldStyle())
-                        .keyboardType(.numberPad)
-                    }
-                    
-                    VStack {
-                        HStack {
-                            Picker("Key Signature", selection: Binding<String>(
-                                get: {
-                                    if let keySignature = viewModel.editablePiece.keySignature?.rawValue {
-                                        return keySignature
-                                    }
-                                    return ""
-                                },
-                                set: { newValue in
-                                    if let keySignature = KeySignatureType(rawValue: newValue) {
-                                        viewModel.editablePiece.keySignature = GraphQLEnum(keySignature)
-                                    } else {
-                                        viewModel.editablePiece.keySignature = nil
-                                    }
-                                }
-                            )) {
-                                Text("None").tag("")
-                                ForEach(KeySignatureType.allCases, id: \.self) { keySignatureType in
-                                    Text(keySignatureType.displayName)
-                                        .tag(keySignatureType.rawValue)
-                                }
-                            }
-                        }
-                    }
-            }
+        Form {
+            nameFields
+            movementsSection
+            catalogueSection
+            instrumentationSection
+            externalInformation
+            
             if duplicatePiece != nil {
                 Text("Duplicate Piece Found!")
                     .font(.subheadline)
                     .foregroundColor(.red)
             }
-            
-            
-                
-                
-                //                                Picker("Format", selection: Binding( get: {
-                //                                        viewModel.piece.format?.rawValue ?? ""
-                //                                    },
-                //                                    set: { newValue in
-                //                                        viewModel.piece.format = Format(rawValue: newValue)
-                //                                    }
-                //                                )) {
-                //                                    Text("").tag("")
-                //                                    ForEach(Format.allCases, id: \.self) { format in
-                //                                        Text(format.rawValue).tag(format.rawValue)
-                //                                    }
-                //                                }
-                
-                //                                HStack {
-                //                                    Text("Nickname")
-                //                                        .foregroundColor(.primary)
-                //                                    Spacer()
-                //                                    TextField("", text: Binding(
-                //                                        get: {
-                //                                            if let nickname = viewModel.piece.nickname {
-                //                                                return nickname
-                //                                            } else {
-                //                                                return ""
-                //                                            }
-                //                                        },
-                //                                        set: { newValue in
-                //                                            viewModel.piece.nickname = newValue.isEmpty ? nil : newValue
-                //                                        }
-                //                                    ))
-                //                                    .frame(width: 200)
-                //                                    .multilineTextAlignment(.trailing)
-                //                                }
-            }
-            //                            .onAppear {
-            //                                Task {
-            //                                    do {
-            //                                        self.duplicatePiece = try await viewModel.isDuplicate(piece: viewModel.piece)
-            //                                    } catch {
-            //                                        print(error)
-            //                                    }
-            //                                }
-            //                            }
-            //                        }
-            //                        .toast(isPresenting: $showToast) {
-            //                            AlertToast(type: .error(.red), title: errorMessage)
-            //                        }
         }
-                            .navigationBarItems(
-                                trailing: Button(action: {
-                                    Task {
-                                        do {
-                                            let piece = try await viewModel.insertPiece()
-        
-                                            path.removeLast() // remove edit page
-                                            path.append(PieceNavigationContext.userPiece(piece))
-                                        } catch {
-                                            print(error.localizedDescription)
-                                            if let supabaseError = error as? SupabaseError {
-                                                print(supabaseError)
-                                                switch supabaseError {
-                                                case .pieceAlreadyExists:
-                                                    errorMessage = "You have already added this piece"
-                                                }
-                                            } else {
-                                                errorMessage = "An unexpected error occurred."
-                                            }
-                                            showToast = true
-                                        }
-                                    }
-                                }, label: {
-                                    Text("Create")
-                                        .foregroundColor(.primary) // Ensure button text adapts to dark mode
-                                })
-                            )
-                            .buttonStyle(.bordered)
-                            .foregroundColor(.primary) // Ensure button text adapts to dark mode
-                        }
-        
-        // struct PieceEdit_Previews: PreviewProvider {
-        //    static var previews: some View {
-        //        PieceEdit(piece: Piece.examplePieces.randomElement()!)
-        //            .environment(\.colorScheme, .dark) // Preview in dark mode
-        //    }
-        // }
-        //    }
+        .navigationTitle("Create Piece")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarItems(trailing: createButton)
+        .toast(isPresenting: $showToast) {
+            AlertToast(type: .error(.red), title: errorMessage)
+        }
+    }
+    
+    private var nameFields: some View {
+        Section("Name") {
+            workNameField
+            nickNameField
+            composerField
+        }
+    }
+    
+    private var workNameField: some View {
+        HStack {
+            Text("Work Name")
+            Spacer()
+            TextField("Enter name", text: $viewModel.editablePiece.workName)
+                .frame(maxWidth: 200)
+                .multilineTextAlignment(.trailing)
+                .textFieldStyle(PlainTextFieldStyle())
+        }
+    }
+    
+    private var nickNameField: some View {
+        HStack {
+            Text("Nickname")
+            Spacer()
+            TextField("Optional", text: Binding(
+                get: { viewModel.editablePiece.nickname ?? "" },
+                set: { newValue in
+                    viewModel.editablePiece.nickname = newValue.isEmpty ? nil : newValue
+                }
+            ))
+            .frame(maxWidth: 200)
+            .multilineTextAlignment(.trailing)
+            .textFieldStyle(PlainTextFieldStyle())
+            .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+    
+    public var composerField: some View {
+        HStack {
+            Text("Composer")
+            Spacer()
+            TextField("Composer", text: Binding(
+                get: { viewModel.editablePiece.composer?.name ?? "" },
+                set: { newValue in
+                    if viewModel.editablePiece.composer == nil {
+                        viewModel.editablePiece.composer = EditableComposer(name: newValue)
+                    } else {
+                        viewModel.editablePiece.composer?.name = newValue
+                    }
+                }
+            ))
+            .multilineTextAlignment(.trailing)
+        }
+    }
+    
+    private var movementsSection: some View {
+        Section("Movements") {
+            if let movements = viewModel.editablePiece.movements {
+                ForEach(movements, id: \.id) { movement in
+                    Text(movement.name ?? "")
+                }
+            }
+        }
+    }
+    
+    private var catalogueSection: some View {
+        Section("Meta Attributes") {
+            cataloguePicker
+            catalogueNumberField
+            keySignaturePicker
+            pieceFormatPicker
+            compositionYearField
+        }
+    }
+    
+    private var externalInformation: some View {
+        Section("External Information") {
+            HStack {
+                Text("Wikipedia URL")
+                Spacer()
+                TextField("Optional", text: Binding(
+                    get: { viewModel.editablePiece.wikipediaUrl ?? "" },
+                    set: { newValue in
+                        viewModel.editablePiece.wikipediaUrl = newValue.isEmpty ? nil : newValue
+                    }
+                ))
+                .frame(maxWidth: 200)
+                .multilineTextAlignment(.trailing)
+                .textFieldStyle(PlainTextFieldStyle())
+                .fixedSize(horizontal: false, vertical: true)
+            }
+            
+            HStack {
+                Text("IMSLP URL")
+                Spacer()
+                TextField("Optional", text: Binding(
+                    get: { viewModel.editablePiece.imslpUrl ?? "" },
+                    set: { newValue in
+                        viewModel.editablePiece.imslpUrl = newValue.isEmpty ? nil : newValue
+                    }
+                ))
+                .frame(maxWidth: 200)
+                .multilineTextAlignment(.trailing)
+                .textFieldStyle(PlainTextFieldStyle())
+                .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+
+    }
+    
+    private var instrumentationSection: some View {
+        Section("Instrumentation") {
+            ForEach(viewModel.editablePiece.instrumentation ?? [], id: \.self) { instrument in
+                HStack {
+                    Text(instrument ?? "")
+                    Spacer()
+                    Button(action: {
+                        viewModel.editablePiece.instrumentation?.removeAll(where: { $0 == instrument })
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.red)
+                    }
+                }
+            }
+            
+            HStack {
+                TextField("Add instrument", text: $newInstrument)
+                
+                Button(action: {
+                    guard !newInstrument.isEmpty else { return }
+                    if viewModel.editablePiece.instrumentation == nil {
+                        viewModel.editablePiece.instrumentation = [newInstrument]
+                    } else {
+                        viewModel.editablePiece.instrumentation?.append(newInstrument)
+                    }
+                    newInstrument = ""
+                }) {
+                    Image(systemName: "plus.circle.fill")
+                        .foregroundColor(.accentColor)
+                }
+                .disabled(newInstrument.isEmpty)
+            }
+        }
+    }
+    
+    private var cataloguePicker: some View {
+        Picker("Identifier", selection: $viewModel.editablePiece.catalogueType) {
+            Text("None").tag(nil as GraphQLEnum<ApolloGQL.CatalogueType>?)
+            ForEach(CatalogueType.allCases, id: \.self) { type in
+                Text(type.rawValue)
+                    .tag(GraphQLEnum(type.rawValue) as GraphQLEnum<ApolloGQL.CatalogueType>?)
+            }
+        }
+    }
+    
+    private var catalogueNumberField: some View {
+        HStack {
+            Text("Number")
+            Spacer()
+            TextField("", value: $viewModel.editablePiece.catalogueNumber, format: .number)
+                .frame(maxWidth: 200)
+                .multilineTextAlignment(.trailing)
+                .textFieldStyle(PlainTextFieldStyle())
+                .keyboardType(.numberPad)
+        }
+    }
+    private var compositionYearField: some View {
+        HStack {
+            Text("Composition Year")
+            Spacer()
+            TextField("Optional", text: Binding(
+                get: {
+                    if let year = viewModel.editablePiece.compositionYear {
+                        return String(year)
+                    }
+                    return ""
+                },
+                set: { newValue in
+                    if let year = Int(newValue) {
+                        viewModel.editablePiece.compositionYear = year
+                    } else {
+                        viewModel.editablePiece.compositionYear = nil
+                    }
+                }
+            ))
+            .frame(maxWidth: 200)
+            .multilineTextAlignment(.trailing)
+            .textFieldStyle(PlainTextFieldStyle())
+            .keyboardType(.numberPad)
+        }
+    }
+    
+    private var keySignaturePicker: some View {
+        Picker("Key Signature", selection: $viewModel.editablePiece.keySignature) {
+            Text("None").tag(nil as GraphQLEnum<ApolloGQL.KeySignatureType>?)
+            ForEach(KeySignatureType.allCases, id: \.self) { type in
+                Text(type.displayName)
+                    .tag(GraphQLEnum(type) as GraphQLEnum<ApolloGQL.KeySignatureType>?)
+            }
+        }
+    }
+    private var pieceFormatPicker: some View {
+        Picker("Format", selection: $viewModel.editablePiece.format) {
+            Text("None").tag(nil as GraphQLEnum<ApolloGQL.PieceFormat>?)
+            ForEach(PieceFormat.allCases, id: \.self) { type in
+                Text(type.displayName)
+                    .tag(GraphQLEnum(type) as GraphQLEnum<ApolloGQL.PieceFormat>?)
+            }
+        }
+    }
+    
+    private var createButton: some View {
+        Button("Submit") {
+            Task {
+                do {
+                    
+                    let piece = try await viewModel.insertPiece()
+//                    path.removeLast()
+//                    path.append(PieceNavigationContext.userPiece(piece))
+                } catch let error as SupabaseError {
+                    errorMessage = error == .pieceAlreadyExists
+                        ? "You have already added this piece"
+                        : "An unexpected error occurred."
+                    showToast = true
+                } catch {
+                    errorMessage = "An unexpected error occurred."
+                    showToast = true
+                }
+            }
+        }
+        .buttonStyle(.bordered)
+        .foregroundColor(.primary)
+    }
 }
 
 struct PieceEdit_Previews: PreviewProvider {
@@ -215,9 +286,13 @@ struct PieceEdit_Previews: PreviewProvider {
                     workName: "Symphony No. 5",
                     catalogueType: GraphQLEnum(CatalogueType.Op.rawValue),
                     keySignature: GraphQLEnum(KeySignatureType.cminor),
-                    format: GraphQLEnum(Format.symphony.rawValue),
+                    format: GraphQLEnum(PieceFormat.symphony.rawValue),
+                    instrumentation: ["Violin", "Cello", "Bassoon", "Chorus"],
+                    wikipediaUrl: "https://en.wikipedia.org/wiki/Symphony_No._5_(Beethoven)",
+                    imslpUrl: "https://imslp.org/wiki/Symphony_No.5,_Op.67_(Beethoven,_Ludwig_van)",
+                    compositionYear: 1804,
                     catalogueNumber: 67,
-                    nickname: "Fate",
+                    nickname: "My really really really long nickname jkl;asd",
                     composer: PieceDetails.Composer(name: "Ludwig van Beethoven"),
                     movements: PieceDetails.Movements(
                         edges: [
