@@ -39,7 +39,7 @@ class SupabaseDatabase:
         ) VALUES (
             %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
         )
-        ON CONFLICT (composer_id, catalogue_type, catalogue_number)
+        ON CONFLICT (imslp_url)
         DO UPDATE SET
             work_name = EXCLUDED.work_name,
             catalogue_type_num_desc = EXCLUDED.catalogue_type_num_desc,
