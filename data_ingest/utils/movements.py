@@ -28,15 +28,18 @@ def parse_movements(
         data = BeautifulSoup(response.text, "html.parser")
     if not data:
         raise ValueError("Beautiful soup object could not be initialized")
+    
     general_info_div = data.find("div", class_="wi_body")
     movements = []
     number_title_pattern = r"(\d+)\.\s*([A-Za-z ]+)"
-    
+    # Add patterns for tempo markings
+    tempo_pattern = r'\s*[♩♪𝅗𝅥𝅘𝅥𝅮]\s*=\s*\d+\s*'  # Basic pattern for musical note symbols
+    extended_tempo_pattern = r'\s*(?:<[^>]+>)*\s*=\s*\d+\s*'  # Pattern that handles HTML image tags
     
     if not general_info_div or not isinstance(general_info_div, Tag):
         raise ValueError("Could not find 'div' with class 'wi_body'")
     
-    #  try to get movements from ordered list (ol)
+    # try to get movements from ordered list (ol)
     ol_container = general_info_div.find("ol")
     if ol_container and isinstance(ol_container, Tag):
         for index, item in enumerate(ol_container.find_all("li")):
@@ -54,8 +57,18 @@ def parse_movements(
             
             line = item.get_text(strip=True).replace("\xa0", " ")
             name = line
+            
+            # Remove key signatures and tempo markings from parentheses
             key_sig_pattern = r"\([^)]*(?:major|minor)[^)]*\)"
             name = re.sub(key_sig_pattern, "", name).strip()
+            # Remove parentheses containing tempo markings
+            name = re.sub(r'\([^)]*(?:=\s*\d+)[^)]*\)', '', name).strip()
+            # Remove any remaining tempo markings
+            name = re.sub(tempo_pattern, "", name).strip()
+            name = re.sub(extended_tempo_pattern, "", name).strip()
+            # Remove any double spaces created by the removals
+            name = re.sub(r'\s+', ' ', name).strip()
+            
             base_title = re.sub(r'\s*\[.*?\].*$', '', name).strip()
             
             cleansed_name = re.search(number_title_pattern, base_title)
@@ -114,8 +127,17 @@ def parse_movements(
                     logging.warning(f"Could not parse key signature from: {raw_html}")
                 
                 name = movement.title
+                # Remove key signatures and tempo markings from parentheses
                 key_sig_pattern = r"\([^)]*(?:major|minor)[^)]*\)"
                 name = re.sub(key_sig_pattern, "", name).strip()
+                # Remove parentheses containing tempo markings
+                name = re.sub(r'\([^)]*(?:=\s*\d+)[^)]*\)', '', name).strip()
+                # Remove any remaining tempo markings
+                name = re.sub(tempo_pattern, "", name).strip()
+                name = re.sub(extended_tempo_pattern, "", name).strip()
+                # Remove any double spaces created by the removals
+                name = re.sub(r'\s+', ' ', name).strip()
+                
                 base_title = re.sub(r'\s*\[.*?\].*$', '', name).strip()
                 
                 # Clean number prefix

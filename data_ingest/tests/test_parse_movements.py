@@ -109,3 +109,11 @@ def test_div_movement():
     assert data[2].title == 'Clair de lune'
     assert data[3].title == 'Passepied'
     
+
+def test_remove_tempo_symbol_from_name():
+    data = parse_movements(url = "https://imslp.org/wiki/Piano_Sonata_No.29,_Op.106_(Beethoven,_Ludwig_van")
+    print(data)
+    assert data[0].title == 'Allegro'
+    assert data[1].title == 'Scherzo. Assai vivace'
+    assert data[2].title == 'Adagio sostenuto'
+    assert data[3].title == 'Introduzione. Largo - Fuga: Allegro risoluto'
