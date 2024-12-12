@@ -54,15 +54,15 @@ def base_imslp_iterator(
     collection_objects = []
     try:
         driver.get(base_url)
-        wait = WebDriverWait(driver, 20)  
+        wait = WebDriverWait(driver, 20)
 
         # Find the tab
         tab_xpath_patterns = [
             f"//a[contains(text(), '{tab}')]",
             f"//a[normalize-space()='{tab}']",
-            f"//div[contains(@class, 'tabpanel')]//a[contains(text(), '{tab}')]"
+            f"//div[contains(@class, 'tabpanel')]//a[contains(text(), '{tab}')]",
         ]
-        
+
         collection_link = None
         for xpath in tab_xpath_patterns:
             try:
@@ -80,10 +80,10 @@ def base_imslp_iterator(
         collection_container_id = urlparse(
             collection_link.get_attribute("href")
         ).fragment
-        
+
         if not collection_container_id:
             return []
-            
+
         driver.execute_script("arguments[0].click();", collection_link)
         time.sleep(2)  # Wait for content to load
 
@@ -120,17 +120,17 @@ def base_imslp_iterator(
                 container = driver.find_element(By.ID, collection_container_id)
                 next_page = container.find_element(
                     By.XPATH,
-                    ".//a[contains(@class, 'categorypaginglink') and contains(text(), 'next') and not(contains(text(), 'no next'))]"
+                    ".//a[contains(@class, 'categorypaginglink') and contains(text(), 'next') and not(contains(text(), 'no next'))]",
                 )
                 driver.execute_script("arguments[0].click();", next_page)
                 time.sleep(2)
-                
+
                 # Get links from the new page
                 new_links = get_container_links()
                 if not new_links:
                     break
                 collection_objects.extend(new_links)
-                
+
             except Exception:
                 break
 
@@ -142,6 +142,7 @@ def base_imslp_iterator(
         return []
 
     return list(set(collection_objects))
+
 
 def get_all_composer_pieces(base_url: str) -> List[str]:
     return base_imslp_iterator(base_url, tab="Compositions")

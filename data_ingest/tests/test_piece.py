@@ -114,9 +114,9 @@ def test_parse_metadata():
                 "catalogue_number": 106,
                 "title": "Piano Sonata No.29",
                 "catalogue_type": "op",
-                "composition_year_string": '1817–18',
+                "composition_year_string": "1817–18",
                 "composition_year": 1817,
-                "key_signature": 'bflat',
+                "key_signature": "bflat",
                 "movements_count": 4,
                 "nickname": "Hammerklavier, Große Sonate für das Hammerklavier",
                 "instrumentation": ["piano"],
@@ -224,7 +224,7 @@ def test_create_piece_from_tag(url, expected_data):
                 "catalogue_type": "op",
                 "composition_year_string": "1934",
                 "composition_year": 1934,
-                "key_signature": 'aminor',
+                "key_signature": "aminor",
                 "movements_count": 25,
                 "nickname": "Рапсодия на тему Паганини (Rapsodiya na temu Paganini)",  #
                 "instrumentation": ["piano", "orchestra"],
@@ -241,9 +241,9 @@ def test_create_piece_from_tag(url, expected_data):
                 "catalogue_type": "cd",
                 "composition_year_string": "1909-10",
                 "composition_year": 1909,
-                "key_signature":None,
+                "key_signature": None,
                 "movements_count": 12,
-                "nickname":None,
+                "nickname": None,
                 "instrumentation": ["piano"],
                 "piece_style": "romantic",
                 "catalogue_number_secondary": None,
@@ -258,9 +258,9 @@ def test_create_piece_from_tag(url, expected_data):
                 "catalogue_type": "mwvq",
                 "composition_year_string": "1820",
                 "composition_year": 1820,
-                "key_signature":'f',
+                "key_signature": "f",
                 "movements_count": 3,
-                "nickname":None,  
+                "nickname": None,
                 "instrumentation": ["violin", "piano"],
                 "piece_style": "romantic",
                 "catalogue_number_secondary": None,
@@ -275,13 +275,13 @@ def test_create_piece_from_tag(url, expected_data):
                 "catalogue_type": "h",
                 "composition_year_string": "1861, rev. 1868",
                 "composition_year": 1861,
-                "key_signature":None,
+                "key_signature": None,
                 "movements_count": 0,
-                "nickname":None,  
-                "instrumentation":  ['TTBB—TTBB', 'organTTBB a capella'],
+                "nickname": None,
+                "instrumentation": ["TTBB—TTBB", "organTTBB a capella"],
                 "piece_style": "romantic",
                 "catalogue_number_secondary": None,
-                "sub_piece_type": None
+                "sub_piece_type": None,
             },
         ),
     ],
@@ -304,5 +304,3 @@ def test_create_piece_from_url(url, expected_data):
         data.catalogue_number_secondary == expected_data["catalogue_number_secondary"]
     )
     assert data.sub_piece_type == expected_data["sub_piece_type"]
-
-

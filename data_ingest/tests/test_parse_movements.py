@@ -16,8 +16,11 @@ from utils.movements import parse_key_signature, parse_movements
         ("Doloroso in D♯ minor", "dsharpminor"),
         ("Presto  = 192-200 (D♭ major)", "dflat"),
         ("F♯ major", "fsharp"),
-        ('Allegro (B♭ major.  = 138)', 'bflat'), # hammerklavier
-        ('Introduzione. Largo ( = 76) - Fuga: Allegro risoluto (B♭ major.  = 144))', 'bflat'), # hammerklavier
+        ("Allegro (B♭ major.  = 138)", "bflat"),  # hammerklavier
+        (
+            "Introduzione. Largo ( = 76) - Fuga: Allegro risoluto (B♭ major.  = 144))",
+            "bflat",
+        ),  # hammerklavier
         (
             "D<span class=\"music-symbol\" style='font-family: Arial Unicode MS, Lucida Sans Unicode; font-size:110%'>♭</span> major)",
             "dflat",
@@ -26,6 +29,7 @@ from utils.movements import parse_key_signature, parse_movements
 )
 def test_parse_key_signature(test_input, expected):
     assert parse_key_signature(test_input) == expected
+
 
 # Movement parsing tests
 def test_parse_piece_movements():
@@ -40,6 +44,7 @@ def test_parse_piece_movements():
     # clean name without number
     assert result[0].title == "Allegro moderato"
     assert result[1].title == "Scherzo"
+
 
 def test_parse_piece_sections():
     result = parse_movements(
@@ -58,13 +63,12 @@ def test_parse_piece_sections():
     # url
     print(result)
     assert (
-        result[0].download_url
-        == "https://imslp.org/wiki/Special:ImagefromIndex/309270"
+        result[0].download_url == "https://imslp.org/wiki/Special:ImagefromIndex/309270"
     )
     assert (
-        result[1].download_url
-        == "https://imslp.org/wiki/Special:ImagefromIndex/309271"
+        result[1].download_url == "https://imslp.org/wiki/Special:ImagefromIndex/309271"
     )
+
 
 # Nickname and movement count tests
 def test_create_piece_with_sub_piece_and_nickname():
@@ -88,39 +92,49 @@ def test_create_piece_with_sub_piece_and_nickname():
     assert data[5].key_signature == "gsharpminor"
     assert data[6].key_signature == "csharpminor"
 
+
 def test_parse_nickname():
     data = parse_movements(
         url="https://imslp.org/wiki/4_Pieces%2C_Op.56_(Scriabin%2C_Aleksandr)"
     )
     assert data[0].title == "Prelude"
 
+
 def test_movement():
-    data = parse_movements(url= "https://imslp.org/wiki/10_Pieces_for_Piano,_Op.12_(Prokofiev,_Sergey)")
+    data = parse_movements(
+        url="https://imslp.org/wiki/10_Pieces_for_Piano,_Op.12_(Prokofiev,_Sergey)"
+    )
     print(data)
     assert len(data) == 10
     assert data[0].key_signature is None
 
 
-
 def test_div_movement():
-    data = parse_movements(url = "https://imslp.org/wiki/Suite_bergamasque_(Debussy,_Claude)")
-    assert data[0].title == 'Prélude'
-    assert data[1].title == 'Menuet'
-    assert data[2].title == 'Clair de lune'
-    assert data[3].title == 'Passepied'
-    
+    data = parse_movements(
+        url="https://imslp.org/wiki/Suite_bergamasque_(Debussy,_Claude)"
+    )
+    assert data[0].title == "Prélude"
+    assert data[1].title == "Menuet"
+    assert data[2].title == "Clair de lune"
+    assert data[3].title == "Passepied"
+
 
 def test_remove_tempo_symbol_from_name():
-    data = parse_movements(url = "https://imslp.org/wiki/Piano_Sonata_No.29,_Op.106_(Beethoven,_Ludwig_van")
+    data = parse_movements(
+        url="https://imslp.org/wiki/Piano_Sonata_No.29,_Op.106_(Beethoven,_Ludwig_van"
+    )
     print(data)
-    assert data[0].title == 'Allegro'
-    assert data[1].title == 'Scherzo. Assai vivace'
-    assert data[2].title == 'Adagio sostenuto'
-    assert data[3].title == 'Introduzione. Largo - Fuga: Allegro risoluto'
-    
+    assert data[0].title == "Allegro"
+    assert data[1].title == "Scherzo. Assai vivace"
+    assert data[2].title == "Adagio sostenuto"
+    assert data[3].title == "Introduzione. Largo - Fuga: Allegro risoluto"
+
+
 def test_remove_links_from_movement_name():
-    data = parse_movements(url = "https://imslp.org/wiki/Preludes,_Op.28_(Chopin,_Fr%C3%A9d%C3%A9ric)")
-    assert data[0].title == 'Agitato'
-    assert data[0].key_signature == 'c'
-    assert data[1].title == 'Lento'
-    assert data[1].key_signature == 'aminor'
+    data = parse_movements(
+        url="https://imslp.org/wiki/Preludes,_Op.28_(Chopin,_Fr%C3%A9d%C3%A9ric)"
+    )
+    assert data[0].title == "Agitato"
+    assert data[0].key_signature == "c"
+    assert data[1].title == "Lento"
+    assert data[1].key_signature == "aminor"

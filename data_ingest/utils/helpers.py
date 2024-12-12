@@ -52,11 +52,12 @@ def standardize_dict_keys(data: dict) -> Optional[Dict]:
         for k, v in data.items()
     }
 
+
 def parse_key_signature(raw_string: str) -> Optional[str]:
     """Parses a key signature string and returns the root note with its quality (e.g., 'csharp', 'dflat')."""
     # First, remove any Cyrillic text in parentheses to avoid false matches
-    clean_raw = re.sub(r'\([^)]*[А-Яа-я][^)]*\)', '', raw_string)
-    
+    clean_raw = re.sub(r"\([^)]*[А-Яа-я][^)]*\)", "", raw_string)
+
     soup = BeautifulSoup(clean_raw, "html.parser")
     clean_string = (
         soup.get_text()
@@ -77,11 +78,7 @@ def parse_key_signature(raw_string: str) -> Optional[str]:
         quality = in_match.group(3)
         result = root
         if accidental:
-            accidental = (
-                accidental.lower()
-                .replace("♯", "sharp")
-                .replace("♭", "flat")
-            )
+            accidental = accidental.lower().replace("♯", "sharp").replace("♭", "flat")
             result += accidental
         if quality and quality.lower() == "minor":
             result += "minor"
@@ -91,43 +88,38 @@ def parse_key_signature(raw_string: str) -> Optional[str]:
     paren_pattern = r"\(([^)]*(?:major|minor)[^)]*)\)"
     paren_matches = list(re.finditer(paren_pattern, clean_string, re.IGNORECASE))
     key_string = clean_string
-    
+
     if paren_matches:
         # Take the last parenthetical expression containing major/minor
         key_string = paren_matches[-1].group(1).strip()
 
     # Check if the string contains any Cyrillic characters
-    if re.search('[А-Яа-я]', key_string):
+    if re.search("[А-Яа-я]", key_string):
         # If it contains Cyrillic, require explicit major/minor
         pattern = r"(?:^|\b)([A-G])\s*(sharp|flat|♯|♭)?\s*(major|minor)(?:\b|$)"
     else:
         # If no Cyrillic, allow more relaxed matching
         pattern = r"(?:^|\b)([A-G])\s*(sharp|flat|♯|♭)?(?:\s*(major|minor))?(?:\b|$)"
-    
+
     match = re.search(pattern, key_string, re.IGNORECASE)
-    
+
     if not match and not paren_matches:
         # Try the full string if parentheses match didn't work
         match = re.search(pattern, clean_string, re.IGNORECASE)
-    
+
     if match:
         root = match.group(1).lower()
         accidental = match.group(2)
         quality = match.group(3)
         result = root
         if accidental:
-            accidental = (
-                accidental.lower()
-                .replace("♯", "sharp")
-                .replace("♭", "flat")
-            )
+            accidental = accidental.lower().replace("♯", "sharp").replace("♭", "flat")
             result += accidental
         if quality and quality.lower() == "minor":
             result += "minor"
         return result
 
     return None
-
 
 
 def section_download_link(data: Tag, piece_name: str) -> str | None:
