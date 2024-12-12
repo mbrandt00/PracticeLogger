@@ -117,3 +117,10 @@ def test_remove_tempo_symbol_from_name():
     assert data[1].title == 'Scherzo. Assai vivace'
     assert data[2].title == 'Adagio sostenuto'
     assert data[3].title == 'Introduzione. Largo - Fuga: Allegro risoluto'
+    
+def test_remove_links_from_movement_name():
+    data = parse_movements(url = "https://imslp.org/wiki/Preludes,_Op.28_(Chopin,_Fr%C3%A9d%C3%A9ric)")
+    assert data[0].title == 'Agitato'
+    assert data[0].key_signature == 'c'
+    assert data[1].title == 'Lento'
+    assert data[1].key_signature == 'aminor'

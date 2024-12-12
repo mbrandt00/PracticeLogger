@@ -16,8 +16,6 @@ class Movement:
     download_url: Optional[str] = None
     nickname: Optional[str] = None
 
-
-
 def parse_movements(
     data: Optional[Tag] = None, url: Optional[str] = None
 ) -> List[Movement]:
@@ -101,10 +99,23 @@ def parse_movements(
                     if isinstance(element, Tag):
                         if element.name == "dl":
                             break
-                        main_text += element.get_text()
+                        # Skip <a> tags and their content
+                        elif element.name == "a":
+                            continue
+                        # For span tags that might contain links
+                        elif element.name == "span":
+                            # Skip if it's a plainlinks span containing links
+                            if "plainlinks" in element.get("class", []):
+                                continue
+                            main_text += element.get_text()
+                        else:
+                            main_text += element.get_text()
                     else:
-                        main_text += str(element)
-                
+                        # Only add text content if it's not just whitespace or semicolons
+                        text = str(element).strip()
+                        if text and text not in [';', ' ;']:
+                            main_text += text
+
                 movement = Movement(
                     key_signature=None,
                     number=index + 1,
@@ -141,8 +152,13 @@ def parse_movements(
                 base_title = re.sub(r'\s*\[.*?\].*$', '', name).strip()
                 
                 # Clean number prefix
-                if base_title.startswith(f"{index + 1}."):
-                    base_title = base_title[len(f"{index + 1}."):]
+                base_title = re.sub(r'^\d+\.\s*', '', base_title)
+                
+                # Extract key signature from the title if present
+                key_pattern = r'\((.*?(?:major|minor).*?)\)'
+                key_match = re.search(key_pattern, base_title)
+                if key_match:
+                    base_title = re.sub(r'\s*\(.*?(?:major|minor).*?\)', '', base_title)
                 
                 # Clean up italics and extra spaces from title
                 base_title = re.sub(r'<[^>]+>', '', base_title).strip()
@@ -154,6 +170,8 @@ def parse_movements(
                 nickname_potential = re.findall(nickname_pattern, movement.title)
                 if len(nickname_potential) == 1:
                     movement.nickname = nickname_potential[0]
+                    # Remove the nickname from the title
+                    movement.title = re.sub(r'\s*[\'"].*?[\'"]\s*', '', movement.title).strip()
                     
                 bad_characters = ["{", "p.", "monatsbericht"]
                 if any(bad in movement.title.lower() for bad in bad_characters):
