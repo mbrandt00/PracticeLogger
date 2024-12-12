@@ -13,12 +13,18 @@ public struct MovementsInsertInput: InputObject {
   public init(
     pieceId: GraphQLNullable<BigInt> = nil,
     name: GraphQLNullable<String> = nil,
-    number: GraphQLNullable<Int> = nil
+    number: GraphQLNullable<Int> = nil,
+    keySignature: GraphQLNullable<GraphQLEnum<KeySignatureType>> = nil,
+    nickname: GraphQLNullable<String> = nil,
+    downloadUrl: GraphQLNullable<String> = nil
   ) {
     __data = InputDict([
       "pieceId": pieceId,
       "name": name,
-      "number": number
+      "number": number,
+      "keySignature": keySignature,
+      "nickname": nickname,
+      "downloadUrl": downloadUrl
     ])
   }
 
@@ -35,5 +41,20 @@ public struct MovementsInsertInput: InputObject {
   public var number: GraphQLNullable<Int> {
     get { __data["number"] }
     set { __data["number"] = newValue }
+  }
+
+  public var keySignature: GraphQLNullable<GraphQLEnum<KeySignatureType>> {
+    get { __data["keySignature"] }
+    set { __data["keySignature"] = newValue }
+  }
+
+  public var nickname: GraphQLNullable<String> {
+    get { __data["nickname"] }
+    set { __data["nickname"] = newValue }
+  }
+
+  public var downloadUrl: GraphQLNullable<String> {
+    get { __data["downloadUrl"] }
+    set { __data["downloadUrl"] = newValue }
   }
 }

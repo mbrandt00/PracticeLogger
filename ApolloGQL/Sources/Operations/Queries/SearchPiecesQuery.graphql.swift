@@ -41,6 +41,20 @@ public class SearchPiecesQuery: GraphQLQuery {
 
     public var searchPieceWithAssociations: SearchPieceWithAssociations? { __data["searchPieceWithAssociations"] }
 
+    public init(
+      searchPieceWithAssociations: SearchPieceWithAssociations? = nil
+    ) {
+      self.init(_dataDict: DataDict(
+        data: [
+          "__typename": ApolloGQL.Objects.Query.typename,
+          "searchPieceWithAssociations": searchPieceWithAssociations._fieldData,
+        ],
+        fulfilledFragments: [
+          ObjectIdentifier(SearchPiecesQuery.Data.self)
+        ]
+      ))
+    }
+
     /// SearchPieceWithAssociations
     ///
     /// Parent Type: `PiecesConnection`
@@ -56,6 +70,20 @@ public class SearchPiecesQuery: GraphQLQuery {
 
       public var edges: [Edge] { __data["edges"] }
 
+      public init(
+        edges: [Edge]
+      ) {
+        self.init(_dataDict: DataDict(
+          data: [
+            "__typename": ApolloGQL.Objects.PiecesConnection.typename,
+            "edges": edges._fieldData,
+          ],
+          fulfilledFragments: [
+            ObjectIdentifier(SearchPiecesQuery.Data.SearchPieceWithAssociations.self)
+          ]
+        ))
+      }
+
       /// SearchPieceWithAssociations.Edge
       ///
       /// Parent Type: `PiecesEdge`
@@ -70,6 +98,20 @@ public class SearchPiecesQuery: GraphQLQuery {
         ] }
 
         public var node: Node { __data["node"] }
+
+        public init(
+          node: Node
+        ) {
+          self.init(_dataDict: DataDict(
+            data: [
+              "__typename": ApolloGQL.Objects.PiecesEdge.typename,
+              "node": node._fieldData,
+            ],
+            fulfilledFragments: [
+              ObjectIdentifier(SearchPiecesQuery.Data.SearchPieceWithAssociations.Edge.self)
+            ]
+          ))
+        }
 
         /// SearchPieceWithAssociations.Edge.Node
         ///
@@ -87,6 +129,12 @@ public class SearchPiecesQuery: GraphQLQuery {
           public var id: ApolloGQL.BigInt { __data["id"] }
           public var workName: String { __data["workName"] }
           public var catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? { __data["catalogueType"] }
+          public var keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? { __data["keySignature"] }
+          public var format: GraphQLEnum<ApolloGQL.PieceFormat>? { __data["format"] }
+          public var instrumentation: [String?]? { __data["instrumentation"] }
+          public var wikipediaUrl: String? { __data["wikipediaUrl"] }
+          public var imslpUrl: String? { __data["imslpUrl"] }
+          public var compositionYear: Int? { __data["compositionYear"] }
           public var catalogueNumber: Int? { __data["catalogueNumber"] }
           public var nickname: String? { __data["nickname"] }
           public var composer: Composer? { __data["composer"] }
@@ -97,6 +145,45 @@ public class SearchPiecesQuery: GraphQLQuery {
             public init(_dataDict: DataDict) { __data = _dataDict }
 
             public var pieceDetails: PieceDetails { _toFragment() }
+          }
+
+          public init(
+            id: ApolloGQL.BigInt,
+            workName: String,
+            catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? = nil,
+            keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? = nil,
+            format: GraphQLEnum<ApolloGQL.PieceFormat>? = nil,
+            instrumentation: [String?]? = nil,
+            wikipediaUrl: String? = nil,
+            imslpUrl: String? = nil,
+            compositionYear: Int? = nil,
+            catalogueNumber: Int? = nil,
+            nickname: String? = nil,
+            composer: Composer? = nil,
+            movements: Movements? = nil
+          ) {
+            self.init(_dataDict: DataDict(
+              data: [
+                "__typename": ApolloGQL.Objects.Pieces.typename,
+                "id": id,
+                "workName": workName,
+                "catalogueType": catalogueType,
+                "keySignature": keySignature,
+                "format": format,
+                "instrumentation": instrumentation,
+                "wikipediaUrl": wikipediaUrl,
+                "imslpUrl": imslpUrl,
+                "compositionYear": compositionYear,
+                "catalogueNumber": catalogueNumber,
+                "nickname": nickname,
+                "composer": composer._fieldData,
+                "movements": movements._fieldData,
+              ],
+              fulfilledFragments: [
+                ObjectIdentifier(SearchPiecesQuery.Data.SearchPieceWithAssociations.Edge.Node.self),
+                ObjectIdentifier(PieceDetails.self)
+              ]
+            ))
           }
 
           public typealias Composer = PieceDetails.Composer

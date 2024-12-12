@@ -12,6 +12,7 @@ public class Movements: MockObject {
   public struct MockFields {
     @Field<ApolloGQL.BigInt>("id") public var id
     @Field<String>("name") public var name
+    @Field<String>("nickname") public var nickname
     @Field<Int>("number") public var number
   }
 }
@@ -20,11 +21,13 @@ public extension Mock where O == Movements {
   convenience init(
     id: ApolloGQL.BigInt? = nil,
     name: String? = nil,
+    nickname: String? = nil,
     number: Int? = nil
   ) {
     self.init()
     _setScalar(id, for: \.id)
     _setScalar(name, for: \.name)
+    _setScalar(nickname, for: \.nickname)
     _setScalar(number, for: \.number)
   }
 }
