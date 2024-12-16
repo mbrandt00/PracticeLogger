@@ -9,7 +9,7 @@ query SearchImslpPieces($query: String!) {
         catalogueType
         composerId
         keySignature
-        movementsCollection {
+        movementsCollection(orderBy: { number: AscNullsLast }) {
           edges {
             node {
               nickname

@@ -1,8 +1,9 @@
-import polars as pl
-from pathlib import Path 
-import logging
 import glob
+import logging
 import os
+from pathlib import Path
+
+import polars as pl
 from supabase_database import SupabaseDatabase
 
 # Configure logging
@@ -33,6 +34,23 @@ except Exception as e:
 
 logger.info("Starting data filtering and processing")
 
+print("filtering out records with catalogue count less than 30")
+catalogue_counts = (
+    df.group_by("catalogue_type")
+    .agg(pl.len().alias("catalogue_count"))
+    .filter(pl.col("catalogue_count") >= 30)
+)
+
+# Join back to main dataframe to keep only records with common catalogue types
+df = df.join(
+    catalogue_counts.select("catalogue_type"), 
+    on="catalogue_type", 
+    how="inner"
+).filter(
+    # Keep nulls as well since they are common in your data
+    pl.col("catalogue_type").is_null() | pl.col("catalogue_type").is_in(catalogue_counts["catalogue_type"])
+)
+
 filtered_df = (
    df.group_by("composer_name")
    .agg(pl.count("work_name").alias("count"))
@@ -41,9 +59,6 @@ filtered_df = (
 )
 
 logger.info(f"After initial filtering and join, DataFrame shape: {filtered_df.shape}")
-
-pl.Config.set_fmt_str_lengths(50)
-pl.Config.set_tbl_rows(50)
 
 filtered_df = filtered_df.filter(
    ~(pl.col("instrumentation").list.get(0).str.contains("chorus|SATB|mixed chorus"))

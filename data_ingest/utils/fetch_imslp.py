@@ -1,15 +1,28 @@
+import datetime
 import json
+import logging
+import os
+
+import polars as pl
 from imslp_scraping import get_all_composer_pieces, get_composer_url
 from pieces import create_piece
-import datetime
-import polars as pl
-import logging
 
-# Configure logging
+log_dir = "logs"
+os.makedirs(log_dir, exist_ok=True)
+
+# Generate log filename with timestamp
+current_time = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+log_file = os.path.join(log_dir, f"imslp_scraper_{current_time}.log")
+
+# Configure logging to both file and console
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
+    handlers=[
+        logging.FileHandler(log_file),
+        logging.StreamHandler()
+    ]
 )
 logger = logging.getLogger(__name__)
 

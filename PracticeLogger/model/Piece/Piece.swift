@@ -61,7 +61,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         try container.encode(id, forKey: .id)
         try container.encode(workName, forKey: .workName)
         try container.encodeIfPresent(composer?.id, forKey: .composer_id)
-        try container.encodeIfPresent(catalogue_type, forKey: .catalogue_type)
+//        try container.encodeIfPresent(catalogue_type, forKey: .catalogue_type)
         try container.encodeIfPresent(nickname, forKey: .nickname)
         try container.encodeIfPresent(catalogue_number, forKey: .catalogue_number)
         try container.encodeIfPresent(format, forKey: .format)
@@ -74,7 +74,7 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
         workName = try container.decode(String.self, forKey: .workName)
         composer = nil
         movements = []
-        catalogue_type = try container.decodeIfPresent(CatalogueType.self, forKey: .catalogue_type)
+//        catalogue_type = try container.decodeIfPresent(CatalogueType.self, forKey: .catalogue_type)
         catalogue_number = try container.decodeIfPresent(Int.self, forKey: .catalogue_number)
         format = try container.decodeIfPresent(Format.self, forKey: .format)
 //        key_signature = try container.decodeIfPresent(KeySignatureType.self, forKey: .key_signature)

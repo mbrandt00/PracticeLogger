@@ -7,7 +7,7 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
   public static let operationName: String = "SearchImslpPieces"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query SearchImslpPieces($query: String!) { searchImslpPieces(query: $query) { __typename edges { __typename node { __typename id workName ...PieceDetails catalogueNumber catalogueType composerId keySignature movementsCollection { __typename edges { __typename node { __typename nickname number name } } } } } } }"#,
+      #"query SearchImslpPieces($query: String!) { searchImslpPieces(query: $query) { __typename edges { __typename node { __typename id workName ...PieceDetails catalogueNumber catalogueType composerId keySignature movementsCollection(orderBy: { number: AscNullsLast }) { __typename edges { __typename node { __typename nickname number name } } } } } } }"#,
       fragments: [PieceDetails.self]
     ))
 
@@ -118,7 +118,7 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
             .field("catalogueType", GraphQLEnum<ApolloGQL.CatalogueType>?.self),
             .field("composerId", ApolloGQL.BigInt?.self),
             .field("keySignature", GraphQLEnum<ApolloGQL.KeySignatureType>?.self),
-            .field("movementsCollection", MovementsCollection?.self),
+            .field("movementsCollection", MovementsCollection?.self, arguments: ["orderBy": ["number": "AscNullsLast"]]),
             .fragment(PieceDetails.self),
           ] }
 

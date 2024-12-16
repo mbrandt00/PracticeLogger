@@ -5,7 +5,7 @@
 
 public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
   public static var fragmentDefinition: StaticString {
-    #"fragment PieceDetails on Pieces { __typename id workName catalogueType keySignature format instrumentation wikipediaUrl imslpUrl compositionYear catalogueNumber nickname composer { __typename name } movements: movementsCollection(orderBy: [{ number: DescNullsLast }]) { __typename edges { __typename node { __typename id name number } } } }"#
+    #"fragment PieceDetails on Pieces { __typename id workName catalogueType keySignature format instrumentation wikipediaUrl imslpUrl compositionYear catalogueNumber nickname composer { __typename name } movements: movementsCollection(orderBy: [{ number: AscNullsLast }]) { __typename edges { __typename node { __typename id name number } } } }"#
   }
 
   public let __data: DataDict
@@ -26,7 +26,7 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
     .field("catalogueNumber", Int?.self),
     .field("nickname", String?.self),
     .field("composer", Composer?.self),
-    .field("movementsCollection", alias: "movements", Movements?.self, arguments: ["orderBy": [["number": "DescNullsLast"]]]),
+    .field("movementsCollection", alias: "movements", Movements?.self, arguments: ["orderBy": [["number": "AscNullsLast"]]]),
   ] }
 
   public var id: ApolloGQL.BigInt { __data["id"] }

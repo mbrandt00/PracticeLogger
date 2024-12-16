@@ -14,7 +14,7 @@ fragment PieceDetails on Pieces {
   composer {
     name
   }
-  movements: movementsCollection(orderBy: [{ number: DescNullsLast }]) {
+  movements: movementsCollection(orderBy: [{ number: AscNullsLast }]) {
     edges {
       node {
         id

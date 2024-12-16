@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -27,6 +27,7 @@
 		D14A43712C5DF83A00556C03 /* TabBarContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14A43702C5DF83A00556C03 /* TabBarContainer.swift */; };
 		D15501B82BF1961C0088BCCE /* MovementEditRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15501B72BF1961C0088BCCE /* MovementEditRow.swift */; };
 		D157BF622C56DA0F00139677 /* RepetoireRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D157BF612C56DA0F00139677 /* RepetoireRow.swift */; };
+		D15853732D0FC4370053B0F5 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D15853722D0FC4370053B0F5 /* ApolloGQL */; };
 		D15B56F72CCD553700EB71CD /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D15B56F62CCD553700EB71CD /* ApolloGQL */; };
 		D15B56FD2CCD56D500EB71CD /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D15B56FC2CCD56D500EB71CD /* ApolloGQL */; };
 		D15B57002CCDD64E00EB71CD /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D15B56FF2CCDD64E00EB71CD /* ApolloGQL */; };
@@ -71,7 +72,6 @@
 		D19E735A2B898F9400BB3EC7 /* PracticeLoggerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E73592B898F9400BB3EC7 /* PracticeLoggerUITests.swift */; };
 		D19E735C2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E735B2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift */; };
 		D1A056112CB1A9E30024DC2A /* PracticeSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1A056102CB1A9E30024DC2A /* PracticeSessionView.swift */; };
-		D1AC00D62BD46BC80019FA0F /* PieceEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1AC00D52BD46BC80019FA0F /* PieceEdit.swift */; };
 		D1BE01D22C67EE1E00529BAE /* NavigationContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1BE01D12C67EE1E00529BAE /* NavigationContext.swift */; };
 		D1C2BEB52BDCE22600E8E39F /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C2BEB42BDCE22600E8E39F /* Tag.swift */; };
 		D1C2BEB72BDD612F00E8E39F /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C2BEB62BDD612F00E8E39F /* SignIn.swift */; };
@@ -157,7 +157,6 @@
 		D19E73592B898F9400BB3EC7 /* PracticeLoggerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLoggerUITests.swift; sourceTree = "<group>"; };
 		D19E735B2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLoggerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		D1A056102CB1A9E30024DC2A /* PracticeSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSessionView.swift; sourceTree = "<group>"; };
-		D1AC00D52BD46BC80019FA0F /* PieceEdit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceEdit.swift; sourceTree = "<group>"; };
 		D1BE01D12C67EE1E00529BAE /* NavigationContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationContext.swift; sourceTree = "<group>"; };
 		D1C2BEB42BDCE22600E8E39F /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		D1C2BEB62BDD612F00E8E39F /* SignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
@@ -179,6 +178,10 @@
 		D1F5EE882BF8656E00E9DA23 /* Movement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movement.swift; sourceTree = "<group>"; };
 		D1F5EE8A2BF8662000E9DA23 /* Composer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Composer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		D158536F2D0FB8450053B0F5 /* PieceEdit */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = PieceEdit; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		D19E73382B898F9300BB3EC7 /* Frameworks */ = {
@@ -221,6 +224,7 @@
 				D1C6B0D82B8BC81300F7B877 /* Auth in Frameworks */,
 				D19487CB2CE13A940056D850 /* ApolloGQL in Frameworks */,
 				D19487D32CE1AE220056D850 /* ApolloGQL in Frameworks */,
+				D15853732D0FC4370053B0F5 /* ApolloGQL in Frameworks */,
 				D1F87A112CDAF10D00F5C70D /* ApolloGQL in Frameworks */,
 				D117BFB22CA8BF7E0046A1E5 /* ApolloGQL in Frameworks */,
 				D19188242D0612E6005D3515 /* ApolloGQL in Frameworks */,
@@ -266,7 +270,7 @@
 			children = (
 				D131F1742B8AFCC8002261BC /* Components */,
 				D17C5CA72B9E561300C1CA44 /* NewPieceRow.swift */,
-				D1AC00D52BD46BC80019FA0F /* PieceEdit.swift */,
+				D158536F2D0FB8450053B0F5 /* PieceEdit */,
 				D1C2BEB62BDD612F00E8E39F /* SignIn.swift */,
 				D197387D2C153F7100EBF53F /* PieceShow.swift */,
 				D1C2BEC32BDD7A9100E8E39F /* Profile.swift */,
@@ -459,6 +463,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				D158536F2D0FB8450053B0F5 /* PieceEdit */,
+			);
 			name = PracticeLogger;
 			packageProductDependencies = (
 				D1C6B0D72B8BC81300F7B877 /* Auth */,
@@ -508,6 +515,7 @@
 				D19188232D0612E6005D3515 /* ApolloGQL */,
 				D19188252D0617B8005D3515 /* ApolloGQL */,
 				D19188272D062677005D3515 /* ApolloGQL */,
+				D15853722D0FC4370053B0F5 /* ApolloGQL */,
 			);
 			productName = PracticeLogger;
 			productReference = D19E733B2B898F9300BB3EC7 /* PracticeLogger.app */;
@@ -585,7 +593,7 @@
 				D1C6B0D62B8BC81300F7B877 /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				D15C882D2BF05E5000AAC950 /* XCRemoteSwiftPackageReference "AlertToast" */,
 				D12F1F362CFD749200235C16 /* XCRemoteSwiftPackageReference "apollo-ios" */,
-				D1E086C92D053134003AE2B4 /* XCLocalSwiftPackageReference "ApolloGQL" */,
+				D15853712D0FC4370053B0F5 /* XCLocalSwiftPackageReference "ApolloGQL" */,
 			);
 			productRefGroup = D19E733C2B898F9300BB3EC7 /* Products */;
 			projectDirPath = "";
@@ -686,7 +694,6 @@
 				D19E73412B898F9300BB3EC7 /* ContentView.swift in Sources */,
 				D13D0EDC2BCC4B23006B2683 /* SetString.swift in Sources */,
 				D19738802C1540B600EBF53F /* PracticeSessionViewModel.swift in Sources */,
-				D1AC00D62BD46BC80019FA0F /* PieceEdit.swift in Sources */,
 				D11D792C2C6C5B9D0073BA21 /* Array.swift in Sources */,
 				D19E733F2B898F9300BB3EC7 /* PracticeLoggerApp.swift in Sources */,
 				D1C2BEB92BDD61A800E8E39F /* SignInViewModel.swift in Sources */,
@@ -1068,7 +1075,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		D1E086C92D053134003AE2B4 /* XCLocalSwiftPackageReference "ApolloGQL" */ = {
+		D15853712D0FC4370053B0F5 /* XCLocalSwiftPackageReference "ApolloGQL" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ApolloGQL;
 		};
@@ -1126,6 +1133,10 @@
 			productName = ApolloGQL;
 		};
 		D146A7502CFD2CD40066093A /* ApolloGQL */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ApolloGQL;
+		};
+		D15853722D0FC4370053B0F5 /* ApolloGQL */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ApolloGQL;
 		};
