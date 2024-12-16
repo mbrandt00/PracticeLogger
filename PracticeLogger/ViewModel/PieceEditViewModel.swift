@@ -16,51 +16,69 @@ class PieceEditViewModel: ObservableObject {
         self.editablePiece = EditablePiece(from: piece)
     }
     
-    func insertPiece() async throws -> PieceDetails {
-        // Will implement this later when needed
-        print(editablePiece)
+    func insertPiece() throws -> Void {
         fatalError("Not implemented")
     }
     
-    func move(from source: IndexSet, to destination: Int) {
-        guard var movements = editablePiece.movements else { return }
-        movements.move(fromOffsets: source, toOffset: destination)
-        for (index, movement) in movements.enumerated() {
-            movement.number = index + 1
+    func updateMovement(at index: Int, newName: String) {
+        print("⚡️ Updating movement at index: \(index)")
+        let movements = editablePiece.movements
+        
+        
+        // Update directly on the existing array
+        editablePiece.movements[index].name = newName
+        
+        // Force a view update by reassigning the array
+        let updatedMovements = editablePiece.movements
+        editablePiece.movements = updatedMovements
+        
+        print("✅ Movement updated successfully")
+    }
+    
+    func deleteMovement(at index: Int) {
+        print("Deleting movement at index:", index)
+        var movements = editablePiece.movements
+        
+        movements.remove(at: index)
+        
+        // Update numbering
+        print("Updating numbers for remaining movements")
+        for (idx, movement) in movements.enumerated() {
+            movement.number = idx + 1
         }
+        
+        print("Final movements count:", movements.count)
         editablePiece.movements = movements
     }
     
-    func updateMovementName(at index: Int, newName: String) {
-        guard let movements = editablePiece.movements,
-              index < movements.count else { return }
-        editablePiece.movements?[index].name = newName
-    }
-    
-    func isDuplicate() async throws -> PieceDetails? {
-        guard let catalogueNumber = editablePiece.catalogueNumber,
-              let catalogueType = editablePiece.catalogueType else {
-            return nil
+    func moveMovements(from source: IndexSet, to destination: Int) {
+        var movements = editablePiece.movements 
+        movements.move(fromOffsets: source, toOffset: destination)
+        
+        // Update numbering
+        for (idx, movement) in movements.enumerated() {
+            movement.number = idx + 1
         }
-        // Will implement later when needed
-        return nil
+        
+        editablePiece.movements = movements
     }
 }
 
 class EditablePiece: ObservableObject {
-    let id: ApolloGQL.BigInt
+    @Published var id: ApolloGQL.BigInt
     @Published var workName: String
     @Published var catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>?
     @Published var catalogueNumber: Int?
     @Published var nickname: String?
     @Published var keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>?
     @Published var format: GraphQLEnum<PieceFormat>?
-    @Published var movements: [EditableMovement]?
+    @Published var movements: [EditableMovement]  = []
     @Published var composer: EditableComposer?
     @Published var compositionYear: Int?
     @Published var imslpUrl: String?
     @Published var wikipediaUrl: String?
-    @Published var instrumentation:  [String?]?
+    @Published var instrumentation: [String?]?
+    
     init(from piece: PieceDetails) {
         self.id = piece.id
         self.workName = piece.workName
@@ -73,26 +91,22 @@ class EditablePiece: ObservableObject {
         self.compositionYear = piece.compositionYear
         self.wikipediaUrl = piece.wikipediaUrl
         self.imslpUrl = piece.imslpUrl
-        self.movements = piece.movements?.edges.map { EditableMovement(from: $0.node) }
+        if let movements = piece.movements?.edges {
+            self.movements = movements.compactMap { edge in
+                return EditableMovement(from: edge.node)
+            }.sorted { ($0.number ?? 0) < ($1.number ?? 0) }
+        }
+        
         if let composer = piece.composer {
             self.composer = EditableComposer(from: composer)
         }
     }
-    
-    func toGraphQLInput() -> PiecesInsertInput {
-        PiecesInsertInput(
-            nickname: .some(self.nickname ?? ""),
-            keySignature: self.keySignature != nil ? .some(self.keySignature!) : .none,
-            catalogueType: self.catalogueType != nil ? .some(self.catalogueType!) : .none,
-            catalogueNumber: self.catalogueNumber != nil ? .some(self.catalogueNumber!) : .none
-        )
-    }
 }
 
-class EditableMovement {
-    let id: ApolloGQL.BigInt
-    var name: String?
-    var number: Int?
+class EditableMovement: Identifiable, ObservableObject {
+    @Published var id: ApolloGQL.BigInt
+    @Published var name: String?
+    @Published var number: Int?
     
     init(from node: PieceDetails.Movements.Edge.Node) {
         self.id = node.id

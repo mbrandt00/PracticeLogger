@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import MusicKit
 
 class Movement: Identifiable, ObservableObject, Codable, Hashable {
     let id: Int

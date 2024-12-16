@@ -8,7 +8,6 @@
 import ApolloGQL
 import Combine
 import Foundation
-import MusicKit
 
 class SearchViewModel: ObservableObject {
     @Published var searchTerm = ""
@@ -18,34 +17,37 @@ class SearchViewModel: ObservableObject {
     @Published var newPieces: [PieceDetails] = []
     private var cancellables = Set<AnyCancellable>()
 
+//    @MainActor
+//    func searchPieces() async {
+//        do {
+////                    userPieces = try await getUserPieces()
+//                    if !searchTerm.isEmpty {
+//                        newPieces = try await searchImslpPieces() ?? []
+////                        let userPieceSet = Set(userPieces)
+////                        fetchedPieces.removeAll { userPieceSet.contains($0) }
+////                        if let selectedKeySignature = selectedKeySignature {
+////                            fetchedPieces = fetchedPieces.filter { $0.key_signature == selectedKeySignature }
+////                        }
+////                        newPieces = fetchedPieces.filter { newPiece in
+////                            !userPieces.contains { userPiece in
+////                                newPiece.catalogue_type?.rawValue == userPiece.catalogueType?.rawValue &&
+////                                    newPiece.catalogue_number == userPiece.catalogueNumber
+////                            }
+////                        }
+//                    }catch {
+//                    print("Error fetching pieces: \(error)")
+//                }
+//                }
+//        }
+//    }
     @MainActor
     func searchPieces() async {
         do {
-            let status = await MusicAuthorization.request()
-            switch status {
-            case .authorized:
-                do {
-//                    userPieces = try await getUserPieces()
-                    if !searchTerm.isEmpty {
-                        newPieces = try await searchImslpPieces() ?? []
-//                        let userPieceSet = Set(userPieces)
-//                        fetchedPieces.removeAll { userPieceSet.contains($0) }
-//                        if let selectedKeySignature = selectedKeySignature {
-//                            fetchedPieces = fetchedPieces.filter { $0.key_signature == selectedKeySignature }
-//                        }
-//                        newPieces = fetchedPieces.filter { newPiece in
-//                            !userPieces.contains { userPiece in
-//                                newPiece.catalogue_type?.rawValue == userPiece.catalogueType?.rawValue &&
-//                                    newPiece.catalogue_number == userPiece.catalogueNumber
-//                            }
-//                        }
-                    }
-                } catch {
-                    print("Error fetching pieces: \(error)")
-                }
-            default:
-                print("Unknown music authorization status.")
+            if !searchTerm.isEmpty {
+                newPieces = try await searchImslpPieces() ?? []
             }
+        } catch {
+            print("Error fetching pieces: \(error)")
         }
     }
 //    func getUserPieces() async throws -> [PieceDetails] {

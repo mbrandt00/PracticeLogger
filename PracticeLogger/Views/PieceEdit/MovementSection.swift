@@ -63,8 +63,9 @@ struct MovementSection: View {
                             }
                         )
                     }
-                    .onMove { indexSet, destination in
-                        moveMovements(from: indexSet, to: destination)
+                    .onMove { source, destination in
+                        movements.move(fromOffsets: source, toOffset: destination)
+                        movements.indices.forEach { movements[$0].number = $0 + 1 }
                     }
                     
                     if isAddingMovement {
@@ -128,14 +129,6 @@ struct MovementSection: View {
         }
     }
 
-    private func moveMovements(from source: IndexSet, to destination: Int) {
-        movements.move(fromOffsets: source, toOffset: destination)
-        
-        // Update movement numbers
-        for (index, movement) in movements.enumerated() {
-            movement.number = index + 1
-        }
-    }
 
     private func updateMovement(at index: Int, newName: String) {
         guard index < movements.count else { return }
@@ -241,5 +234,121 @@ struct NewMovementRow: View {
             }
         }
         .padding(.vertical, 4)
+    }
+}
+
+struct PreviewContainer: View {
+    @State private var movements = [
+        EditableMovement(from: .init(
+            id: "1",
+            name: "Allegro con brio",
+            number: 1
+        )),
+        EditableMovement(from: .init(
+            id: "2",
+            name: "Andante con moto",
+            number: 2
+        )),
+        EditableMovement(from: .init(
+            id: "3",
+            name: "Scherzo: Allegro",
+            number: 3
+        )),
+        EditableMovement(from: .init(
+            id: "4",
+            name: "Allegro - Presto",
+            number: 4
+        ))
+    ]
+    @State private var isAddingMovement = false
+    @State private var isEditingMovements = false
+    @State private var editingMovementId: String? = nil
+    @State private var newMovementName = ""
+    
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("Preview Controls") {
+                    Toggle("Editing Mode", isOn: $isEditingMovements)
+                    Toggle("Adding Movement", isOn: $isAddingMovement)
+                    Button("Clear All Movements") {
+                        movements.removeAll()
+                    }
+                    Button("Reset to Default Movements") {
+                        movements = [
+                            EditableMovement(from: .init(
+                                id: "1",
+                                name: "Allegro con brio",
+                                number: 1
+                            )),
+                            EditableMovement(from: .init(
+                                id: "2",
+                                name: "Andante con moto",
+                                number: 2
+                            )),
+                            EditableMovement(from: .init(
+                                id: "3",
+                                name: "Scherzo: Allegro",
+                                number: 3
+                            )),
+                            EditableMovement(from: .init(
+                                id: "4",
+                                name: "Allegro - Presto",
+                                number: 4
+                            ))
+                        ]
+                    }
+                }
+                
+                MovementSection(
+                    movements: $movements,
+                    isAddingMovement: $isAddingMovement,
+                    isEditingMovements: $isEditingMovements,
+                    editingMovementId: $editingMovementId,
+                    newMovementName: $newMovementName
+                )
+            }
+            .navigationTitle("Movements Preview")
+        }
+    }
+}
+
+struct MovementViews_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            Form {
+                
+                
+                MovementSection(
+                    movements: .constant([
+                        EditableMovement(from: .init(
+                            id: "1",
+                            name: "Allegro con brio",
+                            number: 1
+                        )),
+                        EditableMovement(from: .init(
+                            id: "2",
+                            name: "Andante con moto",
+                            number: 2
+                        )),
+                        EditableMovement(from: .init(
+                            id: "3",
+                            name: "Scherzo: Allegro",
+                            number: 3
+                        )),
+                        EditableMovement(from: .init(
+                            id: "4",
+                            name: "Allegro - Presto",
+                            number: 4
+                        ))
+                    ]),
+                    isAddingMovement: .constant(false),
+                    isEditingMovements: .constant(true),
+                    editingMovementId: .constant(nil),
+                    newMovementName: .constant("")
+                )
+            }
+            .navigationTitle("Movements Preview")
+        }
     }
 }
