@@ -24,9 +24,9 @@ struct NewPieceRow: View {
                 Spacer()
                 VStack(alignment: .trailing, spacing: 10) {
                     Tag("\(piece.movements.count) movements")
-                    if let keySignature = piece.key_signature, let tonality = piece.tonality {
-                        Tag("\(keySignature.rawValue) \(tonality.rawValue)")
-                    }
+//                    if let keySignature = piece.key_signature, let tonality = piece.tonality {
+//                        Tag("\(keySignature.rawValue) \(tonality.rawValue)")
+//                    }
                 }
             }
         }

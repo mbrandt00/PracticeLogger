@@ -2,12 +2,19 @@ fragment PieceDetails on Pieces {
   id
   workName
   catalogueType
+  keySignature
+  format
+  instrumentation
+  wikipediaUrl
+  imslpUrl
+  compositionYear
+
   catalogueNumber
   nickname
   composer {
     name
   }
-  movements: movementsCollection(orderBy: [{ number: DescNullsLast }]) {
+  movements: movementsCollection(orderBy: [{ number: AscNullsLast }]) {
     edges {
       node {
         id
