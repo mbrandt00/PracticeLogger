@@ -190,3 +190,4 @@ ALTER SCHEMA imslp OWNER TO postgres;
 GRANT USAGE ON SCHEMA imslp TO postgres, anon, authenticated;
 GRANT ALL ON ALL TABLES IN SCHEMA imslp TO postgres, anon, authenticated;
 GRANT ALL ON ALL FUNCTIONS IN SCHEMA imslp TO postgres, anon, authenticated;
+
