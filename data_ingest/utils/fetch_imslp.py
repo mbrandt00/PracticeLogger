@@ -110,16 +110,16 @@ composers = [
 ]
 pieces = []
 for composer in composers:
-    logger.info(f"Starting import for {composer}")
+    logger.info("Starting import for %s", composer)
     url = get_composer_url(composer)
     data = get_all_composer_pieces(url)
     for piece_url in data:
         if len(pieces) % 100 == 0:
-            logger.info(f"Processed {len(pieces)} pieces")
+            logger.info("Processed %s pieces", len(pieces))
         try:
             piece = create_piece(url=piece_url)
         except ValueError as e:
-            logger.error(f"Error processing {piece_url}: {e}")
+            logger.error("Error processing %s: %s", piece_url, e)
             continue
         pieces.append(piece)
 
@@ -134,4 +134,4 @@ df = pl.DataFrame(pieces_dict, strict=False, infer_schema_length=1000)
 current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 output_file = f"full_df_{current_datetime}.parquet"
 df.write_parquet(output_file)
-logger.info(f"Data saved to {output_file}")
+logger.info("Data saved to %s", output_file)

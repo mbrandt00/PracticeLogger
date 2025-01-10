@@ -24,11 +24,7 @@ pythonpath = ["."]
 [tool.ruff]
 exclude = ["venv"]
 [tool.ruff.lint]
-ignore = ["D100", "D101", "D102", "D103", ]
+ignore = ["D100", "D101", "D102", "D103", "C0116"]
 
 [dependency-groups]
-dev = [
-    "pandas>=2.2.3",
-    "pyspark>=3.5.3",
-    "ydata-profiling>=4.12.0",
-]
+dev = ["pandas>=2.2.3", "pyspark>=3.5.3", "ydata-profiling>=4.12.0"]

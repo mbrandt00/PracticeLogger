@@ -101,13 +101,14 @@ unique_instruments = (
 logger.info(f"Created unique instruments DataFrame with shape: {unique_instruments.shape}")
 
 df = filtered_df.unique()
-logger.info(f"Final DataFrame shape before database insertion: {df.shape}")
+df = filtered_df.filter(pl.col("composer_name") == "Bach, Johann Sebastian")
+logger.info(f"Filtered for Bach's compositions. DataFrame shape: {df.shape}")
+# logger.info(f"Final DataFrame shape before database insertion: {df.shape}")
 
 db = SupabaseDatabase()
 try:
    logger.info("Starting database insertion")
    successful, failed = db.bulk_insert_from_df(df)
-   logger.info(f"Successfully inserted {successful} pieces")
    if failed:
        logger.warning(f"Failed to insert {len(failed)} pieces")
        for work_name, error in failed:

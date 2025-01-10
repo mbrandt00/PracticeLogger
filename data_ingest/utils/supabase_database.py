@@ -1,11 +1,36 @@
 import json
+import logging
 import os
+from typing import Dict, List, Optional, Tuple
+from urllib.parse import quote, unquote
+
 import polars as pl
 import psycopg2
+from psycopg2 import errors
 
+logger = logging.getLogger(__name__)
+
+def load_collections_mapping(composer_name: str) -> dict:
+    """Load collections mapping for a given composer"""
+    # Clean the composer name: lowercase, replace spaces with underscore, remove commas
+    clean_name = composer_name.lower().replace(' ', '_').replace(',', '')
+    
+    # Get path by going up one directory from current file location
+    current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    filename = os.path.join(current_dir, "collections_mapping", f"{clean_name}.json")
+    
+    logger.info("Looking for collections mapping at: %s", filename)
+    
+    try:
+        with open(filename, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        logger.warning(f"No collections mapping found at {filename}")
+        return {}
 
 class SupabaseDatabase:
     def __init__(self, db=None, user=None, password=None, host=None, port=None):
+        """Initialize database connection and create necessary tables"""
         self.conn = psycopg2.connect(
             dbname=db or os.getenv("DB_NAME", "postgres"),
             user=user or os.getenv("DB_USER", "postgres"),
@@ -16,16 +41,45 @@ class SupabaseDatabase:
         self.cur = self.conn.cursor()
         self.cur.execute("SET search_path TO imslp, public;")
 
-    def query(self, query):
-        self.cur.execute(query)
-        return self.cur.fetchall()
+    def insert_collection(self, name: str, url: str, composer_id: int) -> int:
+        """Insert a collection and return its ID"""
+        sql = """
+        INSERT INTO imslp.collections (name, url, composer_id)
+        VALUES (%s, %s, %s)
+        ON CONFLICT (url) DO UPDATE SET
+            name = EXCLUDED.name,
+            composer_id = EXCLUDED.composer_id
+        RETURNING id;
+        """
+        self.cur.execute(sql, (name, url, composer_id))
+        return self.cur.fetchone()[0]
 
-    def bulk_insert_from_df(self, df):
+    def link_piece_to_collection(self, collection_id: int, piece_id: int):
+        """Link a piece to a collection"""
+        sql = """
+        INSERT INTO imslp.collection_pieces (collection_id, piece_id)
+        VALUES (%s, %s)
+        ON CONFLICT DO NOTHING;
+        """
+        self.cur.execute(sql, (collection_id, piece_id))
+
+    def bulk_insert_from_df(self, df: pl.DataFrame) -> Tuple[int, List[Tuple[str, str]]]:
         """Insert all pieces and movements from a Polars DataFrame"""
         successful_inserts = 0
         failed_inserts = []
 
-        # Get composer ID function
+        # Get unique composer names from the DataFrame
+        unique_composers = df.get_column("composer_name").unique().to_list()
+        
+        # Load all collections mappings at once
+        collections_mappings = {}
+        for composer_name in unique_composers:
+            try:
+                collections_mappings[composer_name] = load_collections_mapping(composer_name)
+            except Exception as e:
+                logger.error(f"Failed to load collections mapping for {composer_name}: {e}")
+                collections_mappings[composer_name] = {}
+
         composer_function_sql = """
         SELECT * FROM public.find_or_create_composer(%s);
         """
@@ -53,7 +107,6 @@ class SupabaseDatabase:
             instrumentation = EXCLUDED.instrumentation,
             nickname = EXCLUDED.nickname,
             piece_style = EXCLUDED.piece_style,
-            imslp_url = EXCLUDED.imslp_url,
             wikipedia_url = EXCLUDED.wikipedia_url
         RETURNING id;
         """
@@ -76,25 +129,39 @@ class SupabaseDatabase:
                 # First get or create the composer
                 self.cur.execute(composer_function_sql, (row["composer_name"],))
                 composer_record = self.cur.fetchone()
-                composer_id = composer_record[0]  # Assuming the id is the first column
+                composer_id = composer_record[0]
 
-                # Parse movements if they're still in string form
-                movements = (
-                    json.loads(row["movements"])
-                    if isinstance(row["movements"], str)
-                    else row["movements"]
-                )
+                # Get collections mapping for this composer from the preloaded dictionary
+                collections_mapping = collections_mappings.get(row["composer_name"], {})
+                
+                # Find matching collection for this piece
+                piece_url = row["imslp_url"]
+                decoded_piece_url = unquote(piece_url)
+                encoded_piece_url = quote(decoded_piece_url, safe=':/')
+                matching_collection = None
 
-                # Insert piece with composer_id and get piece_id
+                try:
+                    for collection_name, collection_data in collections_mapping.items():
+                        encoded_collection_pieces = [quote(url, safe=':/') for url in collection_data["pieces"]]
+                        if encoded_piece_url in encoded_collection_pieces:
+                            matching_collection = {
+                                "name": collection_name,
+                                "url": collection_data["url"]
+                            }
+                            logger.info(f"Found matching collection: {collection_name}")
+                            break
+                except Exception as e:
+                    logger.error(f"Error processing collections for {piece_url}: {e}")
+                    matching_collection = None
+
+                # Insert piece and get piece_id
                 self.cur.execute(
                     piece_insert_sql,
                     (
-                        composer_id,  # Add composer_id as first parameter
+                        composer_id,
                         row["work_name"],
                         row["catalogue_desc_str"],
-                        row.get("catalogue_type", "").lower()
-                        if row.get("catalogue_type")
-                        else None,
+                        row.get("catalogue_type", "").lower() if row.get("catalogue_type") else None,
                         row["catalogue_number"],
                         row["catalogue_number_secondary"],
                         row["composition_year"],
@@ -111,12 +178,32 @@ class SupabaseDatabase:
                 )
                 piece_id = self.cur.fetchone()[0]
 
-                # For existing pieces, we might want to clear old movements before inserting new ones
-                self.cur.execute(
-                    "DELETE FROM imslp.movements WHERE piece_id = %s", (piece_id,)
+                # Handle collection association if found
+                if matching_collection:
+                    try:
+                        collection_id = self.insert_collection(
+                            matching_collection["name"],
+                            matching_collection["url"],
+                            composer_id
+                        )
+                        self.link_piece_to_collection(collection_id, piece_id)
+                    except Exception as e:
+                        logger.error(f"Failed to link piece to collection: {e}")
+                        # Continue processing even if collection linking fails
+                
+                # Parse and insert movements
+                movements = (
+                    json.loads(row["movements"])
+                    if isinstance(row["movements"], str)
+                    else row["movements"]
                 )
 
-                # Insert movements for this piece
+                # Clear existing movements for this piece
+                self.cur.execute(
+                    "DELETE FROM imslp.movements WHERE piece_id = %s",
+                    (piece_id,)
+                )
+
                 for movement in movements:
                     self.cur.execute(
                         movement_insert_sql,
@@ -136,10 +223,14 @@ class SupabaseDatabase:
             except Exception as e:
                 self.conn.rollback()
                 failed_inserts.append((row["work_name"], str(e)))
+                logger.error(f"Failed to insert piece {row['work_name']}: {e}")
                 continue
 
         return successful_inserts, failed_inserts
 
     def close(self):
-        self.cur.close()
-        self.conn.close()
+        """Close database connection and cursor"""
+        if self.cur:
+            self.cur.close()
+        if self.conn:
+            self.conn.close()
