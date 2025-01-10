@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import re
 import sys
 import time
 from typing import List, Literal, Optional, Union
@@ -148,33 +149,6 @@ def get_all_composer_pieces(base_url: str) -> List[str]:
     return base_imslp_iterator(base_url, tab="Compositions")
 
 
-def get_composer_collection_objects(base_url: str) -> List[str]:
-    return base_imslp_iterator(base_url, tab="Collections")
-
-
-# def create_table_from_dataclass(dataclass, schema, table_name):
-#     columns = []
-#     for field in dataclass.__annotations__.items():
-#         name, typ = field
-#         # Mapping Python types to SQL types
-#         if typ is int:
-#             columns.append(f"{name} INT")
-#         elif typ is str:
-#             columns.append(f"{name} VARCHAR(255)")
-#         elif typ is Optional[int]:
-#             columns.append(f"{name} INT")  # Assuming INT for Optional[int]
-#         elif typ is Optional[str]:
-#             columns.append(f"{name} VARCHAR(255)")  # Assuming VARCHAR for Optional[str]
-#         else:
-#             columns.append(f"{name} VARCHAR(255)")  # Default to VARCHAR
-#     columns_sql = ", ".join(columns)
-#     create_statement = (
-#         f"CREATE TABLE IF NOT EXISTS {schema}.{table_name} ({columns_sql});"
-#     )
-#     return create_statement
-
-
-# need to add id to pieces, movements
 def piece_to_dict(new_piece):
     try:
         piece_dict = vars(new_piece).copy()
