@@ -1,0 +1,42 @@
+{
+  "String Quartets": {
+    "url": "/wiki/String_Quartets_(Dvorak,_Antonin)",
+    "pieces": [
+      "/wiki/String_Quartet_No.1,Op.2(Dvořák,_Antonín)",
+      "/wiki/String_Quartet_No.2,B.17(Dvořák,_Antonín)",
+      "/wiki/String_Quartet_No.3,B.18(Dvořák,_Antonín)",
+      "/wiki/String_Quartet_No.4,B.19(Dvořák,_Antonín)",
+      "/wiki/String_Quartet_No.5,Op.9(Dvořák,_Antonín)",
+      "/wiki/String_Quartet_No.7,Op.16(Dvořák,_Antonín)",
+      "/wiki/String_Quartet_No.8,Op.80(Dvořák,_Antonín)",
+      "/wiki/String_Quartet_No.9,Op.34(Dvořák,_Antonín)",
+      "/wiki/String_Quartet_No.10,Op.51(Dvořák,_Antonín)",
+      "/wiki/String_Quartet_No.11,Op.61(Dvořák,_Antonín)",
+      "/wiki/String_Quartet_No.12,Op.96(Dvořák,_Antonín)",
+      "/wiki/String_Quartet_No.13,Op.106(Dvořák,_Antonín)",
+      "/wiki/String_Quartet_No.14,Op.105(Dvořák,Antonín)"
+    ]
+  },
+  "Piano Chamber Works": {
+    "url": "/wiki/Piano_Chamber_Music(Dvorak,_Antonin)",
+    "pieces": [
+      "/wiki/Piano_Trio_No.1,Op.21(Dvořák,_Antonín)",
+      "/wiki/Piano_Trio_No.2,Op.26(Dvořák,_Antonín)",
+      "/wiki/Piano_Trio_No.3,Op.65(Dvořák,_Antonín)",
+      "/wiki/Piano_Trio_No.4,Op.90(Dvořák,_Antonín)",
+      "/wiki/Piano_Quartet_No.1,Op.23(Dvořák,_Antonín)",
+      "/wiki/Piano_Quartet_No.2,Op.87(Dvořák,_Antonín)",
+      "/wiki/Piano_Quintet_No.1,Op.5(Dvořák,_Antonín)",
+      "/wiki/Piano_Quintet_No.2,Op.81(Dvořák,Antonín)"
+    ]
+  },
+  "Concertos": {
+    "url": "/wiki/Concertos(Dvorak,_Antonin)",
+    "pieces": [
+      "/wiki/Piano_Concerto,Op.33(Dvořák,_Antonín)",
+      "/wiki/Violin_Concerto,Op.53(Dvořák,_Antonín)",
+      "/wiki/Cello_Concerto_in_A_major,B.10(Dvořák,_Antonín)",
+      "/wiki/Cello_Concerto,Op.104(Dvořák,Antonín)"
+    ]
+  }
+}

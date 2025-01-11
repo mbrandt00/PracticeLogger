@@ -1,0 +1,70 @@
+{
+  "Nocturnes": {
+    "url": "/wiki/Nocturnes_(Faure,_Gabriel)",
+    "pieces": [
+      "/wiki/3_Nocturnes,Op.33(Fauré,_Gabriel)",
+      "/wiki/Nocturne_No.4,Op.36(Fauré,_Gabriel)",
+      "/wiki/Nocturne_No.5,Op.37(Fauré,_Gabriel)",
+      "/wiki/Nocturne_No.6,Op.63(Fauré,_Gabriel)",
+      "/wiki/Nocturne_No.7,Op.74(Fauré,_Gabriel)",
+      "/wiki/Nocturne_No.9,Op.97(Fauré,_Gabriel)",
+      "/wiki/Nocturne_No.10,Op.99(Fauré,_Gabriel)",
+      "/wiki/Nocturne_No.12,Op.107(Fauré,_Gabriel)",
+      "/wiki/Nocturne_No.13,Op.119(Fauré,Gabriel)"
+    ]
+  },
+  "Barcarolles": {
+    "url": "/wiki/Barcarolles(Faure,_Gabriel)",
+    "pieces": [
+      "/wiki/Barcarolle_No.1,Op.26(Fauré,_Gabriel)",
+      "/wiki/Barcarolle_No.2,Op.41(Fauré,_Gabriel)",
+      "/wiki/Barcarolle_No.3,Op.42(Fauré,_Gabriel)",
+      "/wiki/Barcarolle_No.4,Op.44(Fauré,_Gabriel)",
+      "/wiki/Barcarolle_No.5,Op.66(Fauré,_Gabriel)",
+      "/wiki/Barcarolle_No.6,Op.70(Fauré,_Gabriel)",
+      "/wiki/Barcarolle_No.7,Op.90(Fauré,_Gabriel)",
+      "/wiki/Barcarolle_No.8,Op.96(Fauré,_Gabriel)",
+      "/wiki/Barcarolle_No.9,Op.101(Fauré,_Gabriel)",
+      "/wiki/Barcarolle_No.11,Op.105(Fauré,_Gabriel)",
+      "/wiki/Barcarolle_No.12,Op.106bis(Fauré,_Gabriel)",
+      "/wiki/Barcarolle_No.13,Op.116(Fauré,Gabriel)"
+    ]
+  },
+  "Impromptus": {
+    "url": "/wiki/Impromptus(Faure,_Gabriel)",
+    "pieces": [
+      "/wiki/Impromptu_No.1,Op.25(Fauré,_Gabriel)",
+      "/wiki/Impromptu_No.2,Op.31(Fauré,_Gabriel)",
+      "/wiki/Impromptu_No.3,Op.34(Fauré,_Gabriel)",
+      "/wiki/Impromptu_No.4,Op.91(Fauré,_Gabriel)",
+      "/wiki/Impromptu_No.5,Op.102(Fauré,_Gabriel)",
+      "/wiki/Impromptu_No.6,Op.86(Fauré,Gabriel)"
+    ]
+  },
+  "Valses-Caprices": {
+    "url": "/wiki/Valses-Caprices(Faure,_Gabriel)",
+    "pieces": [
+      "/wiki/Valse-Caprice_No.1,Op.30(Fauré,_Gabriel)",
+      "/wiki/Valse-Caprice_No.2,Op.38(Fauré,_Gabriel)",
+      "/wiki/Valse-Caprice_No.3,Op.59(Fauré,_Gabriel)",
+      "/wiki/Valse-Caprice_No.4,Op.62(Fauré,Gabriel)"
+    ]
+  },
+  "Piano Chamber Works": {
+    "url": "/wiki/Piano_Chamber_Works(Faure,_Gabriel)",
+    "pieces": [
+      "/wiki/Piano_Quartet_No.1,Op.15(Fauré,_Gabriel)",
+      "/wiki/Piano_Quartet_No.2,Op.45(Fauré,_Gabriel)",
+      "/wiki/Piano_Quintet_No.1,Op.89(Fauré,_Gabriel)",
+      "/wiki/Piano_Quintet_No.2,Op.115(Fauré,_Gabriel)",
+      "/wiki/Piano_Trio,Op.120(Fauré,Gabriel)"
+    ]
+  },
+  "Preludes": {
+    "url": "/wiki/Preludes(Faure,_Gabriel)",
+    "pieces": [
+      "/wiki/9_Préludes,Op.103(Fauré,Gabriel)",
+      "/wiki/Prelude_and_Fugue(Fauré,Gabriel)"
+    ]
+  }
+}

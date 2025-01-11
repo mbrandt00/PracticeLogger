@@ -1,0 +1,39 @@
+{
+  "Piano Sonatas": {
+    "url": "/wiki/Piano_Sonatas_(Clementi,_Muzio)",
+    "pieces": [
+      "/wiki/Piano_Sonata_No.1,Op.2_No.2(Clementi,_Muzio)",
+      "/wiki/Piano_Sonata,Op.16(Clementi,_Muzio)",
+      "/wiki/Piano_Sonata,Op.20(Clementi,_Muzio)",
+      "/wiki/Piano_Sonata,Op.26(Clementi,_Muzio)",
+      "/wiki/Piano_Sonata,Op.41(Clementi,_Muzio)",
+      "/wiki/Piano_Sonata,Op.46(Clementi,_Muzio)",
+      "/wiki/Piano_Sonata,WO_3(Clementi,_Muzio)",
+      "/wiki/Piano_Sonata,WO_13(Clementi,_Muzio)",
+      "/wiki/Piano_Sonata,WO_14(Clementi,_Muzio)",
+      "/wiki/3_Piano_Sonatas,Op.7(Clementi,_Muzio)",
+      "/wiki/3_Piano_Sonatas,Op.8(Clementi,_Muzio)",
+      "/wiki/3_Piano_Sonatas,Op.9(Clementi,_Muzio)",
+      "/wiki/3_Piano_Sonatas,Op.10(Clementi,_Muzio)",
+      "/wiki/6_Piano_Sonatas,Op.13(Clementi,_Muzio)",
+      "/wiki/3_Piano_Sonatas,Op.23(Clementi,_Muzio)",
+      "/wiki/6_Piano_Sonatas,Op.25(Clementi,_Muzio)",
+      "/wiki/3_Piano_Sonatas,Op.33(Clementi,_Muzio)",
+      "/wiki/3_Piano_Sonatas,Op.35(Clementi,_Muzio)",
+      "/wiki/3_Piano_Sonatas,Op.37(Clementi,_Muzio)",
+      "/wiki/3_Piano_Sonatas,Op.40(Clementi,_Muzio)",
+      "/wiki/3_Piano_Sonatas,Op.50(Clementi,Muzio)"
+    ]
+  },
+  "Piano Trios": {
+    "url": "/wiki/Piano_Trios(Clementi,_Muzio)",
+    "pieces": [
+      "/wiki/Piano_Trio,WO_6(Clementi,_Muzio)",
+      "/wiki/3_Piano_Trios,Op.21(Clementi,_Muzio)",
+      "/wiki/3_Piano_Trios,Op.22(Clementi,_Muzio)",
+      "/wiki/3_Piano_Trios,Op.27(Clementi,_Muzio)",
+      "/wiki/3_Piano_Trios,Op.28(Clementi,_Muzio)",
+      "/wiki/3_Piano_Trios,Op.29(Clementi,Muzio)"
+    ]
+  }
+}
