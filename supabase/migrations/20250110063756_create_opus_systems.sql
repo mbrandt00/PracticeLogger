@@ -1,4 +1,3 @@
-/** Up Migration **/
 create table if not exists imslp.opus_systems (
     id serial primary key,
     name varchar(50) not null,
@@ -16,5 +15,3 @@ insert into imslp.opus_systems (name, description) values
     ('RV', 'Ryom-Verzeichnis (Vivaldi works)')
 on conflict do nothing;
 
-/** Down Migration **/
-drop table if exists imslp.opus_systems;

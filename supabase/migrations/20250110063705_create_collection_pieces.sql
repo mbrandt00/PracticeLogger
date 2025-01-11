@@ -1,4 +1,3 @@
-/** Up Migration **/
 create table if not exists "imslp"."collection_pieces" (
     "collection_id" integer not null,
     "piece_id" integer not null,
@@ -8,6 +7,3 @@ create table if not exists "imslp"."collection_pieces" (
     constraint "collection_pieces_piece_id_fkey" foreign key ("piece_id") 
         references "imslp"."pieces"("id")
 );
-
-/** Down Migration **/
-drop table if exists "imslp"."collection_pieces";
