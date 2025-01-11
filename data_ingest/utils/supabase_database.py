@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import unicodedata
 from typing import Dict, List, Optional, Tuple
 from urllib.parse import quote, unquote
 
@@ -10,23 +11,14 @@ from psycopg2 import errors
 
 logger = logging.getLogger(__name__)
 
-def load_collections_mapping(composer_name: str) -> dict:
-    """Load collections mapping for a given composer"""
-    # Clean the composer name: lowercase, replace spaces with underscore, remove commas
-    clean_name = composer_name.lower().replace(' ', '_').replace(',', '')
+from imslp_utils import (
+    normalize_composer_name,
+    extract_piece_name,
+    urls_match,
+    load_collections_mapping
+)
+
     
-    # Get path by going up one directory from current file location
-    current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    filename = os.path.join(current_dir, "collections_mapping", f"{clean_name}.json")
-    
-    logger.info("Looking for collections mapping at: %s", filename)
-    
-    try:
-        with open(filename, 'r') as f:
-            return json.load(f)
-    except FileNotFoundError:
-        logger.warning(f"No collections mapping found at {filename}")
-        return {}
 
 class SupabaseDatabase:
     def __init__(self, db=None, user=None, password=None, host=None, port=None):
@@ -46,9 +38,9 @@ class SupabaseDatabase:
         sql = """
         INSERT INTO imslp.collections (name, url, composer_id)
         VALUES (%s, %s, %s)
-        ON CONFLICT (url) DO UPDATE SET
-            name = EXCLUDED.name,
-            composer_id = EXCLUDED.composer_id
+        ON CONFLICT ON CONSTRAINT collections_name_composer_id_key 
+        DO UPDATE SET
+            url = EXCLUDED.url
         RETURNING id;
         """
         self.cur.execute(sql, (name, url, composer_id))
@@ -70,15 +62,6 @@ class SupabaseDatabase:
 
         # Get unique composer names from the DataFrame
         unique_composers = df.get_column("composer_name").unique().to_list()
-        
-        # Load all collections mappings at once
-        collections_mappings = {}
-        for composer_name in unique_composers:
-            try:
-                collections_mappings[composer_name] = load_collections_mapping(composer_name)
-            except Exception as e:
-                logger.error(f"Failed to load collections mapping for {composer_name}: {e}")
-                collections_mappings[composer_name] = {}
 
         composer_function_sql = """
         SELECT * FROM public.find_or_create_composer(%s);
@@ -126,33 +109,35 @@ class SupabaseDatabase:
 
         for row in df.iter_rows(named=True):
             try:
-                # First get or create the composer
                 self.cur.execute(composer_function_sql, (row["composer_name"],))
                 composer_record = self.cur.fetchone()
                 composer_id = composer_record[0]
 
-                # Get collections mapping for this composer from the preloaded dictionary
-                collections_mapping = collections_mappings.get(row["composer_name"], {})
+                # Get normalized collections for this composer
+                composer_collections = load_collections_mapping(row["composer_name"])
                 
-                # Find matching collection for this piece
-                piece_url = row["imslp_url"]
-                decoded_piece_url = unquote(piece_url)
-                encoded_piece_url = quote(decoded_piece_url, safe=':/')
+                # Initialize matching_collection as None
                 matching_collection = None
 
-                try:
-                    for collection_name, collection_data in collections_mapping.items():
-                        encoded_collection_pieces = [quote(url, safe=':/') for url in collection_data["pieces"]]
-                        if encoded_piece_url in encoded_collection_pieces:
-                            matching_collection = {
-                                "name": collection_name,
-                                "url": collection_data["url"]
-                            }
-                            logger.info(f"Found matching collection: {collection_name}")
+                if composer_collections:
+                    logger.debug(f"Found {len(composer_collections)} potential collections for {row['composer_name']}")
+                    
+                    # Log the current piece URL being processed
+                    logger.debug(f"Processing piece URL: {row['imslp_url']}")
+
+                    # Try to find a matching collection
+                    for collection_name, collection_data in composer_collections.items():
+                        logger.debug(f"Checking collection: {collection_name} with {len(collection_data['pieces'])} pieces")
+                        for piece_url in collection_data['pieces']:
+                            if urls_match(row["imslp_url"], piece_url):
+                                matching_collection = {
+                                    "name": collection_name,
+                                    "url": collection_data["url"]
+                                }
+                                logger.info(f"Matched piece {row['work_name']} to collection {collection_name}")
+                                break
+                        if matching_collection:
                             break
-                except Exception as e:
-                    logger.error(f"Error processing collections for {piece_url}: {e}")
-                    matching_collection = None
 
                 # Insert piece and get piece_id
                 self.cur.execute(
@@ -187,10 +172,13 @@ class SupabaseDatabase:
                             composer_id
                         )
                         self.link_piece_to_collection(collection_id, piece_id)
+                        logger.info(f"Successfully linked piece {row['work_name']} to collection {matching_collection['name']}")
                     except Exception as e:
                         logger.error(f"Failed to link piece to collection: {e}")
-                        # Continue processing even if collection linking fails
-                
+                        # Continue processing as this is not a critical failure
+                else:
+                    logger.debug(f"No matching collection found for piece {row['work_name']}")
+
                 # Parse and insert movements
                 movements = (
                     json.loads(row["movements"])
@@ -227,7 +215,6 @@ class SupabaseDatabase:
                 continue
 
         return successful_inserts, failed_inserts
-
     def close(self):
         """Close database connection and cursor"""
         if self.cur:
