@@ -1,0 +1,68 @@
+{
+  "Piano Sonatas": {
+    "url": "/wiki/Piano_Sonatas_(Hindemith%2C_Paul)",
+    "pieces": [
+      "/wiki/Piano_Sonata_No.1_(Hindemith%2C_Paul)",
+      "/wiki/Piano_Sonata_No.2_(Hindemith%2C_Paul)",
+      "/wiki/Piano_Sonata_No.3_(Hindemith%2C_Paul)",
+      "/wiki/Piano_Sonata%2C_Op.17_(Hindemith%2C_Paul)",
+      "/wiki/Sonata_for_Piano_4_Hands_(Hindemith%2C_Paul)",
+      "/wiki/Sonata_for_2_Pianos_(Hindemith%2C_Paul)"
+    ]
+  },
+  "String Quartets": {
+    "url": "/wiki/String_Quartets_(Hindemith%2C_Paul)",
+    "pieces": [
+      "/wiki/String_Quartet_No.1%2C_Op.2_(Hindemith%2C_Paul)",
+      "/wiki/String_Quartet_No.2%2C_Op.10_(Hindemith%2C_Paul)",
+      "/wiki/String_Quartet_No.3%2C_Op.16_(Hindemith%2C_Paul)",
+      "/wiki/String_Quartet_No.4%2C_Op.22_(Hindemith%2C_Paul)",
+      "/wiki/String_Quartet_No.5%2C_Op.32_(Hindemith%2C_Paul)",
+      "/wiki/String_Quartet_No.6_(Hindemith%2C_Paul)",
+      "/wiki/String_Quartet_No.7_(Hindemith%2C_Paul)"
+    ]
+  },
+  "Viola Sonatas": {
+    "url": "/wiki/Viola_Sonatas_(Hindemith%2C_Paul)",
+    "pieces": [
+      "/wiki/Viola_Sonata%2C_IPH_172_(Hindemith%2C_Paul)",
+      "/wiki/Viola_Sonata%2C_Op.11_No.4_(Hindemith%2C_Paul)",
+      "/wiki/Viola_Sonata%2C_Op.11_No.5_(Hindemith%2C_Paul)",
+      "/wiki/Viola_Sonata%2C_Op.25_No.1_(Hindemith%2C_Paul)",
+      "/wiki/Viola_Sonata%2C_Op.25_No.4_(Hindemith%2C_Paul)",
+      "/wiki/Viola_Sonata%2C_Op.31_No.4_(Hindemith%2C_Paul)",
+      "/wiki/Viola_Sonata_(Hindemith%2C_Paul)"
+    ]
+  },
+  "Violin Sonatas": {
+    "url": "/wiki/Violin_Sonatas_(Hindemith%2C_Paul)",
+    "pieces": [
+      "/wiki/Violin_Sonata_in_C_major_(Hindemith%2C_Paul)",
+      "/wiki/Violin_Sonata_in_E_major_(Hindemith%2C_Paul)",
+      "/wiki/Violin_Sonata%2C_Op.11_No.1_(Hindemith%2C_Paul)",
+      "/wiki/Violin_Sonata%2C_Op.11_No.2_(Hindemith%2C_Paul)",
+      "/wiki/Violin_Sonata%2C_Op.31_No.1_(Hindemith%2C_Paul)",
+      "/wiki/Violin_Sonata%2C_Op.31_No.2_(Hindemith%2C_Paul)"
+    ]
+  },
+  "Kammermusik": {
+    "url": "/wiki/Kammermusik_(Hindemith%2C_Paul)",
+    "pieces": [
+      "/wiki/Kammermusik_No.1%2C_Op.24_No.1_(Hindemith%2C_Paul)",
+      "/wiki/Kammermusik_No.2%2C_Op.36_No.1_(Hindemith%2C_Paul)",
+      "/wiki/Kammermusik_No.3%2C_Op.36_No.2_(Hindemith%2C_Paul)",
+      "/wiki/Kammermusik_No.4%2C_Op.36_No.3_(Hindemith%2C_Paul)",
+      "/wiki/Kammermusik_No.5%2C_Op.36_No.4_(Hindemith%2C_Paul)",
+      "/wiki/Kammermusik_No.6%2C_Op.46_No.1_(Hindemith%2C_Paul)",
+      "/wiki/Kammermusik_No.7%2C_Op.46_No.2_(Hindemith%2C_Paul)"
+    ]
+  },
+  "Organ Sonatas": {
+    "url": "/wiki/Organ_Sonatas_(Hindemith%2C_Paul)",
+    "pieces": [
+      "/wiki/Organ_Sonata_No.1_(Hindemith%2C_Paul)",
+      "/wiki/Organ_Sonata_No.2_(Hindemith%2C_Paul)",
+      "/wiki/Organ_Sonata_No.3_(Hindemith%2C_Paul)"
+    ]
+  }
+}

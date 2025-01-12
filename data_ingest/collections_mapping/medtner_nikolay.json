@@ -1,0 +1,50 @@
+{
+  "Piano Sonatas": {
+    "url": "/wiki/Piano_Sonata,_Op.5_(Medtner,_Nikolay)",
+    "pieces": [
+      "/wiki/Piano_Sonata,_Op.5_(Medtner,_Nikolay)",
+      "/wiki/Piano_Sonata,_Op.22_(Medtner,_Nikolay)",
+      "/wiki/Piano_Sonata,_Op.25_No.2_(Medtner,_Nikolay)",
+      "/wiki/Piano_Sonata,_Op.30_(Medtner,_Nikolay)",
+      "/wiki/Sonata_romantica,_Op.53_No.1_(Medtner,_Nikolay)",
+      "/wiki/Sonata_minacciosa,_Op.53_No.2_(Medtner,_Nikolay)",
+      "/wiki/Sonata-Idyll,_Op.56_(Medtner,_Nikolay)",
+      "/wiki/Sonata-Tale,_Op.25_No.1_(Medtner,_Nikolay)",
+      "/wiki/Sonata-Ballade,_Op.27_(Medtner,_Nikolay)",
+      "/wiki/Sonata-Vocalise,_Op.41_No.1_(Medtner,_Nikolay)",
+      "/wiki/Sonaten-Triade,_Op.11_(Medtner,_Nikolay)"
+    ]
+  },
+  "Fairy Tales": {
+    "url": "/wiki/2_Tales,_Op.8_(Medtner,_Nikolay)",
+    "pieces": [
+      "/wiki/Tale_in_D_minor_(Medtner,_Nikolay)",
+      "/wiki/2_Tales,_Op.8_(Medtner,_Nikolay)",
+      "/wiki/3_Tales,_Op.9_(Medtner,_Nikolay)",
+      "/wiki/2_Tales,_Op.14_(Medtner,_Nikolay)",
+      "/wiki/2_Tales,_Op.20_(Medtner,_Nikolay)",
+      "/wiki/4_Tales,_Op.26_(Medtner,_Nikolay)",
+      "/wiki/4_Tales,_Op.34_(Medtner,_Nikolay)",
+      "/wiki/4_Tales,_Op.35_(Medtner,_Nikolay)",
+      "/wiki/3_Tales,_Op.42_(Medtner,_Nikolay)",
+      "/wiki/2_Tales,_Op.48_(Medtner,_Nikolay)",
+      "/wiki/6_Tales,_Op.51_(Medtner,_Nikolay)"
+    ]
+  },
+  "Piano Concertos": {
+    "url": "/wiki/Piano_Concerto_No.1,_Op.33_(Medtner,_Nikolay)",
+    "pieces": [
+      "/wiki/Piano_Concerto_No.1,_Op.33_(Medtner,_Nikolay)",
+      "/wiki/Piano_Concerto_No.2,_Op.50_(Medtner,_Nikolay)",
+      "/wiki/Piano_Concerto_No.3,_Op.60_(Medtner,_Nikolay)"
+    ]
+  },
+  "Violin Sonatas": {
+    "url": "/wiki/Violin_Sonata_No.1,_Op.21_(Medtner,_Nikolay)",
+    "pieces": [
+      "/wiki/Violin_Sonata_No.1,_Op.21_(Medtner,_Nikolay)",
+      "/wiki/Violin_Sonata_No.2,_Op.44_(Medtner,_Nikolay)",
+      "/wiki/Violin_Sonata_No.3,_Op.57_(Medtner,_Nikolay)"
+    ]
+  }
+}
