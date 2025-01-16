@@ -1,3 +1,4 @@
+import logging
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple, TypedDict
 
@@ -6,7 +7,25 @@ from bs4 import BeautifulSoup, Tag
 from helpers import (convert_empty_vals_to_none, parse_key_signature,
                      standardize_dict_keys)
 from movements import Movement, parse_movements
+from requests import Session
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
+logger = logging.getLogger(__name__)
+
+
+def create_session_with_retries():
+    session = Session()
+    retries = Retry(
+        total=5,  # total number of retries
+        backoff_factor=1,  # wait 1, 2, 4, 8, 16 seconds between retries
+        status_forcelist=[500, 502, 503, 504],  # retry on these HTTP status codes
+        allowed_methods=["GET", "HEAD", "OPTIONS"]  # only retry on these methods
+    )
+    adapter = HTTPAdapter(max_retries=retries)
+    session.mount("http://", adapter)
+    session.mount("https://", adapter)
+    return session
 
 @dataclass
 class Piece:
@@ -97,10 +116,17 @@ def create_piece(
 ) -> Optional[Piece]:
     if not data and not url:
         raise ValueError("No data or url argument found")
-
+    
     if url:
-        response = requests.get(url, timeout=10)
-        data = BeautifulSoup(response.text, "html.parser")
+        try:
+            session = create_session_with_retries()
+            response = session.get(url, timeout=10)
+            response.raise_for_status()
+            data = BeautifulSoup(response.text, "html.parser")
+        except (requests.exceptions.SSLError, requests.exceptions.RequestException) as e:
+            logging.error(f"Request failed for {url}: {str(e)}")
+            return None
+
 
     if not data:
         raise ValueError("Beautiful soup object could not be initialized")

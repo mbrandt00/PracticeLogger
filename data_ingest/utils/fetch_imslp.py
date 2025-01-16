@@ -2,6 +2,7 @@ import datetime
 import json
 import logging
 import os
+import time
 
 import polars as pl
 from imslp_scraping import get_all_composer_pieces, get_composer_url
@@ -25,8 +26,6 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
-
-# short_composers = ["Scriabin, Aleksandr"]
 
 composers = [
     "Bach, Johann Sebastian",
@@ -108,30 +107,63 @@ composers = [
     "Chopin, Frédéric",
     "Scriabin, Aleksandr",
 ]
+
 pieces = []
 for composer in composers:
     logger.info("Starting import for %s", composer)
-    url = get_composer_url(composer)
-    data = get_all_composer_pieces(url)
-    for piece_url in data:
-        if len(pieces) % 100 == 0:
-            logger.info("Processed %s pieces", len(pieces))
-        try:
-            piece = create_piece(url=piece_url)
-        except ValueError as e:
-            logger.error("Error processing %s: %s", piece_url, e)
-            continue
-        pieces.append(piece)
+    try:
+        url = get_composer_url(composer)
+        data = get_all_composer_pieces(url)
+        
+        for piece_url in data:
+            if len(pieces) % 100 == 0:
+                logger.info("Processed %s pieces", len(pieces))
+            
+            max_retries = 3
+            retry_delay = 15
+            
+            for attempt in range(max_retries):
+                try:
+                    piece = create_piece(url=piece_url)
+                    if piece:  
+                        pieces.append(piece)
+                    break  
+                except ValueError as e:
+                    logger.error("Error processing %s: %s", piece_url, e)
+                    if attempt < max_retries - 1:  # Don't sleep on the last attempt
+                        logger.info(f"Retrying in {retry_delay} seconds...")
+                        time.sleep(retry_delay)
+                    continue
+                except Exception as e:  
+                    logger.error(f"Unexpected error processing {piece_url}: {str(e)}")
+                    if attempt < max_retries - 1:
+                        logger.info(f"Retrying in {retry_delay} seconds...")
+                        time.sleep(retry_delay)
+                    continue
+                
+    except Exception as e:
+        logger.error(f"Error processing composer {composer}: {str(e)}")
+        continue  # Move to next composer if there's an error
+
+if not pieces:
+    logger.error("No pieces were collected. Exiting without saving.")
+    exit(1)
 
 pieces_dict = []
 for piece in pieces:
-    piece_dict = vars(piece).copy()
-    piece_dict["movements"] = json.dumps([vars(m) for m in piece.movements])
-    pieces_dict.append(piece_dict)
+    if piece is not None:  # Add null check
+        piece_dict = vars(piece).copy()
+        piece_dict["movements"] = json.dumps([vars(m) for m in piece.movements])
+        pieces_dict.append(piece_dict)
 
-df = pl.DataFrame(pieces_dict, strict=False, infer_schema_length=1000)
+if pieces_dict: 
+    df = pl.DataFrame(pieces_dict, strict=False, infer_schema_length=1000)
+    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    output_file = f"full_df_{current_datetime}.parquet"
+    df.write_parquet(output_file)
+    logger.info("Data saved to %s", output_file)
+    os.system("pmset sleepnow")
+else:
+    logger.error("No valid pieces to save")
 
-current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-output_file = f"full_df_{current_datetime}.parquet"
-df.write_parquet(output_file)
-logger.info("Data saved to %s", output_file)
+os.system("pmset sleepnow")
