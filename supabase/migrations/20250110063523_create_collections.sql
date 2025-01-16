@@ -21,3 +21,8 @@ alter sequence "imslp"."collections_id_seq" owned by "imslp"."collections"."id";
 
 alter table only "imslp"."collections" alter column "id" 
     set default nextval('imslp.collections_id_seq'::regclass);
+
+ALTER TABLE imslp.pieces
+ADD COLUMN collection_id BIGINT,
+ADD CONSTRAINT fk_imslp_pieces_to_collection
+FOREIGN KEY (collection_id) REFERENCES imslp.collections(id);
