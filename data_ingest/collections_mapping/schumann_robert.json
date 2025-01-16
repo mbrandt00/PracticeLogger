@@ -1,0 +1,55 @@
+{
+  "Piano Sonatas": {
+    "url": "/wiki/Piano_Sonata_No.1,Op.11(Schumann,_Robert)",
+    "pieces": [
+      "/wiki/Piano_Sonata_No.1,Op.11(Schumann,_Robert)",
+      "/wiki/Piano_Sonata_No.2,Op.22(Schumann,_Robert)",
+      "/wiki/Piano_Sonata_No.3,Op.14(Schumann,_Robert)",
+      "/wiki/3_Piano_Sonatas_for_the_Young,Op.118(Schumann,_Robert)"
+    ]
+  },
+  "Fantasiestücke": {
+    "url": "/wiki/Fantasiestücke,Op.12(Schumann,_Robert)",
+    "pieces": [
+      "/wiki/Fantasiestücke,Op.12(Schumann,_Robert)",
+      "/wiki/Fantasiestücke,Op.73(Schumann,_Robert)",
+      "/wiki/3_Fantasiestücke,Op.111(Schumann,_Robert)"
+    ]
+  },
+  "Piano Cycles": {
+    "url": "/wiki/Carnaval,Op.9(Schumann,_Robert)",
+    "pieces": [
+      "/wiki/Carnaval,Op.9(Schumann,_Robert)",
+      "/wiki/Davidsbündlertänze,Op.6(Schumann,_Robert)",
+      "/wiki/Kreisleriana,Op.16(Schumann,_Robert)",
+      "/wiki/Papillons,Op.2(Schumann,_Robert)",
+      "/wiki/Waldszenen,Op.82(Schumann,_Robert)",
+      "/wiki/Kinderszenen,Op.15(Schumann,_Robert)"
+    ]
+  },
+  "Piano Concertos": {
+    "url": "/wiki/Piano_Concerto,Op.54(Schumann,_Robert)",
+    "pieces": [
+      "/wiki/Piano_Concerto,Op.54(Schumann,_Robert)",
+      "/wiki/Introduction_and_Allegro,Op.134(Schumann,_Robert)",
+      "/wiki/Konzertstück,Op.92(Schumann,_Robert)"
+    ]
+  },
+  "Studies and Etudes": {
+    "url": "/wiki/Symphonic_Etudes,Op.13(Schumann,_Robert)",
+    "pieces": [
+      "/wiki/Symphonic_Etudes,Op.13(Schumann,_Robert)",
+      "/wiki/6_Concert_Etudes_after_Paganini_Caprices,Op.10(Schumann,_Robert)",
+      "/wiki/Etudes_after_Paganini_Caprices,Op.3(Schumann,_Robert)",
+      "/wiki/6_Studien_in_kanonischer_Form,Op.56(Schumann,_Robert)"
+    ]
+  },
+  "Piano Trios": {
+    "url": "/wiki/Piano_Trio_No.1,Op.63(Schumann,_Robert)",
+    "pieces": [
+      "/wiki/Piano_Trio_No.1,Op.63(Schmann,_Robert)",
+      "/wiki/Piano_Trio_No.2,Op.80(Schmann,_Robert)",
+      "/wiki/Piano_Trio_No.3,Op.110(Schmann,_Robert)"
+    ]
+  }
+}

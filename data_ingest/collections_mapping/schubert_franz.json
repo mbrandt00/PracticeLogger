@@ -1,0 +1,77 @@
+{
+  "Piano Sonatas": {
+    "url": "/wiki/Piano_Sonatas_(Schubert%2C_Franz)",
+    "pieces": [
+      "/wiki/Piano_Sonata_in_E_major%2C_D.154",
+      "/wiki/Piano_Sonata_in_E_major%2C_D.157",
+      "/wiki/Piano_Sonata_in_C_major%2C_D.279",
+      "/wiki/Piano_Sonata_in_E_major%2C_D.459",
+      "/wiki/Piano_Sonata_in_A_minor%2C_D.537",
+      "/wiki/Piano_Sonata_in_A-flat_major%2C_D.557",
+      "/wiki/Piano_Sonata_in_E_minor%2C_D.566",
+      "/wiki/Piano_Sonata_in_E-flat_major%2C_D.568",
+      "/wiki/Piano_Sonata_in_F-sharp_minor%2C_D.571",
+      "/wiki/Piano_Sonata_in_B_major%2C_D.575",
+      "/wiki/Piano_Sonata_in_C_major%2C_D.613",
+      "/wiki/Piano_Sonata_in_F_minor%2C_D.625",
+      "/wiki/Piano_Sonata_in_C-sharp_minor%2C_D.655",
+      "/wiki/Piano_Sonata_in_A_major%2C_D.664",
+      "/wiki/Piano_Sonata_in_E_minor%2C_D.769a",
+      "/wiki/Piano_Sonata_in_A_minor%2C_D.784",
+      "/wiki/Piano_Sonata_in_C_major%2C_D.840",
+      "/wiki/Piano_Sonata_in_A_minor%2C_D.845",
+      "/wiki/Piano_Sonata_in_D_major%2C_D.850",
+      "/wiki/Piano_Sonata_in_G_major%2C_D.894",
+      "/wiki/Piano_Sonata_in_C_minor%2C_D.958",
+      "/wiki/Piano_Sonata_in_A_major%2C_D.959",
+      "/wiki/Piano_Sonata_in_B-flat_major%2C_D.960"
+    ]
+  },
+  "Impromptus": {
+    "url": "/wiki/Impromptus_(Schubert%2C_Franz)",
+    "pieces": ["/wiki/4_Impromptus%2C_D.899", "/wiki/4_Impromptus%2C_D.935"]
+  },
+  "Piano Variations": {
+    "url": "/wiki/Piano_Variations_(Schubert%2C_Franz)",
+    "pieces": [
+      "/wiki/10_Variations_in_F_major%2C_D.156",
+      "/wiki/13_Variations_on_a_Theme_of_Hüttenbrenner%2C_D.576",
+      "/wiki/8_Variations_on_a_French_Song%2C_D.624",
+      "/wiki/Variation_on_a_Waltz_by_Diabelli%2C_D.718",
+      "/wiki/8_Variations_on_an_Original_Theme%2C_D.813",
+      "/wiki/Variations_on_a_Theme_from_Hérold's_'Marie'%2C_D.908"
+    ]
+  },
+  "Piano Duets": {
+    "url": "/wiki/Piano_Duets_(Schubert%2C_Franz)",
+    "pieces": [
+      "/wiki/Fantasie_in_F_minor%2C_D.940",
+      "/wiki/Sonata_for_Piano_Duet_in_F_major%2C_D.1c",
+      "/wiki/Sonata_for_Piano_Duet_in_B-flat_major%2C_D.617",
+      "/wiki/Sonata_for_Piano_Duet_in_C_major%2C_D.812",
+      "/wiki/Divertissement_à_la_hongroise%2C_D.818",
+      "/wiki/Divertissement_sur_des_motifs_originaux_français%2C_D.823",
+      "/wiki/Grande_marche_funèbre%2C_D.859",
+      "/wiki/Grande_marche_héroïque%2C_D.885",
+      "/wiki/6_Grandes_marches%2C_D.819",
+      "/wiki/Rondo_in_A_major%2C_D.951"
+    ]
+  },
+  "Dances": {
+    "url": "/wiki/Dances_(Schubert%2C_Franz)",
+    "pieces": [
+      "/wiki/12_Valses_nobles%2C_D.969",
+      "/wiki/Valses_sentimentales%2C_D.779",
+      "/wiki/38_Waltzes%2C_Ländler_and_Ecossaises%2C_D.145",
+      "/wiki/20_Waltzes%2C_D.146",
+      "/wiki/12_German_Dances%2C_D.420",
+      "/wiki/16_German_Dances_and_2_Ecossaises%2C_D.783",
+      "/wiki/12_Grazer_Waltzer%2C_D.924",
+      "/wiki/Wiener_Damen-Ländler_und_Ecossaisen%2C_D.734",
+      "/wiki/17_Ländler%2C_D.366",
+      "/wiki/12_Ländler%2C_D.681",
+      "/wiki/6_Polonaises%2C_D.824",
+      "/wiki/4_Polonaises%2C_D.599"
+    ]
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "Symphonies": {
+    "url": "/wiki/Symphony_No.1,_Op.13_(Tchaikovsky,_Pyotr)",
+    "pieces": [
+      "/wiki/Symphony_No.1,_Op.13_(Tchaikovsky,_Pyotr)",
+      "/wiki/Symphony_No.2,_Op.17_(Tchaikovsky,_Pyotr)",
+      "/wiki/Symphony_No.3,_Op.29_(Tchaikovsky,_Pyotr)",
+      "/wiki/Symphony_No.4,_Op.36_(Tchaikovsky,_Pyotr)",
+      "/wiki/Symphony_No.5,_Op.64_(Tchaikovsky,_Pyotr)",
+      "/wiki/Symphony_No.6,_Op.74_(Tchaikovsky,_Pyotr)",
+      "/wiki/Manfred_Symphony,_Op.58_(Tchaikovsky,_Pyotr)"
+    ]
+  },
+  "Piano Concertos": {
+    "url": "/wiki/Piano_Concerto_No.1,_Op.23_(Tchaikovsky,_Pyotr)",
+    "pieces": [
+      "/wiki/Piano_Concerto_No.1,_Op.23_(Tchaikovsky,_Pyotr)",
+      "/wiki/Piano_Concerto_No.2,_Op.44_(Tchaikovsky,_Pyotr)",
+      "/wiki/Piano_Concerto_No.3,_Op.75_(Tchaikovsky,_Pyotr)",
+      "/wiki/Concert_Fantasia,_Op.56_(Tchaikovsky,_Pyotr)",
+      "/wiki/Andante_and_Finale,_Op.79_(Tchaikovsky,_Pyotr)"
+    ]
+  },
+  "Ballets": {
+    "url": "/wiki/Swan_Lake_(ballet),_Op.20_(Tchaikovsky,_Pyotr)",
+    "pieces": [
+      "/wiki/Swan_Lake_(ballet),_Op.20_(Tchaikovsky,_Pyotr)",
+      "/wiki/The_Nutcracker_(ballet),_Op.71_(Tchaikovsky,_Pyotr)",
+      "/wiki/The_Sleeping_Beauty_(ballet),_Op.66_(Tchaikovsky,_Pyotr)",
+      "/wiki/Swan_Lake_(suite),_Op.20a_(Tchaikovsky,_Pyotr)",
+      "/wiki/The_Nutcracker_(suite),_Op.71a_(Tchaikovsky,_Pyotr)",
+      "/wiki/The_Sleeping_Beauty_(suite),_Op.66a_(Tchaikovsky,_Pyotr)"
+    ]
+  },
+  "Operas": {
+    "url": "/wiki/Eugene_Onegin,_Op.24_(Tchaikovsky,_Pyotr)",
+    "pieces": [
+      "/wiki/Eugene_Onegin,_Op.24_(Tchaikovsky,_Pyotr)",
+      "/wiki/The_Queen_of_Spades,_Op.68_(Tchaikovsky,_Pyotr)",
+      "/wiki/Iolanta,_Op.69_(Tchaikovsky,_Pyotr)",
+      "/wiki/Mazeppa,_TH_7_(Tchaikovsky,_Pyotr)",
+      "/wiki/The_Maid_of_Orleans,_TH_6_(Tchaikovsky,_Pyotr)",
+      "/wiki/The_Oprichnik,_TH_3_(Tchaikovsky,_Pyotr)",
+      "/wiki/Cherevichki,_TH_8_(Tchaikovsky,_Pyotr)"
+    ]
+  },
+  "Chamber Music": {
+    "url": "/wiki/String_Quartet_No.1,_Op.11_(Tchaikovsky,_Pyotr)",
+    "pieces": [
+      "/wiki/String_Quartet_No.1,_Op.11_(Tchaikovsky,_Pyotr)",
+      "/wiki/String_Quartet_No.2,_Op.22_(Tchaikovsky,_Pyotr)",
+      "/wiki/String_Quartet_No.3,_Op.30_(Tchaikovsky,_Pyotr)",
+      "/wiki/Piano_Trio,_Op.50_(Tchaikovsky,_Pyotr)",
+      "/wiki/Souvenir_de_Florence,_Op.70_(Tchaikovsky,_Pyotr)"
+    ]
+  },
+  "Piano Works": {
+    "url": "/wiki/The_Seasons,_Op.37a_(Tchaikovsky,_Pyotr)",
+    "pieces": [
+      "/wiki/The_Seasons,_Op.37a_(Tchaikovsky,_Pyotr)",
+      "/wiki/Children's_Album,_Op.39_(Tchaikovsky,_Pyotr)",
+      "/wiki/Grand_Sonata,_Op.37_(Tchaikovsky,_Pyotr)",
+      "/wiki/18_Pieces,_Op.72_(Tchaikovsky,_Pyotr)",
+      "/wiki/6_Pieces,_Op.19_(Tchaikovsky,_Pyotr)",
+      "/wiki/12_Pieces,_Op.40_(Tchaikovsky,_Pyotr)",
+      "/wiki/6_Pieces,_Op.51_(Tchaikovsky,_Pyotr)",
+      "/wiki/Dumka,_Op.59_(Tchaikovsky,_Pyotr)"
+    ]
+  },
+  "Orchestral Works": {
+    "url": "/wiki/Romeo_and_Juliet_(overture-fantasia),_TH_42_(Tchaikovsky,_Pyotr)",
+    "pieces": [
+      "/wiki/Romeo_and_Juliet_(overture-fantasia),_TH_42_(Tchaikovsky,_Pyotr)",
+      "/wiki/1812_Overture,_Op.49_(Tchaikovsky,_Pyotr)",
+      "/wiki/Francesca_da_Rimini,_Op.32_(Tchaikovsky,_Pyotr)",
+      "/wiki/Serenade_for_String_Orchestra,_Op.48_(Tchaikovsky,_Pyotr)",
+      "/wiki/Capriccio_italien,_Op.45_(Tchaikovsky,_Pyotr)",
+      "/wiki/Suite_No.3,_Op.55_(Tchaikovsky,_Pyotr)",
+      "/wiki/The_Tempest,_Op.18_(Tchaikovsky,_Pyotr)",
+      "/wiki/Hamlet_(overture-fantasia),_Op.67_(Tchaikovsky,_Pyotr)"
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "Piano Concertos": {
+    "url": "/wiki/Piano_Concerto,_Op.7_(Schumann,_Clara)",
+    "pieces": [
+      "/wiki/Piano_Concerto,_Op.7_(Schumann,_Clara)",
+      "/wiki/Konzertsatz_in_F_minor_(Schumann,_Clara)"
+    ]
+  },
+  "Romances": {
+    "url": "/wiki/3_Romances,_Op.11_(Schumann,_Clara)",
+    "pieces": [
+      "/wiki/3_Romances,_Op.11_(Schumann,_Clara)",
+      "/wiki/3_Romances,_Op.21_(Schumann,_Clara)",
+      "/wiki/3_Romances,_Op.22_(Schumann,_Clara)",
+      "/wiki/Romanze_in_A_minor,_WoO_28_(Schumann,_Clara)"
+    ]
+  },
+  "Preludes and Fugues": {
+    "url": "/wiki/3_Preludes_and_Fugues,_Op.16_(Schumann,_Clara)",
+    "pieces": [
+      "/wiki/3_Preludes_and_Fugues,_Op.16_(Schumann,_Clara)",
+      "/wiki/Prelude_and_Fugue_in_F-sharp_minor_(Schumann,_Clara)",
+      "/wiki/Praeludien_(Schumann,_Clara)",
+      "/wiki/Einfache_Praeludien_für_Schüler_(Schumann,_Clara)"
+    ]
+  },
+  "Lieder": {
+    "url": "/wiki/Lieder,_Op.12_(Schumann,_Clara)",
+    "pieces": [
+      "/wiki/Lieder,_Op.12_(Schumann,_Clara)",
+      "/wiki/6_Lieder,_Op.13_(Schumann,_Clara)",
+      "/wiki/6_Lieder,_Op.23_(Schumann,_Clara)"
+    ]
+  },
+  "Scherzos": {
+    "url": "/wiki/Scherzo_No.1,_Op.10_(Schumann,_Clara)",
+    "pieces": [
+      "/wiki/Scherzo_No.1,_Op.10_(Schumann,_Clara)",
+      "/wiki/Scherzo_No.2,_Op.14_(Schumann,_Clara)"
+    ]
+  },
+  "Variations": {
+    "url": "/wiki/Variations_de_Concert,_Op.8_(Schumann,_Clara)",
+    "pieces": [
+      "/wiki/Variations_de_Concert,_Op.8_(Schumann,_Clara)",
+      "/wiki/Variationen_über_ein_Thema_von_Robert_Schumann,_Op.20_(Schumann,_Clara)",
+      "/wiki/Romance_variée,_Op.3_(Schumann,_Clara)"
+    ]
+  }
+}

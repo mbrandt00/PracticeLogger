@@ -1,0 +1,33 @@
+{
+  "Suites": {
+    "url": "/wiki/Miroirs,_M.43_(Ravel,_Maurice)",
+    "pieces": [
+      "/wiki/Miroirs,_M.43_(Ravel,_Maurice)",
+      "/wiki/Gaspard_de_la_nuit,_M.55_(Ravel,_Maurice)",
+      "/wiki/Le_tombeau_de_Couperin,_M.68_(Ravel,_Maurice)"
+    ]
+  },
+  "Character Pieces": {
+    "url": "/wiki/Pavane_pour_une_infante_défunte,_M.19_(Ravel,_Maurice)",
+    "pieces": [
+      "/wiki/Pavane_pour_une_infante_défunte,_M.19_(Ravel,_Maurice)",
+      "/wiki/Jeux_d'eau,_M.30_(Ravel,_Maurice)",
+      "/wiki/Valses_nobles_et_sentimentales,_M.61_(Ravel,_Maurice)",
+      "/wiki/Menuet_antique,_M.7_(Ravel,_Maurice)",
+      "/wiki/À_la_manière_de_Borodine,_M.63/1_(Ravel,_Maurice)",
+      "/wiki/À_la_manière_de_Chabrier,_M.63/2_(Ravel,_Maurice)",
+      "/wiki/Menuet_sur_le_nom_d'Haydn,_M.58_(Ravel,_Maurice)",
+      "/wiki/Minuet_in_C-sharp_minor,_M.42_(Ravel,_Maurice)",
+      "/wiki/Frontispice,_M.70_(Ravel,_Maurice)",
+      "/wiki/Sérénade_grotesque,_M.5_(Ravel,_Maurice)"
+    ]
+  },
+  "Piano Concertos": {
+    "url": "/wiki/Piano_Concerto_in_G_major,_M.83_(Ravel,_Maurice)",
+    "pieces": [
+      "/wiki/Piano_Concerto_in_G_major,_M.83_(Ravel,_Maurice)",
+      "/wiki/Piano_Concerto_for_the_Left_Hand,_M.82_(Ravel,_Maurice)",
+      "/wiki/Sonatine,_M.40_(Ravel,_Maurice)"
+    ]
+  }
+}

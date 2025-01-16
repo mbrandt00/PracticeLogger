@@ -1,0 +1,80 @@
+{
+  "Piano Sonatas": {
+    "url": "/wiki/Piano_Sonata_No.1,Op.6(Scriabin,_Aleksandr)",
+    "pieces": [
+      "/wiki/Piano_Sonata_No.1,Op.6(Scriabin,_Aleksandr)",
+      "/wiki/Piano_Sonata_No.2,Op.19(Scriabin,_Aleksandr)",
+      "/wiki/Piano_Sonata_No.3,Op.23(Scriabin,_Aleksandr)",
+      "/wiki/Piano_Sonata_No.4,Op.30(Scriabin,_Aleksandr)",
+      "/wiki/Piano_Sonata_No.5,Op.53(Scriabin,_Aleksandr)",
+      "/wiki/Piano_Sonata_No.6,Op.62(Scriabin,_Aleksandr)",
+      "/wiki/Piano_Sonata_No.7,Op.64(Scriabin,_Aleksandr)",
+      "/wiki/Piano_Sonata_No.8,Op.66(Scriabin,_Aleksandr)",
+      "/wiki/Piano_Sonata_No.9,Op.68(Scriabin,_Aleksandr)",
+      "/wiki/Piano_Sonata_No.10,Op.70(Scriabin,Aleksandr)",
+      "/wiki/Piano_Sonata_in_E-flat_minor(Scriabin,Aleksandr)",
+      "/wiki/Sonata-Fantaisie(Scriabin,_Aleksandr)"
+    ]
+  },
+  "Preludes": {
+    "url": "/wiki/24_Preludes,Op.11(Scriabin,_Aleksandr)",
+    "pieces": [
+      "/wiki/24_Preludes,Op.11(Scriabin,_Aleksandr)",
+      "/wiki/6_Preludes,Op.13(Scriabin,_Aleksandr)",
+      "/wiki/5_Preludes,Op.15(Scriabin,_Aleksandr)",
+      "/wiki/5_Preludes,Op.16(Scriabin,_Aleksandr)",
+      "/wiki/7_Preludes,Op.17(Scriabin,_Aleksandr)",
+      "/wiki/4_Preludes,Op.22(Scriabin,_Aleksandr)",
+      "/wiki/2_Preludes,Op.27(Scriabin,_Aleksandr)",
+      "/wiki/4_Preludes,Op.31(Scriabin,_Aleksandr)",
+      "/wiki/4_Preludes,Op.33(Scriabin,_Aleksandr)",
+      "/wiki/3_Preludes,Op.35(Scriabin,_Aleksandr)",
+      "/wiki/4_Preludes,Op.37(Scriabin,_Aleksandr)",
+      "/wiki/4_Preludes,Op.39(Scriabin,_Aleksandr)",
+      "/wiki/4_Preludes,Op.48(Scriabin,_Aleksandr)",
+      "/wiki/2_Preludes,Op.67(Scriabin,_Aleksandr)",
+      "/wiki/5_Preludes,Op.74(Scriabin,_Aleksandr)"
+    ]
+  },
+  "Etudes": {
+    "url": "/wiki/12_Etudes,Op.8(Scriabin,_Aleksandr)",
+    "pieces": [
+      "/wiki/12_Etudes,Op.8(Scriabin,_Aleksandr)",
+      "/wiki/8_Etudes,Op.42(Scriabin,_Aleksandr)",
+      "/wiki/3_Etudes,Op.65(Scriabin,_Aleksandr)"
+    ]
+  },
+  "Poèmes": {
+    "url": "/wiki/2_Poèmes,Op.32(Scriabin,_Aleksandr)",
+    "pieces": [
+      "/wiki/2_Poèmes,Op.32(Scriabin,_Aleksandr)",
+      "/wiki/Poème_tragique,Op.34(Scriabin,_Aleksandr)",
+      "/wiki/Poème_Satanique,Op.36(Scriabin,_Aleksandr)",
+      "/wiki/Poème,Op.41(Scriabin,_Aleksandr)",
+      "/wiki/2_Poèmes,Op.44(Scriabin,_Aleksandr)",
+      "/wiki/2_Poèmes,Op.63(Scriabin,_Aleksandr)",
+      "/wiki/2_Poèmes,Op.69(Scriabin,_Aleksandr)",
+      "/wiki/2_Poèmes,Op.71(Scriabin,_Aleksandr)",
+      "/wiki/Poème-Nocturne,Op.61(Scriabin,_Aleksandr)"
+    ]
+  },
+  "Mazurkas": {
+    "url": "/wiki/10_Mazurkas,Op.3(Scriabin,_Aleksandr)",
+    "pieces": [
+      "/wiki/10_Mazurkas,Op.3(Scriabin,_Aleksandr)",
+      "/wiki/9_Mazurkas,Op.25(Scriabin,_Aleksandr)",
+      "/wiki/2_Mazurkas,Op.40(Scriabin,Aleksandr)",
+      "/wiki/Mazurka_in_B_minor(Scriabin,Aleksandr)",
+      "/wiki/Mazurka_in_F_major(Scriabin,_Aleksandr)"
+    ]
+  },
+  "Impromptus": {
+    "url": "/wiki/2_Impromptus_à_la_Mazur,Op.7(Scriabin,_Aleksandr)",
+    "pieces": [
+      "/wiki/2_Impromptus_à_la_Mazur,Op.7(Scriabin,_Aleksandr)",
+      "/wiki/2_Impromptus,Op.10(Scriabin,_Aleksandr)",
+      "/wiki/2_Impromptus,Op.12(Scriabin,_Aleksandr)",
+      "/wiki/2_Impromptus,Op.14(Scriabin,_Aleksandr)"
+    ]
+  }
+}
