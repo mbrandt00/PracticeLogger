@@ -11,14 +11,9 @@ from psycopg2 import errors
 
 logger = logging.getLogger(__name__)
 
-from imslp_utils import (
-    normalize_composer_name,
-    extract_piece_name,
-    urls_match,
-    load_collections_mapping
-)
+from imslp_utils import (extract_piece_name, load_collections_mapping,
+                         normalize_composer_name, urls_match)
 
-    
 
 class SupabaseDatabase:
     def __init__(self, db=None, user=None, password=None, host=None, port=None):
@@ -46,15 +41,6 @@ class SupabaseDatabase:
         self.cur.execute(sql, (name, url, composer_id))
         return self.cur.fetchone()[0]
 
-    def link_piece_to_collection(self, collection_id: int, piece_id: int):
-        """Link a piece to a collection"""
-        sql = """
-        INSERT INTO imslp.collection_pieces (collection_id, piece_id)
-        VALUES (%s, %s)
-        ON CONFLICT DO NOTHING;
-        """
-        self.cur.execute(sql, (collection_id, piece_id))
-
     def bulk_insert_from_df(self, df: pl.DataFrame) -> Tuple[int, List[Tuple[str, str]]]:
         """Insert all pieces and movements from a Polars DataFrame"""
         successful_inserts = 0
@@ -73,9 +59,9 @@ class SupabaseDatabase:
             catalogue_number, catalogue_number_secondary, composition_year,
             composition_year_string, key_signature, sub_piece_type,
             sub_piece_count, instrumentation, nickname, piece_style,
-            imslp_url, wikipedia_url
+            imslp_url, wikipedia_url, collection_id
         ) VALUES (
-            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
         )
         ON CONFLICT (imslp_url)
         DO UPDATE SET
@@ -90,7 +76,8 @@ class SupabaseDatabase:
             instrumentation = EXCLUDED.instrumentation,
             nickname = EXCLUDED.nickname,
             piece_style = EXCLUDED.piece_style,
-            wikipedia_url = EXCLUDED.wikipedia_url
+            wikipedia_url = EXCLUDED.wikipedia_url,
+            collection_id = EXCLUDED.collection_id
         RETURNING id;
         """
 
@@ -113,16 +100,12 @@ class SupabaseDatabase:
                 composer_record = self.cur.fetchone()
                 composer_id = composer_record[0]
 
-                # Get normalized collections for this composer
                 composer_collections = load_collections_mapping(row["composer_name"])
                 
-                # Initialize matching_collection as None
-                matching_collection = None
+                collection_id = None
 
                 if composer_collections:
                     logger.debug(f"Found {len(composer_collections)} potential collections for {row['composer_name']}")
-                    
-                    # Log the current piece URL being processed
                     logger.debug(f"Processing piece URL: {row['imslp_url']}")
 
                     # Try to find a matching collection
@@ -130,16 +113,17 @@ class SupabaseDatabase:
                         logger.debug(f"Checking collection: {collection_name} with {len(collection_data['pieces'])} pieces")
                         for piece_url in collection_data['pieces']:
                             if urls_match(row["imslp_url"], piece_url):
-                                matching_collection = {
-                                    "name": collection_name,
-                                    "url": collection_data["url"]
-                                }
+                                # Insert collection and get its ID
+                                collection_id = self.insert_collection(
+                                    collection_name,
+                                    collection_data["url"],
+                                    composer_id
+                                )
                                 logger.info(f"Matched piece {row['work_name']} to collection {collection_name}")
                                 break
-                        if matching_collection:
+                        if collection_id:
                             break
 
-                # Insert piece and get piece_id
                 self.cur.execute(
                     piece_insert_sql,
                     (
@@ -159,25 +143,10 @@ class SupabaseDatabase:
                         row["piece_style"],
                         row["imslp_url"],
                         row["wikipedia_url"],
+                        collection_id, 
                     ),
                 )
                 piece_id = self.cur.fetchone()[0]
-
-                # Handle collection association if found
-                if matching_collection:
-                    try:
-                        collection_id = self.insert_collection(
-                            matching_collection["name"],
-                            matching_collection["url"],
-                            composer_id
-                        )
-                        self.link_piece_to_collection(collection_id, piece_id)
-                        logger.info(f"Successfully linked piece {row['work_name']} to collection {matching_collection['name']}")
-                    except Exception as e:
-                        logger.error(f"Failed to link piece to collection: {e}")
-                        # Continue processing as this is not a critical failure
-                else:
-                    logger.debug(f"No matching collection found for piece {row['work_name']}")
 
                 # Parse and insert movements
                 movements = (
@@ -186,7 +155,6 @@ class SupabaseDatabase:
                     else row["movements"]
                 )
 
-                # Clear existing movements for this piece
                 self.cur.execute(
                     "DELETE FROM imslp.movements WHERE piece_id = %s",
                     (piece_id,)
@@ -215,6 +183,7 @@ class SupabaseDatabase:
                 continue
 
         return successful_inserts, failed_inserts
+
     def close(self):
         """Close database connection and cursor"""
         if self.cur:

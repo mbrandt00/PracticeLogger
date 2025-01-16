@@ -1,13 +1,10 @@
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, TypedDict, Tuple
+from typing import Dict, List, Optional, Tuple, TypedDict
 
 import requests
 from bs4 import BeautifulSoup, Tag
-from helpers import (
-    convert_empty_vals_to_none,
-    parse_key_signature,
-    standardize_dict_keys,
-)
+from helpers import (convert_empty_vals_to_none, parse_key_signature,
+                     standardize_dict_keys)
 from movements import Movement, parse_movements
 
 
@@ -16,7 +13,7 @@ class Piece:
     work_name: str
     composer_name: str
     catalogue_desc_str: Optional[str] = None
-    catalogue_type: Optional[str] = None  # op, bmv, etc
+    catalogue_type: Optional[str] = None  
     catalogue_number: Optional[int] = None
     catalogue_number_secondary: Optional[int] = None
     catalogue_id: Optional[int] = None
