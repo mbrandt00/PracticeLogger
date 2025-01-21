@@ -1,18 +1,14 @@
 import json
 import logging
 import os
-import unicodedata
-from typing import Dict, List, Optional, Tuple
-from urllib.parse import quote, unquote
+from typing import List, Tuple
 
 import polars as pl
 import psycopg2
-from psycopg2 import errors
+from imslp_utils import load_collections_mapping, urls_match
 
 logger = logging.getLogger(__name__)
 
-from imslp_utils import (extract_piece_name, load_collections_mapping,
-                         normalize_composer_name, urls_match)
 
 
 class SupabaseDatabase:
@@ -39,15 +35,17 @@ class SupabaseDatabase:
         RETURNING id;
         """
         self.cur.execute(sql, (name, url, composer_id))
-        return self.cur.fetchone()[0]
+        returned_rec = self.cur.fetchone()
+        if returned_rec is None: 
+            raise ValueError("Collection not inserted correctly")
+
+        return returned_rec[0] 
 
     def bulk_insert_from_df(self, df: pl.DataFrame) -> Tuple[int, List[Tuple[str, str]]]:
         """Insert all pieces and movements from a Polars DataFrame"""
         successful_inserts = 0
         failed_inserts = []
 
-        # Get unique composer names from the DataFrame
-        unique_composers = df.get_column("composer_name").unique().to_list()
 
         composer_function_sql = """
         SELECT * FROM public.find_or_create_composer(%s);
@@ -98,6 +96,8 @@ class SupabaseDatabase:
             try:
                 self.cur.execute(composer_function_sql, (row["composer_name"],))
                 composer_record = self.cur.fetchone()
+                if composer_record is None: 
+                    raise ValueError(f"Could not find composer in supabase (id: {row})")
                 composer_id = composer_record[0]
 
                 composer_collections = load_collections_mapping(row["composer_name"])
@@ -146,9 +146,11 @@ class SupabaseDatabase:
                         collection_id, 
                     ),
                 )
-                piece_id = self.cur.fetchone()[0]
+                inserted_id = self.cur.fetchone()
+                if inserted_id is None: 
+                    raise ValueError(f"Piece not inserted correctly {row}")
+                piece_id = inserted_id[0]
 
-                # Parse and insert movements
                 movements = (
                     json.loads(row["movements"])
                     if isinstance(row["movements"], str)
