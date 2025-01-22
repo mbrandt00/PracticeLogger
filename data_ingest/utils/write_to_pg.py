@@ -101,7 +101,6 @@ unique_instruments = (
 logger.info(f"Created unique instruments DataFrame with shape: {unique_instruments.shape}")
 
 df = filtered_df.unique()
-logger.info(f"Filtered for Bach's compositions. DataFrame shape: {df.shape}")
 
 db = SupabaseDatabase()
 try:

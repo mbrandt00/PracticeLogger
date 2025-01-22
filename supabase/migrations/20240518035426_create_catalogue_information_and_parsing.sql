@@ -29,7 +29,8 @@ CREATE TYPE catalogue_type AS ENUM (
     'wd',      
     'wq',      
     'jw',      
-    'trv'      
+    'trv',
+    'mwv'  
 );
 
 ALTER TABLE pieces

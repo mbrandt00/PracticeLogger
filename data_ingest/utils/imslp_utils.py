@@ -79,13 +79,10 @@ def load_collections_mapping(composer_name: str) -> dict:
     # Get path by going up one directory from current file location
     filename = os.path.join(current_dir, "collections_mapping", f"{clean_name}.json")
     
-    logger.info("Looking for collections mapping at: %s", filename)
-    
     try:
         with open(filename, 'r') as f:
             return json.load(f)
     except FileNotFoundError:
-        logger.warning(f"No collections mapping found at {filename}")
         return {}
     
 if __name__ == '__main__':

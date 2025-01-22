@@ -9,6 +9,7 @@ from imslp_utils import load_collections_mapping, urls_match
 
 logger = logging.getLogger(__name__)
 
+logger.setLevel(logging.ERROR)
 
 
 class SupabaseDatabase:
@@ -105,12 +106,9 @@ class SupabaseDatabase:
                 collection_id = None
 
                 if composer_collections:
-                    logger.debug(f"Found {len(composer_collections)} potential collections for {row['composer_name']}")
-                    logger.debug(f"Processing piece URL: {row['imslp_url']}")
-
                     # Try to find a matching collection
                     for collection_name, collection_data in composer_collections.items():
-                        logger.debug(f"Checking collection: {collection_name} with {len(collection_data['pieces'])} pieces")
+                        logger.info(collection_name, collection_data)
                         for piece_url in collection_data['pieces']:
                             if urls_match(row["imslp_url"], piece_url):
                                 # Insert collection and get its ID
@@ -181,9 +179,10 @@ class SupabaseDatabase:
             except Exception as e:
                 self.conn.rollback()
                 failed_inserts.append((row["work_name"], str(e)))
-                logger.error(f"Failed to insert piece {row['work_name']}: {e}")
                 continue
-
+        logger.info("Refreshing all searchable text")
+        self.cur.execute("SELECT imslp.refresh_all_searchable_text();")
+        self.conn.commit()
         return successful_inserts, failed_inserts
 
     def close(self):

@@ -191,3 +191,10 @@ GRANT USAGE ON SCHEMA imslp TO postgres, anon, authenticated;
 GRANT ALL ON ALL TABLES IN SCHEMA imslp TO postgres, anon, authenticated;
 GRANT ALL ON ALL FUNCTIONS IN SCHEMA imslp TO postgres, anon, authenticated;
 
+CREATE OR REPLACE FUNCTION imslp.refresh_all_searchable_text() 
+RETURNS void AS $$
+BEGIN
+    UPDATE imslp.pieces 
+    SET searchable_text = imslp.get_piece_searchable_text(id);
+END;
+$$ LANGUAGE plpgsql;

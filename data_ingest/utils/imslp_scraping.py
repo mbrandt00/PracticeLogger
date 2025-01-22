@@ -170,16 +170,23 @@ if __name__ == "__main__":
     #     print(df.head(5))
     # else:
     logging.info("pulling data to parquet")
-    composers = ["Beethoven, Ludwig van", "Chopin, Frédéric", "Scriabin, Aleksandr"]
+    # composers = ["Beethoven, Ludwig van", "Chopin, Frédéric", "Scriabin, Aleksandr"]
+    composers = ["Brahms, Johannes"]
     pieces = []
     for composer in composers:
         url = get_composer_url(composer)
         data = get_all_composer_pieces(url)
+        
         for piece_url in data[:100]:
-            piece = create_piece(url=piece_url)
-            pieces.append(piece)
+            try:
+                piece = create_piece(url=piece_url)
+                pieces.append(piece)
+            except Exception as e:
+                print(e)
+            
     pieces_dict = [piece_to_dict(piece) for piece in pieces]
-    df = pl.DataFrame(pieces_dict, strict=False)
+    print(pieces_dict)
+    # df = pl.DataFrame(pieces_dict, strict=False)
     # df.write_parquet("test_df.parquet")
     # db = SupabaseDatabase()
     # try:
