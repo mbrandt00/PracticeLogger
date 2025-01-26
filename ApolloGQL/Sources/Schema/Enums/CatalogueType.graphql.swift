@@ -35,4 +35,5 @@ public enum CatalogueType: String, EnumType {
   case wq = "wq"
   case jw = "jw"
   case trv = "trv"
+  case mwv = "mwv"
 }

@@ -11,10 +11,10 @@ public struct PiecesInsertInput: InputObject {
   }
 
   public init(
-    id: GraphQLNullable<BigInt> = nil,
     workName: GraphQLNullable<String> = nil,
     composerId: GraphQLNullable<BigInt> = nil,
     nickname: GraphQLNullable<String> = nil,
+    userId: GraphQLNullable<UUID> = nil,
     format: GraphQLNullable<GraphQLEnum<PieceFormat>> = nil,
     keySignature: GraphQLNullable<GraphQLEnum<KeySignatureType>> = nil,
     catalogueType: GraphQLNullable<GraphQLEnum<CatalogueType>> = nil,
@@ -32,13 +32,14 @@ public struct PiecesInsertInput: InputObject {
     compositionYearString: GraphQLNullable<String> = nil,
     subPieceType: GraphQLNullable<String> = nil,
     subPieceCount: GraphQLNullable<Int> = nil,
-    imslpUrl: GraphQLNullable<String> = nil
+    imslpUrl: GraphQLNullable<String> = nil,
+    imslpPieceId: GraphQLNullable<BigInt> = nil
   ) {
     __data = InputDict([
-      "id": id,
       "workName": workName,
       "composerId": composerId,
       "nickname": nickname,
+      "userId": userId,
       "format": format,
       "keySignature": keySignature,
       "catalogueType": catalogueType,
@@ -56,13 +57,9 @@ public struct PiecesInsertInput: InputObject {
       "compositionYearString": compositionYearString,
       "subPieceType": subPieceType,
       "subPieceCount": subPieceCount,
-      "imslpUrl": imslpUrl
+      "imslpUrl": imslpUrl,
+      "imslpPieceId": imslpPieceId
     ])
-  }
-
-  public var id: GraphQLNullable<BigInt> {
-    get { __data["id"] }
-    set { __data["id"] = newValue }
   }
 
   public var workName: GraphQLNullable<String> {
@@ -78,6 +75,11 @@ public struct PiecesInsertInput: InputObject {
   public var nickname: GraphQLNullable<String> {
     get { __data["nickname"] }
     set { __data["nickname"] = newValue }
+  }
+
+  public var userId: GraphQLNullable<UUID> {
+    get { __data["userId"] }
+    set { __data["userId"] = newValue }
   }
 
   public var format: GraphQLNullable<GraphQLEnum<PieceFormat>> {
@@ -168,5 +170,10 @@ public struct PiecesInsertInput: InputObject {
   public var imslpUrl: GraphQLNullable<String> {
     get { __data["imslpUrl"] }
     set { __data["imslpUrl"] = newValue }
+  }
+
+  public var imslpPieceId: GraphQLNullable<BigInt> {
+    get { __data["imslpPieceId"] }
+    set { __data["imslpPieceId"] = newValue }
   }
 }

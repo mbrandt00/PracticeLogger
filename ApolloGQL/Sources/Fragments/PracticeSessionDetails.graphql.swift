@@ -100,6 +100,7 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
       .fragment(PieceDetails.self),
     ] }
 
+    public var imslpPieceId: ApolloGQL.BigInt { __data["imslpPieceId"] }
     public var id: ApolloGQL.BigInt { __data["id"] }
     public var workName: String { __data["workName"] }
     public var catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? { __data["catalogueType"] }
@@ -109,8 +110,16 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
     public var wikipediaUrl: String? { __data["wikipediaUrl"] }
     public var imslpUrl: String? { __data["imslpUrl"] }
     public var compositionYear: Int? { __data["compositionYear"] }
+    public var catalogueNumberSecondary: Int? { __data["catalogueNumberSecondary"] }
+    public var catalogueTypeNumDesc: String? { __data["catalogueTypeNumDesc"] }
+    public var compositionYearDesc: String? { __data["compositionYearDesc"] }
+    public var compositionYearString: String? { __data["compositionYearString"] }
+    public var pieceStyle: String? { __data["pieceStyle"] }
+    public var subPieceType: String? { __data["subPieceType"] }
+    public var subPieceCount: Int? { __data["subPieceCount"] }
     public var catalogueNumber: Int? { __data["catalogueNumber"] }
     public var nickname: String? { __data["nickname"] }
+    public var composerId: ApolloGQL.BigInt? { __data["composerId"] }
     public var composer: Composer? { __data["composer"] }
     public var movements: Movements? { __data["movements"] }
 
@@ -122,6 +131,7 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
     }
 
     public init(
+      imslpPieceId: ApolloGQL.BigInt,
       id: ApolloGQL.BigInt,
       workName: String,
       catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? = nil,
@@ -131,14 +141,23 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
       wikipediaUrl: String? = nil,
       imslpUrl: String? = nil,
       compositionYear: Int? = nil,
+      catalogueNumberSecondary: Int? = nil,
+      catalogueTypeNumDesc: String? = nil,
+      compositionYearDesc: String? = nil,
+      compositionYearString: String? = nil,
+      pieceStyle: String? = nil,
+      subPieceType: String? = nil,
+      subPieceCount: Int? = nil,
       catalogueNumber: Int? = nil,
       nickname: String? = nil,
+      composerId: ApolloGQL.BigInt? = nil,
       composer: Composer? = nil,
       movements: Movements? = nil
     ) {
       self.init(_dataDict: DataDict(
         data: [
           "__typename": ApolloGQL.Objects.Pieces.typename,
+          "imslpPieceId": imslpPieceId,
           "id": id,
           "workName": workName,
           "catalogueType": catalogueType,
@@ -148,8 +167,16 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
           "wikipediaUrl": wikipediaUrl,
           "imslpUrl": imslpUrl,
           "compositionYear": compositionYear,
+          "catalogueNumberSecondary": catalogueNumberSecondary,
+          "catalogueTypeNumDesc": catalogueTypeNumDesc,
+          "compositionYearDesc": compositionYearDesc,
+          "compositionYearString": compositionYearString,
+          "pieceStyle": pieceStyle,
+          "subPieceType": subPieceType,
+          "subPieceCount": subPieceCount,
           "catalogueNumber": catalogueNumber,
           "nickname": nickname,
+          "composerId": composerId,
           "composer": composer._fieldData,
           "movements": movements._fieldData,
         ],

@@ -5,10 +5,11 @@
 ////  Created by Michael Brandt on 7/30/24.
 ////
 //
-import Foundation
-import ApolloGQL
 import ApolloAPI
-enum Format: String, Decodable, Encodable, CaseIterable, Identifiable, Hashable, ApolloAPI.EnumType{
+import ApolloGQL
+import Foundation
+
+enum Format: String, Decodable, Encodable, CaseIterable, Identifiable, Hashable, ApolloAPI.EnumType {
     case bagatelle
     case ballade
     case canon
@@ -72,7 +73,8 @@ enum Format: String, Decodable, Encodable, CaseIterable, Identifiable, Hashable,
         try container.encode(rawValue.lowercased()) // Encode the raw value in lowercase
     }
 }
-// DELETE ME? 
+
+// DELETE ME?
 
 extension PieceFormat {
     var displayName: String {
@@ -117,10 +119,6 @@ extension PieceFormat {
         case .toccata: return "Toccata"
         case .variations: return "Variations"
         case .waltz: return "Waltz"
-        default:
-            // Fallback: convert raw value by capitalizing first letter
-            let formatted = self.rawValue.replacingOccurrences(of: "_", with: " ")
-            return formatted.prefix(1).uppercased() + formatted.dropFirst()
         }
     }
 }

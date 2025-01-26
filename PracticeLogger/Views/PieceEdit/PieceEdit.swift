@@ -6,26 +6,25 @@
 //
 
 import AlertToast
-import SwiftUI
 import ApolloGQL
-
-
+import SwiftUI
 
 struct PieceEdit: View {
     @StateObject private var viewModel: PieceEditViewModel
     @State private var showToast = false
     @State private var errorMessage = ""
     @State private var duplicatePiece: PieceDetails?
-    @Binding var path: NavigationPath
     @State private var newInstrument = ""
     @State private var newMovementName = ""
     @State private var isAddingMovement = false
     @State private var isEditingMovements = false
     @State private var editingMovementId: String? = nil
+    let onComplete: () -> Void
+    @Environment(\.dismiss) var dismiss
 
-    init(piece: PieceDetails, path: Binding<NavigationPath>) {
+    init(piece: PieceDetails, onComplete: @escaping () -> Void) {
         _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
-        _path = path
+        self.onComplete = onComplete
     }
     
     var body: some View {
@@ -110,8 +109,6 @@ struct PieceEdit: View {
         }
     }
     
-   
-
     private var catalogueSection: some View {
         Section("Meta Attributes") {
             cataloguePicker
@@ -154,7 +151,6 @@ struct PieceEdit: View {
                 .fixedSize(horizontal: false, vertical: true)
             }
         }
-
     }
     
     private var instrumentationSection: some View {
@@ -213,6 +209,7 @@ struct PieceEdit: View {
                 .keyboardType(.numberPad)
         }
     }
+
     private var compositionYearField: some View {
         HStack {
             Text("Composition Year")
@@ -248,6 +245,7 @@ struct PieceEdit: View {
             }
         }
     }
+
     private var pieceFormatPicker: some View {
         Picker("Format", selection: $viewModel.editablePiece.format) {
             Text("None").tag(nil as GraphQLEnum<ApolloGQL.PieceFormat>?)
@@ -258,87 +256,76 @@ struct PieceEdit: View {
         }
     }
    
-
-    
     private var createButton: some View {
         Button("Submit") {
             Task {
                 do {
-                    
                     let piece = try await viewModel.insertPiece()
-//                    path.removeLast()
-//                    path.append(PieceNavigationContext.userPiece(piece))
-                } catch let error as SupabaseError {
-                    errorMessage = error == .pieceAlreadyExists
-                        ? "You have already added this piece"
-                        : "An unexpected error occurred."
-                    showToast = true
+                    dismiss()
+                    onComplete()
                 } catch {
-                    errorMessage = "An unexpected error occurred."
-                    showToast = true
+                    // Error handling
                 }
             }
         }
-        .buttonStyle(.bordered)
-        .foregroundColor(.primary)
     }
 }
 
-
-
-struct PieceEdit_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            PieceEdit(
-                piece: PieceDetails(
-                    id: "12345",
-                    workName: "Symphony No. 5",
-                    catalogueType: GraphQLEnum(CatalogueType.op.rawValue),
-                    keySignature: GraphQLEnum(KeySignatureType.cminor),
-                    format: GraphQLEnum(PieceFormat.symphony.rawValue),
-                    instrumentation: ["Violin", "Cello", "Bassoon", "Chorus"],
-                    wikipediaUrl: "https://en.wikipedia.org/wiki/Symphony_No._5_(Beethoven)",
-                    imslpUrl: "https://imslp.org/wiki/Symphony_No.5,_Op.67_(Beethoven,_Ludwig_van)",
-                    compositionYear: 1804,
-                    catalogueNumber: 67,
-                    nickname: "My really really really long nickname jkl;asd",
-                    composer: PieceDetails.Composer(name: "Ludwig van Beethoven"),
-                    movements: PieceDetails.Movements(
-                        edges: [
-                            PieceDetails.Movements.Edge(
-                                node: PieceDetails.Movements.Edge.Node(
-                                    id: "1",
-                                    name: "Allegro con brio",
-                                    number: 1
-                                )
-                            ),
-                            PieceDetails.Movements.Edge(
-                                node: PieceDetails.Movements.Edge.Node(
-                                    id: "2",
-                                    name: "Andante con moto",
-                                    number: 2
-                                )
-                            ),
-                            PieceDetails.Movements.Edge(
-                                node: PieceDetails.Movements.Edge.Node(
-                                    id: "3",
-                                    name: "Scherzo: Allegro",
-                                    number: 3
-                                )
-                            ),
-                            PieceDetails.Movements.Edge(
-                                node: PieceDetails.Movements.Edge.Node(
-                                    id: "4",
-                                    name: "Allegro - Presto",
-                                    number: 4
-                                )
-                            )
-                        ]
-                    )
-                ),
-                path: .constant(NavigationPath())
-            )
-        }
-    }
-    
-}
+//
+// struct PieceEdit_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationStack {
+//            PieceEdit(
+//                piece: PieceDetails(
+//                    id: "12345",
+//                    workName: "Symphony No. 5",
+//                    catalogueType: GraphQLEnum(CatalogueType.op.rawValue),
+//                    keySignature: GraphQLEnum(KeySignatureType.cminor),
+//                    format: GraphQLEnum(PieceFormat.symphony.rawValue),
+//                    instrumentation: ["Violin", "Cello", "Bassoon", "Chorus"],
+//                    wikipediaUrl: "https://en.wikipedia.org/wiki/Symphony_No._5_(Beethoven)",
+//                    imslpUrl: "https://imslp.org/wiki/Symphony_No.5,_Op.67_(Beethoven,_Ludwig_van)",
+//                    compositionYear: 1804,
+//                    catalogueNumber: 67,
+//                    nickname: "My really really really long nickname jkl;asd",
+//                    composer: PieceDetails.Composer(name: "Ludwig van Beethoven"),
+//                    movements: PieceDetails.Movements(
+//                        edges: [
+//                            PieceDetails.Movements.Edge(
+//                                node: PieceDetails.Movements.Edge.Node(
+//                                    id: "1",
+//                                    name: "Allegro con brio",
+//                                    number: 1
+//                                )
+//                            ),
+//                            PieceDetails.Movements.Edge(
+//                                node: PieceDetails.Movements.Edge.Node(
+//                                    id: "2",
+//                                    name: "Andante con moto",
+//                                    number: 2
+//                                )
+//                            ),
+//                            PieceDetails.Movements.Edge(
+//                                node: PieceDetails.Movements.Edge.Node(
+//                                    id: "3",
+//                                    name: "Scherzo: Allegro",
+//                                    number: 3
+//                                )
+//                            ),
+//                            PieceDetails.Movements.Edge(
+//                                node: PieceDetails.Movements.Edge.Node(
+//                                    id: "4",
+//                                    name: "Allegro - Presto",
+//                                    number: 4
+//                                )
+//                            )
+//                        ]
+//                    )
+//                ),
+//                onComplete: {
+//                    print("HI")
+//                }
+//            )
+//        }
+//    }
+// }

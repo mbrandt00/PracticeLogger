@@ -129,6 +129,7 @@ enum CatalogueType {
   wq
   jw
   trv
+  mwv
 }
 
 """
@@ -430,30 +431,6 @@ type Movements implements Node {
   nickname: String
   downloadUrl: String
   piece: Pieces!
-  practiceSessionsCollection(
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """
-    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
-    """
-    offset: Int
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: PracticeSessionsFilter
-
-    """Sort order to apply to the collection"""
-    orderBy: [PracticeSessionsOrderBy!]
-  ): PracticeSessionsConnection
 }
 
 type MovementsConnection {
@@ -499,6 +476,7 @@ input MovementsFilter {
 }
 
 input MovementsInsertInput {
+  id: BigInt
   pieceId: BigInt
   name: String
   number: Int
@@ -526,6 +504,7 @@ input MovementsOrderBy {
 }
 
 input MovementsUpdateInput {
+  id: BigInt
   pieceId: BigInt
   name: String
   number: Int
@@ -600,6 +579,7 @@ type Mutation {
 
   """Adds one or more `PracticeSessions` records to the collection"""
   insertIntoPracticeSessionsCollection(objects: [PracticeSessionsInsertInput!]!): PracticeSessionsInsertResponse
+  refreshAllSearchableText: Opaque
 
   """Updates zero or more records in the `Composers` collection"""
   updateComposersCollection(
@@ -764,6 +744,7 @@ type Pieces implements Node {
   workName: String!
   composerId: BigInt
   nickname: String
+  userId: UUID!
   format: PieceFormat
   keySignature: KeySignatureType
   catalogueType: CatalogueType
@@ -782,31 +763,9 @@ type Pieces implements Node {
   subPieceType: String
   subPieceCount: Int
   imslpUrl: String
+  imslpPieceId: BigInt
   composer: Composers
-  piecesCollection(
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """
-    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
-    """
-    offset: Int
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: PiecesFilter
-
-    """Sort order to apply to the collection"""
-    orderBy: [PiecesOrderBy!]
-  ): PiecesConnection
+  imslpPiece: Pieces
   movementsCollection(
     """Query the first `n` records in the collection"""
     first: Int
@@ -831,6 +790,30 @@ type Pieces implements Node {
     """Sort order to apply to the collection"""
     orderBy: [MovementsOrderBy!]
   ): MovementsConnection
+  practiceSessionsCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """
+    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
+    """
+    offset: Int
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: PracticeSessionsFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [PracticeSessionsOrderBy!]
+  ): PracticeSessionsConnection
 }
 
 type PiecesConnection {
@@ -856,6 +839,7 @@ input PiecesFilter {
   workName: StringFilter
   composerId: BigIntFilter
   nickname: StringFilter
+  userId: UUIDFilter
   format: PieceFormatFilter
   keySignature: KeySignatureTypeFilter
   catalogueType: CatalogueTypeFilter
@@ -874,6 +858,7 @@ input PiecesFilter {
   subPieceType: StringFilter
   subPieceCount: IntFilter
   imslpUrl: StringFilter
+  imslpPieceId: BigIntFilter
   nodeId: IDFilter
 
   """
@@ -891,10 +876,10 @@ input PiecesFilter {
 }
 
 input PiecesInsertInput {
-  id: BigInt
   workName: String
   composerId: BigInt
   nickname: String
+  userId: UUID
   format: PieceFormat
   keySignature: KeySignatureType
   catalogueType: CatalogueType
@@ -913,6 +898,7 @@ input PiecesInsertInput {
   subPieceType: String
   subPieceCount: Int
   imslpUrl: String
+  imslpPieceId: BigInt
 }
 
 type PiecesInsertResponse {
@@ -928,6 +914,7 @@ input PiecesOrderBy {
   workName: OrderByDirection
   composerId: OrderByDirection
   nickname: OrderByDirection
+  userId: OrderByDirection
   format: OrderByDirection
   keySignature: OrderByDirection
   catalogueType: OrderByDirection
@@ -945,13 +932,14 @@ input PiecesOrderBy {
   subPieceType: OrderByDirection
   subPieceCount: OrderByDirection
   imslpUrl: OrderByDirection
+  imslpPieceId: OrderByDirection
 }
 
 input PiecesUpdateInput {
-  id: BigInt
   workName: String
   composerId: BigInt
   nickname: String
+  userId: UUID
   format: PieceFormat
   keySignature: KeySignatureType
   catalogueType: CatalogueType
@@ -970,6 +958,7 @@ input PiecesUpdateInput {
   subPieceType: String
   subPieceCount: Int
   imslpUrl: String
+  imslpPieceId: BigInt
 }
 
 type PiecesUpdateResponse {

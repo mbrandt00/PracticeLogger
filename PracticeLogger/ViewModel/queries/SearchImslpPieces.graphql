@@ -2,22 +2,22 @@ query SearchImslpPieces($query: String!) {
   searchImslpPieces(query: $query) {
     edges {
       node {
-        id
-        workName
+        #   id
+        #   workName
+        #   catalogueNumber
+        #   catalogueType
+        #   composerId
+        #   keySignature
+        #   movementsCollection(orderBy: { number: AscNullsLast }) {
+        #     edges {
+        #       node {
+        #         nickname
+        #         number
+        #         name
+        #       }
+        #     }
+        #   }
         ...PieceDetails
-        catalogueNumber
-        catalogueType
-        composerId
-        keySignature
-        movementsCollection(orderBy: { number: AscNullsLast }) {
-          edges {
-            node {
-              nickname
-              number
-              name
-            }
-          }
-        }
       }
     }
   }

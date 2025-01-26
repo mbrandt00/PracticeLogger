@@ -103,6 +103,7 @@
 		D1F5EE892BF8656E00E9DA23 /* Movement.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F5EE882BF8656E00E9DA23 /* Movement.swift */; };
 		D1F5EE8B2BF8662000E9DA23 /* Composer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F5EE8A2BF8662000E9DA23 /* Composer.swift */; };
 		D1F87A112CDAF10D00F5C70D /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D1F87A102CDAF10D00F5C70D /* ApolloGQL */; };
+		D1FC3D452D46065A00503FE8 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D1FC3D442D46065A00503FE8 /* ApolloGQL */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -236,6 +237,7 @@
 				D1C6B0E02B8BC81300F7B877 /* Storage in Frameworks */,
 				D1C6B0DE2B8BC81300F7B877 /* Realtime in Frameworks */,
 				D17EAA742CD586A400D9656E /* ApolloGQL in Frameworks */,
+				D1FC3D452D46065A00503FE8 /* ApolloGQL in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -516,6 +518,7 @@
 				D19188252D0617B8005D3515 /* ApolloGQL */,
 				D19188272D062677005D3515 /* ApolloGQL */,
 				D15853722D0FC4370053B0F5 /* ApolloGQL */,
+				D1FC3D442D46065A00503FE8 /* ApolloGQL */,
 			);
 			productName = PracticeLogger;
 			productReference = D19E733B2B898F9300BB3EC7 /* PracticeLogger.app */;
@@ -593,7 +596,7 @@
 				D1C6B0D62B8BC81300F7B877 /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				D15C882D2BF05E5000AAC950 /* XCRemoteSwiftPackageReference "AlertToast" */,
 				D12F1F362CFD749200235C16 /* XCRemoteSwiftPackageReference "apollo-ios" */,
-				D15853712D0FC4370053B0F5 /* XCLocalSwiftPackageReference "ApolloGQL" */,
+				D1FC3D432D46065A00503FE8 /* XCLocalSwiftPackageReference "ApolloGQL" */,
 			);
 			productRefGroup = D19E733C2B898F9300BB3EC7 /* Products */;
 			projectDirPath = "";
@@ -1075,7 +1078,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		D15853712D0FC4370053B0F5 /* XCLocalSwiftPackageReference "ApolloGQL" */ = {
+		D1FC3D432D46065A00503FE8 /* XCLocalSwiftPackageReference "ApolloGQL" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ApolloGQL;
 		};
@@ -1308,6 +1311,10 @@
 			productName = ApolloGQL;
 		};
 		D1F87A102CDAF10D00F5C70D /* ApolloGQL */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ApolloGQL;
+		};
+		D1FC3D442D46065A00503FE8 /* ApolloGQL */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ApolloGQL;
 		};

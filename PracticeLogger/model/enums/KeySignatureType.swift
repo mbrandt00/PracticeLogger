@@ -5,9 +5,10 @@
 //  Created by Michael Brandt on 7/30/24.
 //
 
-import Foundation
 import ApolloAPI
 import ApolloGQL
+import Foundation
+
 extension KeySignatureType {
     var displayName: String {
         switch self {
@@ -32,7 +33,6 @@ extension KeySignatureType {
         case .b: return "B"
         case .bsharp: return "B♯"
         case .bflat: return "B♭"
-        
         // Minor keys
         case .cminor: return "C minor"
         case .csharpminor: return "C♯ minor"

@@ -5,11 +5,29 @@
 //  Created by Michael Brandt on 5/17/24.
 //
 
+import ApolloGQL
 import Foundation
 
 struct Composer: Identifiable, Codable {
     var name: String
-    var id = Int()
+    var id: ApolloGQL.BigInt?
+
+    enum CodingKeys: String, CodingKey {
+        case name
+        case id
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        id = try container.decodeIfPresent(ApolloGQL.BigInt.self, forKey: .id)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        try container.encodeIfPresent(id, forKey: .id)
+    }
 }
 
 let staticComposers = [

@@ -1,4 +1,5 @@
 fragment PieceDetails on Pieces {
+  imslpPieceId: id
   id
   workName
   catalogueType
@@ -8,9 +9,17 @@ fragment PieceDetails on Pieces {
   wikipediaUrl
   imslpUrl
   compositionYear
+  catalogueNumberSecondary
+  catalogueTypeNumDesc
+  compositionYearDesc
+  compositionYearString
+  pieceStyle
+  subPieceType
+  subPieceCount
 
   catalogueNumber
   nickname
+  composerId
   composer {
     name
   }
@@ -19,6 +28,10 @@ fragment PieceDetails on Pieces {
       node {
         id
         name
+        keySignature
+        nickname
+        downloadUrl
+        pieceId
         number
       }
     }

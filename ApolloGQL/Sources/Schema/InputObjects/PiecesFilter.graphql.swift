@@ -15,6 +15,7 @@ public struct PiecesFilter: InputObject {
     workName: GraphQLNullable<StringFilter> = nil,
     composerId: GraphQLNullable<BigIntFilter> = nil,
     nickname: GraphQLNullable<StringFilter> = nil,
+    userId: GraphQLNullable<UUIDFilter> = nil,
     format: GraphQLNullable<PieceFormatFilter> = nil,
     keySignature: GraphQLNullable<KeySignatureTypeFilter> = nil,
     catalogueType: GraphQLNullable<CatalogueTypeFilter> = nil,
@@ -33,6 +34,7 @@ public struct PiecesFilter: InputObject {
     subPieceType: GraphQLNullable<StringFilter> = nil,
     subPieceCount: GraphQLNullable<IntFilter> = nil,
     imslpUrl: GraphQLNullable<StringFilter> = nil,
+    imslpPieceId: GraphQLNullable<BigIntFilter> = nil,
     nodeId: GraphQLNullable<IDFilter> = nil,
     and: GraphQLNullable<[PiecesFilter]> = nil,
     or: GraphQLNullable<[PiecesFilter]> = nil,
@@ -43,6 +45,7 @@ public struct PiecesFilter: InputObject {
       "workName": workName,
       "composerId": composerId,
       "nickname": nickname,
+      "userId": userId,
       "format": format,
       "keySignature": keySignature,
       "catalogueType": catalogueType,
@@ -61,6 +64,7 @@ public struct PiecesFilter: InputObject {
       "subPieceType": subPieceType,
       "subPieceCount": subPieceCount,
       "imslpUrl": imslpUrl,
+      "imslpPieceId": imslpPieceId,
       "nodeId": nodeId,
       "and": and,
       "or": or,
@@ -86,6 +90,11 @@ public struct PiecesFilter: InputObject {
   public var nickname: GraphQLNullable<StringFilter> {
     get { __data["nickname"] }
     set { __data["nickname"] = newValue }
+  }
+
+  public var userId: GraphQLNullable<UUIDFilter> {
+    get { __data["userId"] }
+    set { __data["userId"] = newValue }
   }
 
   public var format: GraphQLNullable<PieceFormatFilter> {
@@ -176,6 +185,11 @@ public struct PiecesFilter: InputObject {
   public var imslpUrl: GraphQLNullable<StringFilter> {
     get { __data["imslpUrl"] }
     set { __data["imslpUrl"] = newValue }
+  }
+
+  public var imslpPieceId: GraphQLNullable<BigIntFilter> {
+    get { __data["imslpPieceId"] }
+    set { __data["imslpPieceId"] = newValue }
   }
 
   public var nodeId: GraphQLNullable<IDFilter> {
