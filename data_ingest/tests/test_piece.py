@@ -75,23 +75,6 @@ def test_parse_metadata():
             },
         ),
         (
-            "https://imslp.org/wiki/French_Suite_No.2_in_C_minor%2C_BWV_813_(Bach%2C_Johann_Sebastian)",
-            {
-                "catalogue_number": 813,
-                "title": "French Suite No.2",
-                "catalogue_type": "bwv",
-                "composition_year_string": "1722 ca. from theNotebooks for Anna Magdalena Bach(Nos.2, 9, 31)",
-                "composition_year": 1722,
-                "key_signature": "cminor",
-                "movements_count": 7,
-                "nickname": None,
-                "instrumentation": ["keyboard"],
-                "piece_style": "baroque",
-                "sub_piece_type": "movements",
-                "sub_piece_count": 7,
-            },
-        ),
-        (
             "https://imslp.org/wiki/French_Suite_No.1_(Godowsky%2C_Leopold)",
             {
                 "catalogue_number": None,

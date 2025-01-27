@@ -58,58 +58,84 @@ def parse_movements_section(td_text: str) -> Tuple[Optional[int], Optional[str]]
 
     Returns:
         Tuple containing:
-        - count: The number of movements/sections (largest number if multiple found)
+        - count: The number of movements/sections (largest number found)
         - type: The type of sections (e.g. 'movements', 'preludes', 'variations')
     """
-    parsed_data = td_text.split()
+    import re
+    
+    # First remove content in parentheses and after BWV
+    cleaned_text = re.sub(r'\([^)]*\)', '', td_text)  # Remove parenthetical content
+    cleaned_text = re.sub(r'BWV\s*\d+[a-z]?', '', cleaned_text)  # Remove BWV numbers
+    
+    # Expanded type patterns
+    type_patterns = {
+        r'piece': 'pieces',
+        r'movement': 'movements',
+        r'prelude': 'preludes',
+        r'variation': 'variations',
+        r'[ée]tude': 'etudes',
+        r'arabesque': 'arabesques',
+        r'ballade': 'ballades',
+        r'nocturne': 'nocturnes',
+        r'act': 'acts',
+        r'song': 'songs',
+        r'improvisation': 'improvisations',
+        r'intermezzo': 'intermezzi',
+        r'caprice': 'caprices',
+        r'fantasy': 'fantasies',
+        r'scherzo': 'scherzos'
+    }
+    
+    # Create the simple pattern with all possible types
+    type_alternatives = '|'.join(f'{pattern}s?' for pattern in type_patterns.keys())
+    simple_pattern = fr'(\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\s*({type_alternatives})'
+    
+    # Number word to digit mapping
+    number_words = {
+        'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5,
+        'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10,
+        'eleven': 11, 'twelve': 12
+    }
+    
+    match = re.search(simple_pattern, cleaned_text.lower())
+    
     numbers = []
-    current_type = None
-
-    # First check for common types at the end of the first line
-    first_line = td_text.split("\n")[0].strip().lower()
-    for type_word in ["movements", "pieces", "preludes", "variations"]:
-        if first_line.endswith(type_word):
-            current_type = type_word
-            break
-
-    # Iterate through words to find numbers and potential types
-    in_parentheses = False
-    for i, word in enumerate(parsed_data):
-        # Skip content in parentheses
-        if "(" in word:
-            in_parentheses = True
-            continue
-        if ")" in word:
-            in_parentheses = False
-            continue
-        if in_parentheses:
-            continue
-
-        # Try to parse number
-        try:
-            num = int(word)
-            numbers.append(num)
-            # Only look for type if we haven't already found it
-            if not current_type and i + 1 < len(parsed_data):
-                next_word = parsed_data[i + 1].lower().rstrip(",:")
-                if next_word != "or" and "(" not in next_word:
-                    current_type = next_word
-        except ValueError:
-            # If word is "or", continue looking
-            if word.lower() == "or":
-                continue
-            # If we already found numbers but no type yet, this might be the type
-            elif numbers and not current_type and "(" not in word and ")" not in word:
-                current_type = word.lower().strip(",:")
-
-    # Clean up the type - remove any trailing characters
-    if current_type:
-        current_type = current_type.rstrip("o")  # Remove any trailing 'o'
-        current_type = current_type.strip()  # Remove any whitespace
-
+    piece_type = None
+    
+    if match:
+        # Convert number words to digits if necessary
+        num = match.group(1)
+        numbers.append(int(number_words.get(num, num)))
+        
+        # Find the matching type
+        matched_text = match.group(2).lower()
+        for pattern, type_value in type_patterns.items():
+            if re.search(pattern, matched_text):
+                piece_type = type_value
+                break
+    else:
+        # If simple pattern fails, look for standalone numbers
+        number_pattern = r'\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\b'
+        for num in re.findall(number_pattern, cleaned_text.lower()):
+            numbers.append(int(number_words.get(num, num)))
+        
+        # Try to find type separately
+        for pattern, type_value in type_patterns.items():
+            if re.search(pattern, cleaned_text.lower()):
+                piece_type = type_value
+                break
+    
+    # If we found numbers but no type
+    if numbers and not piece_type:
+        # Look for specific indicators before defaulting to movements
+        if re.search(r'opera|acts?', cleaned_text.lower()):
+            piece_type = 'acts'
+        else:
+            piece_type = 'movements'  # Default case
+        
     count = max(numbers) if numbers else None
-    return count, current_type
-
+    
+    return count, piece_type
 
 def create_piece(
     data: Optional[Tag] = None, url: Optional[str] = None
@@ -127,12 +153,32 @@ def create_piece(
             logging.error(f"Request failed for {url}: {str(e)}")
             return None
 
-
     if not data:
         raise ValueError("Beautiful soup object could not be initialized")
 
-    general_info_div = data.find("div", class_="wi_body")
+    # First get the movements/sections information
+    top_header = data.find("div", class_="wp_header")
+    sub_piece_count = None
+    sub_piece_type = None
+    
+    if isinstance(top_header, Tag):
+        for row in top_header.find_all("tr"):
+            th = row.find("th")
+            td = row.find("td")
+            if th and td:
+                th_text = th.get_text(strip=True)
+                if "Movements/Sections" in th_text:
+                    td_text = td.get_text(strip=True)
+                    print("Raw movements text:", repr(td_text))  # Debug print
+                    count, section_type = parse_movements_section(td_text)
+                    print("Parsed count:", count)  # Debug print
+                    print("Parsed type:", section_type)  # Debug print
+                    sub_piece_count = count
+                    sub_piece_type = section_type
+                    break
 
+    # Then process the general info
+    general_info_div = data.find("div", class_="wi_body")
     metadata = {}
     wiki_url = None
     if isinstance(general_info_div, Tag):
@@ -150,7 +196,14 @@ def create_piece(
 
     meta_attributes = parse_metadata(metadata)
     movements = parse_movements(data)
+    
     if meta_attributes:
+        # Override the metadata's sub_piece information with what we parsed
+        if sub_piece_type:
+            meta_attributes["sub_piece_type"] = sub_piece_type
+        if sub_piece_count:
+            meta_attributes["sub_piece_count"] = sub_piece_count
+
         piece = Piece(
             work_name=meta_attributes["work_title"],
             composer_name=meta_attributes["composer_name"],
@@ -172,20 +225,6 @@ def create_piece(
 
         if url:
             piece.imslp_url = url
-
-        top_header = data.find("div", class_="wp_header")
-
-        if isinstance(top_header, Tag):
-            for row in top_header.find_all("tr"):
-                th = row.find("th")
-                td = row.find("td")
-                if th and td:
-                    th_text = th.get_text(strip=True)
-                    if "Movements/Sections" in th_text:
-                        td_text = td.get_text(strip=True)
-                        count, section_type = parse_movements_section(td_text)
-                        piece.sub_piece_count = count
-                        piece.sub_piece_type = section_type
 
         return piece
 
