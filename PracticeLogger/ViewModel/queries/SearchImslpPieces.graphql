@@ -1,5 +1,5 @@
-query SearchImslpPieces($query: String!) {
-  searchImslpPieces(query: $query) {
+query SearchImslpPieces($query: String!, $filterUserPieces: Boolean = false) {
+  searchImslpPieces(query: $query, filterUserPieces: $filterUserPieces) {
     edges {
       node {
         #   id

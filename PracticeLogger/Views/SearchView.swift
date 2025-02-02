@@ -30,7 +30,7 @@ struct SearchView: View {
                     ForEach(searchViewModel.newPieces, id: \.id) { piece in
                         Button(action: {
                             searchViewModel.selectedPiece = piece
-                        }) {
+                        }, label: {
                             HStack {
                                 VStack(alignment: .leading) {
                                     Text(piece.workName)
@@ -48,8 +48,7 @@ struct SearchView: View {
                                     .foregroundColor(.gray)
                             }
                             .contentShape(Rectangle())
-                        }
-                        .buttonStyle(.plain)
+                        })
                     }
                     .sheet(item: $searchViewModel.selectedPiece) { piece in
                         NavigationStack {
@@ -66,10 +65,6 @@ struct SearchView: View {
         }
     }
 }
-
-// #Preview {
-//    SearchView(searchViewModel: SearchViewModel())
-// }
 
 enum PieceNavigationContext: Hashable {
     case userPiece(PieceDetails)

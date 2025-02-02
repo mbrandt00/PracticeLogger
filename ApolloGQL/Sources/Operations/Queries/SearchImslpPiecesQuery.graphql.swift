@@ -7,17 +7,25 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
   public static let operationName: String = "SearchImslpPieces"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query SearchImslpPieces($query: String!) { searchImslpPieces(query: $query) { __typename edges { __typename node { __typename ...ImslpPieceDetails } } } }"#,
+      #"query SearchImslpPieces($query: String!, $filterUserPieces: Boolean = false) { searchImslpPieces(query: $query, filterUserPieces: $filterUserPieces) { __typename edges { __typename node { __typename ...ImslpPieceDetails } } } }"#,
       fragments: [ImslpPieceDetails.self]
     ))
 
   public var query: String
+  public var filterUserPieces: GraphQLNullable<Bool>
 
-  public init(query: String) {
+  public init(
+    query: String,
+    filterUserPieces: GraphQLNullable<Bool> = false
+  ) {
     self.query = query
+    self.filterUserPieces = filterUserPieces
   }
 
-  public var __variables: Variables? { ["query": query] }
+  public var __variables: Variables? { [
+    "query": query,
+    "filterUserPieces": filterUserPieces
+  ] }
 
   public struct Data: ApolloGQL.SelectionSet {
     public let __data: DataDict
@@ -25,7 +33,10 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
 
     public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Query }
     public static var __selections: [ApolloAPI.Selection] { [
-      .field("searchImslpPieces", SearchImslpPieces?.self, arguments: ["query": .variable("query")]),
+      .field("searchImslpPieces", SearchImslpPieces?.self, arguments: [
+        "query": .variable("query"),
+        "filterUserPieces": .variable("filterUserPieces")
+      ]),
     ] }
 
     public var searchImslpPieces: SearchImslpPieces? { __data["searchImslpPieces"] }

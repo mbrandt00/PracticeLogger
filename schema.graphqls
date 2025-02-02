@@ -1667,6 +1667,7 @@ type Query {
   ): PracticeSessionsConnection
   searchImslpPieces(
     query: String!
+    filterUserPieces: Boolean = false
 
     """Query the first `n` records in the collection"""
     first: Int

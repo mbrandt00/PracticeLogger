@@ -116,7 +116,7 @@ CREATE INDEX IF NOT EXISTS idx_pieces_searchable_text_trgm
 ON imslp.pieces USING gin (searchable_text gin_trgm_ops);
 
 -- Main search function
-CREATE OR REPLACE FUNCTION imslp.search_imslp_pieces(query text) 
+CREATE OR REPLACE FUNCTION imslp.search_imslp_pieces(query text, filter_user_pieces boolean DEFAULT false) 
 RETURNS SETOF imslp.pieces AS $$
     WITH terms AS (
         SELECT unnest(string_to_array(lower(unaccent(query)), ' ')) as term
@@ -127,6 +127,15 @@ RETURNS SETOF imslp.pieces AS $$
     AND NOT EXISTS (
         SELECT 1 FROM terms
         WHERE lower(p.searchable_text) NOT LIKE '%' || term || '%'
+    )
+    AND (
+        NOT filter_user_pieces 
+        OR NOT EXISTS (
+            SELECT 1 
+            FROM public.pieces up 
+            WHERE up.imslp_piece_id = p.id 
+            AND up.user_id = auth.uid()
+        )
     )
     ORDER BY similarity(p.searchable_text, unaccent(query)) DESC;
 $$ LANGUAGE sql STABLE SECURITY DEFINER;

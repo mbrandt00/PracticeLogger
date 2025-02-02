@@ -71,9 +71,8 @@ class SearchViewModel: ObservableObject {
 //        }
 //    }
     func searchImslpPieces() async throws -> [ImslpPieceDetails]? {
-        print("in func")
         return try await withCheckedThrowingContinuation { continuation in
-            Network.shared.apollo.fetch(query: SearchImslpPiecesQuery(query: searchTerm)) { result in
+            Network.shared.apollo.fetch(query: SearchImslpPiecesQuery(query: searchTerm, filterUserPieces: true)) { result in
                 switch result {
                 case .success(let graphQlResult):
                     if let data = graphQlResult.data?.searchImslpPieces {
