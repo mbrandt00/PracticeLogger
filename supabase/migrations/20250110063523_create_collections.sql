@@ -30,3 +30,4 @@ FOREIGN KEY (collection_id) REFERENCES imslp.collections(id);
 COMMENT ON CONSTRAINT fk_imslp_pieces_to_collection 
   ON imslp.pieces 
   IS E'@graphql({"foreign_name": "collection", "local_name": "pieces"})';
+

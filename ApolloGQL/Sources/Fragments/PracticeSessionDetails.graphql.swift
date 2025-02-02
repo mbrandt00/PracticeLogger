@@ -51,12 +51,12 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
 
   /// Movement
   ///
-  /// Parent Type: `Movements`
+  /// Parent Type: `Movement`
   public struct Movement: ApolloGQL.SelectionSet {
     public let __data: DataDict
     public init(_dataDict: DataDict) { __data = _dataDict }
 
-    public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Movements }
+    public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Movement }
     public static var __selections: [ApolloAPI.Selection] { [
       .field("__typename", String.self),
       .field("id", ApolloGQL.BigInt.self),
@@ -75,7 +75,7 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
     ) {
       self.init(_dataDict: DataDict(
         data: [
-          "__typename": ApolloGQL.Objects.Movements.typename,
+          "__typename": ApolloGQL.Objects.Movement.typename,
           "id": id,
           "name": name,
           "number": number,
@@ -89,12 +89,12 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
 
   /// Piece
   ///
-  /// Parent Type: `Pieces`
+  /// Parent Type: `Piece`
   public struct Piece: ApolloGQL.SelectionSet {
     public let __data: DataDict
     public init(_dataDict: DataDict) { __data = _dataDict }
 
-    public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Pieces }
+    public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Piece }
     public static var __selections: [ApolloAPI.Selection] { [
       .field("__typename", String.self),
       .fragment(PieceDetails.self),
@@ -156,7 +156,7 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
     ) {
       self.init(_dataDict: DataDict(
         data: [
-          "__typename": ApolloGQL.Objects.Pieces.typename,
+          "__typename": ApolloGQL.Objects.Piece.typename,
           "imslpPieceId": imslpPieceId,
           "id": id,
           "workName": workName,

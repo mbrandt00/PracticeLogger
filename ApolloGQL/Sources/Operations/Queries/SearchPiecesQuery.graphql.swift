@@ -7,16 +7,16 @@ public class SearchPiecesQuery: GraphQLQuery {
   public static let operationName: String = "SearchPieces"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query SearchPieces($query: String!, $pieceFilter: PiecesFilter) { searchPieceWithAssociations(query: $query, filter: $pieceFilter) { __typename edges { __typename node { __typename ...PieceDetails } } } }"#,
+      #"query SearchPieces($query: String!, $pieceFilter: PieceFilter) { searchPieceWithAssociations(query: $query, filter: $pieceFilter) { __typename edges { __typename node { __typename ...PieceDetails } } } }"#,
       fragments: [PieceDetails.self]
     ))
 
   public var query: String
-  public var pieceFilter: GraphQLNullable<PiecesFilter>
+  public var pieceFilter: GraphQLNullable<PieceFilter>
 
   public init(
     query: String,
-    pieceFilter: GraphQLNullable<PiecesFilter>
+    pieceFilter: GraphQLNullable<PieceFilter>
   ) {
     self.query = query
     self.pieceFilter = pieceFilter
@@ -57,12 +57,12 @@ public class SearchPiecesQuery: GraphQLQuery {
 
     /// SearchPieceWithAssociations
     ///
-    /// Parent Type: `PiecesConnection`
+    /// Parent Type: `PieceConnection`
     public struct SearchPieceWithAssociations: ApolloGQL.SelectionSet {
       public let __data: DataDict
       public init(_dataDict: DataDict) { __data = _dataDict }
 
-      public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.PiecesConnection }
+      public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.PieceConnection }
       public static var __selections: [ApolloAPI.Selection] { [
         .field("__typename", String.self),
         .field("edges", [Edge].self),
@@ -75,7 +75,7 @@ public class SearchPiecesQuery: GraphQLQuery {
       ) {
         self.init(_dataDict: DataDict(
           data: [
-            "__typename": ApolloGQL.Objects.PiecesConnection.typename,
+            "__typename": ApolloGQL.Objects.PieceConnection.typename,
             "edges": edges._fieldData,
           ],
           fulfilledFragments: [
@@ -86,12 +86,12 @@ public class SearchPiecesQuery: GraphQLQuery {
 
       /// SearchPieceWithAssociations.Edge
       ///
-      /// Parent Type: `PiecesEdge`
+      /// Parent Type: `PieceEdge`
       public struct Edge: ApolloGQL.SelectionSet {
         public let __data: DataDict
         public init(_dataDict: DataDict) { __data = _dataDict }
 
-        public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.PiecesEdge }
+        public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.PieceEdge }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
           .field("node", Node.self),
@@ -104,7 +104,7 @@ public class SearchPiecesQuery: GraphQLQuery {
         ) {
           self.init(_dataDict: DataDict(
             data: [
-              "__typename": ApolloGQL.Objects.PiecesEdge.typename,
+              "__typename": ApolloGQL.Objects.PieceEdge.typename,
               "node": node._fieldData,
             ],
             fulfilledFragments: [
@@ -115,12 +115,12 @@ public class SearchPiecesQuery: GraphQLQuery {
 
         /// SearchPieceWithAssociations.Edge.Node
         ///
-        /// Parent Type: `Pieces`
+        /// Parent Type: `Piece`
         public struct Node: ApolloGQL.SelectionSet {
           public let __data: DataDict
           public init(_dataDict: DataDict) { __data = _dataDict }
 
-          public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Pieces }
+          public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Piece }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
             .fragment(PieceDetails.self),
@@ -182,7 +182,7 @@ public class SearchPiecesQuery: GraphQLQuery {
           ) {
             self.init(_dataDict: DataDict(
               data: [
-                "__typename": ApolloGQL.Objects.Pieces.typename,
+                "__typename": ApolloGQL.Objects.Piece.typename,
                 "imslpPieceId": imslpPieceId,
                 "id": id,
                 "workName": workName,

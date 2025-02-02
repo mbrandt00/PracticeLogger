@@ -4,8 +4,8 @@
 import ApolloAPI
 
 public extension Objects {
-  static let Pieces = ApolloAPI.Object(
-    typename: "Pieces",
+  static let ImslpPiece = ApolloAPI.Object(
+    typename: "ImslpPiece",
     implementedInterfaces: [Interfaces.Node.self]
   )
 }

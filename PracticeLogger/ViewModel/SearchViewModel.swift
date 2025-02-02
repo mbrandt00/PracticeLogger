@@ -13,9 +13,9 @@ class SearchViewModel: ObservableObject {
     @Published var searchTerm = ""
     @Published var isFocused: Bool = false
     @Published var selectedKeySignature: KeySignatureType?
+    @Published var selectedPiece: ImslpPieceDetails? = nil
     @Published var userPieces: [PieceDetails] = []
-    @Published var showingSheet: Bool = false
-    @Published var newPieces: [PieceDetails] = []
+    @Published var newPieces: [ImslpPieceDetails] = []
     private var cancellables = Set<AnyCancellable>()
 
 //    @MainActor
@@ -72,7 +72,7 @@ class SearchViewModel: ObservableObject {
 //            }
 //        }
 //    }
-    func searchImslpPieces() async throws -> [PieceDetails]? {
+    func searchImslpPieces() async throws -> [ImslpPieceDetails]? {
         print("in func")
         return try await withCheckedThrowingContinuation { continuation in
             Network.shared.apollo.fetch(query: SearchImslpPiecesQuery(query: searchTerm)) { result in
@@ -81,7 +81,7 @@ class SearchViewModel: ObservableObject {
                     if let data = graphQlResult.data?.searchImslpPieces {
                         print(data)
                         let pieces = data.edges.map { edge in
-                            edge.node.fragments.pieceDetails
+                            edge.node.fragments.imslpPieceDetails // make these conform together with protocol...
                         }
                         print("pieces", pieces)
                         continuation.resume(returning: pieces)
@@ -98,3 +98,4 @@ class SearchViewModel: ObservableObject {
 }
 
 extension SearchImslpPiecesQuery.Data.SearchImslpPieces.Edge.Node: Identifiable {}
+extension ImslpPieceDetails: Identifiable {}

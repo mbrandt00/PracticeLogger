@@ -17,7 +17,7 @@ query SearchImslpPieces($query: String!) {
         #       }
         #     }
         #   }
-        ...PieceDetails
+        ...ImslpPieceDetails
       }
     }
   }

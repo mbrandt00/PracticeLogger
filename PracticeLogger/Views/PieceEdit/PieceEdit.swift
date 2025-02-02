@@ -18,13 +18,12 @@ struct PieceEdit: View {
     @State private var newMovementName = ""
     @State private var isAddingMovement = false
     @State private var isEditingMovements = false
-    @State private var editingMovementId: String? = nil
-    let onComplete: () -> Void
+    @State private var editingMovementId: ApolloGQL.BigInt? = nil
+
     @Environment(\.dismiss) var dismiss
 
-    init(piece: PieceDetails, onComplete: @escaping () -> Void) {
+    init(piece: ImslpPieceDetails, onComplete: @escaping () -> Void) {
         _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
-        self.onComplete = onComplete
     }
     
     var body: some View {
@@ -262,9 +261,9 @@ struct PieceEdit: View {
                 do {
                     let piece = try await viewModel.insertPiece()
                     dismiss()
-                    onComplete()
+
                 } catch {
-                    // Error handling
+                    print(error)
                 }
             }
         }

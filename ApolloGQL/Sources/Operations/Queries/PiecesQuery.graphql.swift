@@ -7,13 +7,13 @@ public class PiecesQuery: GraphQLQuery {
   public static let operationName: String = "PiecesQuery"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query PiecesQuery($pieceFilter: PiecesFilter!) { piecesCollection(filter: $pieceFilter) { __typename edges { __typename node { __typename ...PieceDetails } } } }"#,
+      #"query PiecesQuery($pieceFilter: PieceFilter!) { pieceCollection(filter: $pieceFilter) { __typename edges { __typename node { __typename ...PieceDetails } } } }"#,
       fragments: [PieceDetails.self]
     ))
 
-  public var pieceFilter: PiecesFilter
+  public var pieceFilter: PieceFilter
 
-  public init(pieceFilter: PiecesFilter) {
+  public init(pieceFilter: PieceFilter) {
     self.pieceFilter = pieceFilter
   }
 
@@ -25,19 +25,19 @@ public class PiecesQuery: GraphQLQuery {
 
     public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Query }
     public static var __selections: [ApolloAPI.Selection] { [
-      .field("piecesCollection", PiecesCollection?.self, arguments: ["filter": .variable("pieceFilter")]),
+      .field("pieceCollection", PieceCollection?.self, arguments: ["filter": .variable("pieceFilter")]),
     ] }
 
-    /// A pagable collection of type `Pieces`
-    public var piecesCollection: PiecesCollection? { __data["piecesCollection"] }
+    /// A pagable collection of type `Piece`
+    public var pieceCollection: PieceCollection? { __data["pieceCollection"] }
 
     public init(
-      piecesCollection: PiecesCollection? = nil
+      pieceCollection: PieceCollection? = nil
     ) {
       self.init(_dataDict: DataDict(
         data: [
           "__typename": ApolloGQL.Objects.Query.typename,
-          "piecesCollection": piecesCollection._fieldData,
+          "pieceCollection": pieceCollection._fieldData,
         ],
         fulfilledFragments: [
           ObjectIdentifier(PiecesQuery.Data.self)
@@ -45,14 +45,14 @@ public class PiecesQuery: GraphQLQuery {
       ))
     }
 
-    /// PiecesCollection
+    /// PieceCollection
     ///
-    /// Parent Type: `PiecesConnection`
-    public struct PiecesCollection: ApolloGQL.SelectionSet {
+    /// Parent Type: `PieceConnection`
+    public struct PieceCollection: ApolloGQL.SelectionSet {
       public let __data: DataDict
       public init(_dataDict: DataDict) { __data = _dataDict }
 
-      public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.PiecesConnection }
+      public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.PieceConnection }
       public static var __selections: [ApolloAPI.Selection] { [
         .field("__typename", String.self),
         .field("edges", [Edge].self),
@@ -65,23 +65,23 @@ public class PiecesQuery: GraphQLQuery {
       ) {
         self.init(_dataDict: DataDict(
           data: [
-            "__typename": ApolloGQL.Objects.PiecesConnection.typename,
+            "__typename": ApolloGQL.Objects.PieceConnection.typename,
             "edges": edges._fieldData,
           ],
           fulfilledFragments: [
-            ObjectIdentifier(PiecesQuery.Data.PiecesCollection.self)
+            ObjectIdentifier(PiecesQuery.Data.PieceCollection.self)
           ]
         ))
       }
 
-      /// PiecesCollection.Edge
+      /// PieceCollection.Edge
       ///
-      /// Parent Type: `PiecesEdge`
+      /// Parent Type: `PieceEdge`
       public struct Edge: ApolloGQL.SelectionSet {
         public let __data: DataDict
         public init(_dataDict: DataDict) { __data = _dataDict }
 
-        public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.PiecesEdge }
+        public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.PieceEdge }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
           .field("node", Node.self),
@@ -94,23 +94,23 @@ public class PiecesQuery: GraphQLQuery {
         ) {
           self.init(_dataDict: DataDict(
             data: [
-              "__typename": ApolloGQL.Objects.PiecesEdge.typename,
+              "__typename": ApolloGQL.Objects.PieceEdge.typename,
               "node": node._fieldData,
             ],
             fulfilledFragments: [
-              ObjectIdentifier(PiecesQuery.Data.PiecesCollection.Edge.self)
+              ObjectIdentifier(PiecesQuery.Data.PieceCollection.Edge.self)
             ]
           ))
         }
 
-        /// PiecesCollection.Edge.Node
+        /// PieceCollection.Edge.Node
         ///
-        /// Parent Type: `Pieces`
+        /// Parent Type: `Piece`
         public struct Node: ApolloGQL.SelectionSet {
           public let __data: DataDict
           public init(_dataDict: DataDict) { __data = _dataDict }
 
-          public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Pieces }
+          public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Piece }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
             .fragment(PieceDetails.self),
@@ -172,7 +172,7 @@ public class PiecesQuery: GraphQLQuery {
           ) {
             self.init(_dataDict: DataDict(
               data: [
-                "__typename": ApolloGQL.Objects.Pieces.typename,
+                "__typename": ApolloGQL.Objects.Piece.typename,
                 "imslpPieceId": imslpPieceId,
                 "id": id,
                 "workName": workName,
@@ -197,7 +197,7 @@ public class PiecesQuery: GraphQLQuery {
                 "movements": movements._fieldData,
               ],
               fulfilledFragments: [
-                ObjectIdentifier(PiecesQuery.Data.PiecesCollection.Edge.Node.self),
+                ObjectIdentifier(PiecesQuery.Data.PieceCollection.Edge.Node.self),
                 ObjectIdentifier(PieceDetails.self)
               ]
             ))

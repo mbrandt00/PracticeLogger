@@ -3,7 +3,7 @@
 
 import ApolloAPI
 
-public struct PiecesInsertInput: InputObject {
+public struct PieceInsertInput: InputObject {
   public private(set) var __data: InputDict
 
   public init(_ data: InputDict) {

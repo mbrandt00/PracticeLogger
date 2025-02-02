@@ -7,8 +7,8 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
   public static let operationName: String = "SearchImslpPieces"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query SearchImslpPieces($query: String!) { searchImslpPieces(query: $query) { __typename edges { __typename node { __typename ...PieceDetails } } } }"#,
-      fragments: [PieceDetails.self]
+      #"query SearchImslpPieces($query: String!) { searchImslpPieces(query: $query) { __typename edges { __typename node { __typename ...ImslpPieceDetails } } } }"#,
+      fragments: [ImslpPieceDetails.self]
     ))
 
   public var query: String
@@ -46,12 +46,12 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
 
     /// SearchImslpPieces
     ///
-    /// Parent Type: `PiecesConnection`
+    /// Parent Type: `ImslpPieceConnection`
     public struct SearchImslpPieces: ApolloGQL.SelectionSet {
       public let __data: DataDict
       public init(_dataDict: DataDict) { __data = _dataDict }
 
-      public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.PiecesConnection }
+      public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.ImslpPieceConnection }
       public static var __selections: [ApolloAPI.Selection] { [
         .field("__typename", String.self),
         .field("edges", [Edge].self),
@@ -64,7 +64,7 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
       ) {
         self.init(_dataDict: DataDict(
           data: [
-            "__typename": ApolloGQL.Objects.PiecesConnection.typename,
+            "__typename": ApolloGQL.Objects.ImslpPieceConnection.typename,
             "edges": edges._fieldData,
           ],
           fulfilledFragments: [
@@ -75,12 +75,12 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
 
       /// SearchImslpPieces.Edge
       ///
-      /// Parent Type: `PiecesEdge`
+      /// Parent Type: `ImslpPieceEdge`
       public struct Edge: ApolloGQL.SelectionSet {
         public let __data: DataDict
         public init(_dataDict: DataDict) { __data = _dataDict }
 
-        public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.PiecesEdge }
+        public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.ImslpPieceEdge }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
           .field("node", Node.self),
@@ -93,7 +93,7 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
         ) {
           self.init(_dataDict: DataDict(
             data: [
-              "__typename": ApolloGQL.Objects.PiecesEdge.typename,
+              "__typename": ApolloGQL.Objects.ImslpPieceEdge.typename,
               "node": node._fieldData,
             ],
             fulfilledFragments: [
@@ -104,15 +104,15 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
 
         /// SearchImslpPieces.Edge.Node
         ///
-        /// Parent Type: `Pieces`
+        /// Parent Type: `ImslpPiece`
         public struct Node: ApolloGQL.SelectionSet {
           public let __data: DataDict
           public init(_dataDict: DataDict) { __data = _dataDict }
 
-          public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Pieces }
+          public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.ImslpPiece }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
-            .fragment(PieceDetails.self),
+            .fragment(ImslpPieceDetails.self),
           ] }
 
           public var imslpPieceId: ApolloGQL.BigInt { __data["imslpPieceId"] }
@@ -142,7 +142,7 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
             public let __data: DataDict
             public init(_dataDict: DataDict) { __data = _dataDict }
 
-            public var pieceDetails: PieceDetails { _toFragment() }
+            public var imslpPieceDetails: ImslpPieceDetails { _toFragment() }
           }
 
           public init(
@@ -171,7 +171,7 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
           ) {
             self.init(_dataDict: DataDict(
               data: [
-                "__typename": ApolloGQL.Objects.Pieces.typename,
+                "__typename": ApolloGQL.Objects.ImslpPiece.typename,
                 "imslpPieceId": imslpPieceId,
                 "id": id,
                 "workName": workName,
@@ -197,14 +197,14 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
               ],
               fulfilledFragments: [
                 ObjectIdentifier(SearchImslpPiecesQuery.Data.SearchImslpPieces.Edge.Node.self),
-                ObjectIdentifier(PieceDetails.self)
+                ObjectIdentifier(ImslpPieceDetails.self)
               ]
             ))
           }
 
-          public typealias Composer = PieceDetails.Composer
+          public typealias Composer = ImslpPieceDetails.Composer
 
-          public typealias Movements = PieceDetails.Movements
+          public typealias Movements = ImslpPieceDetails.Movements
         }
       }
     }

@@ -1,4 +1,4 @@
-fragment PieceDetails on Piece {
+fragment ImslpPieceDetails on ImslpPiece {
   imslpPieceId: id
   id
   workName
@@ -23,7 +23,7 @@ fragment PieceDetails on Piece {
   composer {
     name
   }
-  movements: movementCollection(orderBy: [{ number: AscNullsLast }]) {
+  movements: imslpMovementCollection(orderBy: [{ number: AscNullsLast }]) {
     edges {
       node {
         id

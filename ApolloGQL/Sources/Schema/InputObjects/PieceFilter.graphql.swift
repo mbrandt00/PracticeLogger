@@ -3,7 +3,7 @@
 
 import ApolloAPI
 
-public struct PiecesFilter: InputObject {
+public struct PieceFilter: InputObject {
   public private(set) var __data: InputDict
 
   public init(_ data: InputDict) {
@@ -36,9 +36,9 @@ public struct PiecesFilter: InputObject {
     imslpUrl: GraphQLNullable<StringFilter> = nil,
     imslpPieceId: GraphQLNullable<BigIntFilter> = nil,
     nodeId: GraphQLNullable<IDFilter> = nil,
-    and: GraphQLNullable<[PiecesFilter]> = nil,
-    or: GraphQLNullable<[PiecesFilter]> = nil,
-    not: GraphQLNullable<PiecesFilter> = nil
+    and: GraphQLNullable<[PieceFilter]> = nil,
+    or: GraphQLNullable<[PieceFilter]> = nil,
+    not: GraphQLNullable<PieceFilter> = nil
   ) {
     __data = InputDict([
       "id": id,
@@ -198,19 +198,19 @@ public struct PiecesFilter: InputObject {
   }
 
   /// Returns true only if all its inner filters are true, otherwise returns false
-  public var and: GraphQLNullable<[PiecesFilter]> {
+  public var and: GraphQLNullable<[PieceFilter]> {
     get { __data["and"] }
     set { __data["and"] = newValue }
   }
 
   /// Returns true if at least one of its inner filters is true, otherwise returns false
-  public var or: GraphQLNullable<[PiecesFilter]> {
+  public var or: GraphQLNullable<[PieceFilter]> {
     get { __data["or"] }
     set { __data["or"] = newValue }
   }
 
   /// Negates a filter
-  public var not: GraphQLNullable<PiecesFilter> {
+  public var not: GraphQLNullable<PieceFilter> {
     get { __data["not"] }
     set { __data["not"] = newValue }
   }

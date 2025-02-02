@@ -29,7 +29,7 @@ struct SearchView: View {
                 Section(header: Text("New Pieces")) {
                     ForEach(searchViewModel.newPieces, id: \.id) { piece in
                         Button(action: {
-                            searchViewModel.showingSheet.toggle()
+                            searchViewModel.selectedPiece = piece
                         }) {
                             HStack {
                                 VStack(alignment: .leading) {
@@ -50,10 +50,11 @@ struct SearchView: View {
                             .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
-                        .sheet(isPresented: $searchViewModel.showingSheet) {
-                            NavigationStack {
-                                PieceEdit(piece: piece, onComplete: { print("")
-                                })
+                    }
+                    .sheet(item: $searchViewModel.selectedPiece) { piece in // Use sheet(item:) instead of sheet(isPresented:)
+                        NavigationStack {
+                            PieceEdit(piece: piece) {
+                                print("wow we are in complete")
                             }
                         }
                     }
@@ -74,7 +75,7 @@ struct SearchView: View {
 
 enum PieceNavigationContext: Hashable {
     case userPiece(PieceDetails)
-    case newPiece(PieceDetails) // new piece
+    case newPiece(ImslpPieceDetails) // new piece
 }
 
 //

@@ -98,17 +98,3 @@ class Piece: ObservableObject, Identifiable, Hashable, Codable {
             lhs.catalogue_number == rhs.catalogue_number
     }
 }
-
-// extension Piece {
-//    func toGraphQLInput() -> PiecesInsertInput {
-//        return PiecesInsertInput(
-//            workName: .some(workName),
-//            composerId: composer?.id != nil ? .some(BigInt(composer!.id)) : .null,
-//            nickname: nickname != nil ? .some(nickname!) : .null,
-//            format: format != nil ? .some(GraphQLEnum(format!.rawValue)) : .null,
-//            keySignature: key_signature != nil ? .some(GraphQLEnum(key_signature!.rawValue.lowercased())) : .null,
-//            catalogueType: catalogue_type != nil ? .some(GraphQLEnum(catalogue_type!.rawValue)) : .null,
-//            catalogueNumber: catalogue_number != nil ? .some(catalogue_number!) : .null
-//        )
-//    }
-// }

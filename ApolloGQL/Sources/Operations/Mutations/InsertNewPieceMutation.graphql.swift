@@ -7,13 +7,13 @@ public class InsertNewPieceMutation: GraphQLMutation {
   public static let operationName: String = "InsertNewPiece"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"mutation InsertNewPiece($input: [PiecesInsertInput!]!) { insertIntoPiecesCollection(objects: $input) { __typename records { __typename ...PieceDetails } } }"#,
+      #"mutation InsertNewPiece($input: [PieceInsertInput!]!) { insertIntoPieceCollection(objects: $input) { __typename records { __typename ...PieceDetails } } }"#,
       fragments: [PieceDetails.self]
     ))
 
-  public var input: [PiecesInsertInput]
+  public var input: [PieceInsertInput]
 
-  public init(input: [PiecesInsertInput]) {
+  public init(input: [PieceInsertInput]) {
     self.input = input
   }
 
@@ -25,19 +25,19 @@ public class InsertNewPieceMutation: GraphQLMutation {
 
     public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Mutation }
     public static var __selections: [ApolloAPI.Selection] { [
-      .field("insertIntoPiecesCollection", InsertIntoPiecesCollection?.self, arguments: ["objects": .variable("input")]),
+      .field("insertIntoPieceCollection", InsertIntoPieceCollection?.self, arguments: ["objects": .variable("input")]),
     ] }
 
-    /// Adds one or more `Pieces` records to the collection
-    public var insertIntoPiecesCollection: InsertIntoPiecesCollection? { __data["insertIntoPiecesCollection"] }
+    /// Adds one or more `Piece` records to the collection
+    public var insertIntoPieceCollection: InsertIntoPieceCollection? { __data["insertIntoPieceCollection"] }
 
     public init(
-      insertIntoPiecesCollection: InsertIntoPiecesCollection? = nil
+      insertIntoPieceCollection: InsertIntoPieceCollection? = nil
     ) {
       self.init(_dataDict: DataDict(
         data: [
           "__typename": ApolloGQL.Objects.Mutation.typename,
-          "insertIntoPiecesCollection": insertIntoPiecesCollection._fieldData,
+          "insertIntoPieceCollection": insertIntoPieceCollection._fieldData,
         ],
         fulfilledFragments: [
           ObjectIdentifier(InsertNewPieceMutation.Data.self)
@@ -45,14 +45,14 @@ public class InsertNewPieceMutation: GraphQLMutation {
       ))
     }
 
-    /// InsertIntoPiecesCollection
+    /// InsertIntoPieceCollection
     ///
-    /// Parent Type: `PiecesInsertResponse`
-    public struct InsertIntoPiecesCollection: ApolloGQL.SelectionSet {
+    /// Parent Type: `PieceInsertResponse`
+    public struct InsertIntoPieceCollection: ApolloGQL.SelectionSet {
       public let __data: DataDict
       public init(_dataDict: DataDict) { __data = _dataDict }
 
-      public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.PiecesInsertResponse }
+      public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.PieceInsertResponse }
       public static var __selections: [ApolloAPI.Selection] { [
         .field("__typename", String.self),
         .field("records", [Record].self),
@@ -66,23 +66,23 @@ public class InsertNewPieceMutation: GraphQLMutation {
       ) {
         self.init(_dataDict: DataDict(
           data: [
-            "__typename": ApolloGQL.Objects.PiecesInsertResponse.typename,
+            "__typename": ApolloGQL.Objects.PieceInsertResponse.typename,
             "records": records._fieldData,
           ],
           fulfilledFragments: [
-            ObjectIdentifier(InsertNewPieceMutation.Data.InsertIntoPiecesCollection.self)
+            ObjectIdentifier(InsertNewPieceMutation.Data.InsertIntoPieceCollection.self)
           ]
         ))
       }
 
-      /// InsertIntoPiecesCollection.Record
+      /// InsertIntoPieceCollection.Record
       ///
-      /// Parent Type: `Pieces`
+      /// Parent Type: `Piece`
       public struct Record: ApolloGQL.SelectionSet {
         public let __data: DataDict
         public init(_dataDict: DataDict) { __data = _dataDict }
 
-        public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Pieces }
+        public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Piece }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
           .fragment(PieceDetails.self),
@@ -144,7 +144,7 @@ public class InsertNewPieceMutation: GraphQLMutation {
         ) {
           self.init(_dataDict: DataDict(
             data: [
-              "__typename": ApolloGQL.Objects.Pieces.typename,
+              "__typename": ApolloGQL.Objects.Piece.typename,
               "imslpPieceId": imslpPieceId,
               "id": id,
               "workName": workName,
@@ -169,7 +169,7 @@ public class InsertNewPieceMutation: GraphQLMutation {
               "movements": movements._fieldData,
             ],
             fulfilledFragments: [
-              ObjectIdentifier(InsertNewPieceMutation.Data.InsertIntoPiecesCollection.Record.self),
+              ObjectIdentifier(InsertNewPieceMutation.Data.InsertIntoPieceCollection.Record.self),
               ObjectIdentifier(PieceDetails.self)
             ]
           ))

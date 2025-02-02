@@ -17,7 +17,7 @@ ADD COLUMN nickname text,
 ADD COLUMN download_url text;
 
 CREATE SCHEMA IF NOT EXISTS imslp;
-comment on schema imslp is e'@graphql({"inflect_names": true})';
+comment on schema imslp is e'@graphql({"inflect_names": true, "name": "imslp_api"})';
 
 CREATE TABLE imslp.pieces (LIKE public.pieces INCLUDING ALL);
 ALTER TABLE imslp.pieces DROP COLUMN user_id;
@@ -28,6 +28,8 @@ ADD COLUMN imslp_piece_id BIGINT,
 ADD CONSTRAINT fk_imslp_piece
 FOREIGN KEY (imslp_piece_id) REFERENCES imslp.pieces(id)
 ON DELETE SET NULL;
+
+
 
 ALTER TABLE imslp.movements
 ADD CONSTRAINT movements_piece_id_fkey 

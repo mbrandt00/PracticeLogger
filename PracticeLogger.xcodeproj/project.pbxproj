@@ -13,6 +13,12 @@
 		D11990652B9CC58D0031E8A0 /* MusicKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D11990642B9CC58D0031E8A0 /* MusicKit.framework */; };
 		D11D58A82C39A06300501C6F /* ExpandedBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11D58A72C39A06300501C6F /* ExpandedBottomSheet.swift */; };
 		D11D792C2C6C5B9D0073BA21 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11D792B2C6C5B9D0073BA21 /* Array.swift */; };
+		D1254D532D4E9F2900095600 /* PieceInserter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1254D522D4E9F2900095600 /* PieceInserter.swift */; };
+		D1254D562D4EAC0500095600 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D1254D552D4EAC0500095600 /* ApolloGQL */; };
+		D1254D592D4EAE4000095600 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D1254D582D4EAE4000095600 /* ApolloGQL */; };
+		D1254D5C2D4EBBCB00095600 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D1254D5B2D4EBBCB00095600 /* ApolloGQL */; };
+		D1254D5F2D4EBE0500095600 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D1254D5E2D4EBE0500095600 /* ApolloGQL */; };
+		D1254D622D4F4F5200095600 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D1254D612D4F4F5200095600 /* ApolloGQL */; };
 		D12E1BB02C37B64500A4DC28 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12E1BAF2C37B64500A4DC28 /* DateFormatter.swift */; };
 		D12F1F382CFD749200235C16 /* Apollo in Frameworks */ = {isa = PBXBuildFile; productRef = D12F1F372CFD749200235C16 /* Apollo */; };
 		D12F1F3A2CFD749200235C16 /* ApolloAPI in Frameworks */ = {isa = PBXBuildFile; productRef = D12F1F392CFD749200235C16 /* ApolloAPI */; };
@@ -65,6 +71,7 @@
 		D197387E2C153F7100EBF53F /* PieceShow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197387D2C153F7100EBF53F /* PieceShow.swift */; };
 		D19738802C1540B600EBF53F /* PracticeSessionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197387F2C1540B600EBF53F /* PracticeSessionViewModel.swift */; };
 		D19738822C1540E500EBF53F /* PracticeSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19738812C1540E500EBF53F /* PracticeSession.swift */; };
+		D19940FA2D4E0201003889AF /* PieceDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19940F92D4E01FC003889AF /* PieceDetails.swift */; };
 		D19E733F2B898F9300BB3EC7 /* PracticeLoggerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E733E2B898F9300BB3EC7 /* PracticeLoggerApp.swift */; };
 		D19E73412B898F9300BB3EC7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E73402B898F9300BB3EC7 /* ContentView.swift */; };
 		D19E73432B898F9400BB3EC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D19E73422B898F9400BB3EC7 /* Assets.xcassets */; };
@@ -129,6 +136,7 @@
 		D11990642B9CC58D0031E8A0 /* MusicKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MusicKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/MusicKit.framework; sourceTree = DEVELOPER_DIR; };
 		D11D58A72C39A06300501C6F /* ExpandedBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedBottomSheet.swift; sourceTree = "<group>"; };
 		D11D792B2C6C5B9D0073BA21 /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
+		D1254D522D4E9F2900095600 /* PieceInserter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceInserter.swift; sourceTree = "<group>"; };
 		D12E1BAF2C37B64500A4DC28 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		D131F16C2B8AE54E002261BC /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		D131F16F2B8AE8B9002261BC /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
@@ -148,6 +156,7 @@
 		D197387D2C153F7100EBF53F /* PieceShow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceShow.swift; sourceTree = "<group>"; };
 		D197387F2C1540B600EBF53F /* PracticeSessionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSessionViewModel.swift; sourceTree = "<group>"; };
 		D19738812C1540E500EBF53F /* PracticeSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSession.swift; sourceTree = "<group>"; };
+		D19940F92D4E01FC003889AF /* PieceDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceDetails.swift; sourceTree = "<group>"; };
 		D19E733B2B898F9300BB3EC7 /* PracticeLogger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PracticeLogger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D19E733E2B898F9300BB3EC7 /* PracticeLoggerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLoggerApp.swift; sourceTree = "<group>"; };
 		D19E73402B898F9300BB3EC7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -195,8 +204,10 @@
 				D1C6B0DC2B8BC81300F7B877 /* PostgREST in Frameworks */,
 				D19487D02CE14E940056D850 /* Mocks in Frameworks */,
 				D19487CE2CE14E940056D850 /* ApolloGQL in Frameworks */,
+				D1254D562D4EAC0500095600 /* ApolloGQL in Frameworks */,
 				D15C882F2BF05E5000AAC950 /* AlertToast in Frameworks */,
 				D17EAA772CD6892000D9656E /* ApolloGQL in Frameworks */,
+				D1254D592D4EAE4000095600 /* ApolloGQL in Frameworks */,
 				D19487DA2CE1AE620056D850 /* Mocks in Frameworks */,
 				D15B570E2CCEA8F200EB71CD /* ApolloGQL in Frameworks */,
 				D19188262D0617B8005D3515 /* ApolloGQL in Frameworks */,
@@ -223,6 +234,7 @@
 				D12F1F382CFD749200235C16 /* Apollo in Frameworks */,
 				D19188282D062677005D3515 /* ApolloGQL in Frameworks */,
 				D1C6B0D82B8BC81300F7B877 /* Auth in Frameworks */,
+				D1254D622D4F4F5200095600 /* ApolloGQL in Frameworks */,
 				D19487CB2CE13A940056D850 /* ApolloGQL in Frameworks */,
 				D19487D32CE1AE220056D850 /* ApolloGQL in Frameworks */,
 				D15853732D0FC4370053B0F5 /* ApolloGQL in Frameworks */,
@@ -231,6 +243,8 @@
 				D19188242D0612E6005D3515 /* ApolloGQL in Frameworks */,
 				D1E086CB2D053134003AE2B4 /* ApolloGQL in Frameworks */,
 				D15B57002CCDD64E00EB71CD /* ApolloGQL in Frameworks */,
+				D1254D5C2D4EBBCB00095600 /* ApolloGQL in Frameworks */,
+				D1254D5F2D4EBE0500095600 /* ApolloGQL in Frameworks */,
 				D19487DF2CE1AF410056D850 /* Mocks in Frameworks */,
 				D19487D52CE1AE220056D850 /* Mocks in Frameworks */,
 				D146A7512CFD2CD40066093A /* ApolloGQL in Frameworks */,
@@ -422,6 +436,7 @@
 		D1F29CEA2C6C569300FC5E74 /* Piece */ = {
 			isa = PBXGroup;
 			children = (
+				D19940F92D4E01FC003889AF /* PieceDetails.swift */,
 				D1E46FF12B96D52D00228C3F /* Piece.swift */,
 			);
 			path = Piece;
@@ -439,6 +454,7 @@
 		D1F5EE8D2BF8664C00E9DA23 /* utils */ = {
 			isa = PBXGroup;
 			children = (
+				D1254D522D4E9F2900095600 /* PieceInserter.swift */,
 				D117BFAE2CA8B0840046A1E5 /* Network.swift */,
 				D14093042CA86E84008B5CDB /* ApolloConfig.swift */,
 				D1C2BEC12BDD76A300E8E39F /* Database.swift */,
@@ -519,6 +535,11 @@
 				D19188272D062677005D3515 /* ApolloGQL */,
 				D15853722D0FC4370053B0F5 /* ApolloGQL */,
 				D1FC3D442D46065A00503FE8 /* ApolloGQL */,
+				D1254D552D4EAC0500095600 /* ApolloGQL */,
+				D1254D582D4EAE4000095600 /* ApolloGQL */,
+				D1254D5B2D4EBBCB00095600 /* ApolloGQL */,
+				D1254D5E2D4EBE0500095600 /* ApolloGQL */,
+				D1254D612D4F4F5200095600 /* ApolloGQL */,
 			);
 			productName = PracticeLogger;
 			productReference = D19E733B2B898F9300BB3EC7 /* PracticeLogger.app */;
@@ -596,7 +617,7 @@
 				D1C6B0D62B8BC81300F7B877 /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				D15C882D2BF05E5000AAC950 /* XCRemoteSwiftPackageReference "AlertToast" */,
 				D12F1F362CFD749200235C16 /* XCRemoteSwiftPackageReference "apollo-ios" */,
-				D1FC3D432D46065A00503FE8 /* XCLocalSwiftPackageReference "ApolloGQL" */,
+				D1254D602D4F4F5200095600 /* XCLocalSwiftPackageReference "ApolloGQL" */,
 			);
 			productRefGroup = D19E733C2B898F9300BB3EC7 /* Products */;
 			projectDirPath = "";
@@ -683,6 +704,7 @@
 			files = (
 				D12E1BB02C37B64500A4DC28 /* DateFormatter.swift in Sources */,
 				D1ED6C442C4CB0BF00300FE9 /* KeyboardResponder.swift in Sources */,
+				D1254D532D4E9F2900095600 /* PieceInserter.swift in Sources */,
 				D17C5CA82B9E561300C1CA44 /* NewPieceRow.swift in Sources */,
 				D1DF5B5F2BB882CD00FFED0F /* String.swift in Sources */,
 				D177FDA92C55855C00830F0D /* View.swift in Sources */,
@@ -710,6 +732,7 @@
 				D1A056112CB1A9E30024DC2A /* PracticeSessionView.swift in Sources */,
 				D1E98BD32C59EF750065D27D /* KeySignatureType.swift in Sources */,
 				D1F29CEF2C6C580B00FC5E74 /* PracticeSession+SampleData.swift in Sources */,
+				D19940FA2D4E0201003889AF /* PieceDetails.swift in Sources */,
 				D1D6548E2BDDB9BE008D4868 /* ProfileViewModel.swift in Sources */,
 				D1840DD02C48902F001ED849 /* Logger.swift in Sources */,
 				D15501B82BF1961C0088BCCE /* MovementEditRow.swift in Sources */,
@@ -1078,7 +1101,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		D1FC3D432D46065A00503FE8 /* XCLocalSwiftPackageReference "ApolloGQL" */ = {
+		D1254D602D4F4F5200095600 /* XCLocalSwiftPackageReference "ApolloGQL" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ApolloGQL;
 		};
@@ -1113,6 +1136,26 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		D117BFB12CA8BF7E0046A1E5 /* ApolloGQL */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ApolloGQL;
+		};
+		D1254D552D4EAC0500095600 /* ApolloGQL */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ApolloGQL;
+		};
+		D1254D582D4EAE4000095600 /* ApolloGQL */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ApolloGQL;
+		};
+		D1254D5B2D4EBBCB00095600 /* ApolloGQL */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ApolloGQL;
+		};
+		D1254D5E2D4EBE0500095600 /* ApolloGQL */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ApolloGQL;
+		};
+		D1254D612D4F4F5200095600 /* ApolloGQL */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ApolloGQL;
 		};

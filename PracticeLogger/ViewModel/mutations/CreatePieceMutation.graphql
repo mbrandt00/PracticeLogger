@@ -1,8 +1,7 @@
-mutation InsertNewPiece($input: [PiecesInsertInput!]!) {
-  insertIntoPiecesCollection(objects: $input) {
+mutation InsertNewPiece($input: [PieceInsertInput!]!) {
+  insertIntoPieceCollection(objects: $input) {
     records {
       ...PieceDetails
     }
   }
 }
-
