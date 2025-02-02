@@ -1,9 +1,0 @@
-query SearchPieces($query: String!, $pieceFilter: PieceFilter) {
-  searchPieceWithAssociations(query: $query, filter: $pieceFilter) {
-    edges {
-      node {
-        ...PieceDetails
-      }
-    }
-  }
-}

@@ -3,11 +3,11 @@
 
 @_exported import ApolloAPI
 
-public class SearchPiecesQuery: GraphQLQuery {
-  public static let operationName: String = "SearchPieces"
+public class SearchUserPiecesQuery: GraphQLQuery {
+  public static let operationName: String = "SearchUserPieces"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query SearchPieces($query: String!, $pieceFilter: PieceFilter) { searchPieceWithAssociations(query: $query, filter: $pieceFilter) { __typename edges { __typename node { __typename ...PieceDetails } } } }"#,
+      #"query SearchUserPieces($query: String!, $pieceFilter: PieceFilter = {  }) { searchUserPieces(query: $query, filter: $pieceFilter) { __typename edges { __typename node { __typename ...PieceDetails } } } }"#,
       fragments: [PieceDetails.self]
     ))
 
@@ -16,7 +16,9 @@ public class SearchPiecesQuery: GraphQLQuery {
 
   public init(
     query: String,
-    pieceFilter: GraphQLNullable<PieceFilter>
+    pieceFilter: GraphQLNullable<PieceFilter> = .init(
+      PieceFilter()
+    )
   ) {
     self.query = query
     self.pieceFilter = pieceFilter
@@ -33,32 +35,32 @@ public class SearchPiecesQuery: GraphQLQuery {
 
     public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Query }
     public static var __selections: [ApolloAPI.Selection] { [
-      .field("searchPieceWithAssociations", SearchPieceWithAssociations?.self, arguments: [
+      .field("searchUserPieces", SearchUserPieces?.self, arguments: [
         "query": .variable("query"),
         "filter": .variable("pieceFilter")
       ]),
     ] }
 
-    public var searchPieceWithAssociations: SearchPieceWithAssociations? { __data["searchPieceWithAssociations"] }
+    public var searchUserPieces: SearchUserPieces? { __data["searchUserPieces"] }
 
     public init(
-      searchPieceWithAssociations: SearchPieceWithAssociations? = nil
+      searchUserPieces: SearchUserPieces? = nil
     ) {
       self.init(_dataDict: DataDict(
         data: [
           "__typename": ApolloGQL.Objects.Query.typename,
-          "searchPieceWithAssociations": searchPieceWithAssociations._fieldData,
+          "searchUserPieces": searchUserPieces._fieldData,
         ],
         fulfilledFragments: [
-          ObjectIdentifier(SearchPiecesQuery.Data.self)
+          ObjectIdentifier(SearchUserPiecesQuery.Data.self)
         ]
       ))
     }
 
-    /// SearchPieceWithAssociations
+    /// SearchUserPieces
     ///
     /// Parent Type: `PieceConnection`
-    public struct SearchPieceWithAssociations: ApolloGQL.SelectionSet {
+    public struct SearchUserPieces: ApolloGQL.SelectionSet {
       public let __data: DataDict
       public init(_dataDict: DataDict) { __data = _dataDict }
 
@@ -79,12 +81,12 @@ public class SearchPiecesQuery: GraphQLQuery {
             "edges": edges._fieldData,
           ],
           fulfilledFragments: [
-            ObjectIdentifier(SearchPiecesQuery.Data.SearchPieceWithAssociations.self)
+            ObjectIdentifier(SearchUserPiecesQuery.Data.SearchUserPieces.self)
           ]
         ))
       }
 
-      /// SearchPieceWithAssociations.Edge
+      /// SearchUserPieces.Edge
       ///
       /// Parent Type: `PieceEdge`
       public struct Edge: ApolloGQL.SelectionSet {
@@ -108,12 +110,12 @@ public class SearchPiecesQuery: GraphQLQuery {
               "node": node._fieldData,
             ],
             fulfilledFragments: [
-              ObjectIdentifier(SearchPiecesQuery.Data.SearchPieceWithAssociations.Edge.self)
+              ObjectIdentifier(SearchUserPiecesQuery.Data.SearchUserPieces.Edge.self)
             ]
           ))
         }
 
-        /// SearchPieceWithAssociations.Edge.Node
+        /// SearchUserPieces.Edge.Node
         ///
         /// Parent Type: `Piece`
         public struct Node: ApolloGQL.SelectionSet {
@@ -207,7 +209,7 @@ public class SearchPiecesQuery: GraphQLQuery {
                 "movements": movements._fieldData,
               ],
               fulfilledFragments: [
-                ObjectIdentifier(SearchPiecesQuery.Data.SearchPieceWithAssociations.Edge.Node.self),
+                ObjectIdentifier(SearchUserPiecesQuery.Data.SearchUserPieces.Edge.Node.self),
                 ObjectIdentifier(PieceDetails.self)
               ]
             ))

@@ -137,7 +137,8 @@ RETURNS SETOF imslp.pieces AS $$
             AND up.user_id = auth.uid()
         )
     )
-    ORDER BY similarity(p.searchable_text, unaccent(query)) DESC;
+    ORDER BY similarity(p.searchable_text, unaccent(query)) DESC
+    LIMIT 25;
 $$ LANGUAGE sql STABLE SECURITY DEFINER;
 
 

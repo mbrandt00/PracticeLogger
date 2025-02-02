@@ -1692,7 +1692,7 @@ type Query {
     """Sort order to apply to the collection"""
     orderBy: [ImslpPieceOrderBy!]
   ): ImslpPieceConnection
-  searchPieceWithAssociations(
+  searchUserPieces(
     query: String!
 
     """Query the first `n` records in the collection"""

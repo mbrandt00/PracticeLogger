@@ -71,8 +71,10 @@ $$ LANGUAGE sql SECURITY DEFINER;
 CREATE INDEX IF NOT EXISTS idx_pieces_searchable_text_trgm 
 ON pieces USING gin (searchable_text gin_trgm_ops);
 
--- Main search function
-CREATE OR REPLACE FUNCTION search_piece_with_associations(query text) 
+-- User piece search function
+CREATE OR REPLACE FUNCTION search_user_pieces(
+    query text
+) 
 RETURNS SETOF pieces AS $$
     WITH terms AS (
         SELECT unnest(string_to_array(lower(unaccent(query)), ' ')) as term
@@ -84,35 +86,69 @@ RETURNS SETOF pieces AS $$
         SELECT 1 FROM terms
         WHERE lower(p.searchable_text) NOT LIKE '%' || term || '%'
     )
-    ORDER BY similarity(p.searchable_text, unaccent(query)) DESC;
+    AND p.user_id = auth.uid()
+    ORDER BY similarity(p.searchable_text, unaccent(query)) DESC
+    LIMIT 25
 $$ LANGUAGE sql STABLE SECURITY DEFINER;
 
 -- Triggers to maintain searchable text
-CREATE OR REPLACE FUNCTION update_piece_searchable_text() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION update_piece_searchable_text() 
+RETURNS trigger 
+SECURITY DEFINER AS $$
+DECLARE
+    new_text TEXT;
 BEGIN
-    NEW.searchable_text := get_piece_searchable_text(NEW.id);
-    RETURN NEW;
+    -- Get the new searchable text
+    SELECT get_piece_searchable_text(NEW.id) INTO new_text;
+    
+    -- Only update if the text would actually change
+    IF new_text IS DISTINCT FROM NEW.searchable_text THEN
+        UPDATE pieces 
+        SET searchable_text = new_text
+        WHERE id = NEW.id;
+    END IF;
+    
+    RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER piece_searchable_text_update
-    BEFORE INSERT OR UPDATE ON pieces
+    AFTER INSERT OR UPDATE ON pieces
     FOR EACH ROW
     EXECUTE FUNCTION update_piece_searchable_text();
 
-CREATE OR REPLACE FUNCTION update_movement_piece_searchable_text() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION update_movement_piece_searchable_text() 
+RETURNS trigger 
+SECURITY DEFINER AS $$
+DECLARE
+    current_text TEXT;
+    new_text TEXT;
 BEGIN
-    UPDATE pieces
-    SET searchable_text = get_piece_searchable_text(
-        CASE 
-            WHEN TG_OP = 'DELETE' THEN OLD.piece_id 
-            ELSE NEW.piece_id 
-        END
-    )
+    -- Get the current and new searchable text
+    SELECT searchable_text INTO current_text 
+    FROM pieces 
     WHERE id = CASE 
         WHEN TG_OP = 'DELETE' THEN OLD.piece_id 
         ELSE NEW.piece_id 
     END;
+    
+    SELECT get_piece_searchable_text(
+        CASE 
+            WHEN TG_OP = 'DELETE' THEN OLD.piece_id 
+            ELSE NEW.piece_id 
+        END
+    ) INTO new_text;
+    
+    -- Only update if the text would actually change
+    IF new_text IS DISTINCT FROM current_text THEN
+        UPDATE pieces
+        SET searchable_text = new_text
+        WHERE id = CASE 
+            WHEN TG_OP = 'DELETE' THEN OLD.piece_id 
+            ELSE NEW.piece_id 
+        END;
+    END IF;
+    
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
