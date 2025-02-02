@@ -54,7 +54,13 @@ struct RecentPracticeSessions: View {
                 }
             }
             .navigationDestination(for: PieceNavigationContext.self) { context in
-                destination(for: context)
+                switch context {
+                case .userPiece(let piece):
+                    PieceShow(piece: piece, sessionManager: practiceSessionViewModel)
+                case .newPiece(let piece):
+                    // Handle navigation for new pieces if needed
+                    EmptyView()
+                }
             }
         }
         .searchable(text: $searchViewModel.searchTerm, isPresented: $isSearching)
