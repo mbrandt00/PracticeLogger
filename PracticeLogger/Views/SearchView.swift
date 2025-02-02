@@ -51,11 +51,9 @@ struct SearchView: View {
                         }
                         .buttonStyle(.plain)
                     }
-                    .sheet(item: $searchViewModel.selectedPiece) { piece in // Use sheet(item:) instead of sheet(isPresented:)
+                    .sheet(item: $searchViewModel.selectedPiece) { piece in
                         NavigationStack {
-                            PieceEdit(piece: piece) {
-                                print("wow we are in complete")
-                            }
+                            PieceEdit(piece: piece)
                         }
                     }
                 }
@@ -75,67 +73,16 @@ struct SearchView: View {
 
 enum PieceNavigationContext: Hashable {
     case userPiece(PieceDetails)
-    case newPiece(ImslpPieceDetails) // new piece
+    case newPiece(ImslpPieceDetails)
 }
 
-//
-//// STOP USING PIECE DETAILS as type. Do search piece...
-// struct SearchView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        let viewModel = SearchViewModel()
-//        viewModel.showingSheet = true
-//        // Pre-populate some test data
-//        viewModel.newPieces = [
-//            PieceDetails(
-//                id: "12345",
-//                workName: "Symphony No. 5",
-//                catalogueType: GraphQLEnum(CatalogueType.op.rawValue),
-//                keySignature: GraphQLEnum(KeySignatureType.cminor),
-//                format: GraphQLEnum(PieceFormat.symphony.rawValue),
-//                instrumentation: ["Violin", "Cello", "Bassoon", "Chorus"],
-//                wikipediaUrl: "https://en.wikipedia.org/wiki/Symphony_No._5_(Beethoven)",
-//                imslpUrl: "https://imslp.org/wiki/Symphony_No.5,_Op.67_(Beethoven,_Ludwig_van)",
-//                compositionYear: 1804,
-//                catalogueNumber: 67,
-//                nickname: "My really really really long nickname jkl;asd",
-//                composer: PieceDetails.Composer(name: "Ludwig van Beethoven"),
-//                movements: PieceDetails.Movements(
-//                    edges: [
-//                        PieceDetails.Movements.Edge(
-//                            node: PieceDetails.Movements.Edge.Node(
-//                                id: "1",
-//                                name: "Allegro con brio",
-//                                number: 1
-//                            )
-//                        ),
-//                        PieceDetails.Movements.Edge(
-//                            node: PieceDetails.Movements.Edge.Node(
-//                                id: "2",
-//                                name: "Andante con moto",
-//                                number: 2
-//                            )
-//                        ),
-//                        PieceDetails.Movements.Edge(
-//                            node: PieceDetails.Movements.Edge.Node(
-//                                id: "3",
-//                                name: "Scherzo: Allegro",
-//                                number: 3
-//                            )
-//                        ),
-//                        PieceDetails.Movements.Edge(
-//                            node: PieceDetails.Movements.Edge.Node(
-//                                id: "4",
-//                                name: "Allegro - Presto",
-//                                number: 4
-//                            )
-//                        )
-//                    ]
-//                )
-//            )
-//        ]
-//
-//        return NavigationStack {
-//            SearchView(searchViewModel: viewModel)
-//        }
-//    }
-// }
+struct SearchView_Previews: PreviewProvider {
+    static var previews: some View {
+        let viewModel = SearchViewModel()
+        viewModel.newPieces = ImslpPieceDetails.samplePieces
+
+        return NavigationStack {
+            SearchView(searchViewModel: viewModel)
+        }
+    }
+}

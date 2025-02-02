@@ -11,12 +11,10 @@ import Foundation
 
 class SearchViewModel: ObservableObject {
     @Published var searchTerm = ""
-    @Published var isFocused: Bool = false
     @Published var selectedKeySignature: KeySignatureType?
     @Published var selectedPiece: ImslpPieceDetails? = nil
     @Published var userPieces: [PieceDetails] = []
     @Published var newPieces: [ImslpPieceDetails] = []
-    private var cancellables = Set<AnyCancellable>()
 
 //    @MainActor
 //    func searchPieces() async {

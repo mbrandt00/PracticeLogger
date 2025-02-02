@@ -94,8 +94,7 @@ struct RecentPracticeSessions: View {
     private func destination(for context: PieceNavigationContext) -> some View {
         switch context {
         case .newPiece(let piece):
-            return AnyView(PieceEdit(piece: piece, onComplete: { print("In on complete in destination route recentpracticesession")
-            }))
+            return AnyView(PieceEdit(piece: piece))
         case .userPiece(let piece):
             return AnyView(PieceShow(piece: piece, sessionManager: practiceSessionViewModel))
         }

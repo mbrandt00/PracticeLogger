@@ -22,7 +22,7 @@ struct PieceEdit: View {
 
     @Environment(\.dismiss) var dismiss
 
-    init(piece: ImslpPieceDetails, onComplete: @escaping () -> Void) {
+    init(piece: ImslpPieceDetails) {
         _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
     }
     
@@ -321,9 +321,6 @@ struct PieceEdit: View {
 //                        ]
 //                    )
 //                ),
-//                onComplete: {
-//                    print("HI")
-//                }
 //            )
 //        }
 //    }

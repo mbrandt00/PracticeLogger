@@ -45,14 +45,12 @@ class PieceInserter {
             apollo.perform(mutation: InsertNewPieceMutation(input: [inputObject])) { result in
                 switch result {
                 case .success(let graphQlResult):
-                    // First check for GraphQL errors
                     if let errors = graphQlResult.errors {
                         let errorMessage = errors.map { $0.message ?? "" }.joined(separator: ", ")
                         continuation.resume(throwing: RuntimeError("GraphQL errors: \(errorMessage)"))
                         return
                     }
                     
-                    // Then check the response structure
                     guard let collection = graphQlResult.data?.insertIntoPieceCollection else {
                         continuation.resume(throwing: RuntimeError("Missing insertIntoPiecesCollection in response"))
                         return
@@ -86,8 +84,6 @@ class PieceInserter {
             )
         }
         
-        print("🔵 Attempting to insert \(movementsInput.count) movements for piece \(pieceId)")
-        
         return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<PieceDetails, Error>) in
             apollo.perform(mutation: CreateMovementsMutation(input: movementsInput)) { result in
                 switch result {
@@ -103,7 +99,6 @@ class PieceInserter {
                         return
                     }
                     
-                    // Fetch final piece with movements
                     self.fetchPieceDetails(pieceId, continuation: continuation)
                     
                 case .failure(let error):
