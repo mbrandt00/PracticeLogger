@@ -10,7 +10,8 @@ import SwiftUI
 
 struct SearchView: View {
     @ObservedObject var searchViewModel: SearchViewModel
-
+    @ObservedObject var practiceSessionViewModel: PracticeSessionViewModel
+    @Binding var path: NavigationPath
     var body: some View {
         List {
             if !searchViewModel.userPieces.isEmpty {
@@ -52,13 +53,27 @@ struct SearchView: View {
                     }
                     .sheet(item: $searchViewModel.selectedPiece) { piece in
                         NavigationStack {
-                            PieceEdit(piece: piece)
+                            PieceEdit(
+                                piece: piece,
+                                onPieceCreated: { @Sendable piece in
+                                    path.append(PieceNavigationContext.userPiece(piece))
+                                    await MainActor.run {
+                                        searchViewModel.newPieces.removeAll()
+                                        searchViewModel.searchTerm = ""
+                                    }
+                                }
+                            )
                         }
                     }
                 }
             }
         }
         .onChange(of: searchViewModel.searchTerm, initial: true) {
+            Task {
+                await searchViewModel.searchPieces()
+            }
+        }
+        .onAppear {
             Task {
                 await searchViewModel.searchPieces()
             }
@@ -77,7 +92,15 @@ struct SearchView_Previews: PreviewProvider {
         viewModel.newPieces = ImslpPieceDetails.samplePieces
 
         return NavigationStack {
-            SearchView(searchViewModel: viewModel)
+            StateWrapper(viewModel: viewModel)
+        }
+    }
+
+    private struct StateWrapper: View {
+        let viewModel: SearchViewModel
+        @State private var path = NavigationPath()
+        var body: some View {
+            SearchView(searchViewModel: viewModel, practiceSessionViewModel: PracticeSessionViewModel(), path: $path)
         }
     }
 }

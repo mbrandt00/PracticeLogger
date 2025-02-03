@@ -108,7 +108,7 @@ struct RecentPracticeSessions: View {
 
     private func SearchViewContainer() -> some View {
         VStack {
-            SearchView(searchViewModel: searchViewModel)
+            SearchView(searchViewModel: searchViewModel, practiceSessionViewModel: practiceSessionViewModel, path: $path)
                 .background(Color.white)
         }
         .padding(.vertical, 2)

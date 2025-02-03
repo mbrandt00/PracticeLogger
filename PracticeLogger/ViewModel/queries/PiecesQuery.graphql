@@ -1,5 +1,5 @@
-query PiecesQuery($pieceFilter: PieceFilter!) {
-  pieceCollection(filter: $pieceFilter) {
+query PiecesQuery($pieceFilter: PieceFilter!, $orderBy: [PieceOrderBy!] = []) {
+  pieceCollection(filter: $pieceFilter, orderBy: $orderBy) {
     edges {
       node {
         ...PieceDetails

@@ -7,17 +7,25 @@ public class PiecesQuery: GraphQLQuery {
   public static let operationName: String = "PiecesQuery"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query PiecesQuery($pieceFilter: PieceFilter!) { pieceCollection(filter: $pieceFilter) { __typename edges { __typename node { __typename ...PieceDetails } } } }"#,
+      #"query PiecesQuery($pieceFilter: PieceFilter!, $orderBy: [PieceOrderBy!] = []) { pieceCollection(filter: $pieceFilter, orderBy: $orderBy) { __typename edges { __typename node { __typename ...PieceDetails } } } }"#,
       fragments: [PieceDetails.self]
     ))
 
   public var pieceFilter: PieceFilter
+  public var orderBy: GraphQLNullable<[PieceOrderBy]>
 
-  public init(pieceFilter: PieceFilter) {
+  public init(
+    pieceFilter: PieceFilter,
+    orderBy: GraphQLNullable<[PieceOrderBy]> = []
+  ) {
     self.pieceFilter = pieceFilter
+    self.orderBy = orderBy
   }
 
-  public var __variables: Variables? { ["pieceFilter": pieceFilter] }
+  public var __variables: Variables? { [
+    "pieceFilter": pieceFilter,
+    "orderBy": orderBy
+  ] }
 
   public struct Data: ApolloGQL.SelectionSet {
     public let __data: DataDict
@@ -25,7 +33,10 @@ public class PiecesQuery: GraphQLQuery {
 
     public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Query }
     public static var __selections: [ApolloAPI.Selection] { [
-      .field("pieceCollection", PieceCollection?.self, arguments: ["filter": .variable("pieceFilter")]),
+      .field("pieceCollection", PieceCollection?.self, arguments: [
+        "filter": .variable("pieceFilter"),
+        "orderBy": .variable("orderBy")
+      ]),
     ] }
 
     /// A pagable collection of type `Piece`

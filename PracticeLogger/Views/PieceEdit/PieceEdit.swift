@@ -19,11 +19,18 @@ struct PieceEdit: View {
     @State private var isAddingMovement = false
     @State private var isEditingMovements = false
     @State private var editingMovementId: ApolloGQL.BigInt? = nil
+    var onPieceCreated: (@Sendable (PieceDetails) async -> Void)?
+
+    init(piece: ImslpPieceDetails, onPieceCreated: (@Sendable (PieceDetails) async -> Void)? = nil) {
+        _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
+        self.onPieceCreated = onPieceCreated
+    }
 
     @Environment(\.dismiss) var dismiss
 
-    init(piece: ImslpPieceDetails) {
+    init(piece: ImslpPieceDetails, onPieceCreated: ((PieceDetails) -> Void)? = nil) {
         _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
+        self.onPieceCreated = onPieceCreated
     }
     
     var body: some View {
@@ -261,6 +268,7 @@ struct PieceEdit: View {
                 do {
                     let piece = try await viewModel.insertPiece()
                     dismiss()
+                    await onPieceCreated?(piece) // Call the async callback
 
                 } catch {
                     print(error)

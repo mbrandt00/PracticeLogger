@@ -5,6 +5,7 @@
 //  Created by Michael Brandt on 7/30/24.
 //
 
+import Apollo
 import ApolloGQL
 import Combine
 import Foundation
@@ -22,9 +23,46 @@ class SearchViewModel: ObservableObject {
             if !searchTerm.isEmpty {
                 newPieces = try await searchImslpPieces() ?? []
                 userPieces = try await getUserPieces() ?? []
+            } else {
+                userPieces = try await getRecentUserPieces(forceFetch: true) ?? []
+                newPieces = []
             }
         } catch {
             print("Error fetching pieces: \(error)")
+        }
+    }
+
+    func getRecentUserPieces(forceFetch: Bool = false) async throws -> [PieceDetails]? {
+        guard let userId = Database.client.auth.currentUser?.id else {
+            return nil
+        }
+
+        return try await withCheckedThrowingContinuation { continuation in
+            let filter = PieceFilter(userId: .some(UUIDFilter(eq: .some(userId.uuidString))))
+            let direction = GraphQLEnum(OrderByDirection.descNullsFirst)
+            let orderBy: GraphQLNullable<[PieceOrderBy]> = .some([PieceOrderBy(createdAt: .some(direction))])
+
+            let fetchPolicy: CachePolicy = forceFetch ? .fetchIgnoringCacheData : .returnCacheDataElseFetch
+
+            Network.shared.apollo.fetch(
+                query: PiecesQuery(pieceFilter: filter, orderBy: orderBy),
+                cachePolicy: fetchPolicy
+            ) { result in
+                switch result {
+                case .success(let graphQlResult):
+                    if let data = graphQlResult.data?.pieceCollection {
+                        let pieces = data.edges.map { edge in
+                            edge.node.fragments.pieceDetails
+                        }
+                        continuation.resume(returning: pieces)
+                    } else {
+                        continuation.resume(returning: nil)
+                    }
+                case .failure(let error):
+                    print("Error fetching recent pieces: \(error)")
+                    continuation.resume(throwing: error)
+                }
+            }
         }
     }
 
