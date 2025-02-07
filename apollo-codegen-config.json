@@ -46,9 +46,13 @@
       }
     },
     "testMocks": {
-      "swiftPackage": {
-        "targetName": "Mocks"
-      }
+      "none": {}
+    }
+  },
+  "options": {
+    "selectionSetInitializers": {
+      "operations": true,
+      "namedFragments": true
     }
   }
 }

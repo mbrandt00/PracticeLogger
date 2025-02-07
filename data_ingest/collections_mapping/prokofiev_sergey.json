@@ -1,0 +1,27 @@
+{
+  "Piano Sonatas": {
+    "url": "/wiki/Piano_Sonata_No.1,_Op.1_(Prokofiev,_Sergey)",
+    "pieces": [
+      "/wiki/Piano_Sonata_No.1,_Op.1_(Prokofiev,_Sergey)",
+      "/wiki/Piano_Sonata_No.2,_Op.14_(Prokofiev,_Sergey)",
+      "/wiki/Piano_Sonata_No.3,_Op.28_(Prokofiev,_Sergey)",
+      "/wiki/Piano_Sonata_No.4,_Op.29_(Prokofiev,_Sergey)",
+      "/wiki/Piano_Sonata_No.5,_Op.38/135_(Prokofiev,_Sergey)",
+      "/wiki/Piano_Sonata_No.6,_Op.82_(Prokofiev,_Sergey)",
+      "/wiki/Piano_Sonata_No.7,_Op.83_(Prokofiev,_Sergey)",
+      "/wiki/Piano_Sonata_No.8,_Op.84_(Prokofiev,_Sergey)",
+      "/wiki/Piano_Sonata_No.9,_Op.103_(Prokofiev,_Sergey)",
+      "/wiki/Piano_Sonata_No.10,_Op.137_(Prokofiev,_Sergey)"
+    ]
+  },
+  "Piano Concertos": {
+    "url": "/wiki/Piano_Concerto_No.1,_Op.10_(Prokofiev,_Sergey)",
+    "pieces": [
+      "/wiki/Piano_Concerto_No.1,_Op.10_(Prokofiev,_Sergey)",
+      "/wiki/Piano_Concerto_No.2,_Op.16_(Prokofiev,_Sergey)",
+      "/wiki/Piano_Concerto_No.3,_Op.26_(Prokofiev,_Sergey)",
+      "/wiki/Piano_Concerto_No.4,_Op.53_(Prokofiev,_Sergey)",
+      "/wiki/Piano_Concerto_No.5,_Op.55_(Prokofiev,_Sergey)"
+    ]
+  }
+}

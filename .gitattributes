@@ -1,1 +1,2 @@
 *.pbxproj linguist-generated
+*.graphql.swift linguist-generated=true

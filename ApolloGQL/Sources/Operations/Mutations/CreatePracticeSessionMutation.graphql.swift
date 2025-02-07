@@ -31,6 +31,20 @@ public class CreatePracticeSessionMutation: GraphQLMutation {
     /// Adds one or more `PracticeSessions` records to the collection
     public var insertIntoPracticeSessionsCollection: InsertIntoPracticeSessionsCollection? { __data["insertIntoPracticeSessionsCollection"] }
 
+    public init(
+      insertIntoPracticeSessionsCollection: InsertIntoPracticeSessionsCollection? = nil
+    ) {
+      self.init(_dataDict: DataDict(
+        data: [
+          "__typename": ApolloGQL.Objects.Mutation.typename,
+          "insertIntoPracticeSessionsCollection": insertIntoPracticeSessionsCollection._fieldData,
+        ],
+        fulfilledFragments: [
+          ObjectIdentifier(CreatePracticeSessionMutation.Data.self)
+        ]
+      ))
+    }
+
     /// InsertIntoPracticeSessionsCollection
     ///
     /// Parent Type: `PracticeSessionsInsertResponse`
@@ -46,6 +60,20 @@ public class CreatePracticeSessionMutation: GraphQLMutation {
 
       /// Array of records impacted by the mutation
       public var records: [Record] { __data["records"] }
+
+      public init(
+        records: [Record]
+      ) {
+        self.init(_dataDict: DataDict(
+          data: [
+            "__typename": ApolloGQL.Objects.PracticeSessionsInsertResponse.typename,
+            "records": records._fieldData,
+          ],
+          fulfilledFragments: [
+            ObjectIdentifier(CreatePracticeSessionMutation.Data.InsertIntoPracticeSessionsCollection.self)
+          ]
+        ))
+      }
 
       /// InsertIntoPracticeSessionsCollection.Record
       ///
@@ -71,6 +99,29 @@ public class CreatePracticeSessionMutation: GraphQLMutation {
           public init(_dataDict: DataDict) { __data = _dataDict }
 
           public var practiceSessionDetails: PracticeSessionDetails { _toFragment() }
+        }
+
+        public init(
+          id: ApolloGQL.BigInt,
+          startTime: ApolloGQL.Datetime,
+          endTime: ApolloGQL.Datetime? = nil,
+          movement: Movement? = nil,
+          piece: Piece
+        ) {
+          self.init(_dataDict: DataDict(
+            data: [
+              "__typename": ApolloGQL.Objects.PracticeSessions.typename,
+              "id": id,
+              "startTime": startTime,
+              "endTime": endTime,
+              "movement": movement._fieldData,
+              "piece": piece._fieldData,
+            ],
+            fulfilledFragments: [
+              ObjectIdentifier(CreatePracticeSessionMutation.Data.InsertIntoPracticeSessionsCollection.Record.self),
+              ObjectIdentifier(PracticeSessionDetails.self)
+            ]
+          ))
         }
 
         public typealias Movement = PracticeSessionDetails.Movement

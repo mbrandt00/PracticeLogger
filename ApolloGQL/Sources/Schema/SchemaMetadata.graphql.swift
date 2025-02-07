@@ -20,21 +20,27 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
 
   public static func objectType(forTypename typename: String) -> ApolloAPI.Object? {
     switch typename {
-    case "Mutation": return ApolloGQL.Objects.Mutation
-    case "PracticeSessionsInsertResponse": return ApolloGQL.Objects.PracticeSessionsInsertResponse
-    case "PracticeSessions": return ApolloGQL.Objects.PracticeSessions
     case "Composers": return ApolloGQL.Objects.Composers
-    case "Movements": return ApolloGQL.Objects.Movements
-    case "Pieces": return ApolloGQL.Objects.Pieces
-    case "MovementsConnection": return ApolloGQL.Objects.MovementsConnection
-    case "MovementsEdge": return ApolloGQL.Objects.MovementsEdge
-    case "MovementsInsertResponse": return ApolloGQL.Objects.MovementsInsertResponse
-    case "PiecesInsertResponse": return ApolloGQL.Objects.PiecesInsertResponse
-    case "Query": return ApolloGQL.Objects.Query
-    case "PiecesConnection": return ApolloGQL.Objects.PiecesConnection
-    case "PiecesEdge": return ApolloGQL.Objects.PiecesEdge
+    case "ImslpMovement": return ApolloGQL.Objects.ImslpMovement
+    case "ImslpMovementConnection": return ApolloGQL.Objects.ImslpMovementConnection
+    case "ImslpMovementEdge": return ApolloGQL.Objects.ImslpMovementEdge
+    case "ImslpPiece": return ApolloGQL.Objects.ImslpPiece
+    case "ImslpPieceConnection": return ApolloGQL.Objects.ImslpPieceConnection
+    case "ImslpPieceEdge": return ApolloGQL.Objects.ImslpPieceEdge
+    case "Movement": return ApolloGQL.Objects.Movement
+    case "MovementConnection": return ApolloGQL.Objects.MovementConnection
+    case "MovementEdge": return ApolloGQL.Objects.MovementEdge
+    case "MovementInsertResponse": return ApolloGQL.Objects.MovementInsertResponse
+    case "Mutation": return ApolloGQL.Objects.Mutation
+    case "Piece": return ApolloGQL.Objects.Piece
+    case "PieceConnection": return ApolloGQL.Objects.PieceConnection
+    case "PieceEdge": return ApolloGQL.Objects.PieceEdge
+    case "PieceInsertResponse": return ApolloGQL.Objects.PieceInsertResponse
+    case "PracticeSessions": return ApolloGQL.Objects.PracticeSessions
     case "PracticeSessionsConnection": return ApolloGQL.Objects.PracticeSessionsConnection
     case "PracticeSessionsEdge": return ApolloGQL.Objects.PracticeSessionsEdge
+    case "PracticeSessionsInsertResponse": return ApolloGQL.Objects.PracticeSessionsInsertResponse
+    case "Query": return ApolloGQL.Objects.Query
     default: return nil
     }
   }

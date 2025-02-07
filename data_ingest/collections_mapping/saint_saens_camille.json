@@ -1,0 +1,20 @@
+{
+  "Piano Concertos": {
+    "url": "/wiki/Piano_Concerto_No.1,_Op.17_(Saint-Saëns,_Camille)",
+    "pieces": [
+      "/wiki/Piano_Concerto_No.1,_Op.17_(Saint-Saëns,_Camille)",
+      "/wiki/Piano_Concerto_No.2,_Op.22_(Saint-Saëns,_Camille)",
+      "/wiki/Piano_Concerto_No.3,_Op.29_(Saint-Saëns,_Camille)",
+      "/wiki/Piano_Concerto_No.4,_Op.44_(Saint-Saëns,_Camille)",
+      "/wiki/Piano_Concerto_No.5,_Op.103_(Saint-Saëns,_Camille)"
+    ]
+  },
+  "Piano Études": {
+    "url": "/wiki/6_Études,_Op.52_(Saint-Saëns,_Camille)",
+    "pieces": [
+      "/wiki/6_Études,_Op.52_(Saint-Saëns,_Camille)",
+      "/wiki/6_Études,_Op.111_(Saint-Saëns,_Camille)",
+      "/wiki/6_Études_pour_la_main_gauche_seule,_Op.135_(Saint-Saëns,_Camille)"
+    ]
+  }
+}

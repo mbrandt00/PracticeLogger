@@ -1,0 +1,37 @@
+{
+  "Symphonies": {
+    "url": "/wiki/Symphonies_(Ives%2C_Charles)",
+    "pieces": [
+      "/wiki/Symphony_No.1_(Ives%2C_Charles)",
+      "/wiki/Symphony_No.2_(Ives%2C_Charles)",
+      "/wiki/Symphony_No.3_(Ives%2C_Charles)",
+      "/wiki/Symphony_No.4_(Ives%2C_Charles)",
+      "/wiki/A_Symphony:_New_England_Holidays_(Ives%2C_Charles)"
+    ]
+  },
+  "Piano Sonatas": {
+    "url": "/wiki/Piano_Sonatas_(Ives%2C_Charles)",
+    "pieces": [
+      "/wiki/Piano_Sonata_No.1_(Ives%2C_Charles)",
+      "/wiki/Piano_Sonata_No.2_(Ives%2C_Charles)",
+      "/wiki/Three-Page_Sonata_(Ives%2C_Charles)"
+    ]
+  },
+  "Violin Sonatas": {
+    "url": "/wiki/Violin_Sonatas_(Ives%2C_Charles)",
+    "pieces": [
+      "/wiki/Violin_Sonata_No.1_(Ives%2C_Charles)",
+      "/wiki/Violin_Sonata_No.2_(Ives%2C_Charles)",
+      "/wiki/Violin_Sonata_No.3_(Ives%2C_Charles)",
+      "/wiki/Violin_Sonata_No.4_(Ives%2C_Charles)"
+    ]
+  },
+  "String Quartets": {
+    "url": "/wiki/String_Quartets_(Ives%2C_Charles)",
+    "pieces": [
+      "/wiki/String_Quartet_No.1_(Ives%2C_Charles)",
+      "/wiki/String_Quartet_No.2_(Ives%2C_Charles)",
+      "/wiki/Scherzo_for_String_Quartet_(Ives%2C_Charles)"
+    ]
+  }
+}

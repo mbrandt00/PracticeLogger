@@ -1,0 +1,49 @@
+{
+  "Piano Concertos": {
+    "url": "/wiki/Piano_Concerto_No.1,_Op.1_(Rachmaninoff,_Sergei)",
+    "pieces": [
+      "/wiki/Piano_Concerto_No.1,_Op.1_(Rachmaninoff,_Sergei)",
+      "/wiki/Piano_Concerto_No.2,_Op.18_(Rachmaninoff,_Sergei)",
+      "/wiki/Piano_Concerto_No.3,_Op.30_(Rachmaninoff,_Sergei)",
+      "/wiki/Piano_Concerto_No.4,_Op.40_(Rachmaninoff,_Sergei)",
+      "/wiki/Rhapsody_on_a_Theme_of_Paganini,_Op.43_(Rachmaninoff,_Sergei)"
+    ]
+  },
+  "Piano Sonatas": {
+    "url": "/wiki/Piano_Sonata_No.1,_Op.28_(Rachmaninoff,_Sergei)",
+    "pieces": [
+      "/wiki/Piano_Sonata_No.1,_Op.28_(Rachmaninoff,_Sergei)",
+      "/wiki/Piano_Sonata_No.2,_Op.36_(Rachmaninoff,_Sergei)"
+    ]
+  },
+  "Preludes": {
+    "url": "/wiki/10_Preludes,_Op.23_(Rachmaninoff,_Sergei)",
+    "pieces": [
+      "/wiki/Prelude_in_D_minor_(Rachmaninoff,_Sergei)",
+      "/wiki/Prelude_in_F_major_(Rachmaninoff,_Sergei)",
+      "/wiki/10_Preludes,_Op.23_(Rachmaninoff,_Sergei)",
+      "/wiki/13_Preludes,_Op.32_(Rachmaninoff,_Sergei)"
+    ]
+  },
+  "Études-Tableaux": {
+    "url": "/wiki/Etudes-tableaux,_Op.33_(Rachmaninoff,_Sergei)",
+    "pieces": [
+      "/wiki/Etudes-tableaux,_Op.33_(Rachmaninoff,_Sergei)",
+      "/wiki/Etudes-tableaux,_Op.39_(Rachmaninoff,_Sergei)"
+    ]
+  },
+  "Variations": {
+    "url": "/wiki/Variations_on_a_Theme_of_Chopin,_Op.22_(Rachmaninoff,_Sergei)",
+    "pieces": [
+      "/wiki/Variations_on_a_Theme_of_Chopin,_Op.22_(Rachmaninoff,_Sergei)",
+      "/wiki/Variations_on_a_Theme_of_Corelli,_Op.42_(Rachmaninoff,_Sergei)"
+    ]
+  },
+  "Morceaux de salon": {
+    "url": "/wiki/Morceaux_de_fantaisie,_Op.3_(Rachmaninoff,_Sergei)",
+    "pieces": [
+      "/wiki/2_Morceaux_de_salon,_Op.6_(Rachmaninoff,_Sergei)",
+      "/wiki/7_Morceaux_de_salon,_Op.10_(Rachmaninoff,_Sergei)"
+    ]
+  }
+}

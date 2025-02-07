@@ -1,0 +1,84 @@
+{
+  "Variations": {
+    "url": null,
+    "pieces": [
+      "/wiki/Variations_and_Fugue_on_a_Theme_by_Handel%2C_Op.24_(Brahms%2C_Johannes)",
+      "/wiki/Variations_on_a_Hungarian_Song%2C_Op.21_No.2_(Brahms%2C_Johannes)",
+      "/wiki/Variations_on_a_Theme_by_Haydn%2C_Op.56_(Brahms%2C_Johannes)",
+      "/wiki/Variations_on_a_Theme_by_Paganini%2C_Op.35_(Brahms%2C_Johannes)",
+      "/wiki/Variations_on_a_Theme_by_Robert_Schumann%2C_Op.9_(Brahms%2C_Johannes)",
+      "/wiki/Variations_on_a_Theme_by_Robert_Schumann%2C_Op.23_(Brahms%2C_Johannes)",
+      "/wiki/Variations_on_an_Original_Theme%2C_Op.21_No.1_(Brahms%2C_Johannes)"
+    ]
+  },
+  "String Quartets": {
+    "url": "",
+    "pieces": [
+      "/wiki/String_Quartet_No.1%2C_Op.51_No.1_(Brahms%2C_Johannes)",
+      "/wiki/String_Quartet_No.2%2C_Op.51_No.2_(Brahms%2C_Johannes)",
+      "/wiki/String_Quartet_No.3%2C_Op.67_(Brahms%2C_Johannes)"
+    ]
+  },
+  "String Quintets": {
+    "url": "",
+    "pieces": [
+      "/wiki/String_Quintet_No.1%2C_Op.88_(Brahms%2C_Johannes)",
+      "/wiki/String_Quintet_No.2%2C_Op.111_(Brahms%2C_Johannes)"
+    ]
+  },
+  "Piano Quartets": {
+    "url": "",
+    "pieces": [
+      "/wiki/Piano_Quartet_No.1%2C_Op.25_(Brahms%2C_Johannes)",
+      "/wiki/Piano_Quartet_No.2%2C_Op.26_(Brahms%2C_Johannes)",
+      "/wiki/Piano_Quartet_No.3%2C_Op.60_(Brahms%2C_Johannes)"
+    ]
+  },
+  "Piano Sonatas": {
+    "url": "",
+    "pieces": [
+      "/wiki/Piano_Sonata_No.1%2C_Op.1_(Brahms%2C_Johannes)",
+      "/wiki/Piano_Sonata_No.2%2C_Op.2_(Brahms%2C_Johannes)",
+      "/wiki/Piano_Sonata_No.3%2C_Op.5_(Brahms%2C_Johannes)"
+    ]
+  },
+  "Piano Concertos": {
+    "url": "",
+    "pieces": [
+      "/wiki/Piano_Concerto_No.1%2C_Op.15_(Brahms%2C_Johannes)",
+      "/wiki/Piano_Concerto_No.2%2C_Op.83_(Brahms%2C_Johannes)"
+    ]
+  },
+  "Klavierstücke": {
+    "url": "",
+    "pieces": [
+      "/wiki/8_Klavierst%C3%BCcke%2C_Op.76_(Brahms%2C_Johannes)",
+      "/wiki/6_Klavierst%C3%BCcke%2C_Op.118_(Brahms%2C_Johannes)",
+      "/wiki/4_Klavierst%C3%BCcke%2C_Op.119_(Brahms%2C_Johannes)"
+    ]
+  },
+  "Violin Sonatas": {
+    "url": "",
+    "pieces": [
+      "/wiki/Violin_Sonata_No.1%2C_Op.78_(Brahms%2C_Johannes)",
+      "/wiki/Violin_Sonata_No.2%2C_Op.100_(Brahms%2C_Johannes)",
+      "/wiki/Violin_Sonata_No.3%2C_Op.108_(Brahms%2C_Johannes)"
+    ]
+  },
+  "Cello Sonatas": {
+    "url": "",
+    "pieces": [
+      "/wiki/Cello_Sonata_No.1%2C_Op.38_(Brahms%2C_Johannes)",
+      "/wiki/Cello_Sonata_No.2%2C_Op.99_(Brahms%2C_Johannes)"
+    ]
+  },
+  "Piano Trios": {
+    "url": "",
+    "pieces": [
+      "/wiki/Piano_Trio_No.1%2C_Op.8_(Brahms%2C_Johannes)",
+      "/wiki/Piano_Trio_No.2%2C_Op.87_(Brahms%2C_Johannes)",
+      "/wiki/Piano_Trio_No.3%2C_Op.101_(Brahms%2C_Johannes)",
+      "/wiki/Piano_Trio_No.4_in_A_major%2C_Anh.4%2F5_(Brahms%2C_Johannes)"
+    ]
+  }
+}

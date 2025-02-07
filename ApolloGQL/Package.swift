@@ -1,4 +1,4 @@
-// swift-tools-version:5.7
+// swift-tools-version:5.9
 
 import PackageDescription
 
@@ -12,7 +12,6 @@ let package = Package(
   ],
   products: [
     .library(name: "ApolloGQL", targets: ["ApolloGQL"]),
-    .library(name: "Mocks", targets: ["Mocks"]),
   ],
   dependencies: [
     .package(url: "https://github.com/apollographql/apollo-ios.git", from: "1.0.0"),
@@ -24,14 +23,6 @@ let package = Package(
         .product(name: "ApolloAPI", package: "apollo-ios"),
       ],
       path: "./Sources"
-    ),
-    .target(
-      name: "Mocks",
-      dependencies: [
-        .product(name: "ApolloTestSupport", package: "apollo-ios"),
-        .target(name: "ApolloGQL"),
-      ],
-      path: "./Mocks"
     ),
   ]
 )

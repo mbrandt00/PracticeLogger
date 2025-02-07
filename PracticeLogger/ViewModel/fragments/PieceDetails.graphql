@@ -1,17 +1,37 @@
-fragment PieceDetails on Pieces {
+fragment PieceDetails on Piece {
+  imslpPieceId: id
   id
   workName
   catalogueType
+  keySignature
+  format
+  instrumentation
+  wikipediaUrl
+  imslpUrl
+  compositionYear
+  catalogueNumberSecondary
+  catalogueTypeNumDesc
+  compositionYearDesc
+  compositionYearString
+  pieceStyle
+  subPieceType
+  subPieceCount
+
   catalogueNumber
   nickname
+  composerId
   composer {
     name
   }
-  movements: movementsCollection(orderBy: [{ number: DescNullsLast }]) {
+  movements: movementCollection(orderBy: [{ number: AscNullsLast }]) {
     edges {
       node {
         id
         name
+        keySignature
+        nickname
+        downloadUrl
+        pieceId
         number
       }
     }

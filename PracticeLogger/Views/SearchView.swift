@@ -10,21 +10,9 @@ import SwiftUI
 
 struct SearchView: View {
     @ObservedObject var searchViewModel: SearchViewModel
-
+    @ObservedObject var practiceSessionViewModel: PracticeSessionViewModel
+    @Binding var path: NavigationPath
     var body: some View {
-        Picker("Key Signature", selection: $searchViewModel.selectedKeySignature) {
-            Text("Key Signature").tag(KeySignatureType?.none)
-            ForEach(KeySignatureType.allCases) { keySignature in
-                Text(keySignature.rawValue).tag(KeySignatureType?(keySignature))
-            }
-        }
-        .pickerStyle(MenuPickerStyle())
-        .onChange(of: searchViewModel.selectedKeySignature) {
-            Task {
-                await searchViewModel.searchPieces()
-            }
-        }
-
         List {
             if !searchViewModel.userPieces.isEmpty {
                 Section(header: Text("Pieces")) {
@@ -40,13 +28,42 @@ struct SearchView: View {
             }
             if !searchViewModel.newPieces.isEmpty {
                 Section(header: Text("New Pieces")) {
-                    ForEach(searchViewModel.newPieces) { piece in
-                        NavigationLink(
-                            value: PieceNavigationContext.newPiece(piece), label: {
-//                                RepertoireRow(piece: piece)
-                                Text("New piece: \(piece.workName)")
+                    ForEach(searchViewModel.newPieces, id: \.id) { piece in
+                        Button(action: {
+                            searchViewModel.selectedPiece = piece
+                        }, label: {
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text(piece.workName)
+                                        .font(.headline)
+                                    if let composer = piece.composer {
+                                        Text(composer.name)
+                                            .font(.subheadline)
+                                            .foregroundColor(.gray)
+                                    }
+                                }
+
+                                Spacer()
+
+                                Image(systemName: "plus.rectangle")
+                                    .foregroundColor(.gray)
                             }
-                        )
+                            .contentShape(Rectangle())
+                        })
+                    }
+                    .sheet(item: $searchViewModel.selectedPiece) { piece in
+                        NavigationStack {
+                            PieceEdit(
+                                piece: piece,
+                                onPieceCreated: { @Sendable piece in
+                                    path.append(PieceNavigationContext.userPiece(piece))
+                                    await MainActor.run {
+                                        searchViewModel.newPieces.removeAll()
+                                        searchViewModel.searchTerm = ""
+                                    }
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -56,14 +73,34 @@ struct SearchView: View {
                 await searchViewModel.searchPieces()
             }
         }
+        .onAppear {
+            Task {
+                await searchViewModel.searchPieces()
+            }
+        }
     }
 }
 
-// #Preview {
-//    SearchView(searchViewModel: SearchViewModel())
-// }
-
 enum PieceNavigationContext: Hashable {
     case userPiece(PieceDetails)
-    case newPiece(Piece) // new piece
+    case newPiece(ImslpPieceDetails)
+}
+
+struct SearchView_Previews: PreviewProvider {
+    static var previews: some View {
+        let viewModel = SearchViewModel()
+        viewModel.newPieces = ImslpPieceDetails.samplePieces
+
+        return NavigationStack {
+            StateWrapper(viewModel: viewModel)
+        }
+    }
+
+    private struct StateWrapper: View {
+        let viewModel: SearchViewModel
+        @State private var path = NavigationPath()
+        var body: some View {
+            SearchView(searchViewModel: viewModel, practiceSessionViewModel: PracticeSessionViewModel(), path: $path)
+        }
+    }
 }

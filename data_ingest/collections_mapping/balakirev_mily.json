@@ -1,0 +1,56 @@
+{
+  "Mazurkas": {
+    "url": null,
+    "pieces": [
+      "https://imslp.org/wiki/Mazurka_No.1_(Balakirev%2C_Mily)",
+      "https://imslp.org/wiki/Mazurka_No.2_(Balakirev%2C_Mily)",
+      "https://imslp.org/wiki/Mazurka_No.3_(Balakirev%2C_Mily)",
+      "https://imslp.org/wiki/Mazurka_No.4_(Balakirev%2C_Mily)",
+      "https://imslp.org/wiki/Mazurka_No.5_(Balakirev%2C_Mily)",
+      "https://imslp.org/wiki/Mazurka_No.6_(Balakirev%2C_Mily)",
+      "https://imslp.org/wiki/Mazurka_No.7_(Balakirev%2C_Mily)"
+    ]
+  },
+  "Nocturnes": {
+    "url": "https://imslp.org/wiki/6_French_Suites,_BWV_812-817_(Bach,_Johann_Sebastian)",
+    "pieces": [
+      "https://imslp.org/wiki/Nocturne_No.1_(Balakirev%2C_Mily)",
+      "https://imslp.org/wiki/Nocturne_No.2_(Balakirev%2C_Mily)",
+      "https://imslp.org/wiki/Nocturne_No.3_(Balakirev%2C_Mily)"
+    ]
+  },
+  "Piano Concertos": {
+    "url": null,
+    "pieces": [
+      "https://imslp.org/wiki/Piano_Concerto_No.1%2C_Op.1_(Balakirev%2C_Mily)",
+      "https://imslp.org/wiki/Piano_Concerto_No.2_(Balakirev%2C_Mily)"
+    ]
+  },
+  "Piano Sonatas": {
+    "url": "https://imslp.org/wiki/Das_wohltemperierte_Klavier_I,_BWV_846-869_(Bach,_Johann_Sebastian)",
+    "pieces": [
+      "https://imslp.org/wiki/Piano_Sonata_No.1%2C_Op.5_(Balakirev%2C_Mily)",
+      "https://imslp.org/wiki/Piano_Sonata_No.2_(Balakirev%2C_Mily)"
+    ]
+  },
+  "Scherzos": {
+    "url": "https://imslp.org/wiki/Das_wohltemperierte_Klavier_II,_BWV_870-893_(Bach,_Johann_Sebastian)",
+    "pieces": [
+      "https://imslp.org/wiki/Scherzo_No.1_(Balakirev%2C_Mily)",
+      "https://imslp.org/wiki/Scherzo_No.2_(Balakirev%2C_Mily)",
+      "https://imslp.org/wiki/Scherzo_No.3_(Balakirev%2C_Mily)"
+    ]
+  },
+  "Waltzes": {
+    "url": null,
+    "pieces": [
+      "https://imslp.org/wiki/Waltz_No.1_(Balakirev%2C_Mily)",
+      "https://imslp.org/wiki/Waltz_No.2_(Balakirev%2C_Mily)",
+      "https://imslp.org/wiki/Waltz_No.3_(Balakirev%2C_Mily)",
+      "https://imslp.org/wiki/Waltz_No.4_(Balakirev%2C_Mily)",
+      "https://imslp.org/wiki/Waltz_No.5_(Balakirev%2C_Mily)",
+      "https://imslp.org/wiki/Waltz_No.6_(Balakirev%2C_Mily)",
+      "https://imslp.org/wiki/Waltz_No.7_(Balakirev%2C_Mily)"
+    ]
+  }
+}

@@ -54,7 +54,13 @@ struct RecentPracticeSessions: View {
                 }
             }
             .navigationDestination(for: PieceNavigationContext.self) { context in
-                destination(for: context)
+                switch context {
+                case .userPiece(let piece):
+                    PieceShow(piece: piece, sessionManager: practiceSessionViewModel)
+                case .newPiece(let piece):
+                    // Handle navigation for new pieces if needed
+                    EmptyView()
+                }
             }
         }
         .searchable(text: $searchViewModel.searchTerm, isPresented: $isSearching)
@@ -94,7 +100,7 @@ struct RecentPracticeSessions: View {
     private func destination(for context: PieceNavigationContext) -> some View {
         switch context {
         case .newPiece(let piece):
-            return AnyView(PieceEdit(piece: piece, path: $path))
+            return AnyView(PieceEdit(piece: piece))
         case .userPiece(let piece):
             return AnyView(PieceShow(piece: piece, sessionManager: practiceSessionViewModel))
         }
@@ -102,7 +108,7 @@ struct RecentPracticeSessions: View {
 
     private func SearchViewContainer() -> some View {
         VStack {
-            SearchView(searchViewModel: searchViewModel)
+            SearchView(searchViewModel: searchViewModel, practiceSessionViewModel: practiceSessionViewModel, path: $path)
                 .background(Color.white)
         }
         .padding(.vertical, 2)

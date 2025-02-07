@@ -1,0 +1,46 @@
+{
+  "Piano Concertos": {
+    "url": "https://imslp.org/wiki/Category:Bartok,_Bela",
+    "pieces": [
+      "https://imslp.org/wiki/Piano_Concerto_No.1,Sz.83(Bartók,_Béla)",
+      "https://imslp.org/wiki/Piano_Concerto_No.2,Sz.95(Bartók,_Béla)",
+      "https://imslp.org/wiki/Piano_Concerto_No.3,Sz.119(Bartók,_Béla)"
+    ]
+  },
+  "Violin Concertos": {
+    "url": "https://imslp.org/wiki/Category:Bartok,_Bela",
+    "pieces": [
+      "https://imslp.org/wiki/Violin_Concerto_No.1,Sz.36(Bartók,_Béla)",
+      "https://imslp.org/wiki/Violin_Concerto_No.2,Sz.112(Bartók,_Béla)"
+    ]
+  },
+  "String Quartets": {
+    "url": "https://imslp.org/wiki/Category:Bartok,_Bela",
+    "pieces": [
+      "https://imslp.org/wiki/String_Quartet_No.1,Sz.40(Bartók,_Béla)",
+      "https://imslp.org/wiki/String_Quartet_No.2,Sz.67(Bartók,_Béla)",
+      "https://imslp.org/wiki/String_Quartet_No.3,Sz.85(Bartók,_Béla)",
+      "https://imslp.org/wiki/String_Quartet_No.4,Sz.91(Bartók,_Béla)",
+      "https://imslp.org/wiki/String_Quartet_No.5,Sz.102(Bartók,_Béla)",
+      "https://imslp.org/wiki/String_Quartet_No.6,Sz.114(Bartók,_Béla)"
+    ]
+  },
+  "Violin Sonatas": {
+    "url": "https://imslp.org/wiki/Category:Bartok,_Bela",
+    "pieces": [
+      "https://imslp.org/wiki/Violin_Sonata_No.1,Sz.75(Bartók,_Béla)",
+      "https://imslp.org/wiki/Violin_Sonata_No.2,Sz.76(Bartók,_Béla)"
+    ]
+  },
+  "Rhapsodies": {
+    "url": null,
+    "pieces": [
+      "https://imslp.org/wiki/Rhapsody_for_Piano%2C_Sz.26_(Bart%C3%B3k%2C_B%C3%A9la)",
+      "https://imslp.org/wiki/Rhapsody_for_Piano_and_Orchestra,_Sz.27_(Bart%C3%B3k,_B%C3%A9la)",
+      "https://imslp.org/wiki/Violin_Rhapsody_No.1,_Sz.87_(Bart%C3%B3k,_B%C3%A9la)",
+      "https://imslp.org/wiki/Violin_Rhapsody_No.2,_Sz.90_(Bart%C3%B3k,_B%C3%A9la)",
+      "https://imslp.org/wiki/Suite_No.1%2C_Op.3_(Bart%C3%B3k%2C_B%C3%A9la)",
+      "https://imslp.org/wiki/Suite_No.2,_Op.4_(Bart%C3%B3k,_B%C3%A9la)"
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+[project]
+name = "data-ingest"
+version = "0.1.0"
+description = "Scripts to scrape data and insert into database"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "beautifulsoup4>=4.12.3",
+    "imslp>=0.2.3",
+    "polars>=1.14.0",
+    "psycopg2-binary>=2.9.10",
+    "psycopg2>=2.9.10",
+    "pytest>=8.3.3",
+    "ruff>=0.7.4",
+    "selenium>=4.26.1",
+    "webdriver-manager>=4.0.2",
+    "ipykernel>=6.29.5",
+    "numpy==2.0",
+    "setuptools>=75.6.0",
+    "pyarrow>=18.0.0",
+]
+[tool.pytest.ini_options]
+pythonpath = ["."]
+[tool.ruff]
+exclude = ["venv"]
+[tool.ruff.lint]
+ignore = ["D100", "D101", "D102", "D103", "C0116"]
+
+[dependency-groups]
+dev = ["pandas>=2.2.3", "pyspark>=3.5.3", "ydata-profiling>=4.12.0"]
