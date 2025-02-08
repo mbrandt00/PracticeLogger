@@ -102,7 +102,7 @@ logger.info(f"Created unique instruments DataFrame with shape: {unique_instrumen
 
 df = filtered_df.unique()
 
-db = SupabaseDatabase()
+db = SupabaseDatabase(env="prod")
 try:
    logger.info("Starting database insertion")
    successful, failed = db.bulk_insert_from_df(df)
