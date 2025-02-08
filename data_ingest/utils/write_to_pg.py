@@ -1,33 +1,44 @@
+import argparse
 import glob
 import logging
 import os
 from pathlib import Path
 
 import polars as pl
-from supabase_database import SupabaseDatabase
 
-# Configure logging
+from .supabase_database import SupabaseDatabase
+
+parser = argparse.ArgumentParser(description='Process data with environment selection')
+parser.add_argument('--env', 
+                   choices=['prod', 'local'],
+                   default='local',
+                   help='Environment to use (prod or local)')
+args = parser.parse_args()
+
 logging.basicConfig(
-   level=logging.INFO,
-   format='%(asctime)s - %(levelname)s - %(message)s',
-   datefmt='%Y-%m-%d %H:%M:%S'
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
 )
 logger = logging.getLogger(__name__)
 
 # Find most recent file matching pattern
 pattern = "full_df_*.parquet"
-try:
-   files = glob.glob(pattern)
-   if not files:
-       logger.error(f"No files found matching pattern: {pattern}")
-       raise FileNotFoundError(f"No files found matching pattern: {pattern}")
-   
-   latest_file = max(files, key=os.path.getctime)  # Get most recent file
-   logger.info(f"Reading from most recent file: {latest_file}")
-   
-   df = pl.read_parquet(Path(latest_file))
-   logger.info(f"Successfully loaded DataFrame with shape: {df.shape}")
+script_dir = os.path.dirname(os.path.abspath(__file__))
+parquet_dir = os.path.join(script_dir, '..', 'parquet')
+search_path = os.path.join(parquet_dir, pattern)
 
+try:
+    files = glob.glob(search_path)
+    if not files:
+        logger.error(f"No files found matching pattern: {search_path}")
+        raise FileNotFoundError(f"No files found matching pattern: {search_path}")
+    
+    latest_file = max(files, key=os.path.getctime)  # Get most recent file
+    logger.info(f"Reading from most recent file: {latest_file}")
+    
+    df = pl.read_parquet(Path(latest_file))
+    logger.info(f"Successfully loaded DataFrame with shape: {df.shape}")
 except Exception as e:
    logger.error(f"Error reading parquet file: {e}")
    raise
@@ -102,7 +113,8 @@ logger.info(f"Created unique instruments DataFrame with shape: {unique_instrumen
 
 df = filtered_df.unique()
 
-db = SupabaseDatabase(env="prod")
+# raise ValueError(df.schema)
+db = SupabaseDatabase(env=args.env)
 try:
    logger.info("Starting database insertion")
    successful, failed = db.bulk_insert_from_df(df)
