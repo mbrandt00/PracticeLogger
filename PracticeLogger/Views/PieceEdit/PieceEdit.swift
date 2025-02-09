@@ -278,58 +278,12 @@ struct PieceEdit: View {
     }
 }
 
-//
-// struct PieceEdit_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NavigationStack {
-//            PieceEdit(
-//                piece: PieceDetails(
-//                    id: "12345",
-//                    workName: "Symphony No. 5",
-//                    catalogueType: GraphQLEnum(CatalogueType.op.rawValue),
-//                    keySignature: GraphQLEnum(KeySignatureType.cminor),
-//                    format: GraphQLEnum(PieceFormat.symphony.rawValue),
-//                    instrumentation: ["Violin", "Cello", "Bassoon", "Chorus"],
-//                    wikipediaUrl: "https://en.wikipedia.org/wiki/Symphony_No._5_(Beethoven)",
-//                    imslpUrl: "https://imslp.org/wiki/Symphony_No.5,_Op.67_(Beethoven,_Ludwig_van)",
-//                    compositionYear: 1804,
-//                    catalogueNumber: 67,
-//                    nickname: "My really really really long nickname jkl;asd",
-//                    composer: PieceDetails.Composer(name: "Ludwig van Beethoven"),
-//                    movements: PieceDetails.Movements(
-//                        edges: [
-//                            PieceDetails.Movements.Edge(
-//                                node: PieceDetails.Movements.Edge.Node(
-//                                    id: "1",
-//                                    name: "Allegro con brio",
-//                                    number: 1
-//                                )
-//                            ),
-//                            PieceDetails.Movements.Edge(
-//                                node: PieceDetails.Movements.Edge.Node(
-//                                    id: "2",
-//                                    name: "Andante con moto",
-//                                    number: 2
-//                                )
-//                            ),
-//                            PieceDetails.Movements.Edge(
-//                                node: PieceDetails.Movements.Edge.Node(
-//                                    id: "3",
-//                                    name: "Scherzo: Allegro",
-//                                    number: 3
-//                                )
-//                            ),
-//                            PieceDetails.Movements.Edge(
-//                                node: PieceDetails.Movements.Edge.Node(
-//                                    id: "4",
-//                                    name: "Allegro - Presto",
-//                                    number: 4
-//                                )
-//                            )
-//                        ]
-//                    )
-//                ),
-//            )
-//        }
-//    }
-// }
+struct PieceEdit_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            PieceEdit(
+                piece: ImslpPieceDetails.samplePieces[0]
+            )
+        }
+    }
+}

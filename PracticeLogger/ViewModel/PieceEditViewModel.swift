@@ -105,11 +105,23 @@ class EditableMovement: Identifiable, ObservableObject {
     @Published var id: ApolloGQL.BigInt
     @Published var name: String?
     @Published var number: Int?
+    @Published var pieceId: String?
 
     init(from node: ImslpPieceDetails.Movements.Edge.Node) {
         self.id = node.id
         self.name = node.name
         self.number = node.number
+        self.pieceId = node.pieceId
+    }
+}
+
+extension EditableMovement {
+    func toGraphQLInput() -> MovementInsertInput {
+        MovementInsertInput(
+            //            pieceId: .some(pieceId ?? ""),
+            name: name.map { .some($0) } ?? .null,
+            number: .some(number ?? 0)
+        )
     }
 }
 
