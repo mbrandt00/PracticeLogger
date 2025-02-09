@@ -11,7 +11,9 @@ import SwiftUI
 struct PracticeLoggerApp: App {
     @State private var isSignedIn = false
     init() {
-        UITextField.appearance().clearButtonMode = .whileEditing
+        DispatchQueue.main.async {
+            UITextField.appearance().clearButtonMode = .whileEditing
+        }
     }
 
     var body: some Scene {
