@@ -71,8 +71,14 @@ filtered_df = (
 
 logger.info(f"After initial filtering and join, DataFrame shape: {filtered_df.shape}")
 
+filtered_df.schema
+print(filtered_df.count())
+print("HEAD")
+print(df.head(1))
 filtered_df = filtered_df.filter(
-   ~(pl.col("instrumentation").list.get(0).str.contains("chorus|SATB|mixed chorus"))
+    pl.when(pl.col("instrumentation").list.len() > 0)
+    .then(~pl.col("instrumentation").list.first().str.contains("chorus|SATB|mixed chorus"))
+    .otherwise(True)
 )
 
 logger.info("Applied chorus/SATB filtering")
