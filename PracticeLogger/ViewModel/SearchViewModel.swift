@@ -90,7 +90,10 @@ class SearchViewModel: ObservableObject {
 
     func searchImslpPieces() async throws -> [ImslpPieceDetails]? {
         return try await withCheckedThrowingContinuation { continuation in
-            Network.shared.apollo.fetch(query: SearchImslpPiecesQuery(query: searchTerm, filterUserPieces: true)) { result in
+            let direction = GraphQLEnum(OrderByDirection.ascNullsFirst)
+            let orderBy: GraphQLNullable<[ImslpPieceOrderBy]> = .some([ImslpPieceOrderBy(catalogueNumber: .some(direction))])
+
+            Network.shared.apollo.fetch(query: SearchImslpPiecesQuery(query: searchTerm, filterUserPieces: true, orderBy: orderBy)) { result in
                 switch result {
                 case .success(let graphQlResult):
                     if let data = graphQlResult.data?.searchImslpPieces {
