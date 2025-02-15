@@ -141,21 +141,6 @@ struct PieceEdit: View {
                 .textFieldStyle(PlainTextFieldStyle())
                 .fixedSize(horizontal: false, vertical: true)
             }
-            
-            HStack {
-                Text("IMSLP URL")
-                Spacer()
-                TextField("Optional", text: Binding(
-                    get: { viewModel.editablePiece.imslpUrl ?? "" },
-                    set: { newValue in
-                        viewModel.editablePiece.imslpUrl = newValue.isEmpty ? nil : newValue
-                    }
-                ))
-                .frame(maxWidth: 200)
-                .multilineTextAlignment(.trailing)
-                .textFieldStyle(PlainTextFieldStyle())
-                .fixedSize(horizontal: false, vertical: true)
-            }
         }
     }
     
