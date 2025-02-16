@@ -40,7 +40,7 @@ class SearchViewModel: ObservableObject {
         return try await withCheckedThrowingContinuation { continuation in
             let filter = PieceFilter(userId: .some(UUIDFilter(eq: .some(userId.uuidString))))
             let direction = GraphQLEnum(OrderByDirection.descNullsFirst)
-            let orderBy: GraphQLNullable<[PieceOrderBy]> = .some([PieceOrderBy(createdAt: .some(direction))])
+            let orderBy: GraphQLNullable<[PieceOrderBy]> = .some([PieceOrderBy(lastPracticed: .some(direction))])
 
             let fetchPolicy: CachePolicy = forceFetch ? .fetchIgnoringCacheData : .returnCacheDataElseFetch
 
@@ -68,7 +68,9 @@ class SearchViewModel: ObservableObject {
 
     func getUserPieces() async throws -> [PieceDetails]? {
         return try await withCheckedThrowingContinuation { continuation in
-            Network.shared.apollo.fetch(query: SearchUserPiecesQuery(query: searchTerm)) { result in
+            let direction = GraphQLEnum(OrderByDirection.descNullsFirst)
+            let orderBy: GraphQLNullable<[PieceOrderBy]> = .some([PieceOrderBy(lastPracticed: .some(direction))])
+            Network.shared.apollo.fetch(query: SearchUserPiecesQuery(query: searchTerm, orderBy: orderBy)) { result in
                 switch result {
                 case .success(let graphQlResult):
                     if let data = graphQlResult.data?.searchUserPieces {

@@ -33,7 +33,9 @@ public struct PieceOrderBy: InputObject {
     subPieceType: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
     subPieceCount: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
     imslpUrl: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
-    imslpPieceId: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil
+    imslpPieceId: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
+    totalPracticeTime: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
+    lastPracticed: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil
   ) {
     __data = InputDict([
       "id": id,
@@ -58,7 +60,9 @@ public struct PieceOrderBy: InputObject {
       "subPieceType": subPieceType,
       "subPieceCount": subPieceCount,
       "imslpUrl": imslpUrl,
-      "imslpPieceId": imslpPieceId
+      "imslpPieceId": imslpPieceId,
+      "totalPracticeTime": totalPracticeTime,
+      "lastPracticed": lastPracticed
     ])
   }
 
@@ -175,5 +179,15 @@ public struct PieceOrderBy: InputObject {
   public var imslpPieceId: GraphQLNullable<GraphQLEnum<OrderByDirection>> {
     get { __data["imslpPieceId"] }
     set { __data["imslpPieceId"] = newValue }
+  }
+
+  public var totalPracticeTime: GraphQLNullable<GraphQLEnum<OrderByDirection>> {
+    get { __data["totalPracticeTime"] }
+    set { __data["totalPracticeTime"] = newValue }
+  }
+
+  public var lastPracticed: GraphQLNullable<GraphQLEnum<OrderByDirection>> {
+    get { __data["lastPracticed"] }
+    set { __data["lastPracticed"] = newValue }
   }
 }

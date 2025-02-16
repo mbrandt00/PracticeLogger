@@ -85,7 +85,7 @@ struct MovementSection: View {
             ForEach(movements) { movement in
                 MovementRow(
                     movement: movement,
-                    index: movements.firstIndex(of: movement) ?? 0, // Get index this way instead
+                    index: movements.firstIndex(of: movement) ?? 0,
                     onUpdate: { newName in
                         withAnimation {
                             if let index = movements.firstIndex(of: movement) {
@@ -93,32 +93,27 @@ struct MovementSection: View {
                             }
                         }
                     },
-                    
                     onKeySignatureUpdate: { newKeySignature in
                         withAnimation {
                             if let index = movements.firstIndex(of: movement) {
                                 updateMovementKeySignature(at: index, newKeySignature: newKeySignature)
                             }
                         }
-                    }
-                )
-                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                    Button(role: .destructive) {
+                    },
+                    onDelete: {
                         withAnimation {
                             if let index = movements.firstIndex(of: movement) {
                                 deleteMovement(at: index)
                             }
                         }
-                    } label: {
-                        Label("Delete", systemImage: "trash")
                     }
-                }
+                )
             }
             .onMove { source, destination in
                 movements.move(fromOffsets: source, toOffset: destination)
                 movements.indices.forEach { movements[$0].number = $0 + 1 }
             }
-            
+                
             if isAddingMovement {
                 NewMovementRow(
                     newMovementName: $newMovementName,
@@ -215,6 +210,7 @@ struct MovementRow: View {
     let index: Int
     let onUpdate: (String) -> Void
     let onKeySignatureUpdate: (GraphQLEnum<ApolloGQL.KeySignatureType>?) -> Void
+    let onDelete: () -> Void // Add new onDelete handler
     
     @State private var editedName: String = ""
     @State private var selectedKeySignature: GraphQLEnum<ApolloGQL.KeySignatureType>?
@@ -234,6 +230,12 @@ struct MovementRow: View {
                         onUpdate(newValue)
                     }
                 Spacer()
+                
+                Button(action: onDelete) {
+                    Image(systemName: "trash")
+                        .foregroundColor(.red)
+                }
+                .buttonStyle(BorderlessButtonStyle())
             }
             
             KeySignaturePicker(selectedKeySignature: $selectedKeySignature)

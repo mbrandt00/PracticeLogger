@@ -115,6 +115,7 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
     public var compositionYearDesc: String? { __data["compositionYearDesc"] }
     public var compositionYearString: String? { __data["compositionYearString"] }
     public var pieceStyle: String? { __data["pieceStyle"] }
+    public var totalPracticeTime: Int? { __data["totalPracticeTime"] }
     public var subPieceType: String? { __data["subPieceType"] }
     public var subPieceCount: Int? { __data["subPieceCount"] }
     public var catalogueNumber: Int? { __data["catalogueNumber"] }
@@ -146,6 +147,7 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
       compositionYearDesc: String? = nil,
       compositionYearString: String? = nil,
       pieceStyle: String? = nil,
+      totalPracticeTime: Int? = nil,
       subPieceType: String? = nil,
       subPieceCount: Int? = nil,
       catalogueNumber: Int? = nil,
@@ -172,6 +174,7 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
           "compositionYearDesc": compositionYearDesc,
           "compositionYearString": compositionYearString,
           "pieceStyle": pieceStyle,
+          "totalPracticeTime": totalPracticeTime,
           "subPieceType": subPieceType,
           "subPieceCount": subPieceCount,
           "catalogueNumber": catalogueNumber,

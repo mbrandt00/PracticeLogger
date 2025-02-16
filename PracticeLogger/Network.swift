@@ -49,12 +49,12 @@ class NetworkInterceptorProvider: InterceptorProvider {
         return [
             AuthorizationInterceptor(),
             MaxRetryInterceptor(),
-            CacheReadInterceptor(store: store),
+//            CacheReadInterceptor(store: store),
             NetworkFetchInterceptor(client: client),
             ResponseCodeInterceptor(),
             JSONResponseParsingInterceptor(),
             AutomaticPersistedQueryInterceptor(),
-            CacheWriteInterceptor(store: store)
+//            CacheWriteInterceptor(store: store)
         ]
     }
 }
