@@ -42,7 +42,6 @@ struct RecentPracticeSessions: View {
                         }
                     }
                 }
-                .padding(.bottom, practiceSessionViewModel.activeSession != nil ? 55 : 0)
                 .navigationTitle("Recent Sessions")
                 .autocorrectionDisabled()
                 .onAppear {
