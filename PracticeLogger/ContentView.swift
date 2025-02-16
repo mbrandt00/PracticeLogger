@@ -31,29 +31,32 @@ struct ContentView: View {
 
     var body: some View {
         if isSignedIn {
-            ZStack {
-                TabView(selection: $selectedTab) {
-                    ProgressView()
-                        .tabItem {
-                            Label("Progress", systemImage: "chart.xyaxis.line")
-                        }
-                        .tag(Tabs.progress)
+            GeometryReader { geometry in
+                ZStack(alignment: .bottom) {
+                    TabView(selection: $selectedTab) {
+                        ProgressView()
+                            .bottomSheetAware(geometry: geometry)
+                            .tabItem {
+                                Label("Progress", systemImage: "chart.xyaxis.line")
+                            }
+                            .tag(Tabs.progress)
 
-                    RecentPracticeSessions(practiceSessionViewModel: practiceSessionViewModel)
-                        .tabItem {
-                            Label("Practice", systemImage: "metronome")
-                        }
-                        .tag(Tabs.practice)
+                        RecentPracticeSessions(practiceSessionViewModel: practiceSessionViewModel)
+                            .bottomSheetAware(geometry: geometry)
+                            .tabItem {
+                                Label("Practice", systemImage: "metronome")
+                            }
+                            .tag(Tabs.practice)
 
-                    Profile(isSignedIn: $isSignedIn)
-                        .tabItem {
-                            Label("Profile", systemImage: "person")
-                        }
-                        .tag(Tabs.profile)
-                }
+                        Profile(isSignedIn: $isSignedIn)
+                            .bottomSheetAware(geometry: geometry)
+                            .tabItem {
+                                Label("Profile", systemImage: "person")
+                            }
+                            .tag(Tabs.profile)
+                    }
 
-                if let activeSession = practiceSessionViewModel.activeSession {
-                    GeometryReader { geometry in
+                    if let activeSession = practiceSessionViewModel.activeSession {
                         VStack {
                             Spacer()
                             BottomSheet(

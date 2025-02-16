@@ -1,24 +1,20 @@
 import json
 import logging
 import os
-import re
 import sys
 import time
-from typing import List, Literal, Optional, Union
+from typing import List, Literal
 from urllib.parse import quote, urlparse
 
-import polars as pl
-import requests
-from bs4 import BeautifulSoup
-from pieces import Piece, create_piece
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from supabase_database import SupabaseDatabase
 from webdriver_manager.chrome import ChromeDriverManager
+
+from .pieces import create_piece
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 

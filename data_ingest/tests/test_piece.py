@@ -1,5 +1,6 @@
 import pytest
 
+from utils.enums.piece_format import PieceFormat
 from utils.pieces import create_piece, parse_metadata
 
 
@@ -38,6 +39,7 @@ def test_parse_metadata():
                 "piece_style": "romantic",
                 "sub_piece_type": "movements",
                 "sub_piece_count": 4,
+                "piece_format": PieceFormat.SONATA,
             },
         ),
         (
@@ -55,6 +57,7 @@ def test_parse_metadata():
                 "piece_style": "classical",
                 "sub_piece_type": "movements",
                 "sub_piece_count": 3,
+                "piece_format": PieceFormat.SONATA,
             },
         ),
         (
@@ -72,6 +75,7 @@ def test_parse_metadata():
                 "piece_style": "baroque",
                 "sub_piece_type": "movements",
                 "sub_piece_count": 7,
+                "piece_format": PieceFormat.SUITE,
             },
         ),
         (
@@ -89,6 +93,7 @@ def test_parse_metadata():
                 "piece_style": "romantic",
                 "sub_piece_type": "pieces",
                 "sub_piece_count": 3,
+                "piece_format": PieceFormat.SUITE,
             },
         ),
         (
@@ -106,6 +111,7 @@ def test_parse_metadata():
                 "piece_style": "romantic",
                 "sub_piece_type": "movements",
                 "sub_piece_count": 4,
+                "piece_format": PieceFormat.SONATA,
             },
         ),
     ],
@@ -126,7 +132,7 @@ def test_create_piece_from_tag(url, expected_data):
     assert data.piece_style == expected_data["piece_style"]
     assert data.sub_piece_type == expected_data["sub_piece_type"]
     assert data.sub_piece_count == expected_data["sub_piece_count"]
-
+    assert data.format == expected_data["piece_format"]
 
 @pytest.mark.parametrize(
     "url, expected_data",
@@ -146,6 +152,7 @@ def test_create_piece_from_tag(url, expected_data):
                 "piece_style": "classical",
                 "catalogue_number_secondary": 1,
                 "sub_piece_type": "movements",
+                "piece_format": PieceFormat.SONATA,
             },
         ),
         (
@@ -163,6 +170,7 @@ def test_create_piece_from_tag(url, expected_data):
                 "piece_style": "romantic",
                 "catalogue_number_secondary": None,
                 "sub_piece_type": None,
+                "piece_format": PieceFormat.SCHERZO,
             },
         ),
         (
@@ -180,6 +188,7 @@ def test_create_piece_from_tag(url, expected_data):
                 "piece_style": "romantic",
                 "catalogue_number_secondary": None,
                 "sub_piece_type": None,
+                "piece_format": PieceFormat.SCHERZO,
             },
         ),
         (
@@ -192,11 +201,12 @@ def test_create_piece_from_tag(url, expected_data):
                 "composition_year": 1903,
                 "key_signature": None,
                 "movements_count": 8,
-                "nickname": "Восемь этюдов",  #
+                "nickname": "Восемь этюдов",
                 "instrumentation": ["piano"],
                 "piece_style": "romantic",
                 "catalogue_number_secondary": None,
                 "sub_piece_type": "etudes",
+                "piece_format": PieceFormat.ETUDE,
             },
         ),
         (
@@ -209,11 +219,12 @@ def test_create_piece_from_tag(url, expected_data):
                 "composition_year": 1934,
                 "key_signature": "aminor",
                 "movements_count": 25,
-                "nickname": "Рапсодия на тему Паганини (Rapsodiya na temu Paganini)",  #
+                "nickname": "Рапсодия на тему Паганини (Rapsodiya na temu Paganini)",
                 "instrumentation": ["piano", "orchestra"],
                 "piece_style": "romantic",
                 "catalogue_number_secondary": None,
                 "sub_piece_type": "variations",
+                "piece_format": PieceFormat.RHAPSODY,
             },
         ),
         (
@@ -231,6 +242,7 @@ def test_create_piece_from_tag(url, expected_data):
                 "piece_style": "romantic",
                 "catalogue_number_secondary": None,
                 "sub_piece_type": "preludes",
+                "piece_format": PieceFormat.PRELUDE,
             },
         ),
         (
@@ -248,6 +260,7 @@ def test_create_piece_from_tag(url, expected_data):
                 "piece_style": "romantic",
                 "catalogue_number_secondary": None,
                 "sub_piece_type": "movements",
+                "piece_format": PieceFormat.SONATA,
             },
         ),
         (
@@ -265,6 +278,7 @@ def test_create_piece_from_tag(url, expected_data):
                 "piece_style": "romantic",
                 "catalogue_number_secondary": None,
                 "sub_piece_type": None,
+                "piece_format": None,
             },
         ),
     ],
@@ -283,7 +297,6 @@ def test_create_piece_from_url(url, expected_data):
     assert data.nickname == expected_data["nickname"]
     assert data.instrumentation == expected_data["instrumentation"]
     assert data.piece_style == expected_data["piece_style"]
-    assert (
-        data.catalogue_number_secondary == expected_data["catalogue_number_secondary"]
-    )
+    assert data.catalogue_number_secondary == expected_data["catalogue_number_secondary"]
     assert data.sub_piece_type == expected_data["sub_piece_type"]
+    assert data.format == expected_data["piece_format"]

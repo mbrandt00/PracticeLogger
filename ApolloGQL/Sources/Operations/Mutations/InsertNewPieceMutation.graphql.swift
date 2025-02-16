@@ -103,6 +103,7 @@ public class InsertNewPieceMutation: GraphQLMutation {
         public var compositionYearDesc: String? { __data["compositionYearDesc"] }
         public var compositionYearString: String? { __data["compositionYearString"] }
         public var pieceStyle: String? { __data["pieceStyle"] }
+        public var totalPracticeTime: Int? { __data["totalPracticeTime"] }
         public var subPieceType: String? { __data["subPieceType"] }
         public var subPieceCount: Int? { __data["subPieceCount"] }
         public var catalogueNumber: Int? { __data["catalogueNumber"] }
@@ -134,6 +135,7 @@ public class InsertNewPieceMutation: GraphQLMutation {
           compositionYearDesc: String? = nil,
           compositionYearString: String? = nil,
           pieceStyle: String? = nil,
+          totalPracticeTime: Int? = nil,
           subPieceType: String? = nil,
           subPieceCount: Int? = nil,
           catalogueNumber: Int? = nil,
@@ -160,6 +162,7 @@ public class InsertNewPieceMutation: GraphQLMutation {
               "compositionYearDesc": compositionYearDesc,
               "compositionYearString": compositionYearString,
               "pieceStyle": pieceStyle,
+              "totalPracticeTime": totalPracticeTime,
               "subPieceType": subPieceType,
               "subPieceCount": subPieceCount,
               "catalogueNumber": catalogueNumber,

@@ -3,7 +3,7 @@
 
 import ApolloAPI
 
-public struct PieceOrderBy: InputObject {
+public struct ImslpPieceOrderBy: InputObject {
   public private(set) var __data: InputDict
 
   public init(_ data: InputDict) {
@@ -15,7 +15,6 @@ public struct PieceOrderBy: InputObject {
     workName: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
     composerId: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
     nickname: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
-    userId: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
     format: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
     keySignature: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
     catalogueType: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
@@ -33,16 +32,13 @@ public struct PieceOrderBy: InputObject {
     subPieceType: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
     subPieceCount: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
     imslpUrl: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
-    imslpPieceId: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
-    totalPracticeTime: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
-    lastPracticed: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil
+    collectionId: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil
   ) {
     __data = InputDict([
       "id": id,
       "workName": workName,
       "composerId": composerId,
       "nickname": nickname,
-      "userId": userId,
       "format": format,
       "keySignature": keySignature,
       "catalogueType": catalogueType,
@@ -60,9 +56,7 @@ public struct PieceOrderBy: InputObject {
       "subPieceType": subPieceType,
       "subPieceCount": subPieceCount,
       "imslpUrl": imslpUrl,
-      "imslpPieceId": imslpPieceId,
-      "totalPracticeTime": totalPracticeTime,
-      "lastPracticed": lastPracticed
+      "collectionId": collectionId
     ])
   }
 
@@ -84,11 +78,6 @@ public struct PieceOrderBy: InputObject {
   public var nickname: GraphQLNullable<GraphQLEnum<OrderByDirection>> {
     get { __data["nickname"] }
     set { __data["nickname"] = newValue }
-  }
-
-  public var userId: GraphQLNullable<GraphQLEnum<OrderByDirection>> {
-    get { __data["userId"] }
-    set { __data["userId"] = newValue }
   }
 
   public var format: GraphQLNullable<GraphQLEnum<OrderByDirection>> {
@@ -176,18 +165,8 @@ public struct PieceOrderBy: InputObject {
     set { __data["imslpUrl"] = newValue }
   }
 
-  public var imslpPieceId: GraphQLNullable<GraphQLEnum<OrderByDirection>> {
-    get { __data["imslpPieceId"] }
-    set { __data["imslpPieceId"] = newValue }
-  }
-
-  public var totalPracticeTime: GraphQLNullable<GraphQLEnum<OrderByDirection>> {
-    get { __data["totalPracticeTime"] }
-    set { __data["totalPracticeTime"] = newValue }
-  }
-
-  public var lastPracticed: GraphQLNullable<GraphQLEnum<OrderByDirection>> {
-    get { __data["lastPracticed"] }
-    set { __data["lastPracticed"] = newValue }
+  public var collectionId: GraphQLNullable<GraphQLEnum<OrderByDirection>> {
+    get { __data["collectionId"] }
+    set { __data["collectionId"] = newValue }
   }
 }

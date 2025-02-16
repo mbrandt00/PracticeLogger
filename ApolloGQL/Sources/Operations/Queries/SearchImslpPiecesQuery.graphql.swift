@@ -7,24 +7,28 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
   public static let operationName: String = "SearchImslpPieces"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query SearchImslpPieces($query: String!, $filterUserPieces: Boolean = false) { searchImslpPieces(query: $query, filterUserPieces: $filterUserPieces) { __typename edges { __typename node { __typename ...ImslpPieceDetails } } } }"#,
+      #"query SearchImslpPieces($query: String!, $filterUserPieces: Boolean = false, $orderBy: [ImslpPieceOrderBy!] = []) { searchImslpPieces( query: $query filterUserPieces: $filterUserPieces orderBy: $orderBy ) { __typename edges { __typename node { __typename ...ImslpPieceDetails } } } }"#,
       fragments: [ImslpPieceDetails.self]
     ))
 
   public var query: String
   public var filterUserPieces: GraphQLNullable<Bool>
+  public var orderBy: GraphQLNullable<[ImslpPieceOrderBy]>
 
   public init(
     query: String,
-    filterUserPieces: GraphQLNullable<Bool> = false
+    filterUserPieces: GraphQLNullable<Bool> = false,
+    orderBy: GraphQLNullable<[ImslpPieceOrderBy]> = []
   ) {
     self.query = query
     self.filterUserPieces = filterUserPieces
+    self.orderBy = orderBy
   }
 
   public var __variables: Variables? { [
     "query": query,
-    "filterUserPieces": filterUserPieces
+    "filterUserPieces": filterUserPieces,
+    "orderBy": orderBy
   ] }
 
   public struct Data: ApolloGQL.SelectionSet {
@@ -35,7 +39,8 @@ public class SearchImslpPiecesQuery: GraphQLQuery {
     public static var __selections: [ApolloAPI.Selection] { [
       .field("searchImslpPieces", SearchImslpPieces?.self, arguments: [
         "query": .variable("query"),
-        "filterUserPieces": .variable("filterUserPieces")
+        "filterUserPieces": .variable("filterUserPieces"),
+        "orderBy": .variable("orderBy")
       ]),
     ] }
 

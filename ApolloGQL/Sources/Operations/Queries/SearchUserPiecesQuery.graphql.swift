@@ -7,26 +7,30 @@ public class SearchUserPiecesQuery: GraphQLQuery {
   public static let operationName: String = "SearchUserPieces"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query SearchUserPieces($query: String!, $pieceFilter: PieceFilter = {  }) { searchUserPieces(query: $query, filter: $pieceFilter) { __typename edges { __typename node { __typename ...PieceDetails } } } }"#,
+      #"query SearchUserPieces($query: String!, $pieceFilter: PieceFilter = {  }, $orderBy: [PieceOrderBy!] = []) { searchUserPieces(query: $query, filter: $pieceFilter, orderBy: $orderBy) { __typename edges { __typename node { __typename ...PieceDetails } } } }"#,
       fragments: [PieceDetails.self]
     ))
 
   public var query: String
   public var pieceFilter: GraphQLNullable<PieceFilter>
+  public var orderBy: GraphQLNullable<[PieceOrderBy]>
 
   public init(
     query: String,
     pieceFilter: GraphQLNullable<PieceFilter> = .init(
       PieceFilter()
-    )
+    ),
+    orderBy: GraphQLNullable<[PieceOrderBy]> = []
   ) {
     self.query = query
     self.pieceFilter = pieceFilter
+    self.orderBy = orderBy
   }
 
   public var __variables: Variables? { [
     "query": query,
-    "pieceFilter": pieceFilter
+    "pieceFilter": pieceFilter,
+    "orderBy": orderBy
   ] }
 
   public struct Data: ApolloGQL.SelectionSet {
@@ -37,7 +41,8 @@ public class SearchUserPiecesQuery: GraphQLQuery {
     public static var __selections: [ApolloAPI.Selection] { [
       .field("searchUserPieces", SearchUserPieces?.self, arguments: [
         "query": .variable("query"),
-        "filter": .variable("pieceFilter")
+        "filter": .variable("pieceFilter"),
+        "orderBy": .variable("orderBy")
       ]),
     ] }
 
@@ -143,6 +148,7 @@ public class SearchUserPiecesQuery: GraphQLQuery {
           public var compositionYearDesc: String? { __data["compositionYearDesc"] }
           public var compositionYearString: String? { __data["compositionYearString"] }
           public var pieceStyle: String? { __data["pieceStyle"] }
+          public var totalPracticeTime: Int? { __data["totalPracticeTime"] }
           public var subPieceType: String? { __data["subPieceType"] }
           public var subPieceCount: Int? { __data["subPieceCount"] }
           public var catalogueNumber: Int? { __data["catalogueNumber"] }
@@ -174,6 +180,7 @@ public class SearchUserPiecesQuery: GraphQLQuery {
             compositionYearDesc: String? = nil,
             compositionYearString: String? = nil,
             pieceStyle: String? = nil,
+            totalPracticeTime: Int? = nil,
             subPieceType: String? = nil,
             subPieceCount: Int? = nil,
             catalogueNumber: Int? = nil,
@@ -200,6 +207,7 @@ public class SearchUserPiecesQuery: GraphQLQuery {
                 "compositionYearDesc": compositionYearDesc,
                 "compositionYearString": compositionYearString,
                 "pieceStyle": pieceStyle,
+                "totalPracticeTime": totalPracticeTime,
                 "subPieceType": subPieceType,
                 "subPieceCount": subPieceCount,
                 "catalogueNumber": catalogueNumber,

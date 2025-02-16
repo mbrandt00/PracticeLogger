@@ -5,7 +5,8 @@ from typing import List, Optional
 
 import requests
 from bs4 import BeautifulSoup, Tag
-from helpers import parse_key_signature, section_download_link
+
+from .helpers import parse_key_signature, section_download_link
 
 
 @dataclass

@@ -4,12 +4,14 @@ from typing import Dict, List, Optional, Tuple, TypedDict
 
 import requests
 from bs4 import BeautifulSoup, Tag
-from helpers import (convert_empty_vals_to_none, parse_key_signature,
-                     standardize_dict_keys)
-from movements import Movement, parse_movements
 from requests import Session
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+
+from utils.enums.piece_format import PieceFormat, parse_piece_format
+from utils.helpers import (convert_empty_vals_to_none, parse_key_signature,
+                           standardize_dict_keys)
+from utils.movements import Movement, parse_movements
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +42,7 @@ class Piece:
     composition_year_string: Optional[str] = None
     key_signature: Optional[str] = None
     movements: List[Movement] = field(default_factory=list)  # change to sub-piece
+    format: Optional[PieceFormat] = None
     sub_piece_type: Optional[str] = None
     sub_piece_count: Optional[int] = None
     instrumentation: Optional[List[str]] = field(default_factory=list)
@@ -62,7 +65,7 @@ def parse_movements_section(td_text: str) -> Tuple[Optional[int], Optional[str]]
         - type: The type of sections (e.g. 'movements', 'preludes', 'variations')
     """
     import re
-    
+
     # First remove content in parentheses and after BWV
     cleaned_text = re.sub(r'\([^)]*\)', '', td_text)  # Remove parenthetical content
     cleaned_text = re.sub(r'BWV\s*\d+[a-z]?', '', cleaned_text)  # Remove BWV numbers
@@ -169,10 +172,10 @@ def create_piece(
                 th_text = th.get_text(strip=True)
                 if "Movements/Sections" in th_text:
                     td_text = td.get_text(strip=True)
-                    print("Raw movements text:", repr(td_text))  # Debug print
+                    # print("Raw movements text:", repr(td_text))  # Debug print
                     count, section_type = parse_movements_section(td_text)
-                    print("Parsed count:", count)  # Debug print
-                    print("Parsed type:", section_type)  # Debug print
+                    # print("Parsed count:", count)  # Debug print
+                    # print("Parsed type:", section_type)  # Debug print
                     sub_piece_count = count
                     sub_piece_type = section_type
                     break
@@ -216,6 +219,7 @@ def create_piece(
             catalogue_number=meta_attributes["catalogue_number"],
             catalogue_number_secondary=meta_attributes["catalogue_number_secondary"],
             key_signature=meta_attributes["key_signature"],
+            format=meta_attributes["piece_format"],
             instrumentation=meta_attributes["instrumentation"],
             catalogue_desc_str=meta_attributes["opus_catalogue_number_op_cat_no"],
             nickname=meta_attributes["nickname"],
@@ -235,6 +239,7 @@ class PieceMetadata(TypedDict):
     catalogue_type: Optional[str]
     composer_name: str
     catalogue_number: Optional[int]
+    piece_format: Optional[PieceFormat]
     catalogue_number_secondary: Optional[int]
     key_signature: Optional[str]
     composition_year_string: Optional[str]
@@ -378,8 +383,7 @@ def parse_metadata(data: Dict[str, str]) -> Optional[PieceMetadata]:
     # Mapping for renaming keys
     rename_map = {
         "key": "key_signature",
-        "year_date_of_composition_y_d_of_comp": "composition_year_string",
-        "composer": "composer",
+        "year_date_of_composition_y_d_of_comp": "composition_year_string"
     }
 
     # Standardize dictionary: Convert keys to snake_case and replace empty strings with None
@@ -396,6 +400,7 @@ def parse_metadata(data: Dict[str, str]) -> Optional[PieceMetadata]:
         "sub_piece_type": None,
         "sub_piece_count": None,
         "instrumentation": None,
+        "piece_format": None,
         "composition_year_string": None,
         "composition_year": None,
         "catalogue_type": None,
@@ -456,6 +461,7 @@ def parse_metadata(data: Dict[str, str]) -> Optional[PieceMetadata]:
         if " in " in work_title:
             work_title = work_title.split(" in ", 1)[0]
         processed_metadata["work_title"] = work_title
+        processed_metadata["piece_format"] = parse_piece_format(work_title)
 
     # Ensure work_title is present
     if not processed_metadata["work_title"]:

@@ -16,7 +16,9 @@ public struct MovementInsertInput: InputObject {
     number: GraphQLNullable<Int> = nil,
     keySignature: GraphQLNullable<GraphQLEnum<KeySignatureType>> = nil,
     nickname: GraphQLNullable<String> = nil,
-    downloadUrl: GraphQLNullable<String> = nil
+    downloadUrl: GraphQLNullable<String> = nil,
+    totalPracticeTime: GraphQLNullable<Int> = nil,
+    lastPracticed: GraphQLNullable<Datetime> = nil
   ) {
     __data = InputDict([
       "pieceId": pieceId,
@@ -24,7 +26,9 @@ public struct MovementInsertInput: InputObject {
       "number": number,
       "keySignature": keySignature,
       "nickname": nickname,
-      "downloadUrl": downloadUrl
+      "downloadUrl": downloadUrl,
+      "totalPracticeTime": totalPracticeTime,
+      "lastPracticed": lastPracticed
     ])
   }
 
@@ -56,5 +60,15 @@ public struct MovementInsertInput: InputObject {
   public var downloadUrl: GraphQLNullable<String> {
     get { __data["downloadUrl"] }
     set { __data["downloadUrl"] = newValue }
+  }
+
+  public var totalPracticeTime: GraphQLNullable<Int> {
+    get { __data["totalPracticeTime"] }
+    set { __data["totalPracticeTime"] = newValue }
+  }
+
+  public var lastPracticed: GraphQLNullable<Datetime> {
+    get { __data["lastPracticed"] }
+    set { __data["lastPracticed"] = newValue }
   }
 }

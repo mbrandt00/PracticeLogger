@@ -42,7 +42,6 @@ struct RecentPracticeSessions: View {
                         }
                     }
                 }
-                .padding(.bottom, practiceSessionViewModel.activeSession != nil ? 55 : 0)
                 .navigationTitle("Recent Sessions")
                 .autocorrectionDisabled()
                 .onAppear {
@@ -63,7 +62,7 @@ struct RecentPracticeSessions: View {
                 }
             }
         }
-        .searchable(text: $searchViewModel.searchTerm, isPresented: $isSearching)
+        .searchable(text: $searchViewModel.searchTerm, isPresented: $isSearching, prompt: "Search pieces")
     }
 
     private func sessionRow(session: RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge) -> some View {

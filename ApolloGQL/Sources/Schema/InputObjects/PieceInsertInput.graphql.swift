@@ -33,7 +33,9 @@ public struct PieceInsertInput: InputObject {
     subPieceType: GraphQLNullable<String> = nil,
     subPieceCount: GraphQLNullable<Int> = nil,
     imslpUrl: GraphQLNullable<String> = nil,
-    imslpPieceId: GraphQLNullable<BigInt> = nil
+    imslpPieceId: GraphQLNullable<BigInt> = nil,
+    totalPracticeTime: GraphQLNullable<Int> = nil,
+    lastPracticed: GraphQLNullable<Datetime> = nil
   ) {
     __data = InputDict([
       "workName": workName,
@@ -58,7 +60,9 @@ public struct PieceInsertInput: InputObject {
       "subPieceType": subPieceType,
       "subPieceCount": subPieceCount,
       "imslpUrl": imslpUrl,
-      "imslpPieceId": imslpPieceId
+      "imslpPieceId": imslpPieceId,
+      "totalPracticeTime": totalPracticeTime,
+      "lastPracticed": lastPracticed
     ])
   }
 
@@ -175,5 +179,15 @@ public struct PieceInsertInput: InputObject {
   public var imslpPieceId: GraphQLNullable<BigInt> {
     get { __data["imslpPieceId"] }
     set { __data["imslpPieceId"] = newValue }
+  }
+
+  public var totalPracticeTime: GraphQLNullable<Int> {
+    get { __data["totalPracticeTime"] }
+    set { __data["totalPracticeTime"] = newValue }
+  }
+
+  public var lastPracticed: GraphQLNullable<Datetime> {
+    get { __data["lastPracticed"] }
+    set { __data["lastPracticed"] = newValue }
   }
 }
