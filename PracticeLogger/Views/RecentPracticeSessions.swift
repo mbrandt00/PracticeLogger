@@ -49,7 +49,11 @@ struct RecentPracticeSessions: View {
                 }
 
                 if isSearching {
-                    SearchViewContainer()
+                    VStack {
+                        SearchView(searchViewModel: searchViewModel, practiceSessionViewModel: practiceSessionViewModel, path: $path)
+                            .background(Color.white)
+                    }
+                    .padding(.vertical, 2)
                 }
             }
             .navigationDestination(for: PieceNavigationContext.self) { context in
@@ -84,6 +88,25 @@ struct RecentPracticeSessions: View {
                 .fontWeight(.regular)
         }
         .padding(.vertical, 2)
+        .swipeActions {
+            Button(role: .destructive) {
+                Task {
+                    do {
+                        let result = try await Database.client.from("practice_sessions")
+                            .delete()
+                            .eq("id", value: session.node.id)
+                            .execute()
+
+                        print(result)
+                    } catch (let err) {
+                        print(err)
+                        // Handle errors here
+                    }
+                }
+            } label: {
+                Label("Delete", systemImage: "trash")
+            }
+        }
     }
 
     private func loadRecentSessions() {
@@ -103,13 +126,5 @@ struct RecentPracticeSessions: View {
         case .userPiece(let piece):
             return AnyView(PieceShow(piece: piece, sessionManager: practiceSessionViewModel))
         }
-    }
-
-    private func SearchViewContainer() -> some View {
-        VStack {
-            SearchView(searchViewModel: searchViewModel, practiceSessionViewModel: practiceSessionViewModel, path: $path)
-                .background(Color.white)
-        }
-        .padding(.vertical, 2)
     }
 }

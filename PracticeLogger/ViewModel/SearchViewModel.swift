@@ -13,7 +13,7 @@ import Foundation
 class SearchViewModel: ObservableObject {
     @Published var searchTerm = ""
     @Published var selectedKeySignature: KeySignatureType?
-    @Published var selectedPiece: ImslpPieceDetails? = nil
+    @Published var selectedPiece: ImslpPieceDetails?
     @Published var userPieces: [PieceDetails] = []
     @Published var newPieces: [ImslpPieceDetails] = []
 
