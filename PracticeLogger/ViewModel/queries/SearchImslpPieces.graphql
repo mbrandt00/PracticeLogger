@@ -1,22 +1,15 @@
-query SearchImslpPieces($query: String!, $filterUserPieces: Boolean = false) {
-  searchImslpPieces(query: $query, filterUserPieces: $filterUserPieces) {
+query SearchImslpPieces(
+  $query: String!
+  $filterUserPieces: Boolean = false
+  $orderBy: [ImslpPieceOrderBy!] = []
+) {
+  searchImslpPieces(
+    query: $query
+    filterUserPieces: $filterUserPieces
+    orderBy: $orderBy
+  ) {
     edges {
       node {
-        #   id
-        #   workName
-        #   catalogueNumber
-        #   catalogueType
-        #   composerId
-        #   keySignature
-        #   movementsCollection(orderBy: { number: AscNullsLast }) {
-        #     edges {
-        #       node {
-        #         nickname
-        #         number
-        #         name
-        #       }
-        #     }
-        #   }
         ...ImslpPieceDetails
       }
     }

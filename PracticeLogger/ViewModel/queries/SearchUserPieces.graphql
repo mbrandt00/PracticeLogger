@@ -1,5 +1,9 @@
-query SearchUserPieces($query: String!, $pieceFilter: PieceFilter = {}) {
-  searchUserPieces(query: $query, filter: $pieceFilter) {
+query SearchUserPieces(
+  $query: String!
+  $pieceFilter: PieceFilter = {}
+  $orderBy: [PieceOrderBy!] = []
+) {
+  searchUserPieces(query: $query, filter: $pieceFilter, orderBy: $orderBy) {
     edges {
       node {
         ...PieceDetails

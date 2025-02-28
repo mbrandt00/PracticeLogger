@@ -101,15 +101,25 @@ class EditablePiece: ObservableObject {
     }
 }
 
-class EditableMovement: Identifiable, ObservableObject {
+class EditableMovement: Identifiable, ObservableObject, Equatable {
     @Published var id: ApolloGQL.BigInt
     @Published var name: String?
     @Published var number: Int?
+    @Published var pieceId: String?
+    @Published var keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>?
+    @Published var downloadUrl: String?
 
     init(from node: ImslpPieceDetails.Movements.Edge.Node) {
         self.id = node.id
         self.name = node.name
         self.number = node.number
+        self.pieceId = node.pieceId
+        self.keySignature = node.keySignature
+        self.downloadUrl = node.downloadUrl
+    }
+
+    static func == (lhs: EditableMovement, rhs: EditableMovement) -> Bool {
+        return lhs.id == rhs.id
     }
 }
 

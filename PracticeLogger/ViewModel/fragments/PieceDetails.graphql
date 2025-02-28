@@ -14,6 +14,7 @@ fragment PieceDetails on Piece {
   compositionYearDesc
   compositionYearString
   pieceStyle
+  totalPracticeTime
   subPieceType
   subPieceCount
 
@@ -28,6 +29,7 @@ fragment PieceDetails on Piece {
       node {
         id
         name
+        totalPracticeTime
         keySignature
         nickname
         downloadUrl

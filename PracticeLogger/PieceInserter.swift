@@ -80,7 +80,9 @@ class PieceInserter {
             MovementInsertInput(
                 pieceId: pieceId != nil ? .some(pieceId) : .null,
                 name: movement.name != nil ? .some(movement.name!) : .null,
-                number: movement.number != nil ? .some(movement.number!) : .null
+                number: movement.number != nil ? .some(movement.number!) : .null,
+                keySignature: movement.keySignature != nil ? .some(movement.keySignature!) : .null,
+                downloadUrl: movement.downloadUrl != nil ? .some(movement.downloadUrl!) : .null
             )
         }
         

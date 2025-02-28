@@ -783,6 +783,8 @@ type Movement implements Node {
   keySignature: KeySignatureType
   nickname: String
   downloadUrl: String
+  totalPracticeTime: Int
+  lastPracticed: Datetime
   piece: Piece!
   practiceSessionsCollection(
     """Query the first `n` records in the collection"""
@@ -836,6 +838,8 @@ input MovementFilter {
   keySignature: KeySignatureTypeFilter
   nickname: StringFilter
   downloadUrl: StringFilter
+  totalPracticeTime: IntFilter
+  lastPracticed: DatetimeFilter
   nodeId: IDFilter
 
   """
@@ -859,6 +863,8 @@ input MovementInsertInput {
   keySignature: KeySignatureType
   nickname: String
   downloadUrl: String
+  totalPracticeTime: Int
+  lastPracticed: Datetime
 }
 
 type MovementInsertResponse {
@@ -877,6 +883,8 @@ input MovementOrderBy {
   keySignature: OrderByDirection
   nickname: OrderByDirection
   downloadUrl: OrderByDirection
+  totalPracticeTime: OrderByDirection
+  lastPracticed: OrderByDirection
 }
 
 input MovementUpdateInput {
@@ -886,6 +894,8 @@ input MovementUpdateInput {
   keySignature: KeySignatureType
   nickname: String
   downloadUrl: String
+  totalPracticeTime: Int
+  lastPracticed: Datetime
 }
 
 type MovementUpdateResponse {
@@ -1146,6 +1156,8 @@ type Piece implements Node {
   subPieceCount: Int
   imslpUrl: String
   imslpPieceId: BigInt
+  totalPracticeTime: Int
+  lastPracticed: Datetime
   composer: Composers
   imslpPiece: ImslpPiece
   movementCollection(
@@ -1241,6 +1253,8 @@ input PieceFilter {
   subPieceCount: IntFilter
   imslpUrl: StringFilter
   imslpPieceId: BigIntFilter
+  totalPracticeTime: IntFilter
+  lastPracticed: DatetimeFilter
   nodeId: IDFilter
 
   """
@@ -1334,6 +1348,8 @@ input PieceInsertInput {
   subPieceCount: Int
   imslpUrl: String
   imslpPieceId: BigInt
+  totalPracticeTime: Int
+  lastPracticed: Datetime
 }
 
 type PieceInsertResponse {
@@ -1368,6 +1384,8 @@ input PieceOrderBy {
   subPieceCount: OrderByDirection
   imslpUrl: OrderByDirection
   imslpPieceId: OrderByDirection
+  totalPracticeTime: OrderByDirection
+  lastPracticed: OrderByDirection
 }
 
 input PieceUpdateInput {
@@ -1394,6 +1412,8 @@ input PieceUpdateInput {
   subPieceCount: Int
   imslpUrl: String
   imslpPieceId: BigInt
+  totalPracticeTime: Int
+  lastPracticed: Datetime
 }
 
 type PieceUpdateResponse {

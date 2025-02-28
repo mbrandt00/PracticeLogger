@@ -1,26 +1,69 @@
 import json
 import logging
-import os
-from typing import List, Tuple
+import subprocess
+from typing import List, Literal, Tuple
 
 import polars as pl
 import psycopg2
-from imslp_utils import load_collections_mapping, urls_match
+
+from .imslp_utils import load_collections_mapping, urls_match
 
 logger = logging.getLogger(__name__)
 
 logger.setLevel(logging.ERROR)
+EnvironmentType = Literal["local", "prod"]
 
-
+def get_db_credentials(env: EnvironmentType
+) -> dict:
+    """Get database credentials from 1Password based on environment"""
+    if env == "local":
+        return {
+            "db": "postgres",
+            "user": "postgres",
+            "password": "postgres",
+            "host": "localhost",
+            "port": 54322
+        }
+    
+    try:
+        # Read from 1Password CLI
+        credentials = {}
+        fields = ["database", "user", "password", "host", "port"]
+        for field in fields:
+            result = subprocess.run(
+                ["op", "read", f"op://Personal/PracticeLogger/{field}"],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            credentials[field] = result.stdout.strip()
+        
+        return {
+            "db": credentials["database"],
+            "user": credentials["user"],
+            "password": credentials["password"],
+            "host": credentials["host"],
+            "port": int(credentials["port"])
+        }
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Failed to read from 1Password: {e}")
+        raise
+    
 class SupabaseDatabase:
-    def __init__(self, db=None, user=None, password=None, host=None, port=None):
-        """Initialize database connection and create necessary tables"""
+    def __init__(self, env: EnvironmentType = "local"):
+        """Initialize database connection and create necessary tables
+        
+        Args:
+            env: Either "local" or "prod" to determine which credentials to use
+        """
+        credentials = get_db_credentials(env)
+        
         self.conn = psycopg2.connect(
-            dbname=db or os.getenv("DB_NAME", "postgres"),
-            user=user or os.getenv("DB_USER", "postgres"),
-            password=password or os.getenv("DB_PASSWORD", "postgres"),
-            host=host or os.getenv("DB_HOST", "localhost"),
-            port=port or os.getenv("DB_PORT", 54322),
+            dbname=credentials["db"],
+            user=credentials["user"],
+            password=credentials["password"],
+            host=credentials["host"],
+            port=credentials["port"]
         )
         self.cur = self.conn.cursor()
         self.cur.execute("SET search_path TO imslp, public;")
@@ -58,9 +101,9 @@ class SupabaseDatabase:
             catalogue_number, catalogue_number_secondary, composition_year,
             composition_year_string, key_signature, sub_piece_type,
             sub_piece_count, instrumentation, nickname, piece_style,
-            imslp_url, wikipedia_url, collection_id
+            imslp_url, wikipedia_url, collection_id, format
         ) VALUES (
-            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
         )
         ON CONFLICT (imslp_url)
         DO UPDATE SET
@@ -76,7 +119,8 @@ class SupabaseDatabase:
             nickname = EXCLUDED.nickname,
             piece_style = EXCLUDED.piece_style,
             wikipedia_url = EXCLUDED.wikipedia_url,
-            collection_id = EXCLUDED.collection_id
+            collection_id = EXCLUDED.collection_id,
+            format = EXCLUDED.format
         RETURNING id;
         """
 
@@ -142,6 +186,8 @@ class SupabaseDatabase:
                         row["imslp_url"],
                         row["wikipedia_url"],
                         collection_id, 
+                        row["format"] if row.get("format") else None
+
                     ),
                 )
                 inserted_id = self.cur.fetchone()

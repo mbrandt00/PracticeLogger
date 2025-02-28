@@ -1,3 +1,4 @@
+import argparse
 import datetime
 import json
 import logging
@@ -5,9 +6,17 @@ import os
 import time
 
 import polars as pl
-from imslp_scraping import get_all_composer_pieces, get_composer_url
-from pieces import create_piece
 
+from .imslp_scraping import get_all_composer_pieces, get_composer_url
+from .pieces import create_piece
+
+# Add argument parsing at the top
+parser = argparse.ArgumentParser(description='IMSLP web scraper for composer pieces')
+parser.add_argument('--debug', 
+                   action='store_true',
+                   help='Run in debug mode with limited composer set')
+
+args = parser.parse_args()
 log_dir = "logs"
 os.makedirs(log_dir, exist_ok=True)
 
@@ -26,6 +35,11 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
+
+DEBUG_COMPOSERS = [
+    "Rachmaninoff, Sergei",
+    "Chopin, Frédéric",
+]
 
 composers = [
     "Bach, Johann Sebastian",
@@ -71,7 +85,6 @@ composers = [
     "Granados, Enrique",
     "Medtner, Nikolay",
     "Bach, Carl Philipp Emanuel",
-    "Telemann, Georg Philipp",
     "Weber, Carl Maria von",
     "Hummel, Johann Nepomuk",
     "Paganini, Niccolò",
@@ -108,19 +121,24 @@ composers = [
     "Scriabin, Aleksandr",
 ]
 
+composers = DEBUG_COMPOSERS if args.debug else composers
+
 pieces = []
+total_urls = 0  # Track total number of pieces we expect to process
+
 for composer in composers:
     logger.info("Starting import for %s", composer)
     try:
         url = get_composer_url(composer)
         data = get_all_composer_pieces(url)
+        total_urls += len(data)
         
         for piece_url in data:
             if len(pieces) % 100 == 0:
-                logger.info("Processed %s pieces", len(pieces))
+                logger.info(f"Processed {len(pieces)} pieces out of {total_urls} for {composer}")
             
             max_retries = 3
-            retry_delay = 15
+            retry_delay = 2
             
             for attempt in range(max_retries):
                 try:
@@ -130,20 +148,18 @@ for composer in composers:
                     break  
                 except ValueError as e:
                     logger.error("Error processing %s: %s", piece_url, e)
-                    if attempt < max_retries - 1:  # Don't sleep on the last attempt
+                    if attempt < max_retries - 1:
                         logger.info(f"Retrying in {retry_delay} seconds...")
                         time.sleep(retry_delay)
-                    continue
                 except Exception as e:  
                     logger.error(f"Unexpected error processing {piece_url}: {str(e)}")
                     if attempt < max_retries - 1:
                         logger.info(f"Retrying in {retry_delay} seconds...")
                         time.sleep(retry_delay)
-                    continue
                 
     except Exception as e:
         logger.error(f"Error processing composer {composer}: {str(e)}")
-        continue  # Move to next composer if there's an error
+        continue
 
 if not pieces:
     logger.error("No pieces were collected. Exiting without saving.")
@@ -151,19 +167,41 @@ if not pieces:
 
 pieces_dict = []
 for piece in pieces:
-    if piece is not None:  # Add null check
+    if piece is not None:
         piece_dict = vars(piece).copy()
+        # Handle the enum format field by converting to string
+        if piece_dict["format"] is not None:
+            piece_dict["format"] = piece_dict["format"].value  # Convert enum to its value
+        
         piece_dict["movements"] = json.dumps([vars(m) for m in piece.movements])
+        if piece_dict["instrumentation"] is None:
+            piece_dict["instrumentation"] = []
         pieces_dict.append(piece_dict)
 
 if pieces_dict: 
     df = pl.DataFrame(pieces_dict, strict=False, infer_schema_length=1000)
+    
+    # Print schema to see what we're dealing with
+    logger.info("Initial schema: %s", df.schema)
+    
+    # Convert Object type columns to appropriate types
+    for col_name, dtype in df.schema.items():
+        if dtype == pl.Object:
+            if col_name == "instrumentation":
+                df = df.with_columns(pl.col(col_name).cast(pl.List(pl.Utf8)))
+            else:
+                df = df.with_columns(pl.col(col_name).cast(pl.Utf8))
+    
+    logger.info("Final schema after type conversion: %s", df.schema)
+    
     current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     output_file = f"full_df_{current_datetime}.parquet"
-    df.write_parquet(output_file)
-    logger.info("Data saved to %s", output_file)
-    os.system("pmset sleepnow")
+    os.makedirs(os.path.join(os.getcwd(), 'parquet'), exist_ok=True)
+    full_path = os.path.join(os.getcwd(), 'parquet', output_file)
+    
+    df.write_parquet(full_path)
+    logger.info("Data saved to %s", full_path)
 else:
     logger.error("No valid pieces to save")
 
-os.system("pmset sleepnow")
+# os.system("pmset sleepnow")

@@ -14,123 +14,185 @@ struct MovementSection: View {
     @Binding var isEditingMovements: Bool
     @Binding var editingMovementId: String?
     @Binding var newMovementName: String
+    @State private var newMovementKeySignature: GraphQLEnum<ApolloGQL.KeySignatureType>?
     
     var body: some View {
-        Section {
-//            if movements.isEmpty {
-//                if isAddingMovement {
-//                    NewMovementRow(
-//                        newMovementName: $newMovementName,
-//                        isAddingMovement: $isAddingMovement,
-//                        onAdd: addNewMovement
-//                    )
-//                } else {
-//                    Button(action: { isAddingMovement = true }) {
-//                        HStack {
-//                            Image(systemName: "plus.circle.fill")
-//                            Text("Add First Movement")
-//                        }
-//                    }
-//                }
-//            } else {
-            if isEditingMovements {
-                ForEach(movements, id: \.id) { movement in
-                    MovementRow(
-                        movement: movement,
-                        index: movements.firstIndex(where: { $0.id == movement.id }) ?? 0,
-                        isEditing: editingMovementId == movement.id,
-                        onEdit: { editingMovementId = movement.id },
-                        onDelete: {
-                            withAnimation {
-                                if let index = movements.firstIndex(where: { $0.id == movement.id }) {
-                                    deleteMovement(at: index)
-                                }
-                            }
-                        },
-                        onUpdate: { newName in
-                            withAnimation {
-                                if let index = movements.firstIndex(where: { $0.id == movement.id }) {
-                                    updateMovement(at: index, newName: newName)
-                                    editingMovementId = nil
-                                }
-                            }
-                        },
-                        onCancelEdit: {
-                            withAnimation {
-                                editingMovementId = nil
-                            }
-                        }
-                    )
-                }
-                .onMove { source, destination in
-                    movements.move(fromOffsets: source, toOffset: destination)
-                    movements.indices.forEach { movements[$0].number = $0 + 1 }
-                }
-                    
-//                if isAddingMovement {
-//                    NewMovementRow(
-//                        newMovementName: $newMovementName,
-//                        isAddingMovement: $isAddingMovement,
-//                        onAdd: addNewMovement
-//                    )
-//                } else {
-                Button(action: {
-                    withAnimation {
-                        isAddingMovement = true
+        Section(header: sectionHeader) {
+            sectionContent
+        }
+    }
+    
+    private var sectionHeader: some View {
+        HStack {
+            Text("Movements")
+            Spacer()
+            Button(action: {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    isEditingMovements.toggle()
+                    if !isEditingMovements {
+                        editingMovementId = nil
+                        isAddingMovement = false
+                        newMovementName = ""
                     }
-                }) {
+                }
+            }) {
+                Text(isEditingMovements ? "Done" : "Edit")
+                    .foregroundColor(.accentColor)
+            }
+        }
+    }
+    
+    private var sectionContent: some View {
+        Group {
+            if movements.isEmpty {
+                emptyContent
+            } else {
+                VStack(spacing: 0) {
+                    if isEditingMovements {
+                        editableContent
+                    } else {
+                        readOnlyContent
+                    }
+                }
+                .animation(.easeInOut(duration: 0.3), value: isEditingMovements) // Single animation modifier
+            }
+        }
+    }
+    
+    private var emptyContent: some View {
+        Group {
+            if isAddingMovement {
+                NewMovementRow(
+                    newMovementName: $newMovementName,
+                    selectedKeySignature: $newMovementKeySignature,
+                    isAddingMovement: $isAddingMovement,
+                    onAdd: addNewMovement,
+                    onKeySignatureUpdate: updateNewMovementKeySignature
+                )
+            } else {
+                Button(action: { isAddingMovement = true }) {
                     HStack {
                         Image(systemName: "plus.circle.fill")
-                        Text("Add Movement")
+                        Text("Add First Movement")
                     }
-                }
-//                }
-            } else {
-                ForEach(movements, id: \.id) { movement in
-                    Text("\(movement.number ?? 0). \(movement.name ?? "")")
-                }
-//                }
-            }
-        } header: {
-            HStack {
-                Text("Movements")
-                Spacer()
-                Button(action: {
-                    withAnimation {
-                        isEditingMovements.toggle()
-                        if !isEditingMovements {
-                            editingMovementId = nil
-                            isAddingMovement = false
-                            newMovementName = ""
-                        }
-                    }
-                }) {
-                    Text(isEditingMovements ? "Done" : "Edit")
-                        .foregroundColor(.accentColor)
                 }
             }
         }
     }
     
-//    private func addNewMovement() {
-//        guard !newMovementName.isEmpty else { return }
-//
-//        withAnimation {
-//            let newMovement = EditableMovement(from: .init(
-//                id: UUID().uuidString as ApolloGQL.BigInt,
-//                name: newMovementName,
-//                number: movements.count + 1
-//            ))
-//
-//            movements.append(newMovement)
-//
-//            newMovementName = ""
-//        }
-//    }
+    private var editableContent: some View {
+        List {
+            ForEach(movements) { movement in
+                MovementRow(
+                    movement: movement,
+                    index: movements.firstIndex(of: movement) ?? 0,
+                    onUpdate: { newName in
+                        withAnimation {
+                            if let index = movements.firstIndex(of: movement) {
+                                updateMovement(at: index, newName: newName)
+                            }
+                        }
+                    },
+                    onKeySignatureUpdate: { newKeySignature in
+                        withAnimation {
+                            if let index = movements.firstIndex(of: movement) {
+                                updateMovementKeySignature(at: index, newKeySignature: newKeySignature)
+                            }
+                        }
+                    },
+                    onDelete: {
+                        withAnimation {
+                            if let index = movements.firstIndex(of: movement) {
+                                deleteMovement(at: index)
+                            }
+                        }
+                    }
+                )
+            }
+            .onMove { source, destination in
+                movements.move(fromOffsets: source, toOffset: destination)
+                movements.indices.forEach { movements[$0].number = $0 + 1 }
+            }
+                
+            if isAddingMovement {
+                NewMovementRow(
+                    newMovementName: $newMovementName,
+                    selectedKeySignature: $newMovementKeySignature,
+                    isAddingMovement: $isAddingMovement,
+                    onAdd: addNewMovement,
+                    onKeySignatureUpdate: updateNewMovementKeySignature
+                )
+            } else {
+                HStack {
+                    Image(systemName: "plus.circle.fill")
+                    Text("Add Movement")
+                }
+                .onTapGesture {
+                    withAnimation {
+                        isAddingMovement = true
+                    }
+                }
+                .contentShape(Rectangle())
+            }
+        }
+    }
 
+    private var readOnlyContent: some View {
+        Group {
+            VStack(spacing: 5) {
+                ForEach($movements) { movement in // Use binding directly
+                    HStack {
+                        Text("\(movement.wrappedValue.number ?? 0). \(movement.wrappedValue.name ?? "")")
+                        Spacer()
+                        if let keySignatureString = movement.wrappedValue.keySignature?.rawValue,
+                           let keySignatureType = KeySignatureType(rawValue: keySignatureString)
+                        {
+                            Text(keySignatureType.displayName)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .padding(.vertical, 4)
+                    
+                    if movement.wrappedValue.number != movements.count { // Use number for divider check
+                        Divider()
+                    }
+                }
+            }
+        }
+    }
+
+    private func addNewMovement() {
+        guard !newMovementName.isEmpty else { return }
+        
+        withAnimation {
+            let newMovement = EditableMovement(from: .init(
+                id: UUID().uuidString as ApolloGQL.BigInt,
+                name: newMovementName,
+                keySignature: newMovementKeySignature,
+                pieceId: "999",
+                number: movements.count + 1
+            ))
+            
+            movements.append(newMovement)
+            
+            newMovementName = ""
+            newMovementKeySignature = nil
+            isAddingMovement = false
+        }
+    }
+    
     private func updateMovement(at index: Int, newName: String) {
         guard index < movements.count else { return }
         movements[index].name = newName
+    }
+    
+    private func updateMovementKeySignature(at index: Int, newKeySignature: GraphQLEnum<ApolloGQL.KeySignatureType>?) {
+        guard index < movements.count else { return }
+        movements[index].keySignature = newKeySignature
+    }
+    
+    private func updateNewMovementKeySignature(_ newKeySignature: GraphQLEnum<ApolloGQL.KeySignatureType>?) {
+        newMovementKeySignature = newKeySignature
     }
     
     private func deleteMovement(at index: Int) {
@@ -146,206 +208,192 @@ struct MovementSection: View {
 struct MovementRow: View {
     let movement: EditableMovement
     let index: Int
-    let isEditing: Bool
-    let onEdit: () -> Void
-    let onDelete: () -> Void
     let onUpdate: (String) -> Void
-    let onCancelEdit: () -> Void
+    let onKeySignatureUpdate: (GraphQLEnum<ApolloGQL.KeySignatureType>?) -> Void
+    let onDelete: () -> Void // Add new onDelete handler
     
     @State private var editedName: String = ""
+    @State private var selectedKeySignature: GraphQLEnum<ApolloGQL.KeySignatureType>?
     
     var body: some View {
-        Group {
-            if isEditing {
-                HStack {
-                    TextField("Movement name", text: $editedName)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .onAppear {
-                            editedName = movement.name ?? ""
-                        }
-                    
-                    Button(action: {
-                        onUpdate(editedName)
-                    }) {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(.green)
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text("\(index + 1).")
+                TextField(movement.name ?? "", text: $editedName)
+                    .textFieldStyle(PlainTextFieldStyle())
+                    .autocorrectionDisabled(true)
+                    .onAppear {
+                        editedName = movement.name ?? ""
+                        selectedKeySignature = movement.keySignature
                     }
-                    
-                    Button(action: onCancelEdit) {
-                        Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(.red)
+                    .onChange(of: editedName) { newValue in
+                        onUpdate(newValue)
                     }
+                Spacer()
+                
+                Button(action: onDelete) {
+                    Image(systemName: "trash")
+                        .foregroundColor(.red)
                 }
-            } else {
-                HStack {
-                    Text("\(index + 1). \(movement.name ?? "")")
-                    Spacer()
-                    
-                    HStack {
-                        Button(action: onEdit) {
-                            Image(systemName: "pencil.circle")
-                                .foregroundColor(.accentColor)
-                        }
-                        .buttonStyle(BorderlessButtonStyle())
-                        
-                        Button(action: onDelete) {
-                            Image(systemName: "trash.circle")
-                                .foregroundColor(.red)
-                        }
-                        .buttonStyle(BorderlessButtonStyle())
-                    }
-                }
+                .buttonStyle(BorderlessButtonStyle())
             }
+            
+            KeySignaturePicker(selectedKeySignature: $selectedKeySignature)
+                .pickerStyle(MenuPickerStyle())
+                .onChange(of: selectedKeySignature) { newValue in
+                    onKeySignatureUpdate(newValue)
+                }
         }
-        .id(movement.id)
     }
 }
 
 struct NewMovementRow: View {
     @Binding var newMovementName: String
+    @Binding var selectedKeySignature: GraphQLEnum<ApolloGQL.KeySignatureType>?
     @Binding var isAddingMovement: Bool
     let onAdd: () -> Void
+    let onKeySignatureUpdate: (GraphQLEnum<ApolloGQL.KeySignatureType>?) -> Void
     
     var body: some View {
-        HStack {
-            Image(systemName: "plus.circle.fill")
-                .foregroundColor(.accentColor)
-            TextField("Movement name", text: $newMovementName)
-                .submitLabel(.done)
-                .onSubmit(onAdd)
-            
-            if !newMovementName.isEmpty {
-                Button(action: onAdd) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.green)
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                TextField("New movement name", text: $newMovementName)
+                    .textFieldStyle(PlainTextFieldStyle())
+                    .autocorrectionDisabled(true)
+                    .submitLabel(.done)
+                    .onSubmit(onAdd)
+                
+                Spacer()
+                
+                if !newMovementName.isEmpty {
+                    Button(action: onAdd) {
+                        Image(systemName: "checkmark.circle")
+                            .foregroundColor(.green)
+                    }
+                    .buttonStyle(BorderlessButtonStyle())
                 }
+                
+                Button(action: {
+                    withAnimation {
+                        isAddingMovement = false
+                        newMovementName = ""
+                    }
+                }) {
+                    Image(systemName: "xmark.circle")
+                        .foregroundColor(.red)
+                }
+                .buttonStyle(BorderlessButtonStyle())
             }
             
-            Button(action: {
-                withAnimation {
-                    isAddingMovement = false
-                    newMovementName = ""
+            KeySignaturePicker(selectedKeySignature: $selectedKeySignature)
+                .onChange(of: selectedKeySignature) { newValue in
+                    onKeySignatureUpdate(newValue)
                 }
-            }) {
-                Image(systemName: "xmark.circle.fill")
-                    .foregroundColor(.red)
-            }
         }
         .padding(.vertical, 4)
     }
 }
 
-// struct PreviewContainer: View {
-//    @State private var movements = [
-//        EditableMovement(from: .init(
-//            id: "1",
-//            name: "Allegro con brio",
-//            number: 1
-//        )),
-//        EditableMovement(from: .init(
-//            id: "2",
-//            name: "Andante con moto",
-//            number: 2
-//        )),
-//        EditableMovement(from: .init(
-//            id: "3",
-//            name: "Scherzo: Allegro",
-//            number: 3
-//        )),
-//        EditableMovement(from: .init(
-//            id: "4",
-//            name: "Allegro - Presto",
-//            number: 4
-//        ))
-//    ]
-//    @State private var isAddingMovement = false
-//    @State private var isEditingMovements = false
-//    @State private var editingMovementId: String? = nil
-//    @State private var newMovementName = ""
-//
-//    var body: some View {
-//        NavigationStack {
-//            Form {
-//                Section("Preview Controls") {
-//                    Toggle("Editing Mode", isOn: $isEditingMovements)
-//                    Toggle("Adding Movement", isOn: $isAddingMovement)
-//                    Button("Clear All Movements") {
-//                        movements.removeAll()
-//                    }
-//                    Button("Reset to Default Movements") {
-//                        movements = [
-//                            EditableMovement(from: .init(
-//                                id: "1",
-//                                name: "Allegro con brio",
-//                                number: 1
-//                            )),
-//                            EditableMovement(from: .init(
-//                                id: "2",
-//                                name: "Andante con moto",
-//                                number: 2
-//                            )),
-//                            EditableMovement(from: .init(
-//                                id: "3",
-//                                name: "Scherzo: Allegro",
-//                                number: 3
-//                            )),
-//                            EditableMovement(from: .init(
-//                                id: "4",
-//                                name: "Allegro - Presto",
-//                                number: 4
-//                            ))
-//                        ]
-//                    }
-//                }
-//
-//                MovementSection(
-//                    movements: $movements,
-//                    isAddingMovement: $isAddingMovement,
-//                    isEditingMovements: $isEditingMovements,
-//                    editingMovementId: $editingMovementId,
-//                    newMovementName: $newMovementName
-//                )
-//            }
-//            .navigationTitle("Movements Preview")
-//        }
-//    }
-// }
+struct KeySignaturePicker: View {
+    @Binding var selectedKeySignature: GraphQLEnum<ApolloGQL.KeySignatureType>?
+    
+    var body: some View {
+        Picker("Key Signature", selection: $selectedKeySignature) {
+            Text("").tag(nil as GraphQLEnum<ApolloGQL.KeySignatureType>?)
+            ForEach(KeySignatureType.allCases, id: \.self) { type in
+                Text(type.displayName)
+                    .tag(GraphQLEnum(type) as GraphQLEnum<ApolloGQL.KeySignatureType>?)
+            }
+        }
+        .pickerStyle(.menu)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .opacity(selectedKeySignature == nil ? 0.6 : 1)
+    }
+}
 
-//
-// struct MovementViews_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NavigationStack {
-//            Form {
-//                MovementSection(
-//                    movements: .constant([
-//                        EditableMovement(from: .init(
-//                            id: "1",
-//                            name: "Allegro con brio",
-//                            number: 1
-//                        )),
-//                        EditableMovement(from: .init(
-//                            id: "2",
-//                            name: "Andante con moto",
-//                            number: 2
-//                        )),
-//                        EditableMovement(from: .init(
-//                            id: "3",
-//                            name: "Scherzo: Allegro",
-//                            number: 3
-//                        )),
-//                        EditableMovement(from: .init(
-//                            id: "4",
-//                            name: "Allegro - Presto",
-//                            number: 4
-//                        ))
-//                    ]),
-//                    isAddingMovement: .constant(false),
-//                    isEditingMovements: .constant(true),
-//                    editingMovementId: .constant(nil),
-//                    newMovementName: .constant("")
-//                )
-//            }
-//            .navigationTitle("Movements Preview")
-//        }
-//    }
-// }
+struct PreviewContainer: View {
+    @State private var isAddingMovement = false
+    @State private var isEditingMovements = true
+    @State private var editingMovementId: String? = nil
+    @State private var newMovementName = ""
+    @State private var movements = [
+        EditableMovement(from: .init(
+            id: "1" as ApolloGQL.BigInt,
+            name: "Allegro con brio",
+            pieceId: "preview-piece",
+            number: 1
+        )),
+        EditableMovement(from: .init(
+            id: "2" as ApolloGQL.BigInt,
+            name: "Andante con moto",
+            pieceId: "preview-piece",
+            number: 2
+        )),
+        EditableMovement(from: .init(
+            id: "3" as ApolloGQL.BigInt,
+            name: "Scherzo: Allegro",
+            pieceId: "preview-piece",
+            number: 3
+        )),
+        EditableMovement(from: .init(
+            id: "4" as ApolloGQL.BigInt,
+            name: "Allegro - Presto",
+            pieceId: "preview-piece",
+            number: 4
+        ))
+    ]
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section(header: Text("Preview Controls")) {
+                    Toggle("Editing Mode", isOn: $isEditingMovements)
+                    Toggle("Adding Movement", isOn: $isAddingMovement)
+                    Button("Reset to Default Movements") {
+                        movements = [
+                            EditableMovement(from: .init(
+                                id: "1" as ApolloGQL.BigInt,
+                                name: "Allegro con brio",
+                                pieceId: "preview-piece",
+                                number: 1
+                            )),
+                            EditableMovement(from: .init(
+                                id: "2" as ApolloGQL.BigInt,
+                                name: "Andante con moto",
+                                pieceId: "preview-piece",
+                                number: 2
+                            )),
+                            EditableMovement(from: .init(
+                                id: "3" as ApolloGQL.BigInt,
+                                name: "Scherzo: Allegro",
+                                pieceId: "preview-piece",
+                                number: 3
+                            )),
+                            EditableMovement(from: .init(
+                                id: "4" as ApolloGQL.BigInt,
+                                name: "Allegro - Presto",
+                                pieceId: "preview-piece",
+                                number: 4
+                            ))
+                        ]
+                    }
+                }
+                
+                MovementSection(
+                    movements: $movements,
+                    isAddingMovement: $isAddingMovement,
+                    isEditingMovements: $isEditingMovements,
+                    editingMovementId: $editingMovementId,
+                    newMovementName: $newMovementName
+                )
+            }
+            .navigationTitle("Movements Preview")
+        }
+    }
+}
+
+struct MovementViews_Previews: PreviewProvider {
+    static var previews: some View {
+        PreviewContainer()
+    }
+}

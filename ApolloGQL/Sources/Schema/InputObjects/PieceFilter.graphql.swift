@@ -35,6 +35,8 @@ public struct PieceFilter: InputObject {
     subPieceCount: GraphQLNullable<IntFilter> = nil,
     imslpUrl: GraphQLNullable<StringFilter> = nil,
     imslpPieceId: GraphQLNullable<BigIntFilter> = nil,
+    totalPracticeTime: GraphQLNullable<IntFilter> = nil,
+    lastPracticed: GraphQLNullable<DatetimeFilter> = nil,
     nodeId: GraphQLNullable<IDFilter> = nil,
     and: GraphQLNullable<[PieceFilter]> = nil,
     or: GraphQLNullable<[PieceFilter]> = nil,
@@ -65,6 +67,8 @@ public struct PieceFilter: InputObject {
       "subPieceCount": subPieceCount,
       "imslpUrl": imslpUrl,
       "imslpPieceId": imslpPieceId,
+      "totalPracticeTime": totalPracticeTime,
+      "lastPracticed": lastPracticed,
       "nodeId": nodeId,
       "and": and,
       "or": or,
@@ -190,6 +194,16 @@ public struct PieceFilter: InputObject {
   public var imslpPieceId: GraphQLNullable<BigIntFilter> {
     get { __data["imslpPieceId"] }
     set { __data["imslpPieceId"] = newValue }
+  }
+
+  public var totalPracticeTime: GraphQLNullable<IntFilter> {
+    get { __data["totalPracticeTime"] }
+    set { __data["totalPracticeTime"] = newValue }
+  }
+
+  public var lastPracticed: GraphQLNullable<DatetimeFilter> {
+    get { __data["lastPracticed"] }
+    set { __data["lastPracticed"] = newValue }
   }
 
   public var nodeId: GraphQLNullable<IDFilter> {

@@ -10,54 +10,148 @@ import SwiftUI
 
 struct PieceShow: View {
     var piece: PieceDetails
-
     @ObservedObject var sessionManager: PracticeSessionViewModel
-
+    
     var body: some View {
-        HStack {
-            Text(piece.workName)
-                .font(.title)
-                .fontWeight(.bold)
-
-            Spacer()
-
-            Button(action: {
-                Task {
-                    if sessionManager.activeSession?.piece.id == piece.id && sessionManager.activeSession?.movement?.id == nil {
-                        await sessionManager.stopSession()
-                    } else {
-                        _ = try? await sessionManager.startSession(pieceId: Int(piece.id) ?? 0, movementId: nil)
+        ScrollView(showsIndicators: false) {
+            VStack(spacing: 16) {
+                // Piece Header Section
+                VStack(alignment: .leading, spacing: 8) {
+                    if let composer = piece.composer?.name {
+                        Text(composer)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    if let catalogueDesc = piece.catalogueType, let catalogueNumber = piece.catalogueNumber {
+                        Text("\(catalogueDesc.rawValue) \(catalogueNumber)")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    if let nickname = piece.nickname {
+                        Text(nickname)
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                    }
+                    if let totalTime = piece.totalPracticeTime {
+                        HStack {
+                            Image(systemName: "clock")
+                            Text("Total practice: \(formatDuration(seconds: totalTime))")
+                        }
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
                     }
                 }
-            }, label: {
-                Image(systemName: sessionManager.activeSession?.movement?.id == nil && sessionManager.activeSession?.piece.id == piece.id ?
-                    "stop.circle.fill" : "play.circle.fill")
-                    .font(.title)
-                    .foregroundColor(Color.accentColor)
-            })
-        }
-        .padding(.horizontal)
-
-        ScrollView(showsIndicators: false) {
-            if let movementsEdges = piece.movements?.edges {
-                ForEach(movementsEdges, id: \.node.id) { movement in
-                    MovementRow(movement: movement)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal)
+                
+                // Practice Button
+                Button(action: {
+                    Task {
+                        if sessionManager.activeSession?.piece.id == piece.id && sessionManager.activeSession?.movement?.id == nil {
+                            await sessionManager.stopSession()
+                        } else {
+                            _ = try? await sessionManager.startSession(pieceId: Int(piece.id) ?? 0, movementId: nil)
+                        }
+                    }
+                }, label: {
+                    HStack {
+                        Image(systemName: sessionManager.activeSession?.movement?.id == nil && sessionManager.activeSession?.piece.id == piece.id ?
+                            "stop.circle.fill" : "play.circle.fill")
+                        Text(sessionManager.activeSession?.movement?.id == nil && sessionManager.activeSession?.piece.id == piece.id ?
+                            "Stop Practice" : "Start Practice")
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.accentColor)
+                    .cornerRadius(12)
+                })
+                .padding(.horizontal)
+                
+                // Movements Section
+                if let movementsEdges = piece.movements?.edges, !movementsEdges.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Movements")
+                            .font(.headline)
+                            .padding(.horizontal)
+                        
+                        ForEach(movementsEdges, id: \.node.id) { movement in
+                            MovementRow(movement: movement)
+                            
+                            if movement.node.id != movementsEdges.last?.node.id {
+                                Divider()
+                                    .padding(.horizontal)
+                            }
+                        }
+                    }
+                    .padding(.vertical)
                 }
-                .padding()
+                
+                // External Links
+                if piece.wikipediaUrl != nil || piece.imslpUrl != nil {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("References")
+                            .font(.headline)
+                            .padding(.horizontal)
+                        
+                        if let wikipediaUrl = piece.wikipediaUrl {
+                            Link(destination: URL(string: wikipediaUrl)!) {
+                                HStack {
+                                    Image(systemName: "book.fill")
+                                    Text("Wikipedia")
+                                    Spacer()
+                                    Image(systemName: "arrow.up.right")
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+                        
+                        if let imslpUrl = piece.imslpUrl {
+                            Link(destination: URL(string: imslpUrl)!) {
+                                HStack {
+                                    Image(systemName: "doc.fill")
+                                    Text("IMSLP")
+                                    Spacer()
+                                    Image(systemName: "arrow.up.right")
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+                    }
+                    .padding(.vertical)
+                }
             }
         }
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(piece.workName)
+        .navigationBarTitleDisplayMode(.large)
     }
-
+    
     private func MovementRow(movement: PieceDetails.Movements.Edge) -> some View {
         HStack {
-            if let movementName = movement.node.name {
-                Text(movementName)
-                    .font(.body)
+            VStack(alignment: .leading, spacing: 4) {
+                if let movementName = movement.node.name {
+                    Text(movementName)
+                        .font(.body)
+                }
+                
+                if let number = movement.node.number {
+                    Text("Movement \(number)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                if let totalTime = movement.node.totalPracticeTime {
+                    HStack(spacing: 4) {
+                        Image(systemName: "clock")
+                        Text(formatDuration(seconds: totalTime))
+                    }
+                }
             }
-
+            
             Spacer()
-
+            
             Button(action: {
                 Task {
                     if let movementId = sessionManager.activeSession?.movement?.id {
@@ -71,13 +165,31 @@ struct PieceShow: View {
             }, label: {
                 let isActiveMovement = sessionManager.activeSession?.movement?.id == movement.node.id
                 Image(systemName: isActiveMovement ? "stop.circle.fill" : "play.circle.fill")
-                    .foregroundColor(Color.accentColor)
+                    .font(.title3)
+                    .foregroundColor(.accentColor)
             })
         }
-        .padding(.vertical, 10)
+        .padding(.horizontal)
+        .padding(.vertical, 8)
+    }
+
+    private func formatDuration(seconds: Int) -> String {
+        let hours = seconds / 3600
+        let minutes = (seconds % 3600) / 60
+            
+        if hours > 0 {
+            return "\(hours)h \(minutes)m"
+        } else {
+            return "\(minutes)m"
+        }
     }
 }
 
-// #Preview {
-//    PieceShow(piece: Piece.examplePieces.randomElement()!).environmentObject(PracticeSessionViewModel())
-// }
+#Preview {
+    NavigationView {
+        PieceShow(
+            piece: PieceDetails.preview,
+            sessionManager: PracticeSessionViewModel()
+        )
+    }
+}
