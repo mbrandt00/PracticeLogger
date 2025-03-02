@@ -36,6 +36,11 @@ struct SearchView: View {
                                 VStack(alignment: .leading) {
                                     Text(piece.workName)
                                         .font(.headline)
+                                    if let catalogueNumber = piece.catalogueNumber,
+                                       let catalogueType = piece.catalogueType
+                                    {
+                                        Text(catalogueType.displayName + " " + String(catalogueNumber))
+                                    }
                                     if let composer = piece.composer {
                                         Text(composer.name)
                                             .font(.subheadline)
@@ -68,7 +73,7 @@ struct SearchView: View {
                 }
             }
         }
-        .onChange(of: searchViewModel.searchTerm, initial: true) {
+        .onChange(of: searchViewModel.searchTerm, initial: true) { _, _ in
             Task {
                 await searchViewModel.searchPieces()
             }
