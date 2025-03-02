@@ -1,5 +1,7 @@
 fragment PieceDetails on Piece {
   imslpPieceId: id
+  lastPracticed
+  totalPracticeTime
   id
   workName
   catalogueType
@@ -28,6 +30,8 @@ fragment PieceDetails on Piece {
     edges {
       node {
         id
+        lastPracticed
+        totalPracticeTime
         name
         totalPracticeTime
         keySignature

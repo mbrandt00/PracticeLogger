@@ -188,7 +188,7 @@ struct PieceShow: View {
 #Preview {
     NavigationView {
         PieceShow(
-            piece: PieceDetails.preview,
+            piece: PieceDetails.allPreviews[0],
             sessionManager: PracticeSessionViewModel()
         )
     }

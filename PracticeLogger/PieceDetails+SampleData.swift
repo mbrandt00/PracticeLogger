@@ -7,36 +7,43 @@
 
 import ApolloAPI
 import ApolloGQL
+import Foundation
 
 extension PieceDetails {
-    static let preview: PieceDetails = {
+    static let previewBach: PieceDetails = {
         // First create the movement nodes
         let movementNodes = [
             PieceDetails.Movements.Edge.Node(
-                id: BigInt(1),
-                name: "I. Adagio sostenuto",
-                keySignature: GraphQLEnum(KeySignatureType.csharpminor.rawValue),
+                id: BigInt(4),
+                lastPracticed: Date().addingTimeInterval(-345600), // 4 days ago
+                totalPracticeTime: 2456,
+                name: "I. Prelude",
+                keySignature: GraphQLEnum(KeySignatureType.c),
                 nickname: nil,
                 downloadUrl: nil,
-                pieceId: BigInt(12345),
+                pieceId: BigInt(23456),
                 number: 1
             ),
             PieceDetails.Movements.Edge.Node(
-                id: BigInt(2),
-                name: "II. Allegretto",
-                keySignature: GraphQLEnum(KeySignatureType.dflat.rawValue),
+                id: BigInt(5),
+                lastPracticed: nil, // null lastPracticed
+                totalPracticeTime: 1890,
+                name: "II. Allemande",
+                keySignature: GraphQLEnum(KeySignatureType.c),
                 nickname: nil,
                 downloadUrl: nil,
-                pieceId: BigInt(12345),
+                pieceId: BigInt(23456),
                 number: 2
             ),
             PieceDetails.Movements.Edge.Node(
-                id: BigInt(3),
-                name: "III. Presto agitato",
-                keySignature: GraphQLEnum(KeySignatureType.csharpminor.rawValue),
+                id: BigInt(6),
+                lastPracticed: Date().addingTimeInterval(-172800), // 2 days ago
+                totalPracticeTime: 1340,
+                name: "III. Courante",
+                keySignature: GraphQLEnum(KeySignatureType.c),
                 nickname: nil,
                 downloadUrl: nil,
-                pieceId: BigInt(12345),
+                pieceId: BigInt(23456),
                 number: 3
             )
         ]
@@ -50,32 +57,112 @@ extension PieceDetails {
         let movements = PieceDetails.Movements(edges: edges)
 
         // Create the composer
-        let composer = PieceDetails.Composer(name: "Ludwig van Beethoven")
+        let composer = PieceDetails.Composer(name: "Johann Sebastian Bach")
 
         // Create the main piece
         return PieceDetails(
-            imslpPieceId: BigInt(12345),
-            id: BigInt(12345),
-            workName: "Piano Sonata No. 14",
-            catalogueType: GraphQLEnum(CatalogueType.op.rawValue),
-            keySignature: GraphQLEnum(KeySignatureType.csharpminor.rawValue),
-            format: GraphQLEnum(PieceFormat.sonata.rawValue),
-            instrumentation: ["Piano"],
-            wikipediaUrl: "https://en.wikipedia.org/wiki/Piano_Sonata_No._14_(Beethoven)",
-            imslpUrl: "https://imslp.org/wiki/Piano_Sonata_No.14,_Op.27_No.2_(Beethoven,_Ludwig_van)",
-            compositionYear: 1801,
-            catalogueNumberSecondary: 2,
-            catalogueTypeNumDesc: "Op. 27 No. 2",
-            compositionYearDesc: "1801",
-            compositionYearString: "1801",
-            pieceStyle: "Classical",
+            imslpPieceId: BigInt(23456),
+            lastPracticed: Date().addingTimeInterval(-172800), // 2 days ago
+            id: BigInt(23456),
+            workName: "Cello Suite No. 1",
+            catalogueType: GraphQLEnum(CatalogueType.bwv.rawValue),
+            keySignature: GraphQLEnum(KeySignatureType.c),
+            format: GraphQLEnum(PieceFormat.suite.rawValue),
+            instrumentation: ["Cello"],
+            wikipediaUrl: "https://en.wikipedia.org/wiki/Cello_Suites_(Bach)",
+            imslpUrl: "https://imslp.org/wiki/Cello_Suite_No.1_in_G_major,_BWV_1007_(Bach,_Johann_Sebastian)",
+            compositionYear: 1717,
+            catalogueNumberSecondary: nil,
+            catalogueTypeNumDesc: "BWV 1007",
+            compositionYearDesc: "1717",
+            compositionYearString: "1717",
+            pieceStyle: "Baroque",
             subPieceType: nil,
             subPieceCount: nil,
-            catalogueNumber: 27,
-            nickname: "Moonlight Sonata",
-            composerId: BigInt(123),
+            catalogueNumber: 1007,
+            nickname: nil,
+            composerId: BigInt(456),
             composer: composer,
             movements: movements
         )
     }()
+
+    static let previewChopin: PieceDetails = {
+        // First create the movement nodes
+        let movementNodes = [
+            PieceDetails.Movements.Edge.Node(
+                id: BigInt(7),
+                lastPracticed: Date().addingTimeInterval(-43200), // 12 hours ago
+                totalPracticeTime: 3578,
+                name: "Nocturne in E-flat major",
+                keySignature: GraphQLEnum(KeySignatureType.eflat.rawValue),
+                nickname: nil,
+                downloadUrl: nil,
+                pieceId: BigInt(34567),
+                number: 1
+            ),
+            PieceDetails.Movements.Edge.Node(
+                id: BigInt(8),
+                lastPracticed: Date().addingTimeInterval(-129600), // 1.5 days ago
+                totalPracticeTime: 2145,
+                name: "Nocturne in F minor",
+                keySignature: GraphQLEnum(KeySignatureType.fminor.rawValue),
+                nickname: nil,
+                downloadUrl: nil,
+                pieceId: BigInt(34567),
+                number: 2
+            ),
+            PieceDetails.Movements.Edge.Node(
+                id: BigInt(9),
+                lastPracticed: Date().addingTimeInterval(-604800), // 1 week ago
+                totalPracticeTime: 1876,
+                name: "Nocturne in B major",
+                keySignature: GraphQLEnum(KeySignatureType.b),
+                nickname: nil,
+                downloadUrl: nil,
+                pieceId: BigInt(34567),
+                number: 3
+            )
+        ]
+
+        // Create the edges using the nodes
+        let edges = movementNodes.map { node in
+            PieceDetails.Movements.Edge(node: node)
+        }
+
+        // Create the movements collection
+        let movements = PieceDetails.Movements(edges: edges)
+
+        // Create the composer
+        let composer = PieceDetails.Composer(name: "Frédéric Chopin")
+
+        // Create the main piece
+        return PieceDetails(
+            imslpPieceId: BigInt(34567),
+            lastPracticed: Date().addingTimeInterval(-43200), // 12 hours ago
+            id: BigInt(34567),
+            workName: "Nocturnes, Op. 9",
+            catalogueType: GraphQLEnum(CatalogueType.op.rawValue),
+            keySignature: GraphQLEnum(KeySignatureType.eflat.rawValue),
+            format: GraphQLEnum(PieceFormat.nocturne.rawValue),
+            instrumentation: ["Piano"],
+            wikipediaUrl: "https://en.wikipedia.org/wiki/Nocturnes,_Op._9_(Chopin)",
+            imslpUrl: "https://imslp.org/wiki/Nocturnes,_Op.9_(Chopin,_Fr%C3%A9d%C3%A9ric)",
+            compositionYear: 1832,
+            catalogueNumberSecondary: nil,
+            catalogueTypeNumDesc: "Op. 9",
+            compositionYearDesc: "1832",
+            compositionYearString: "1832",
+            pieceStyle: "Romantic",
+            subPieceType: nil,
+            subPieceCount: nil,
+            catalogueNumber: 9,
+            nickname: nil,
+            composerId: BigInt(789),
+            composer: composer,
+            movements: movements
+        )
+    }()
+
+    static let allPreviews = [previewBach, previewChopin]
 }
