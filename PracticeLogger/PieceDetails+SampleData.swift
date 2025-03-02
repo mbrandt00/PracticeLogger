@@ -92,7 +92,7 @@ extension PieceDetails {
         let movementNodes = [
             PieceDetails.Movements.Edge.Node(
                 id: BigInt(7),
-                lastPracticed: Date().addingTimeInterval(-43200), // 12 hours ago
+                lastPracticed: nil,
                 totalPracticeTime: 3578,
                 name: "Nocturne in E-flat major",
                 keySignature: GraphQLEnum(KeySignatureType.eflat.rawValue),
@@ -103,7 +103,7 @@ extension PieceDetails {
             ),
             PieceDetails.Movements.Edge.Node(
                 id: BigInt(8),
-                lastPracticed: Date().addingTimeInterval(-129600), // 1.5 days ago
+                lastPracticed: nil,
                 totalPracticeTime: 2145,
                 name: "Nocturne in F minor",
                 keySignature: GraphQLEnum(KeySignatureType.fminor.rawValue),
@@ -114,7 +114,7 @@ extension PieceDetails {
             ),
             PieceDetails.Movements.Edge.Node(
                 id: BigInt(9),
-                lastPracticed: Date().addingTimeInterval(-604800), // 1 week ago
+                lastPracticed: nil,
                 totalPracticeTime: 1876,
                 name: "Nocturne in B major",
                 keySignature: GraphQLEnum(KeySignatureType.b),
@@ -139,7 +139,7 @@ extension PieceDetails {
         // Create the main piece
         return PieceDetails(
             imslpPieceId: BigInt(34567),
-            lastPracticed: Date().addingTimeInterval(-43200), // 12 hours ago
+            lastPracticed: nil,
             id: BigInt(34567),
             workName: "Nocturnes, Op. 9",
             catalogueType: GraphQLEnum(CatalogueType.op.rawValue),
