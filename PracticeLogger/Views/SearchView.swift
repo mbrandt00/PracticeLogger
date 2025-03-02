@@ -36,6 +36,11 @@ struct SearchView: View {
                                 VStack(alignment: .leading) {
                                     Text(piece.workName)
                                         .font(.headline)
+                                    if let catalogueNumber = piece.catalogueNumber,
+                                       let catalogueType = piece.catalogueType
+                                    {
+                                        Text(catalogueType.displayName + " " + String(catalogueNumber))
+                                    }
                                     if let composer = piece.composer {
                                         Text(composer.name)
                                             .font(.subheadline)
@@ -68,7 +73,7 @@ struct SearchView: View {
                 }
             }
         }
-        .onChange(of: searchViewModel.searchTerm, initial: true) {
+        .onChange(of: searchViewModel.searchTerm, initial: true) { _, _ in
             Task {
                 await searchViewModel.searchPieces()
             }
@@ -77,6 +82,50 @@ struct SearchView: View {
             Task {
                 await searchViewModel.searchPieces()
             }
+        }
+    }
+
+    struct RepertoireRow: View {
+        var piece: PieceDetails
+        var body: some View {
+            HStack(alignment: .center, spacing: 12) {
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(alignment: .center, spacing: 4) {
+                        Text(piece.workName)
+                            .font(.headline)
+                            .lineLimit(1)
+
+                        if piece.lastPracticed == nil {
+                            NewItemBadge()
+                        }
+                    }
+
+                    if let composerName = piece.composer?.name {
+                        Text(composerName)
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                    }
+                }
+
+                Spacer()
+            }
+        }
+    }
+
+    struct NewItemBadge: View {
+        var body: some View {
+            // Custom layout to reduce spacing between icon and text
+            HStack(spacing: 2) { // Reduced spacing between elements
+                Image(systemName: "sparkles")
+                    .font(.caption)
+
+                Text("New")
+                    .font(.caption)
+            }
+            .padding(.horizontal, 4)
+            .padding(.vertical, 4)
+            .background(Color.blue.opacity(0.2))
+            .cornerRadius(8)
         }
     }
 }
@@ -90,6 +139,7 @@ struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         let viewModel = SearchViewModel()
         viewModel.newPieces = ImslpPieceDetails.samplePieces
+        viewModel.userPieces = PieceDetails.allPreviews
 
         return NavigationStack {
             StateWrapper(viewModel: viewModel)

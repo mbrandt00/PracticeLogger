@@ -183,8 +183,9 @@ struct PieceEdit: View {
         Picker("Identifier", selection: $viewModel.editablePiece.catalogueType) {
             Text("None").tag(nil as GraphQLEnum<CatalogueType>?)
             ForEach(CatalogueType.allCases, id: \.self) { type in
-                Text(type.displayName)
-                    .tag(GraphQLEnum<CatalogueType>(type) as GraphQLEnum<CatalogueType>?)
+                let graphQLType = GraphQLEnum<CatalogueType>(type)
+                Text(graphQLType.displayName)
+                    .tag(graphQLType as GraphQLEnum<CatalogueType>?)
             }
         }
     }
