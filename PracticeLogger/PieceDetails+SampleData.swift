@@ -8,9 +8,6 @@
 import ApolloAPI
 import ApolloGQL
 
-import ApolloAPI
-import ApolloGQL
-
 extension PieceDetails {
     static let preview: PieceDetails = {
         // First create the movement nodes
