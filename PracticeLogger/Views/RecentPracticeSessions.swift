@@ -50,7 +50,8 @@ struct RecentPracticeSessions: View {
 
                 if isSearching {
                     VStack {
-                        SearchView(searchViewModel: searchViewModel, practiceSessionViewModel: practiceSessionViewModel, path: $path)
+                        SearchView(searchViewModel: searchViewModel, path: $path)
+                            .environmentObject(practiceSessionViewModel)
                             .background(Color.white)
                     }
                     .padding(.vertical, 2)
