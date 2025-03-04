@@ -22,6 +22,7 @@ class SearchViewModel: ObservableObject {
         do {
             if !searchTerm.isEmpty {
                 newPieces = try await searchImslpPieces() ?? []
+                print("new Pieces", newPieces)
                 userPieces = try await getUserPieces() ?? []
             } else {
                 userPieces = try await getRecentUserPieces(forceFetch: true) ?? []

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ExpandedBottomSheet: View {
     @Binding var expandSheet: Bool
-    var activeSession: PracticeSession
+//    var activeSession: PracticeSession
     var animation: Namespace.ID
     /// View Properties
     @State private var animateContent: Bool = false

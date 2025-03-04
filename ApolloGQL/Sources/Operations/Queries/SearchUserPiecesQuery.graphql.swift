@@ -134,6 +134,8 @@ public class SearchUserPiecesQuery: GraphQLQuery {
           ] }
 
           public var imslpPieceId: ApolloGQL.BigInt { __data["imslpPieceId"] }
+          public var lastPracticed: ApolloGQL.Datetime? { __data["lastPracticed"] }
+          public var totalPracticeTime: Int? { __data["totalPracticeTime"] }
           public var id: ApolloGQL.BigInt { __data["id"] }
           public var workName: String { __data["workName"] }
           public var catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? { __data["catalogueType"] }
@@ -148,7 +150,6 @@ public class SearchUserPiecesQuery: GraphQLQuery {
           public var compositionYearDesc: String? { __data["compositionYearDesc"] }
           public var compositionYearString: String? { __data["compositionYearString"] }
           public var pieceStyle: String? { __data["pieceStyle"] }
-          public var totalPracticeTime: Int? { __data["totalPracticeTime"] }
           public var subPieceType: String? { __data["subPieceType"] }
           public var subPieceCount: Int? { __data["subPieceCount"] }
           public var catalogueNumber: Int? { __data["catalogueNumber"] }
@@ -166,6 +167,8 @@ public class SearchUserPiecesQuery: GraphQLQuery {
 
           public init(
             imslpPieceId: ApolloGQL.BigInt,
+            lastPracticed: ApolloGQL.Datetime? = nil,
+            totalPracticeTime: Int? = nil,
             id: ApolloGQL.BigInt,
             workName: String,
             catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? = nil,
@@ -180,7 +183,6 @@ public class SearchUserPiecesQuery: GraphQLQuery {
             compositionYearDesc: String? = nil,
             compositionYearString: String? = nil,
             pieceStyle: String? = nil,
-            totalPracticeTime: Int? = nil,
             subPieceType: String? = nil,
             subPieceCount: Int? = nil,
             catalogueNumber: Int? = nil,
@@ -193,6 +195,8 @@ public class SearchUserPiecesQuery: GraphQLQuery {
               data: [
                 "__typename": ApolloGQL.Objects.Piece.typename,
                 "imslpPieceId": imslpPieceId,
+                "lastPracticed": lastPracticed,
+                "totalPracticeTime": totalPracticeTime,
                 "id": id,
                 "workName": workName,
                 "catalogueType": catalogueType,
@@ -207,7 +211,6 @@ public class SearchUserPiecesQuery: GraphQLQuery {
                 "compositionYearDesc": compositionYearDesc,
                 "compositionYearString": compositionYearString,
                 "pieceStyle": pieceStyle,
-                "totalPracticeTime": totalPracticeTime,
                 "subPieceType": subPieceType,
                 "subPieceCount": subPieceCount,
                 "catalogueNumber": catalogueNumber,
