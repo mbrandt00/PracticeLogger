@@ -97,17 +97,18 @@ struct RepertoireRow: View {
     var isActive: Bool = false
     
     var body: some View {
-        HStack(alignment: .center, spacing: 12) {
-            Image(systemName: "music.quarternote.3")
-                .foregroundStyle(Color.theme.accent.opacity(0.6))
-                .opacity(isActive ? 1 : 0)
-                
+        HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 4) {
-                HStack(alignment: .center, spacing: 4) {
+                HStack(alignment: .center, spacing: 6) {
                     Text(piece.workName)
                         .font(.headline)
                         .lineLimit(1)
-                        
+                    
+                    if isActive {
+                        Image(systemName: "music.quarternote.3")
+                            .foregroundStyle(Color.theme.accent.opacity(0.6))
+                    }
+                    
                     if piece.lastPracticed == nil {
                         NewItemBadge()
                     }
@@ -143,22 +144,30 @@ enum PieceNavigationContext: Hashable {
     case newPiece(ImslpPieceDetails)
 }
 
-// struct SearchView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        let viewModel = SearchViewModel()
-//        viewModel.newPieces = ImslpPieceDetails.samplePieces
-//        viewModel.userPieces = PieceDetails.allPreviews
-//
-//        return NavigationStack {
-//            StateWrapper(viewModel: viewModel)
-//        }
-//    }
-//
-//    private struct StateWrapper: View {
-//        let viewModel: SearchViewModel
-//        @State private var path = NavigationPath()
-//        var body: some View {
-//            SearchView(searchViewModel: viewModel, practiceSessionViewModel: PracticeSessionViewModel(), path: $path)
-//        }
-//    }
-// }
+struct SearchView_Previews: PreviewProvider {
+    static var previews: some View {
+        let searchViewModel = SearchViewModel()
+        searchViewModel.newPieces = ImslpPieceDetails.samplePieces
+        searchViewModel.userPieces = PieceDetails.allPreviews
+        
+        let practiceSessionViewModel = PracticeSessionViewModel()
+
+        return NavigationStack {
+            StateWrapper(
+                searchViewModel: searchViewModel,
+                practiceSessionViewModel: practiceSessionViewModel
+            )
+        }
+    }
+
+    private struct StateWrapper: View {
+        let searchViewModel: SearchViewModel
+        let practiceSessionViewModel: PracticeSessionViewModel
+        @State private var path = NavigationPath()
+        
+        var body: some View {
+            SearchView(searchViewModel: searchViewModel, path: $path)
+                .environmentObject(practiceSessionViewModel)
+        }
+    }
+}
