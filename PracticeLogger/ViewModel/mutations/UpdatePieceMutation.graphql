@@ -1,0 +1,7 @@
+mutation UpdatePiece($set: PieceUpdateInput!, $filter: PieceFilter) {
+  updatePieceCollection(set: $set, filter: $filter) {
+    records {
+      ...PieceDetails
+    }
+  }
+}

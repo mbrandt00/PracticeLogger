@@ -139,9 +139,7 @@ struct PieceShow: View {
         } content: {
             NavigationStack {
                 PieceEdit(piece: piece, onPieceCreated: { _ in
-                    // Handle the updated piece here
-                    // For example, you might want to refresh your view model
-                    // or update the current piece with the new data
+                    print("Successfully inserted \(piece)")
                 })
                 .navigationTitle("Edit \(piece.workName)")
                 .navigationBarTitleDisplayMode(.inline)

@@ -6,6 +6,7 @@ import ApolloAPI
 public extension Objects {
   static let ImslpMovementConnection = ApolloAPI.Object(
     typename: "ImslpMovementConnection",
-    implementedInterfaces: []
+    implementedInterfaces: [],
+    keyFields: nil
   )
 }

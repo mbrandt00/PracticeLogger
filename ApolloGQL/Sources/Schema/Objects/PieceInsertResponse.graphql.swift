@@ -6,6 +6,7 @@ import ApolloAPI
 public extension Objects {
   static let PieceInsertResponse = ApolloAPI.Object(
     typename: "PieceInsertResponse",
-    implementedInterfaces: []
+    implementedInterfaces: [],
+    keyFields: nil
   )
 }

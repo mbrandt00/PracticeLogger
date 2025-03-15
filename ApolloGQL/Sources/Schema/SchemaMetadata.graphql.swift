@@ -31,11 +31,13 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
     case "MovementConnection": return ApolloGQL.Objects.MovementConnection
     case "MovementEdge": return ApolloGQL.Objects.MovementEdge
     case "MovementInsertResponse": return ApolloGQL.Objects.MovementInsertResponse
+    case "MovementUpdateResponse": return ApolloGQL.Objects.MovementUpdateResponse
     case "Mutation": return ApolloGQL.Objects.Mutation
     case "Piece": return ApolloGQL.Objects.Piece
     case "PieceConnection": return ApolloGQL.Objects.PieceConnection
     case "PieceEdge": return ApolloGQL.Objects.PieceEdge
     case "PieceInsertResponse": return ApolloGQL.Objects.PieceInsertResponse
+    case "PieceUpdateResponse": return ApolloGQL.Objects.PieceUpdateResponse
     case "PracticeSessions": return ApolloGQL.Objects.PracticeSessions
     case "PracticeSessionsConnection": return ApolloGQL.Objects.PracticeSessionsConnection
     case "PracticeSessionsEdge": return ApolloGQL.Objects.PracticeSessionsEdge

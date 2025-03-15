@@ -1,0 +1,407 @@
+{
+  "": {
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/master.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Fragments/ImslpPieceDetails.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpPieceDetails.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpPieceDetails.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpPieceDetails.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpPieceDetails.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Fragments/PieceDetails.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceDetails.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceDetails.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceDetails.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceDetails.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Fragments/PracticeSessionDetails.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessionDetails.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessionDetails.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessionDetails.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessionDetails.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Operations/Mutations/CreateMovementsMutation.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/CreateMovementsMutation.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/CreateMovementsMutation.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/CreateMovementsMutation.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/CreateMovementsMutation.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Operations/Mutations/CreatePracticeSessionMutation.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/CreatePracticeSessionMutation.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/CreatePracticeSessionMutation.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/CreatePracticeSessionMutation.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/CreatePracticeSessionMutation.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Operations/Mutations/InsertNewPieceMutation.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/InsertNewPieceMutation.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/InsertNewPieceMutation.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/InsertNewPieceMutation.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/InsertNewPieceMutation.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Operations/Mutations/UpdateMovementsMutation.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/UpdateMovementsMutation.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/UpdateMovementsMutation.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/UpdateMovementsMutation.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/UpdateMovementsMutation.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Operations/Mutations/UpdatePieceMutation.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/UpdatePieceMutation.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/UpdatePieceMutation.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/UpdatePieceMutation.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/UpdatePieceMutation.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Operations/Queries/ActiveUserSessionQuery.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ActiveUserSessionQuery.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ActiveUserSessionQuery.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ActiveUserSessionQuery.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ActiveUserSessionQuery.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Operations/Queries/PiecesQuery.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PiecesQuery.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PiecesQuery.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PiecesQuery.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PiecesQuery.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Operations/Queries/RecentUserSessionsQuery.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/RecentUserSessionsQuery.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/RecentUserSessionsQuery.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/RecentUserSessionsQuery.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/RecentUserSessionsQuery.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Operations/Queries/SearchImslpPiecesQuery.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/SearchImslpPiecesQuery.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/SearchImslpPiecesQuery.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/SearchImslpPiecesQuery.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/SearchImslpPiecesQuery.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Operations/Queries/SearchUserPiecesQuery.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/SearchUserPiecesQuery.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/SearchUserPiecesQuery.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/SearchUserPiecesQuery.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/SearchUserPiecesQuery.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/CustomScalars/BigInt.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/BigInt.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/BigInt.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/BigInt~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/BigInt.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/CustomScalars/Datetime.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Datetime.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Datetime.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Datetime~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Datetime.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/CustomScalars/ID.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ID.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ID.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ID~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ID.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/CustomScalars/UUID.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/UUID.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/UUID.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/UUID~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/UUID.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Enums/CatalogueType.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/CatalogueType.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/CatalogueType.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/CatalogueType.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/CatalogueType.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Enums/FilterIs.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/FilterIs.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/FilterIs.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/FilterIs.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/FilterIs.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Enums/KeySignatureType.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/KeySignatureType.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/KeySignatureType.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/KeySignatureType.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/KeySignatureType.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Enums/OrderByDirection.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/OrderByDirection.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/OrderByDirection.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/OrderByDirection.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/OrderByDirection.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Enums/PieceFormat.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceFormat.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceFormat.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceFormat.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceFormat.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/InputObjects/BigIntFilter.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/BigIntFilter.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/BigIntFilter.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/BigIntFilter.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/BigIntFilter.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/InputObjects/CatalogueTypeFilter.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/CatalogueTypeFilter.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/CatalogueTypeFilter.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/CatalogueTypeFilter.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/CatalogueTypeFilter.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/InputObjects/DatetimeFilter.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/DatetimeFilter.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/DatetimeFilter.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/DatetimeFilter.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/DatetimeFilter.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/InputObjects/IDFilter.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/IDFilter.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/IDFilter.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/IDFilter.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/IDFilter.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/InputObjects/ImslpPieceOrderBy.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpPieceOrderBy.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpPieceOrderBy.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpPieceOrderBy.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpPieceOrderBy.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/InputObjects/IntFilter.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/IntFilter.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/IntFilter.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/IntFilter.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/IntFilter.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/InputObjects/KeySignatureTypeFilter.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/KeySignatureTypeFilter.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/KeySignatureTypeFilter.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/KeySignatureTypeFilter.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/KeySignatureTypeFilter.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/InputObjects/MovementFilter.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementFilter.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementFilter.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementFilter.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementFilter.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/InputObjects/MovementInsertInput.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementInsertInput.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementInsertInput.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementInsertInput.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementInsertInput.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/InputObjects/MovementUpdateInput.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementUpdateInput.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementUpdateInput.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementUpdateInput.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementUpdateInput.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/InputObjects/PieceFilter.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceFilter.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceFilter.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceFilter.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceFilter.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/InputObjects/PieceFormatFilter.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceFormatFilter.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceFormatFilter.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceFormatFilter.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceFormatFilter.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/InputObjects/PieceInsertInput.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceInsertInput.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceInsertInput.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceInsertInput.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceInsertInput.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/InputObjects/PieceOrderBy.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceOrderBy.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceOrderBy.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceOrderBy.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceOrderBy.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/InputObjects/PieceUpdateInput.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceUpdateInput.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceUpdateInput.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceUpdateInput.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceUpdateInput.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/InputObjects/PracticeSessionsInsertInput.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessionsInsertInput.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessionsInsertInput.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessionsInsertInput.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessionsInsertInput.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/InputObjects/StringFilter.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/StringFilter.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/StringFilter.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/StringFilter.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/StringFilter.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/InputObjects/StringListFilter.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/StringListFilter.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/StringListFilter.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/StringListFilter.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/StringListFilter.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/InputObjects/UUIDFilter.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/UUIDFilter.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/UUIDFilter.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/UUIDFilter.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/UUIDFilter.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Interfaces/Node.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Node.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Node.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Node.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Node.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/Composers.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Composers.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Composers.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Composers.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Composers.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/ImslpMovement.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpMovement.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpMovement.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpMovement.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpMovement.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/ImslpMovementConnection.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpMovementConnection.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpMovementConnection.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpMovementConnection.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpMovementConnection.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/ImslpMovementEdge.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpMovementEdge.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpMovementEdge.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpMovementEdge.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpMovementEdge.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/ImslpPiece.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpPiece.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpPiece.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpPiece.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpPiece.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/ImslpPieceConnection.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpPieceConnection.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpPieceConnection.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpPieceConnection.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpPieceConnection.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/ImslpPieceEdge.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpPieceEdge.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpPieceEdge.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpPieceEdge.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ImslpPieceEdge.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/Movement.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Movement.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Movement.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Movement.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Movement.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/MovementConnection.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementConnection.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementConnection.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementConnection.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementConnection.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/MovementEdge.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementEdge.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementEdge.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementEdge.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementEdge.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/MovementInsertResponse.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementInsertResponse.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementInsertResponse.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementInsertResponse.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementInsertResponse.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/MovementUpdateResponse.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementUpdateResponse.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementUpdateResponse.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementUpdateResponse.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/MovementUpdateResponse.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/Mutation.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Mutation.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Mutation.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Mutation.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Mutation.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/Piece.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Piece.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Piece.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Piece.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Piece.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/PieceConnection.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceConnection.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceConnection.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceConnection.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceConnection.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/PieceEdge.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceEdge.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceEdge.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceEdge.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceEdge.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/PieceInsertResponse.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceInsertResponse.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceInsertResponse.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceInsertResponse.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceInsertResponse.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/PieceUpdateResponse.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceUpdateResponse.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceUpdateResponse.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceUpdateResponse.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PieceUpdateResponse.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/PracticeSessions.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessions.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessions.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessions.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessions.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/PracticeSessionsConnection.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessionsConnection.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessionsConnection.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessionsConnection.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessionsConnection.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/PracticeSessionsEdge.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessionsEdge.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessionsEdge.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessionsEdge.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessionsEdge.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/PracticeSessionsInsertResponse.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessionsInsertResponse.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessionsInsertResponse.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessionsInsertResponse.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/PracticeSessionsInsertResponse.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/Objects/Query.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Query.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Query.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Query.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/Query.graphql.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/SchemaConfiguration.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/SchemaConfiguration.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/SchemaConfiguration.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/SchemaConfiguration~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/SchemaConfiguration.swiftdeps"
+  },
+  "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/Sources/Schema/SchemaMetadata.graphql.swift": {
+    "dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/SchemaMetadata.graphql.d",
+    "object": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/SchemaMetadata.graphql.swift.o",
+    "swiftmodule": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/SchemaMetadata.graphql~partial.swiftmodule",
+    "swift-dependencies": "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/SchemaMetadata.graphql.swiftdeps"
+  }
+}

@@ -1,0 +1,4 @@
+module ApolloGQL {
+    header "/Users/michaelbrandt/personal/PracticeLogger/ApolloGQL/.build/arm64-apple-macosx/debug/ApolloGQL.build/ApolloGQL-Swift.h"
+    requires objc
+}

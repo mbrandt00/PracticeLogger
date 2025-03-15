@@ -1,15 +1,3 @@
-# mutation CreatePracticeSession($input: [PracticeSessionsInsertInput!]!) {
-#   insertIntoPracticeSessionsCollection(objects: $input) {
-#     records {
-#       startTime
-#       endTime
-#       piece {
-#         ...PieceDetails
-#       }
-#     }
-#   }
-# }
-#
 mutation CreatePracticeSession($input: PracticeSessionsInsertInput!) {
   insertIntoPracticeSessionsCollection(objects: [$input]) {
     records {

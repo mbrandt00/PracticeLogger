@@ -6,6 +6,7 @@ import ApolloAPI
 public extension Objects {
   static let PieceConnection = ApolloAPI.Object(
     typename: "PieceConnection",
-    implementedInterfaces: []
+    implementedInterfaces: [],
+    keyFields: nil
   )
 }
