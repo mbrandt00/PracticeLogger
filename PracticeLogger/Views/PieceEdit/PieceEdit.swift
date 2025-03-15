@@ -12,6 +12,7 @@ import SwiftUI
 struct PieceEdit: View {
     @StateObject private var viewModel: PieceEditViewModel
     @State private var showToast = false
+    @State private var isCreatingNewPiece: Bool
     @State private var errorMessage = ""
     @State private var duplicatePiece: PieceDetails?
     @State private var newInstrument = ""
@@ -21,54 +22,17 @@ struct PieceEdit: View {
     @State private var editingMovementId: ApolloGQL.BigInt? = nil
     var onPieceCreated: (@Sendable (PieceDetails) async -> Void)?
 
-    init(imslpPiece piece: ImslpPieceDetails, onPieceCreated: (@Sendable (PieceDetails) async -> Void)? = nil) {
+    init(piece: ImslpPieceDetails, onPieceCreated: ((PieceDetails) async -> Void)? = nil) {
         _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
         self.onPieceCreated = onPieceCreated
+        self.isCreatingNewPiece = true
     }
     
-    // Init for PieceDetails
-    init(piece: PieceDetails, onPieceCreated: (@Sendable (PieceDetails) async -> Void)? = nil) {
+    // Initializer for PieceDetails
+    init(piece: PieceDetails, onPieceCreated: ((PieceDetails) async -> Void)? = nil) {
         _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
         self.onPieceCreated = onPieceCreated
-    }
-    
-    // Overload for non-async callback with ImslpPieceDetails
-    init(imslpPiece piece: ImslpPieceDetails, onPieceCreated: ((PieceDetails) -> Void)? = nil) {
-        _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
-        if let handler = onPieceCreated {
-            self.onPieceCreated = { piece in
-                Task { @MainActor in
-                    handler(piece)
-                }
-            }
-        } else {
-            self.onPieceCreated = nil
-        }
-    }
-    
-    // Overload for non-async callback with PieceDetails
-    init(piece: PieceDetails, onPieceCreated: ((PieceDetails) -> Void)? = nil) {
-        _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
-        if let handler = onPieceCreated {
-            self.onPieceCreated = { piece in
-                Task { @MainActor in
-                    handler(piece)
-                }
-            }
-        } else {
-            self.onPieceCreated = nil
-        }
-    }
-    
-    // Overload for using just the piece parameter without the 'imslpPiece' label
-    init(piece: ImslpPieceDetails, onPieceCreated: ((PieceDetails) -> Void)? = nil) {
-        self.init(imslpPiece: piece, onPieceCreated: onPieceCreated)
-    }
-    
-    // Overload for async callback with ImslpPieceDetails
-    init(piece: ImslpPieceDetails, onPieceCreated: @escaping (PieceDetails) async -> Void) {
-        _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
-        self.onPieceCreated = onPieceCreated
+        self.isCreatingNewPiece = false
     }
 
     @Environment(\.dismiss) var dismiss
@@ -93,7 +57,7 @@ struct PieceEdit: View {
                     .foregroundColor(.red)
             }
         }
-        .navigationTitle("Create Piece")
+        .navigationTitle(isCreatingNewPiece ? "Create Piece" : "Edit Piece")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarItems(trailing: createButton)
         .toast(isPresenting: $showToast) {
@@ -289,10 +253,10 @@ struct PieceEdit: View {
     }
    
     private var createButton: some View {
-        Button("Submit") {
+        Button(isCreatingNewPiece ? "Submit" : "Save") {
             Task {
                 do {
-                    let piece = try await viewModel.insertPiece()
+                    let piece = isCreatingNewPiece ? try await viewModel.insertPiece() : try await viewModel.updatePiece()
                     dismiss()
                     await onPieceCreated?(piece) // Call the async callback
 
