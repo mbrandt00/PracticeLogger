@@ -11,7 +11,7 @@ import SwiftUI
 struct PieceShow: View {
     var piece: PieceDetails
     @ObservedObject var sessionManager: PracticeSessionViewModel
-    
+    @State private var editingMode = false
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 16) {
@@ -127,6 +127,31 @@ struct PieceShow: View {
         }
         .navigationTitle(piece.workName)
         .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            Button {
+                editingMode = true
+            } label: {
+                Image(systemName: "pencil")
+            }
+        }
+        .sheet(isPresented: $editingMode) {
+            editingMode = false
+        } content: {
+            NavigationStack {
+                PieceEdit(piece: piece, onPieceCreated: { _ in
+                    // Handle the updated piece here
+                    // For example, you might want to refresh your view model
+                    // or update the current piece with the new data
+                })
+                .navigationTitle("Edit \(piece.workName)")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    Button("Cancel") {
+                        editingMode = false
+                    }
+                }
+            }
+        }
     }
     
     private func MovementRow(movement: PieceDetails.Movements.Edge) -> some View {

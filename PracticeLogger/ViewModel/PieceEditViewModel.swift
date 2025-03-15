@@ -12,9 +12,14 @@ import Supabase
 
 class PieceEditViewModel: ObservableObject {
     @Published var editablePiece: EditablePiece
-    @Published var selectedPiece: PieceDetails? = nil
 
+    // Constructor for ImslpPieceDetails
     init(piece: ImslpPieceDetails) {
+        self.editablePiece = EditablePiece(from: piece)
+    }
+
+    // Constructor for PieceDetails
+    init(piece: PieceDetails) {
         self.editablePiece = EditablePiece(from: piece)
     }
 
@@ -75,7 +80,11 @@ class EditablePiece: ObservableObject {
     @Published var imslpUrl: String?
     @Published var wikipediaUrl: String?
     @Published var instrumentation: [String?]?
+    @Published var lastPracticed: Date?
+    @Published var totalPracticeTime: Int?
+    @Published var imslpPieceId: ApolloGQL.BigInt?
 
+    // Constructor for ImslpPieceDetails
     init(from piece: ImslpPieceDetails) {
         self.id = piece.id
         self.workName = piece.workName
@@ -89,6 +98,37 @@ class EditablePiece: ObservableObject {
         self.composerId = piece.composerId
         self.wikipediaUrl = piece.wikipediaUrl
         self.imslpUrl = piece.imslpUrl
+        self.imslpPieceId = piece.id
+
+        if let movements = piece.movements?.edges {
+            self.movements = movements.compactMap { edge in
+                EditableMovement(from: edge.node)
+            }.sorted { ($0.number ?? 0) < ($1.number ?? 0) }
+        }
+
+        if let composer = piece.composer {
+            self.composer = EditableComposer(from: composer)
+        }
+    }
+
+    // Constructor for PieceDetails
+    init(from piece: PieceDetails) {
+        self.id = piece.id
+        self.workName = piece.workName
+        self.catalogueType = piece.catalogueType
+        self.catalogueNumber = piece.catalogueNumber
+        self.nickname = piece.nickname
+        self.keySignature = piece.keySignature
+        self.instrumentation = piece.instrumentation
+        self.format = piece.format
+        self.compositionYear = piece.compositionYear
+        self.composerId = piece.composerId
+        self.wikipediaUrl = piece.wikipediaUrl
+        self.imslpUrl = piece.imslpUrl
+        self.imslpPieceId = piece.imslpPieceId
+        self.lastPracticed = piece.lastPracticed
+        self.totalPracticeTime = piece.totalPracticeTime
+
         if let movements = piece.movements?.edges {
             self.movements = movements.compactMap { edge in
                 EditableMovement(from: edge.node)
@@ -108,7 +148,11 @@ class EditableMovement: Identifiable, ObservableObject, Equatable {
     @Published var pieceId: String?
     @Published var keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>?
     @Published var downloadUrl: String?
+    @Published var nickname: String?
+    @Published var lastPracticed: Date?
+    @Published var totalPracticeTime: Int?
 
+    // Constructor for ImslpPieceDetails movement
     init(from node: ImslpPieceDetails.Movements.Edge.Node) {
         self.id = node.id
         self.name = node.name
@@ -116,6 +160,20 @@ class EditableMovement: Identifiable, ObservableObject, Equatable {
         self.pieceId = node.pieceId
         self.keySignature = node.keySignature
         self.downloadUrl = node.downloadUrl
+        self.nickname = node.nickname
+    }
+
+    // Constructor for PieceDetails movement
+    init(from node: PieceDetails.Movements.Edge.Node) {
+        self.id = node.id
+        self.name = node.name
+        self.number = node.number
+        self.pieceId = node.pieceId
+        self.keySignature = node.keySignature
+        self.downloadUrl = node.downloadUrl
+        self.nickname = node.nickname
+        self.lastPracticed = node.lastPracticed
+        self.totalPracticeTime = node.totalPracticeTime
     }
 
     static func == (lhs: EditableMovement, rhs: EditableMovement) -> Bool {
@@ -128,6 +186,10 @@ class EditableComposer {
     var id: ApolloGQL.BigInt?
 
     init(from composer: ImslpPieceDetails.Composer) {
+        self.name = composer.name
+    }
+
+    init(from composer: PieceDetails.Composer) {
         self.name = composer.name
     }
 
@@ -149,9 +211,9 @@ extension EditablePiece {
             compositionYear: compositionYear.map { .some($0) } ?? .null,
             wikipediaUrl: wikipediaUrl.map { .some($0) } ?? .null,
             instrumentation: instrumentation.map { .some($0) } ?? .null,
-            subPieceType: subPieceType.map { .some($0) } ?? .null, // make picker
+            subPieceType: subPieceType.map { .some($0) } ?? .null,
             imslpUrl: imslpUrl.map { .some($0) } ?? .null,
-            imslpPieceId: .some(id)
+            imslpPieceId: imslpPieceId.map { .some($0) } ?? .null
         )
     }
 }

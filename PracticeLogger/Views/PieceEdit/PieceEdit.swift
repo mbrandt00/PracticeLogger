@@ -21,18 +21,58 @@ struct PieceEdit: View {
     @State private var editingMovementId: ApolloGQL.BigInt? = nil
     var onPieceCreated: (@Sendable (PieceDetails) async -> Void)?
 
-    init(piece: ImslpPieceDetails, onPieceCreated: (@Sendable (PieceDetails) async -> Void)? = nil) {
+    init(imslpPiece piece: ImslpPieceDetails, onPieceCreated: (@Sendable (PieceDetails) async -> Void)? = nil) {
+        _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
+        self.onPieceCreated = onPieceCreated
+    }
+    
+    // Init for PieceDetails
+    init(piece: PieceDetails, onPieceCreated: (@Sendable (PieceDetails) async -> Void)? = nil) {
+        _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
+        self.onPieceCreated = onPieceCreated
+    }
+    
+    // Overload for non-async callback with ImslpPieceDetails
+    init(imslpPiece piece: ImslpPieceDetails, onPieceCreated: ((PieceDetails) -> Void)? = nil) {
+        _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
+        if let handler = onPieceCreated {
+            self.onPieceCreated = { piece in
+                Task { @MainActor in
+                    handler(piece)
+                }
+            }
+        } else {
+            self.onPieceCreated = nil
+        }
+    }
+    
+    // Overload for non-async callback with PieceDetails
+    init(piece: PieceDetails, onPieceCreated: ((PieceDetails) -> Void)? = nil) {
+        _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
+        if let handler = onPieceCreated {
+            self.onPieceCreated = { piece in
+                Task { @MainActor in
+                    handler(piece)
+                }
+            }
+        } else {
+            self.onPieceCreated = nil
+        }
+    }
+    
+    // Overload for using just the piece parameter without the 'imslpPiece' label
+    init(piece: ImslpPieceDetails, onPieceCreated: ((PieceDetails) -> Void)? = nil) {
+        self.init(imslpPiece: piece, onPieceCreated: onPieceCreated)
+    }
+    
+    // Overload for async callback with ImslpPieceDetails
+    init(piece: ImslpPieceDetails, onPieceCreated: @escaping (PieceDetails) async -> Void) {
         _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
         self.onPieceCreated = onPieceCreated
     }
 
     @Environment(\.dismiss) var dismiss
 
-    init(piece: ImslpPieceDetails, onPieceCreated: ((PieceDetails) -> Void)? = nil) {
-        _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
-        self.onPieceCreated = onPieceCreated
-    }
-    
     var body: some View {
         Form {
             nameFields
