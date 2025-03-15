@@ -1,3 +1,4 @@
+# should be deprectabable to just use piecesquery
 query SearchUserPieces(
   $query: String!
   $pieceFilter: PieceFilter = {}
