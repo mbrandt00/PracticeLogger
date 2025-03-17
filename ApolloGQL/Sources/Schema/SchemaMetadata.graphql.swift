@@ -22,6 +22,8 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
     switch typename {
     case "Collections": return ApolloGQL.Objects.Collections
     case "Composers": return ApolloGQL.Objects.Composers
+    case "ImslpMovement": return ApolloGQL.Objects.ImslpMovement
+    case "ImslpPiece": return ApolloGQL.Objects.ImslpPiece
     case "Movement": return ApolloGQL.Objects.Movement
     case "MovementConnection": return ApolloGQL.Objects.MovementConnection
     case "MovementEdge": return ApolloGQL.Objects.MovementEdge

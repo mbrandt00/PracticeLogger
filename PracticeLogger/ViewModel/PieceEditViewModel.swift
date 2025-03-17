@@ -147,7 +147,7 @@ class EditableMovement: Identifiable, ObservableObject, Equatable {
     }
 
     static func == (lhs: EditableMovement, rhs: EditableMovement) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.id == rhs.id && lhs.name == rhs.name && lhs.keySignature == rhs.keySignature && lhs.number == rhs.number
     }
 }
 
@@ -179,8 +179,7 @@ extension EditablePiece {
             wikipediaUrl: self.wikipediaUrl.map { .some($0) } ?? .null,
             instrumentation: self.instrumentation.map { .some($0) } ?? .null,
             subPieceType: self.subPieceType.map { .some($0) } ?? .null,
-            imslpUrl: self.imslpUrl.map { .some($0) } ?? .null,
-            isImslp: false
+            imslpUrl: self.imslpUrl.map { .some($0) } ?? .null
         )
     }
 

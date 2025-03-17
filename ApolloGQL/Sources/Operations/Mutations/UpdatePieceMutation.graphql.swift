@@ -116,7 +116,6 @@ public class UpdatePieceMutation: GraphQLMutation {
         public var compositionYearString: String? { __data["compositionYearString"] }
         public var pieceStyle: String? { __data["pieceStyle"] }
         public var subPieceType: String? { __data["subPieceType"] }
-        public var isImslp: Bool? { __data["isImslp"] }
         public var subPieceCount: Int? { __data["subPieceCount"] }
         public var catalogueNumber: Int? { __data["catalogueNumber"] }
         public var nickname: String? { __data["nickname"] }
@@ -149,7 +148,6 @@ public class UpdatePieceMutation: GraphQLMutation {
           compositionYearString: String? = nil,
           pieceStyle: String? = nil,
           subPieceType: String? = nil,
-          isImslp: Bool? = nil,
           subPieceCount: Int? = nil,
           catalogueNumber: Int? = nil,
           nickname: String? = nil,
@@ -177,7 +175,6 @@ public class UpdatePieceMutation: GraphQLMutation {
               "compositionYearString": compositionYearString,
               "pieceStyle": pieceStyle,
               "subPieceType": subPieceType,
-              "isImslp": isImslp,
               "subPieceCount": subPieceCount,
               "catalogueNumber": catalogueNumber,
               "nickname": nickname,

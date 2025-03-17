@@ -37,7 +37,6 @@ public struct PieceFilter: InputObject {
     imslpPieceId: GraphQLNullable<BigIntFilter> = nil,
     totalPracticeTime: GraphQLNullable<IntFilter> = nil,
     lastPracticed: GraphQLNullable<DatetimeFilter> = nil,
-    isImslp: GraphQLNullable<BooleanFilter> = nil,
     collectionId: GraphQLNullable<BigIntFilter> = nil,
     nodeId: GraphQLNullable<IDFilter> = nil,
     and: GraphQLNullable<[PieceFilter]> = nil,
@@ -71,7 +70,6 @@ public struct PieceFilter: InputObject {
       "imslpPieceId": imslpPieceId,
       "totalPracticeTime": totalPracticeTime,
       "lastPracticed": lastPracticed,
-      "isImslp": isImslp,
       "collectionId": collectionId,
       "nodeId": nodeId,
       "and": and,
@@ -208,11 +206,6 @@ public struct PieceFilter: InputObject {
   public var lastPracticed: GraphQLNullable<DatetimeFilter> {
     get { __data["lastPracticed"] }
     set { __data["lastPracticed"] = newValue }
-  }
-
-  public var isImslp: GraphQLNullable<BooleanFilter> {
-    get { __data["isImslp"] }
-    set { __data["isImslp"] = newValue }
   }
 
   public var collectionId: GraphQLNullable<BigIntFilter> {

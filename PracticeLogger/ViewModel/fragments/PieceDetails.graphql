@@ -17,7 +17,6 @@ fragment PieceDetails on Piece {
   pieceStyle
   totalPracticeTime
   subPieceType
-  isImslp
   subPieceCount
 
   catalogueNumber
