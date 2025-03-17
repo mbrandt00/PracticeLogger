@@ -22,17 +22,10 @@ struct PieceEdit: View {
     @State private var editingMovementId: ApolloGQL.BigInt? = nil
     var onPieceCreated: (@Sendable (PieceDetails) async -> Void)?
 
-    init(piece: ImslpPieceDetails, onPieceCreated: ((PieceDetails) async -> Void)? = nil) {
+    init(piece: PieceDetails, isCreatingNewPiece: Bool, onPieceCreated: ((PieceDetails) async -> Void)? = nil) {
         _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
         self.onPieceCreated = onPieceCreated
-        self.isCreatingNewPiece = true
-    }
-    
-    // Initializer for PieceDetails
-    init(piece: PieceDetails, onPieceCreated: ((PieceDetails) async -> Void)? = nil) {
-        _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
-        self.onPieceCreated = onPieceCreated
-        self.isCreatingNewPiece = false
+        self.isCreatingNewPiece = isCreatingNewPiece
     }
 
     @Environment(\.dismiss) var dismiss
@@ -268,12 +261,12 @@ struct PieceEdit: View {
     }
 }
 
-struct PieceEdit_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            PieceEdit(
-                piece: ImslpPieceDetails.samplePieces[0]
-            )
-        }
-    }
-}
+// struct PieceEdit_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationStack {
+//            PieceEdit(
+//                piece: ImslpPieceDetails.samplePieces[0]
+//            )
+//        }
+//    }
+// }

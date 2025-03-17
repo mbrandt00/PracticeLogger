@@ -39,7 +39,7 @@ struct SearchView: View {
         }
         .sheet(item: $searchViewModel.selectedPiece) { piece in
             NavigationStack {
-                PieceEdit(piece: piece, onPieceCreated: handlePieceCreated)
+                PieceEdit(piece: piece, isCreatingNewPiece: false, onPieceCreated: handlePieceCreated)
             }
         }
     }
@@ -53,7 +53,7 @@ struct SearchView: View {
         }
     }
     
-    private func newPieceRow(_ piece: ImslpPieceDetails) -> some View {
+    private func newPieceRow(_ piece: PieceDetails) -> some View {
         Button {
             searchViewModel.selectedPiece = piece
         } label: {
@@ -141,13 +141,13 @@ struct NewItemBadge: View {
 
 enum PieceNavigationContext: Hashable {
     case userPiece(PieceDetails)
-    case newPiece(ImslpPieceDetails)
+    case newPiece(PieceDetails)
 }
 
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         let searchViewModel = SearchViewModel()
-        searchViewModel.newPieces = ImslpPieceDetails.samplePieces
+        searchViewModel.newPieces = []
         searchViewModel.userPieces = PieceDetails.allPreviews
         
         let practiceSessionViewModel = PracticeSessionViewModel()

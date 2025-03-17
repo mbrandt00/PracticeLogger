@@ -29,6 +29,7 @@ struct MovementSection: View {
             Button(action: {
                 withAnimation(.easeInOut(duration: 0.3)) {
                     isEditingMovements.toggle()
+                    print(movements)
                     if !isEditingMovements {
                         editingMovementId = nil
                         isAddingMovement = false

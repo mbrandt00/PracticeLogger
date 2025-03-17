@@ -13,11 +13,6 @@ import Supabase
 class PieceEditViewModel: ObservableObject {
     @Published var editablePiece: EditablePiece
 
-    // Constructor for ImslpPieceDetails
-    init(piece: ImslpPieceDetails) {
-        self.editablePiece = EditablePiece(from: piece)
-    }
-
     // Constructor for PieceDetails
     init(piece: PieceDetails) {
         self.editablePiece = EditablePiece(from: piece)
@@ -98,38 +93,6 @@ class EditablePiece: ObservableObject {
     @Published var totalPracticeTime: Int?
     @Published var imslpPieceId: ApolloGQL.BigInt?
 
-    // Constructor for ImslpPieceDetails
-    init(from piece: ImslpPieceDetails) {
-        self.id = piece.id
-        self.workName = piece.workName
-        self.catalogueType = piece.catalogueType
-        self.catalogueNumber = piece.catalogueNumber
-        self.nickname = piece.nickname
-        self.keySignature = piece.keySignature
-        self.instrumentation = piece.instrumentation
-        self.format = piece.format
-        self.compositionYear = piece.compositionYear
-        self.pieceStyle = piece.pieceStyle
-        self.catalogueNumber = piece.catalogueNumber
-        self.compositionYearString = piece.compositionYearString
-        self.catalogueTypeNumDesc = piece.catalogueTypeNumDesc
-        self.composerId = piece.composerId
-        self.wikipediaUrl = piece.wikipediaUrl
-        self.imslpUrl = piece.imslpUrl
-        self.imslpPieceId = piece.id
-        self.catalogueNumberSecondary = piece.catalogueNumberSecondary
-
-        if let movements = piece.movements?.edges {
-            self.movements = movements.compactMap { edge in
-                EditableMovement(from: edge.node)
-            }.sorted { ($0.number ?? 0) < ($1.number ?? 0) }
-        }
-
-        if let composer = piece.composer {
-            self.composer = EditableComposer(from: composer)
-        }
-    }
-
     // Constructor for PieceDetails
     init(from piece: PieceDetails) {
         self.id = piece.id
@@ -144,7 +107,6 @@ class EditablePiece: ObservableObject {
         self.composerId = piece.composerId
         self.wikipediaUrl = piece.wikipediaUrl
         self.imslpUrl = piece.imslpUrl
-        self.imslpPieceId = piece.imslpPieceId
         self.lastPracticed = piece.lastPracticed
         self.totalPracticeTime = piece.totalPracticeTime
 
@@ -171,17 +133,6 @@ class EditableMovement: Identifiable, ObservableObject, Equatable {
     @Published var lastPracticed: Date?
     @Published var totalPracticeTime: Int?
 
-    // Constructor for ImslpPieceDetails movement
-    init(from node: ImslpPieceDetails.Movements.Edge.Node) {
-        self.id = node.id
-        self.name = node.name
-        self.number = node.number
-        self.pieceId = node.pieceId
-        self.keySignature = node.keySignature
-        self.downloadUrl = node.downloadUrl
-        self.nickname = node.nickname
-    }
-
     // Constructor for PieceDetails movement
     init(from node: PieceDetails.Movements.Edge.Node) {
         self.id = node.id
@@ -204,10 +155,6 @@ class EditableComposer {
     var name: String
     var id: ApolloGQL.BigInt?
 
-    init(from composer: ImslpPieceDetails.Composer) {
-        self.name = composer.name
-    }
-
     init(from composer: PieceDetails.Composer) {
         self.name = composer.name
     }
@@ -218,11 +165,12 @@ class EditableComposer {
 }
 
 extension EditablePiece {
-    func toGraphQLInput() -> PieceInsertInput {
-        PieceInsertInput(
+    func toGraphQLInput() async throws -> PieceInsertInput {
+        try PieceInsertInput(
             workName: .some(self.workName),
             composerId: self.composerId.map { .some($0) } ?? .null,
             nickname: self.nickname.map { .some($0) } ?? .null,
+            userId: .some(await Database.client.auth.user().id.uuidString),
             format: self.format.map { .some($0) } ?? .null,
             keySignature: self.keySignature.map { .some($0) } ?? .null,
             catalogueType: self.catalogueType.map { .some($0) } ?? .null,
@@ -232,7 +180,7 @@ extension EditablePiece {
             instrumentation: self.instrumentation.map { .some($0) } ?? .null,
             subPieceType: self.subPieceType.map { .some($0) } ?? .null,
             imslpUrl: self.imslpUrl.map { .some($0) } ?? .null,
-            imslpPieceId: self.imslpPieceId.map { .some($0) } ?? .null
+            isImslp: false
         )
     }
 

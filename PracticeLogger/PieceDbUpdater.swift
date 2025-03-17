@@ -49,7 +49,7 @@ class PieceDbUpdater {
     // MARK: - Insert Operations
     
     private func insertPiece() async throws -> PieceDetails {
-        let inputObject = piece.toGraphQLInput()
+        let inputObject = try await piece.toGraphQLInput()
         print("🔵 Inserting piece:", inputObject)
         
         let pieceDetails = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<PieceDetails, Error>) in

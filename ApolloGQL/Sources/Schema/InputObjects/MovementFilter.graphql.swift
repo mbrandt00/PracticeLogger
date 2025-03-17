@@ -20,6 +20,8 @@ public struct MovementFilter: InputObject {
     downloadUrl: GraphQLNullable<StringFilter> = nil,
     totalPracticeTime: GraphQLNullable<IntFilter> = nil,
     lastPracticed: GraphQLNullable<DatetimeFilter> = nil,
+    isImslp: GraphQLNullable<BooleanFilter> = nil,
+    imslpMovementId: GraphQLNullable<BigIntFilter> = nil,
     nodeId: GraphQLNullable<IDFilter> = nil,
     and: GraphQLNullable<[MovementFilter]> = nil,
     or: GraphQLNullable<[MovementFilter]> = nil,
@@ -35,6 +37,8 @@ public struct MovementFilter: InputObject {
       "downloadUrl": downloadUrl,
       "totalPracticeTime": totalPracticeTime,
       "lastPracticed": lastPracticed,
+      "isImslp": isImslp,
+      "imslpMovementId": imslpMovementId,
       "nodeId": nodeId,
       "and": and,
       "or": or,
@@ -85,6 +89,16 @@ public struct MovementFilter: InputObject {
   public var lastPracticed: GraphQLNullable<DatetimeFilter> {
     get { __data["lastPracticed"] }
     set { __data["lastPracticed"] = newValue }
+  }
+
+  public var isImslp: GraphQLNullable<BooleanFilter> {
+    get { __data["isImslp"] }
+    set { __data["isImslp"] = newValue }
+  }
+
+  public var imslpMovementId: GraphQLNullable<BigIntFilter> {
+    get { __data["imslpMovementId"] }
+    set { __data["imslpMovementId"] = newValue }
   }
 
   public var nodeId: GraphQLNullable<IDFilter> {

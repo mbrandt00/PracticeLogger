@@ -61,7 +61,6 @@ extension PieceDetails {
 
         // Create the main piece
         return PieceDetails(
-            imslpPieceId: BigInt(23456),
             lastPracticed: Date().addingTimeInterval(-172800), // 2 days ago
             id: BigInt(23456),
             workName: "Cello Suite No. 1",
@@ -138,7 +137,6 @@ extension PieceDetails {
 
         // Create the main piece
         return PieceDetails(
-            imslpPieceId: BigInt(34567),
             lastPracticed: nil,
             id: BigInt(34567),
             workName: "Nocturnes, Op. 9",

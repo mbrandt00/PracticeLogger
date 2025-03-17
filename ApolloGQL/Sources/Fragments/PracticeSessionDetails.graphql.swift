@@ -100,7 +100,6 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
       .fragment(PieceDetails.self),
     ] }
 
-    public var imslpPieceId: ApolloGQL.BigInt { __data["imslpPieceId"] }
     public var lastPracticed: ApolloGQL.Datetime? { __data["lastPracticed"] }
     public var totalPracticeTime: Int? { __data["totalPracticeTime"] }
     public var id: ApolloGQL.BigInt { __data["id"] }
@@ -118,6 +117,7 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
     public var compositionYearString: String? { __data["compositionYearString"] }
     public var pieceStyle: String? { __data["pieceStyle"] }
     public var subPieceType: String? { __data["subPieceType"] }
+    public var isImslp: Bool? { __data["isImslp"] }
     public var subPieceCount: Int? { __data["subPieceCount"] }
     public var catalogueNumber: Int? { __data["catalogueNumber"] }
     public var nickname: String? { __data["nickname"] }
@@ -133,7 +133,6 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
     }
 
     public init(
-      imslpPieceId: ApolloGQL.BigInt,
       lastPracticed: ApolloGQL.Datetime? = nil,
       totalPracticeTime: Int? = nil,
       id: ApolloGQL.BigInt,
@@ -151,6 +150,7 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
       compositionYearString: String? = nil,
       pieceStyle: String? = nil,
       subPieceType: String? = nil,
+      isImslp: Bool? = nil,
       subPieceCount: Int? = nil,
       catalogueNumber: Int? = nil,
       nickname: String? = nil,
@@ -161,7 +161,6 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
       self.init(_dataDict: DataDict(
         data: [
           "__typename": ApolloGQL.Objects.Piece.typename,
-          "imslpPieceId": imslpPieceId,
           "lastPracticed": lastPracticed,
           "totalPracticeTime": totalPracticeTime,
           "id": id,
@@ -179,6 +178,7 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
           "compositionYearString": compositionYearString,
           "pieceStyle": pieceStyle,
           "subPieceType": subPieceType,
+          "isImslp": isImslp,
           "subPieceCount": subPieceCount,
           "catalogueNumber": catalogueNumber,
           "nickname": nickname,

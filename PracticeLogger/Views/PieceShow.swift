@@ -138,7 +138,7 @@ struct PieceShow: View {
             editingMode = false
         } content: {
             NavigationStack {
-                PieceEdit(piece: piece, onPieceCreated: { _ in
+                PieceEdit(piece: piece, isCreatingNewPiece: false, onPieceCreated: { _ in
                     print("Successfully inserted \(piece)")
                 })
                 .navigationTitle("Edit \(piece.workName)")
@@ -162,6 +162,11 @@ struct PieceShow: View {
                 
                 if let number = movement.node.number {
                     Text("Movement \(number)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                if let keySignature = movement.node.keySignature, let value = keySignature.value {
+                    Text("Key Signature: \(value.displayName)")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }

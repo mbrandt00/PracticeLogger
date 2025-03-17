@@ -8,9 +8,8 @@ public extension Interfaces {
     name: "Node",
     keyFields: nil,
     implementingObjects: [
+      "Collections",
       "Composers",
-      "ImslpMovement",
-      "ImslpPiece",
       "Movement",
       "Piece",
       "PracticeSessions"

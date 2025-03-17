@@ -1,5 +1,4 @@
 fragment PieceDetails on Piece {
-  imslpPieceId: id
   lastPracticed
   totalPracticeTime
   id
@@ -18,6 +17,7 @@ fragment PieceDetails on Piece {
   pieceStyle
   totalPracticeTime
   subPieceType
+  isImslp
   subPieceCount
 
   catalogueNumber

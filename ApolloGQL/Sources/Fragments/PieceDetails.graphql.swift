@@ -5,7 +5,7 @@
 
 public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
   public static var fragmentDefinition: StaticString {
-    #"fragment PieceDetails on Piece { __typename imslpPieceId: id lastPracticed totalPracticeTime id workName catalogueType keySignature format instrumentation wikipediaUrl imslpUrl compositionYear catalogueNumberSecondary catalogueTypeNumDesc compositionYearDesc compositionYearString pieceStyle totalPracticeTime subPieceType subPieceCount catalogueNumber nickname composerId composer { __typename name } movements: movementCollection(orderBy: [{ number: AscNullsLast }]) { __typename edges { __typename node { __typename id lastPracticed totalPracticeTime name totalPracticeTime keySignature nickname downloadUrl pieceId number } } } }"#
+    #"fragment PieceDetails on Piece { __typename lastPracticed totalPracticeTime id workName catalogueType keySignature format instrumentation wikipediaUrl imslpUrl compositionYear catalogueNumberSecondary catalogueTypeNumDesc compositionYearDesc compositionYearString pieceStyle totalPracticeTime subPieceType isImslp subPieceCount catalogueNumber nickname composerId composer { __typename name } movements: movementCollection(orderBy: [{ number: AscNullsLast }]) { __typename edges { __typename node { __typename id lastPracticed totalPracticeTime name totalPracticeTime keySignature nickname downloadUrl pieceId number } } } }"#
   }
 
   public let __data: DataDict
@@ -14,7 +14,6 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
   public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Piece }
   public static var __selections: [ApolloAPI.Selection] { [
     .field("__typename", String.self),
-    .field("id", alias: "imslpPieceId", ApolloGQL.BigInt.self),
     .field("lastPracticed", ApolloGQL.Datetime?.self),
     .field("totalPracticeTime", Int?.self),
     .field("id", ApolloGQL.BigInt.self),
@@ -32,6 +31,7 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
     .field("compositionYearString", String?.self),
     .field("pieceStyle", String?.self),
     .field("subPieceType", String?.self),
+    .field("isImslp", Bool?.self),
     .field("subPieceCount", Int?.self),
     .field("catalogueNumber", Int?.self),
     .field("nickname", String?.self),
@@ -40,7 +40,6 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
     .field("movementCollection", alias: "movements", Movements?.self, arguments: ["orderBy": [["number": "AscNullsLast"]]]),
   ] }
 
-  public var imslpPieceId: ApolloGQL.BigInt { __data["imslpPieceId"] }
   public var lastPracticed: ApolloGQL.Datetime? { __data["lastPracticed"] }
   public var totalPracticeTime: Int? { __data["totalPracticeTime"] }
   public var id: ApolloGQL.BigInt { __data["id"] }
@@ -58,6 +57,7 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
   public var compositionYearString: String? { __data["compositionYearString"] }
   public var pieceStyle: String? { __data["pieceStyle"] }
   public var subPieceType: String? { __data["subPieceType"] }
+  public var isImslp: Bool? { __data["isImslp"] }
   public var subPieceCount: Int? { __data["subPieceCount"] }
   public var catalogueNumber: Int? { __data["catalogueNumber"] }
   public var nickname: String? { __data["nickname"] }
@@ -66,7 +66,6 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
   public var movements: Movements? { __data["movements"] }
 
   public init(
-    imslpPieceId: ApolloGQL.BigInt,
     lastPracticed: ApolloGQL.Datetime? = nil,
     totalPracticeTime: Int? = nil,
     id: ApolloGQL.BigInt,
@@ -84,6 +83,7 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
     compositionYearString: String? = nil,
     pieceStyle: String? = nil,
     subPieceType: String? = nil,
+    isImslp: Bool? = nil,
     subPieceCount: Int? = nil,
     catalogueNumber: Int? = nil,
     nickname: String? = nil,
@@ -94,7 +94,6 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
     self.init(_dataDict: DataDict(
       data: [
         "__typename": ApolloGQL.Objects.Piece.typename,
-        "imslpPieceId": imslpPieceId,
         "lastPracticed": lastPracticed,
         "totalPracticeTime": totalPracticeTime,
         "id": id,
@@ -112,6 +111,7 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
         "compositionYearString": compositionYearString,
         "pieceStyle": pieceStyle,
         "subPieceType": subPieceType,
+        "isImslp": isImslp,
         "subPieceCount": subPieceCount,
         "catalogueNumber": catalogueNumber,
         "nickname": nickname,

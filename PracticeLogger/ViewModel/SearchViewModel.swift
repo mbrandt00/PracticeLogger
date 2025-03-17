@@ -6,6 +6,7 @@
 //
 
 import Apollo
+import ApolloAPI
 import ApolloGQL
 import Combine
 import Foundation
@@ -13,17 +14,40 @@ import Foundation
 class SearchViewModel: ObservableObject {
     @Published var searchTerm = ""
     @Published var selectedKeySignature: KeySignatureType?
-    @Published var selectedPiece: ImslpPieceDetails?
     @Published var userPieces: [PieceDetails] = []
-    @Published var newPieces: [ImslpPieceDetails] = []
-
+    @Published var newPieces: [PieceDetails] = []
+    @Published var selectedPiece: PieceDetails?
     @MainActor
     func searchPieces() async {
         do {
             if !searchTerm.isEmpty {
-                newPieces = try await searchImslpPieces() ?? []
-                print("new Pieces", newPieces)
+                // First get the user's pieces
                 userPieces = try await getUserPieces() ?? []
+
+                // Then get the new pieces
+                var allNewPieces = try await searchNewPieces() ?? []
+
+                // Create a set of IMSLP URLs that the user already has
+                let userImslpUrls = Set(userPieces.compactMap { piece in
+                    // We want to collect imslpUrl values from user pieces that aren't IMSLP pieces themselves
+                    // but reference IMSLP pieces
+                    if let isImslp = piece.isImslp, !isImslp {
+                        return piece.imslpUrl
+                    }
+                    return nil
+                })
+
+                // Filter out pieces that the user already has
+                newPieces = allNewPieces.filter { piece in
+                    // Keep the piece only if its imslpUrl is not in the user's pieces
+                    if let imslpUrl = piece.imslpUrl {
+                        return !userImslpUrls.contains(imslpUrl)
+                    }
+                    // If the piece doesn't have an imslpUrl, keep it
+                    return true
+                }
+
+                print("new Pieces", newPieces)
             } else {
                 userPieces = try await getRecentUserPieces(forceFetch: true) ?? []
                 newPieces = []
@@ -68,13 +92,19 @@ class SearchViewModel: ObservableObject {
     }
 
     func getUserPieces() async throws -> [PieceDetails]? {
+        guard let userId = Database.client.auth.currentUser?.id else {
+            return []
+        }
         return try await withCheckedThrowingContinuation { continuation in
             let direction = GraphQLEnum(OrderByDirection.descNullsFirst)
             let orderBy: GraphQLNullable<[PieceOrderBy]> = .some([PieceOrderBy(lastPracticed: .some(direction))])
-            Network.shared.apollo.fetch(query: SearchUserPiecesQuery(query: searchTerm, orderBy: orderBy)) { result in
+            let filter = GraphQLNullable(PieceFilter(
+                userId: .some(UUIDFilter(eq: .some(userId.uuidString)))
+            ))
+            Network.shared.apollo.fetch(query: SearchPiecesQuery(query: searchTerm, pieceFilter: filter, orderBy: orderBy)) { result in
                 switch result {
                 case .success(let graphQlResult):
-                    if let data = graphQlResult.data?.searchUserPieces {
+                    if let data = graphQlResult.data?.searchPieces {
                         let pieces = data.edges.map { edge in
                             edge.node.fragments.pieceDetails
                         }
@@ -91,21 +121,27 @@ class SearchViewModel: ObservableObject {
         }
     }
 
-    func searchImslpPieces() async throws -> [ImslpPieceDetails]? {
+    func searchNewPieces() async throws -> [PieceDetails]? {
+        guard let userId = Database.client.auth.currentUser?.id else {
+            return []
+        }
         return try await withCheckedThrowingContinuation { continuation in
-            let direction = GraphQLEnum(OrderByDirection.ascNullsFirst)
-            let orderBy: GraphQLNullable<[ImslpPieceOrderBy]> = .some([ImslpPieceOrderBy(catalogueNumber: .some(direction))])
-
-            Network.shared.apollo.fetch(query: SearchImslpPiecesQuery(query: searchTerm, filterUserPieces: true, orderBy: orderBy)) { result in
+            let direction = GraphQLEnum(OrderByDirection.descNullsFirst)
+            let orderBy: GraphQLNullable<[PieceOrderBy]> = .some([PieceOrderBy(lastPracticed: .some(direction))])
+            let filter = GraphQLNullable(PieceFilter(
+                isImslp: .some(BooleanFilter(eq: .some(true)))
+            ))
+            Network.shared.apollo.fetch(query: SearchPiecesQuery(query: searchTerm, pieceFilter: filter)) { result in
                 switch result {
                 case .success(let graphQlResult):
-                    if let data = graphQlResult.data?.searchImslpPieces {
+                    if let data = graphQlResult.data?.searchPieces {
                         let pieces = data.edges.map { edge in
-                            edge.node.fragments.imslpPieceDetails // make these conform together with protocol...
+                            edge.node.fragments.pieceDetails
                         }
+                        print("NEW PIECES", pieces)
                         continuation.resume(returning: pieces)
                     } else {
-                        continuation.resume(returning: nil)
+                        continuation.resume(returning: [])
                     }
                 case .failure(let error):
                     print(error)
@@ -115,6 +151,3 @@ class SearchViewModel: ObservableObject {
         }
     }
 }
-
-extension SearchImslpPiecesQuery.Data.SearchImslpPieces.Edge.Node: Identifiable {}
-extension ImslpPieceDetails: Identifiable {}

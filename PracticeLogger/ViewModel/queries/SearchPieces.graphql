@@ -1,10 +1,9 @@
-# should be deprectabable to just use piecesquery
-query SearchUserPieces(
+query SearchPieces(
   $query: String!
   $pieceFilter: PieceFilter = {}
   $orderBy: [PieceOrderBy!] = []
 ) {
-  searchUserPieces(query: $query, filter: $pieceFilter, orderBy: $orderBy) {
+  searchPieces(query: $query, filter: $pieceFilter, orderBy: $orderBy) {
     edges {
       node {
         ...PieceDetails

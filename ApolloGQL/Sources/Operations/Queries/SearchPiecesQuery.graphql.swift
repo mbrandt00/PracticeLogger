@@ -3,11 +3,11 @@
 
 @_exported import ApolloAPI
 
-public class SearchUserPiecesQuery: GraphQLQuery {
-  public static let operationName: String = "SearchUserPieces"
+public class SearchPiecesQuery: GraphQLQuery {
+  public static let operationName: String = "SearchPieces"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query SearchUserPieces($query: String!, $pieceFilter: PieceFilter = {  }, $orderBy: [PieceOrderBy!] = []) { searchUserPieces(query: $query, filter: $pieceFilter, orderBy: $orderBy) { __typename edges { __typename node { __typename ...PieceDetails } } } }"#,
+      #"query SearchPieces($query: String!, $pieceFilter: PieceFilter = {  }, $orderBy: [PieceOrderBy!] = []) { searchPieces(query: $query, filter: $pieceFilter, orderBy: $orderBy) { __typename edges { __typename node { __typename ...PieceDetails } } } }"#,
       fragments: [PieceDetails.self]
     ))
 
@@ -39,33 +39,33 @@ public class SearchUserPiecesQuery: GraphQLQuery {
 
     public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Query }
     public static var __selections: [ApolloAPI.Selection] { [
-      .field("searchUserPieces", SearchUserPieces?.self, arguments: [
+      .field("searchPieces", SearchPieces?.self, arguments: [
         "query": .variable("query"),
         "filter": .variable("pieceFilter"),
         "orderBy": .variable("orderBy")
       ]),
     ] }
 
-    public var searchUserPieces: SearchUserPieces? { __data["searchUserPieces"] }
+    public var searchPieces: SearchPieces? { __data["searchPieces"] }
 
     public init(
-      searchUserPieces: SearchUserPieces? = nil
+      searchPieces: SearchPieces? = nil
     ) {
       self.init(_dataDict: DataDict(
         data: [
           "__typename": ApolloGQL.Objects.Query.typename,
-          "searchUserPieces": searchUserPieces._fieldData,
+          "searchPieces": searchPieces._fieldData,
         ],
         fulfilledFragments: [
-          ObjectIdentifier(SearchUserPiecesQuery.Data.self)
+          ObjectIdentifier(SearchPiecesQuery.Data.self)
         ]
       ))
     }
 
-    /// SearchUserPieces
+    /// SearchPieces
     ///
     /// Parent Type: `PieceConnection`
-    public struct SearchUserPieces: ApolloGQL.SelectionSet {
+    public struct SearchPieces: ApolloGQL.SelectionSet {
       public let __data: DataDict
       public init(_dataDict: DataDict) { __data = _dataDict }
 
@@ -86,12 +86,12 @@ public class SearchUserPiecesQuery: GraphQLQuery {
             "edges": edges._fieldData,
           ],
           fulfilledFragments: [
-            ObjectIdentifier(SearchUserPiecesQuery.Data.SearchUserPieces.self)
+            ObjectIdentifier(SearchPiecesQuery.Data.SearchPieces.self)
           ]
         ))
       }
 
-      /// SearchUserPieces.Edge
+      /// SearchPieces.Edge
       ///
       /// Parent Type: `PieceEdge`
       public struct Edge: ApolloGQL.SelectionSet {
@@ -115,12 +115,12 @@ public class SearchUserPiecesQuery: GraphQLQuery {
               "node": node._fieldData,
             ],
             fulfilledFragments: [
-              ObjectIdentifier(SearchUserPiecesQuery.Data.SearchUserPieces.Edge.self)
+              ObjectIdentifier(SearchPiecesQuery.Data.SearchPieces.Edge.self)
             ]
           ))
         }
 
-        /// SearchUserPieces.Edge.Node
+        /// SearchPieces.Edge.Node
         ///
         /// Parent Type: `Piece`
         public struct Node: ApolloGQL.SelectionSet {
@@ -133,7 +133,6 @@ public class SearchUserPiecesQuery: GraphQLQuery {
             .fragment(PieceDetails.self),
           ] }
 
-          public var imslpPieceId: ApolloGQL.BigInt { __data["imslpPieceId"] }
           public var lastPracticed: ApolloGQL.Datetime? { __data["lastPracticed"] }
           public var totalPracticeTime: Int? { __data["totalPracticeTime"] }
           public var id: ApolloGQL.BigInt { __data["id"] }
@@ -151,6 +150,7 @@ public class SearchUserPiecesQuery: GraphQLQuery {
           public var compositionYearString: String? { __data["compositionYearString"] }
           public var pieceStyle: String? { __data["pieceStyle"] }
           public var subPieceType: String? { __data["subPieceType"] }
+          public var isImslp: Bool? { __data["isImslp"] }
           public var subPieceCount: Int? { __data["subPieceCount"] }
           public var catalogueNumber: Int? { __data["catalogueNumber"] }
           public var nickname: String? { __data["nickname"] }
@@ -166,7 +166,6 @@ public class SearchUserPiecesQuery: GraphQLQuery {
           }
 
           public init(
-            imslpPieceId: ApolloGQL.BigInt,
             lastPracticed: ApolloGQL.Datetime? = nil,
             totalPracticeTime: Int? = nil,
             id: ApolloGQL.BigInt,
@@ -184,6 +183,7 @@ public class SearchUserPiecesQuery: GraphQLQuery {
             compositionYearString: String? = nil,
             pieceStyle: String? = nil,
             subPieceType: String? = nil,
+            isImslp: Bool? = nil,
             subPieceCount: Int? = nil,
             catalogueNumber: Int? = nil,
             nickname: String? = nil,
@@ -194,7 +194,6 @@ public class SearchUserPiecesQuery: GraphQLQuery {
             self.init(_dataDict: DataDict(
               data: [
                 "__typename": ApolloGQL.Objects.Piece.typename,
-                "imslpPieceId": imslpPieceId,
                 "lastPracticed": lastPracticed,
                 "totalPracticeTime": totalPracticeTime,
                 "id": id,
@@ -212,6 +211,7 @@ public class SearchUserPiecesQuery: GraphQLQuery {
                 "compositionYearString": compositionYearString,
                 "pieceStyle": pieceStyle,
                 "subPieceType": subPieceType,
+                "isImslp": isImslp,
                 "subPieceCount": subPieceCount,
                 "catalogueNumber": catalogueNumber,
                 "nickname": nickname,
@@ -220,7 +220,7 @@ public class SearchUserPiecesQuery: GraphQLQuery {
                 "movements": movements._fieldData,
               ],
               fulfilledFragments: [
-                ObjectIdentifier(SearchUserPiecesQuery.Data.SearchUserPieces.Edge.Node.self),
+                ObjectIdentifier(SearchPiecesQuery.Data.SearchPieces.Edge.Node.self),
                 ObjectIdentifier(PieceDetails.self)
               ]
             ))
