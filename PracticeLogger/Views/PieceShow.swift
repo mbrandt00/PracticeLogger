@@ -153,12 +153,13 @@ struct PieceShow: View {
     }
     
     private func MovementRow(movement: PieceDetails.Movements.Edge, subPieceType: String?) -> some View {
-        HStack(alignment: .top) {
+        HStack(alignment: .center) {
             if let number = movement.node.number {
                 Text("\(number)")
                     .font(.headline)
                     .foregroundColor(.primary)
                     .frame(width: 40, height: 40)
+                    .background(Color.gray.opacity(0.1))
                     .cornerRadius(8)
             } else {
                 // Empty space with same dimensions when there's no number
@@ -190,8 +191,29 @@ struct PieceShow: View {
             }
             
             Spacer()
+            
+            Button(action: {
+                Task {
+                    let isActiveMovement = sessionManager.activeSession?.movement?.id == movement.node.id
+                            
+                    if isActiveMovement {
+                        // Stop the current session
+                        await sessionManager.stopSession()
+                    } else {
+                        // Start a new session for this movement
+                        // The database trigger will automatically stop any active session
+                        _ = try? await sessionManager.startSession(pieceId: Int(piece.id) ?? 0, movementId: Int(movement.node.id) ?? 0)
+                    }
+                }
+            }, label: {
+                let isActiveMovement = sessionManager.activeSession?.movement?.id == movement.node.id
+                Image(systemName: isActiveMovement ? "stop.circle.fill" : "play.circle.fill")
+                    .font(.title2)
+                    .foregroundColor(Color.accentColor)
+            })
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 8)
+        .padding(.horizontal, 4)
     }
 
     private func formatDuration(seconds: Int) -> String {
