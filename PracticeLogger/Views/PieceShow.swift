@@ -9,7 +9,7 @@ import ApolloGQL
 import SwiftUI
 
 struct PieceShow: View {
-    var piece: PieceDetails
+    @State var piece: PieceDetails
     @ObservedObject var sessionManager: PracticeSessionViewModel
     @State private var editingMode = false
     var body: some View {
@@ -138,8 +138,8 @@ struct PieceShow: View {
             editingMode = false
         } content: {
             NavigationStack {
-                PieceEdit(piece: piece, isCreatingNewPiece: false, onPieceCreated: { _ in
-                    print("Successfully inserted \(piece)")
+                PieceEdit(piece: piece, isCreatingNewPiece: false, onPieceCreated: { updatedPiece in
+                    piece = updatedPiece
                 })
                 .navigationTitle("Edit \(piece.workName)")
                 .navigationBarTitleDisplayMode(.inline)

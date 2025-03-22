@@ -261,7 +261,7 @@ class PieceDbUpdater {
         apollo.fetch(query: PiecesQuery(
             pieceFilter: PieceFilter(
                 id: .some(BigIntFilter(eq: .some(pieceId))))
-        )) { result in
+        ), cachePolicy: .fetchIgnoringCacheData) { result in
             switch result {
             case .success(let pieceResult):
                 if let completePiece = pieceResult.data?.pieceCollection?.edges.first {

@@ -19,7 +19,7 @@ fragment PieceDetails on Piece {
   subPieceType
   subPieceCount
   userId
-
+  collectionId
   catalogueNumber
   nickname
   composerId

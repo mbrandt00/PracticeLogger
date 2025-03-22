@@ -252,7 +252,7 @@ struct PieceEdit: View {
                 do {
                     let piece = isCreatingNewPiece ? try await viewModel.insertPiece() : try await viewModel.updatePiece()
                     dismiss()
-                    await onPieceCreated?(piece) // Call the async callback
+                    await onPieceCreated?(piece)
 
                 } catch {
                     print(error)
@@ -262,12 +262,12 @@ struct PieceEdit: View {
     }
 }
 
-// struct PieceEdit_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NavigationStack {
-//            PieceEdit(
-//                piece: ImslpPieceDetails.samplePieces[0]
-//            )
-//        }
-//    }
-// }
+struct PieceEdit_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            PieceEdit(
+                piece: PieceDetails.previewBach, isCreatingNewPiece: true
+            )
+        }
+    }
+}
