@@ -18,6 +18,7 @@ fragment PieceDetails on Piece {
   totalPracticeTime
   subPieceType
   subPieceCount
+  userId
 
   catalogueNumber
   nickname

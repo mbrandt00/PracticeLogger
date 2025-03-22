@@ -25,27 +25,27 @@ class SearchViewModel: ObservableObject {
                 userPieces = try await getUserPieces() ?? []
 
                 // Then get the new pieces
-                var allNewPieces = try await searchNewPieces() ?? []
+                newPieces = try await searchNewPieces() ?? []
 
-                // Create a set of IMSLP URLs that the user already has
-                let userImslpUrls = Set(userPieces.compactMap { piece in
-                    // We want to collect imslpUrl values from user pieces that aren't IMSLP pieces themselves
-                    // but reference IMSLP pieces
-                    if let isImslp = piece.isImslp, !isImslp {
-                        return piece.imslpUrl
-                    }
-                    return nil
-                })
+//                // Create a set of IMSLP URLs that the user already has
+//                let userImslpUrls = Set(userPieces.compactMap { piece in
+//                    // We want to collect imslpUrl values from user pieces that aren't IMSLP pieces themselves
+//                    // but reference IMSLP pieces
+//                    if let isImslp = piece.isImslp, !isImslp {
+//                        return piece.imslpUrl
+//                    }
+//                    return nil
+//                })
 
-                // Filter out pieces that the user already has
-                newPieces = allNewPieces.filter { piece in
-                    // Keep the piece only if its imslpUrl is not in the user's pieces
-                    if let imslpUrl = piece.imslpUrl {
-                        return !userImslpUrls.contains(imslpUrl)
-                    }
-                    // If the piece doesn't have an imslpUrl, keep it
-                    return true
-                }
+//                // Filter out pieces that the user already has
+//                newPieces = allNewPieces.filter { piece in
+//                    // Keep the piece only if its imslpUrl is not in the user's pieces
+//                    if let imslpUrl = piece.imslpUrl {
+//                        return !userImslpUrls.contains(imslpUrl)
+//                    }
+//                    // If the piece doesn't have an imslpUrl, keep it
+//                    return true
+//                }
 
                 print("new Pieces", newPieces)
             } else {
@@ -128,10 +128,7 @@ class SearchViewModel: ObservableObject {
         return try await withCheckedThrowingContinuation { continuation in
             let direction = GraphQLEnum(OrderByDirection.descNullsFirst)
             let orderBy: GraphQLNullable<[PieceOrderBy]> = .some([PieceOrderBy(lastPracticed: .some(direction))])
-            let filter = GraphQLNullable(PieceFilter(
-                isImslp: .some(BooleanFilter(eq: .some(true)))
-            ))
-            Network.shared.apollo.fetch(query: SearchPiecesQuery(query: searchTerm, pieceFilter: filter)) { result in
+            Network.shared.apollo.fetch(query: SearchPiecesQuery(query: searchTerm)) { result in
                 switch result {
                 case .success(let graphQlResult):
                     if let data = graphQlResult.data?.searchPieces {

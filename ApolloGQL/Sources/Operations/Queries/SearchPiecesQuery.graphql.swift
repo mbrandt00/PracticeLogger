@@ -151,6 +151,7 @@ public class SearchPiecesQuery: GraphQLQuery {
           public var pieceStyle: String? { __data["pieceStyle"] }
           public var subPieceType: String? { __data["subPieceType"] }
           public var subPieceCount: Int? { __data["subPieceCount"] }
+          public var userId: ApolloGQL.UUID? { __data["userId"] }
           public var catalogueNumber: Int? { __data["catalogueNumber"] }
           public var nickname: String? { __data["nickname"] }
           public var composerId: ApolloGQL.BigInt? { __data["composerId"] }
@@ -183,6 +184,7 @@ public class SearchPiecesQuery: GraphQLQuery {
             pieceStyle: String? = nil,
             subPieceType: String? = nil,
             subPieceCount: Int? = nil,
+            userId: ApolloGQL.UUID? = nil,
             catalogueNumber: Int? = nil,
             nickname: String? = nil,
             composerId: ApolloGQL.BigInt? = nil,
@@ -210,6 +212,7 @@ public class SearchPiecesQuery: GraphQLQuery {
                 "pieceStyle": pieceStyle,
                 "subPieceType": subPieceType,
                 "subPieceCount": subPieceCount,
+                "userId": userId,
                 "catalogueNumber": catalogueNumber,
                 "nickname": nickname,
                 "composerId": composerId,

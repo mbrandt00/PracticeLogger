@@ -39,7 +39,7 @@ struct SearchView: View {
         }
         .sheet(item: $searchViewModel.selectedPiece) { piece in
             NavigationStack {
-                PieceEdit(piece: piece, isCreatingNewPiece: false, onPieceCreated: handlePieceCreated)
+                PieceEdit(piece: piece, isCreatingNewPiece: true, onPieceCreated: handlePieceCreated)
             }
         }
     }
