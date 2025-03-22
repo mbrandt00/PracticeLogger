@@ -38,7 +38,8 @@ struct PieceEdit: View {
                 isAddingMovement: $isAddingMovement,
                 isEditingMovements: $isEditingMovements,
                 editingMovementId: $editingMovementId,
-                newMovementName: $newMovementName
+                newMovementName: $newMovementName,
+                isCreatingNewPiece: isCreatingNewPiece
             )
             catalogueSection
             instrumentationSection

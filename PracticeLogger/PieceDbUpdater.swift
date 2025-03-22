@@ -191,7 +191,7 @@ class PieceDbUpdater {
             if let keySignature = movement.keySignature {
                 keySignatureValue = .some(keySignature)
             }
-                    
+
             let updateInput = MovementUpdateInput(
                 name: movement.name != nil ? .some(movement.name!) : .null,
                 number: movement.number != nil ? .some(movement.number!) : .null,
@@ -199,47 +199,18 @@ class PieceDbUpdater {
                 nickname: movement.nickname != nil ? .some(movement.nickname!) : .null,
                 downloadUrl: movement.downloadUrl != nil ? .some(movement.downloadUrl!) : .null
             )
-                    
+
             let filter = GraphQLNullable<MovementFilter>(MovementFilter(id: .some(BigIntFilter(eq: .some(movement.id)))))
             let updateInputTyped: MovementUpdateInput = updateInput
             let filterTyped: GraphQLNullable<MovementFilter> = filter
-                
+
             return (updateInputTyped, filterTyped)
         }
-                
-        // Movements to insert (those without IDs or with IDs that don't match existing movements)
-        let movementsToInsert = piece.movements.compactMap { movement -> MovementInsertInput? in
-            existingMovementIds.contains(movement.id)
-            
-            // Handle GraphQLEnum for keySignature
-            let keySignatureValue: GraphQLNullable<GraphQLEnum<KeySignatureType>> =
-                if let keySignature = movement.keySignature {
-                    .some(keySignature) // Pass the whole wrapper
-                } else {
-                    .null
-                }
-                    
-            return MovementInsertInput(
-                pieceId: .some(pieceDetails.id),
-                name: movement.name != nil ? .some(movement.name!) : .null,
-                number: movement.number != nil ? .some(movement.number!) : .null,
-                keySignature: keySignatureValue,
-                nickname: movement.nickname != nil ? .some(movement.nickname!) : .null,
-                downloadUrl: movement.downloadUrl != nil ? .some(movement.downloadUrl!) : .null
-            )
-        }
-                
-        // Perform updates for existing movements
+
         for (updateInput, filter) in movementsToUpdate {
             _ = try await updateMovement(set: updateInput, filter: filter)
         }
-                
-        // Insert new movements
-        if !movementsToInsert.isEmpty {
-            _ = try await insertNewMovements(inputs: movementsToInsert)
-        }
-                
-        // Return refreshed piece details
+
         return try await fetchPieceDetails(pieceDetails.id)
     }
     
