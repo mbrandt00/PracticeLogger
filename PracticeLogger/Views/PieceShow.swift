@@ -74,12 +74,12 @@ struct PieceShow: View {
                 // Movements Section
                 if let movementsEdges = piece.movements?.edges, !movementsEdges.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Movements")
+                        Text(piece.subPieceType?.capitalized ?? "Movements")
                             .font(.headline)
                             .padding(.horizontal)
                         
                         ForEach(movementsEdges, id: \.node.id) { movement in
-                            MovementRow(movement: movement)
+                            MovementRow(movement: movement, subPieceType: piece.subPieceType)
                             
                             if movement.node.id != movementsEdges.last?.node.id {
                                 Divider()
@@ -152,53 +152,46 @@ struct PieceShow: View {
         }
     }
     
-    private func MovementRow(movement: PieceDetails.Movements.Edge) -> some View {
-        HStack {
+    private func MovementRow(movement: PieceDetails.Movements.Edge, subPieceType: String?) -> some View {
+        HStack(alignment: .top) {
+            if let number = movement.node.number {
+                Text("\(number)")
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                    .frame(width: 40, height: 40)
+                    .cornerRadius(8)
+            } else {
+                // Empty space with same dimensions when there's no number
+                Color.clear
+                    .frame(width: 40, height: 40)
+            }
+            
+            // Main content
             VStack(alignment: .leading, spacing: 4) {
                 if let movementName = movement.node.name {
                     Text(movementName)
                         .font(.body)
                 }
                 
-                if let number = movement.node.number {
-                    Text("Movement \(number)")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
                 if let keySignature = movement.node.keySignature, let value = keySignature.value {
-                    Text("Key Signature: \(value.displayName)")
+                    Text(value.displayName)
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
+                
                 if let totalTime = movement.node.totalPracticeTime {
                     HStack(spacing: 4) {
                         Image(systemName: "clock")
                         Text(formatDuration(seconds: totalTime))
                     }
+                    .font(.caption)
+                    .foregroundColor(.secondary)
                 }
             }
             
             Spacer()
-            
-            Button(action: {
-                Task {
-                    if let movementId = sessionManager.activeSession?.movement?.id {
-                        if movementId == movement.node.id {
-                            await sessionManager.stopSession()
-                        }
-                    } else {
-                        _ = try? await sessionManager.startSession(pieceId: Int(piece.id) ?? 0, movementId: Int(movement.node.id) ?? 0)
-                    }
-                }
-            }, label: {
-                let isActiveMovement = sessionManager.activeSession?.movement?.id == movement.node.id
-                Image(systemName: isActiveMovement ? "stop.circle.fill" : "play.circle.fill")
-                    .font(.title3)
-                    .foregroundColor(.accentColor)
-            })
         }
-        .padding(.horizontal)
-        .padding(.vertical, 8)
+        .padding(.vertical, 4)
     }
 
     private func formatDuration(seconds: Int) -> String {

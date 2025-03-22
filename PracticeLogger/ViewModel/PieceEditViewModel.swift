@@ -72,6 +72,7 @@ class EditablePiece: ObservableObject {
     @Published var catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>?
     @Published var catalogueNumber: Int?
     @Published var nickname: String?
+    @Published var collectionId: ApolloGQL.BigInt?
     @Published var keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>?
     @Published var subPieceType: String?
     @Published var format: GraphQLEnum<PieceFormat>?
@@ -100,8 +101,10 @@ class EditablePiece: ObservableObject {
         self.catalogueType = piece.catalogueType
         self.catalogueNumber = piece.catalogueNumber
         self.nickname = piece.nickname
+        self.collectionId = piece.collectionId
         self.keySignature = piece.keySignature
         self.instrumentation = piece.instrumentation
+        self.subPieceType = piece.subPieceType
         self.format = piece.format
         self.compositionYear = piece.compositionYear
         self.composerId = piece.composerId
@@ -175,11 +178,13 @@ extension EditablePiece {
             keySignature: self.keySignature.map { .some($0) } ?? .null,
             catalogueType: self.catalogueType.map { .some($0) } ?? .null,
             catalogueNumber: self.catalogueNumber.map { .some($0) } ?? .null,
+            catalogueNumberSecondary: self.catalogueNumberSecondary.map { .some($0) } ?? .null,
             compositionYear: self.compositionYear.map { .some($0) } ?? .null,
             wikipediaUrl: self.wikipediaUrl.map { .some($0) } ?? .null,
             instrumentation: self.instrumentation.map { .some($0) } ?? .null,
             subPieceType: self.subPieceType.map { .some($0) } ?? .null,
-            imslpUrl: self.imslpUrl.map { .some($0) } ?? .null
+            imslpUrl: self.imslpUrl.map { .some($0) } ?? .null,
+            collectionId: self.collectionId.map { .some($0) } ?? .null
         )
     }
 

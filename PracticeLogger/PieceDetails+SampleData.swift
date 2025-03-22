@@ -17,7 +17,7 @@ extension PieceDetails {
                 id: BigInt(4),
                 lastPracticed: Date().addingTimeInterval(-345600), // 4 days ago
                 totalPracticeTime: 2456,
-                name: "I. Prelude",
+                name: "Prelude",
                 keySignature: GraphQLEnum(KeySignatureType.c),
                 nickname: nil,
                 downloadUrl: nil,
@@ -28,7 +28,7 @@ extension PieceDetails {
                 id: BigInt(5),
                 lastPracticed: nil, // null lastPracticed
                 totalPracticeTime: 1890,
-                name: "II. Allemande",
+                name: "Allemande",
                 keySignature: GraphQLEnum(KeySignatureType.c),
                 nickname: nil,
                 downloadUrl: nil,
@@ -39,7 +39,7 @@ extension PieceDetails {
                 id: BigInt(6),
                 lastPracticed: Date().addingTimeInterval(-172800), // 2 days ago
                 totalPracticeTime: 1340,
-                name: "III. Courante",
+                name: "Courante",
                 keySignature: GraphQLEnum(KeySignatureType.c),
                 nickname: nil,
                 downloadUrl: nil,
@@ -152,7 +152,7 @@ extension PieceDetails {
             compositionYearDesc: "1832",
             compositionYearString: "1832",
             pieceStyle: "Romantic",
-            subPieceType: nil,
+            subPieceType: "nocturnes",
             subPieceCount: nil,
             catalogueNumber: 9,
             nickname: nil,
