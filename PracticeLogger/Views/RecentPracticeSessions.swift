@@ -34,7 +34,8 @@ struct RecentPracticeSessions: View {
                                 let daySessions = groupedSessionsByDay[day] ?? []
 
                                 ForEach(daySessions, id: \.node.id) { session in
-                                    NavigationLink(destination: PracticeSessionView(session: session)) {
+                                    let piece = session
+                                    NavigationLink(destination: PieceShow(piece: session.node.piece.fragments.pieceDetails, sessionManager: practiceSessionViewModel)) {
                                         sessionRow(session: session)
                                     }
                                 }
