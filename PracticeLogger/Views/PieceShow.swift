@@ -24,9 +24,14 @@ struct PieceShow: View {
                     }
                     
                     if let catalogueDesc = piece.catalogueType, let catalogueNumber = piece.catalogueNumber {
-                        Text("\(catalogueDesc.rawValue) \(catalogueNumber)")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                        HStack(spacing: 4) {
+                            Text("\(catalogueDesc.displayName) \(catalogueNumber)")
+                            if let compositionYear = piece.compositionYear {
+                                Text("(\(String(compositionYear)))")
+                            }
+                        }
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
                     }
                     
                     if let nickname = piece.nickname {
