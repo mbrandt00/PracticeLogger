@@ -15,8 +15,12 @@ struct PieceShow: View {
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 16) {
-                // Piece Header Section
                 VStack(alignment: .leading, spacing: 8) {
+                    if let nickname = piece.nickname {
+                        Text(nickname)
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                    }
                     if let composer = piece.composer?.name {
                         Text(composer)
                             .font(.subheadline)
@@ -34,11 +38,6 @@ struct PieceShow: View {
                         .foregroundColor(.secondary)
                     }
                     
-                    if let nickname = piece.nickname {
-                        Text(nickname)
-                            .font(.headline)
-                            .foregroundColor(.secondary)
-                    }
                     if let totalTime = piece.totalPracticeTime {
                         HStack {
                             Image(systemName: "clock")
@@ -78,7 +77,7 @@ struct PieceShow: View {
                 
                 // Movements Section
                 if let movementsEdges = piece.movements?.edges, !movementsEdges.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: 2) {
                         Text(piece.subPieceType?.capitalized ?? "Movements")
                             .font(.headline)
                             .padding(.horizontal)
@@ -92,7 +91,7 @@ struct PieceShow: View {
                             }
                         }
                     }
-                    .padding(.vertical)
+                    .padding(.vertical, 4)
                 }
                 
                 // External Links
@@ -194,7 +193,8 @@ struct PieceShow: View {
                     .foregroundColor(.secondary)
                 }
             }
-            
+            .frame(maxHeight: .infinity)
+
             Spacer()
             
             Button(action: {
@@ -215,9 +215,11 @@ struct PieceShow: View {
                 Image(systemName: isActiveMovement ? "stop.circle.fill" : "play.circle.fill")
                     .font(.title2)
                     .foregroundColor(Color.accentColor)
+                    .frame(width: 60, height: 40)
             })
         }
-        .padding(.vertical, 8)
+        .padding(.top, 8)
+        .padding(.bottom, 4)
         .padding(.horizontal, 4)
     }
 
@@ -236,7 +238,7 @@ struct PieceShow: View {
 #Preview {
     NavigationView {
         PieceShow(
-            piece: PieceDetails.allPreviews[0],
+            piece: PieceDetails.allPreviews[2],
             sessionManager: PracticeSessionViewModel()
         )
     }
