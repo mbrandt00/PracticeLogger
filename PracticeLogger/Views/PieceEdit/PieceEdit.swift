@@ -12,6 +12,7 @@ import SwiftUI
 struct PieceEdit: View {
     @StateObject private var viewModel: PieceEditViewModel
     @State private var showToast = false
+    @State private var isCreatingNewPiece: Bool
     @State private var errorMessage = ""
     @State private var duplicatePiece: PieceDetails?
     @State private var newInstrument = ""
@@ -21,18 +22,14 @@ struct PieceEdit: View {
     @State private var editingMovementId: ApolloGQL.BigInt? = nil
     var onPieceCreated: (@Sendable (PieceDetails) async -> Void)?
 
-    init(piece: ImslpPieceDetails, onPieceCreated: (@Sendable (PieceDetails) async -> Void)? = nil) {
+    init(piece: PieceDetails, isCreatingNewPiece: Bool, onPieceCreated: ((PieceDetails) async -> Void)? = nil) {
         _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
         self.onPieceCreated = onPieceCreated
+        self.isCreatingNewPiece = isCreatingNewPiece
     }
 
     @Environment(\.dismiss) var dismiss
 
-    init(piece: ImslpPieceDetails, onPieceCreated: ((PieceDetails) -> Void)? = nil) {
-        _viewModel = StateObject(wrappedValue: PieceEditViewModel(piece: piece))
-        self.onPieceCreated = onPieceCreated
-    }
-    
     var body: some View {
         Form {
             nameFields
@@ -41,7 +38,8 @@ struct PieceEdit: View {
                 isAddingMovement: $isAddingMovement,
                 isEditingMovements: $isEditingMovements,
                 editingMovementId: $editingMovementId,
-                newMovementName: $newMovementName
+                newMovementName: $newMovementName,
+                isCreatingNewPiece: isCreatingNewPiece
             )
             catalogueSection
             instrumentationSection
@@ -53,7 +51,7 @@ struct PieceEdit: View {
                     .foregroundColor(.red)
             }
         }
-        .navigationTitle("Create Piece")
+        .navigationTitle(isCreatingNewPiece ? "Create Piece" : "Edit Piece")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarItems(trailing: createButton)
         .toast(isPresenting: $showToast) {
@@ -183,8 +181,9 @@ struct PieceEdit: View {
         Picker("Identifier", selection: $viewModel.editablePiece.catalogueType) {
             Text("None").tag(nil as GraphQLEnum<CatalogueType>?)
             ForEach(CatalogueType.allCases, id: \.self) { type in
-                Text(type.displayName)
-                    .tag(GraphQLEnum<CatalogueType>(type) as GraphQLEnum<CatalogueType>?)
+                let graphQLType = GraphQLEnum<CatalogueType>(type)
+                Text(graphQLType.displayName)
+                    .tag(graphQLType as GraphQLEnum<CatalogueType>?)
             }
         }
     }
@@ -248,12 +247,12 @@ struct PieceEdit: View {
     }
    
     private var createButton: some View {
-        Button("Submit") {
+        Button(isCreatingNewPiece ? "Submit" : "Save") {
             Task {
                 do {
-                    let piece = try await viewModel.insertPiece()
+                    let piece = isCreatingNewPiece ? try await viewModel.insertPiece() : try await viewModel.updatePiece()
                     dismiss()
-                    await onPieceCreated?(piece) // Call the async callback
+                    await onPieceCreated?(piece)
 
                 } catch {
                     print(error)
@@ -267,7 +266,7 @@ struct PieceEdit_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
             PieceEdit(
-                piece: ImslpPieceDetails.samplePieces[0]
+                piece: PieceDetails.previewBach, isCreatingNewPiece: true
             )
         }
     }

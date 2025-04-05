@@ -6,6 +6,7 @@ import ApolloAPI
 public extension Objects {
   static let PracticeSessionsInsertResponse = ApolloAPI.Object(
     typename: "PracticeSessionsInsertResponse",
-    implementedInterfaces: []
+    implementedInterfaces: [],
+    keyFields: nil
   )
 }

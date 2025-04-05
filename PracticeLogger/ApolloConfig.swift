@@ -7,7 +7,6 @@
 
 import Apollo
 import ApolloAPI
-import ApolloGQL
 import Foundation
 
 // AuthorizationInterceptor to add the Authorization header

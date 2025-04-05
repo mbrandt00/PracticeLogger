@@ -34,7 +34,8 @@ struct RecentPracticeSessions: View {
                                 let daySessions = groupedSessionsByDay[day] ?? []
 
                                 ForEach(daySessions, id: \.node.id) { session in
-                                    NavigationLink(destination: PracticeSessionView(session: session)) {
+                                    let piece = session
+                                    NavigationLink(destination: PieceShow(piece: session.node.piece.fragments.pieceDetails, sessionManager: practiceSessionViewModel)) {
                                         sessionRow(session: session)
                                     }
                                 }
@@ -50,7 +51,8 @@ struct RecentPracticeSessions: View {
 
                 if isSearching {
                     VStack {
-                        SearchView(searchViewModel: searchViewModel, practiceSessionViewModel: practiceSessionViewModel, path: $path)
+                        SearchView(searchViewModel: searchViewModel, path: $path)
+                            .environmentObject(practiceSessionViewModel)
                             .background(Color.white)
                     }
                     .padding(.vertical, 2)
@@ -122,7 +124,7 @@ struct RecentPracticeSessions: View {
     private func destination(for context: PieceNavigationContext) -> some View {
         switch context {
         case .newPiece(let piece):
-            return AnyView(PieceEdit(piece: piece))
+            return AnyView(PieceEdit(piece: piece, isCreatingNewPiece: true))
         case .userPiece(let piece):
             return AnyView(PieceShow(piece: piece, sessionManager: practiceSessionViewModel))
         }

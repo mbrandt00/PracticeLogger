@@ -6,6 +6,7 @@ import ApolloAPI
 public extension Objects {
   static let PieceEdge = ApolloAPI.Object(
     typename: "PieceEdge",
-    implementedInterfaces: []
+    implementedInterfaces: [],
+    keyFields: nil
   )
 }

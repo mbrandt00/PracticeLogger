@@ -6,8 +6,8 @@
 //
 
 import Foundation
-
 import Supabase
+
 class ContentViewModel: ObservableObject {
     func getUser() async throws -> User {
         try await Database.shared.client.auth.session.user

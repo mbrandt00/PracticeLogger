@@ -3,20 +3,28 @@
 
 @_exported import ApolloAPI
 
-public class CreateMovementsMutation: GraphQLMutation {
-  public static let operationName: String = "CreateMovementsMutation"
+public class UpdateMovementsMutation: GraphQLMutation {
+  public static let operationName: String = "UpdateMovementsMutation"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"mutation CreateMovementsMutation($input: [MovementInsertInput!]!) { insertIntoMovementCollection(objects: $input) { __typename records { __typename number name id } } }"#
+      #"mutation UpdateMovementsMutation($set: MovementUpdateInput!, $filter: MovementFilter) { updateMovementCollection(set: $set, filter: $filter) { __typename records { __typename number name id } } }"#
     ))
 
-  public var input: [MovementInsertInput]
+  public var set: MovementUpdateInput
+  public var filter: GraphQLNullable<MovementFilter>
 
-  public init(input: [MovementInsertInput]) {
-    self.input = input
+  public init(
+    set: MovementUpdateInput,
+    filter: GraphQLNullable<MovementFilter>
+  ) {
+    self.set = set
+    self.filter = filter
   }
 
-  public var __variables: Variables? { ["input": input] }
+  public var __variables: Variables? { [
+    "set": set,
+    "filter": filter
+  ] }
 
   public struct Data: ApolloGQL.SelectionSet {
     public let __data: DataDict
@@ -24,34 +32,37 @@ public class CreateMovementsMutation: GraphQLMutation {
 
     public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Mutation }
     public static var __selections: [ApolloAPI.Selection] { [
-      .field("insertIntoMovementCollection", InsertIntoMovementCollection?.self, arguments: ["objects": .variable("input")]),
+      .field("updateMovementCollection", UpdateMovementCollection.self, arguments: [
+        "set": .variable("set"),
+        "filter": .variable("filter")
+      ]),
     ] }
 
-    /// Adds one or more `Movement` records to the collection
-    public var insertIntoMovementCollection: InsertIntoMovementCollection? { __data["insertIntoMovementCollection"] }
+    /// Updates zero or more records in the `Movement` collection
+    public var updateMovementCollection: UpdateMovementCollection { __data["updateMovementCollection"] }
 
     public init(
-      insertIntoMovementCollection: InsertIntoMovementCollection? = nil
+      updateMovementCollection: UpdateMovementCollection
     ) {
       self.init(_dataDict: DataDict(
         data: [
           "__typename": ApolloGQL.Objects.Mutation.typename,
-          "insertIntoMovementCollection": insertIntoMovementCollection._fieldData,
+          "updateMovementCollection": updateMovementCollection._fieldData,
         ],
         fulfilledFragments: [
-          ObjectIdentifier(CreateMovementsMutation.Data.self)
+          ObjectIdentifier(UpdateMovementsMutation.Data.self)
         ]
       ))
     }
 
-    /// InsertIntoMovementCollection
+    /// UpdateMovementCollection
     ///
-    /// Parent Type: `MovementInsertResponse`
-    public struct InsertIntoMovementCollection: ApolloGQL.SelectionSet {
+    /// Parent Type: `MovementUpdateResponse`
+    public struct UpdateMovementCollection: ApolloGQL.SelectionSet {
       public let __data: DataDict
       public init(_dataDict: DataDict) { __data = _dataDict }
 
-      public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.MovementInsertResponse }
+      public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.MovementUpdateResponse }
       public static var __selections: [ApolloAPI.Selection] { [
         .field("__typename", String.self),
         .field("records", [Record].self),
@@ -65,16 +76,16 @@ public class CreateMovementsMutation: GraphQLMutation {
       ) {
         self.init(_dataDict: DataDict(
           data: [
-            "__typename": ApolloGQL.Objects.MovementInsertResponse.typename,
+            "__typename": ApolloGQL.Objects.MovementUpdateResponse.typename,
             "records": records._fieldData,
           ],
           fulfilledFragments: [
-            ObjectIdentifier(CreateMovementsMutation.Data.InsertIntoMovementCollection.self)
+            ObjectIdentifier(UpdateMovementsMutation.Data.UpdateMovementCollection.self)
           ]
         ))
       }
 
-      /// InsertIntoMovementCollection.Record
+      /// UpdateMovementCollection.Record
       ///
       /// Parent Type: `Movement`
       public struct Record: ApolloGQL.SelectionSet {
@@ -106,7 +117,7 @@ public class CreateMovementsMutation: GraphQLMutation {
               "id": id,
             ],
             fulfilledFragments: [
-              ObjectIdentifier(CreateMovementsMutation.Data.InsertIntoMovementCollection.Record.self)
+              ObjectIdentifier(UpdateMovementsMutation.Data.UpdateMovementCollection.Record.self)
             ]
           ))
         }

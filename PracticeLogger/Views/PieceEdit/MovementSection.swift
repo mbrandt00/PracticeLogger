@@ -15,7 +15,24 @@ struct MovementSection: View {
     @Binding var editingMovementId: String?
     @Binding var newMovementName: String
     @State private var newMovementKeySignature: GraphQLEnum<ApolloGQL.KeySignatureType>?
+    @State private var isCreatingNewPiece: Bool
     
+    init(
+        movements: Binding<[EditableMovement]>,
+        isAddingMovement: Binding<Bool>,
+        isEditingMovements: Binding<Bool>,
+        editingMovementId: Binding<String?>,
+        newMovementName: Binding<String>,
+        isCreatingNewPiece: Bool = false
+    ) {
+        self._movements = movements
+        self._isAddingMovement = isAddingMovement
+        self._isEditingMovements = isEditingMovements
+        self._editingMovementId = editingMovementId
+        self._newMovementName = newMovementName
+        self.isCreatingNewPiece = isCreatingNewPiece
+    }
+
     var body: some View {
         Section(header: sectionHeader) {
             sectionContent
@@ -29,6 +46,7 @@ struct MovementSection: View {
             Button(action: {
                 withAnimation(.easeInOut(duration: 0.3)) {
                     isEditingMovements.toggle()
+                    print(movements)
                     if !isEditingMovements {
                         editingMovementId = nil
                         isAddingMovement = false
@@ -86,6 +104,7 @@ struct MovementSection: View {
                 MovementRow(
                     movement: movement,
                     index: movements.firstIndex(of: movement) ?? 0,
+                    isCreatingNewPiece: isCreatingNewPiece,
                     onUpdate: { newName in
                         withAnimation {
                             if let index = movements.firstIndex(of: movement) {
@@ -122,7 +141,7 @@ struct MovementSection: View {
                     onAdd: addNewMovement,
                     onKeySignatureUpdate: updateNewMovementKeySignature
                 )
-            } else {
+            } else if isCreatingNewPiece {
                 HStack {
                     Image(systemName: "plus.circle.fill")
                     Text("Add Movement")
@@ -208,6 +227,7 @@ struct MovementSection: View {
 struct MovementRow: View {
     let movement: EditableMovement
     let index: Int
+    let isCreatingNewPiece: Bool
     let onUpdate: (String) -> Void
     let onKeySignatureUpdate: (GraphQLEnum<ApolloGQL.KeySignatureType>?) -> Void
     let onDelete: () -> Void // Add new onDelete handler
@@ -231,11 +251,12 @@ struct MovementRow: View {
                     }
                 Spacer()
                 
-                Button(action: onDelete) {
-                    Image(systemName: "trash")
-                        .foregroundColor(.red)
+                if isCreatingNewPiece {
+                    Button(action: onDelete) {
+                        Image(systemName: "trash")
+                            .foregroundColor(.red)
+                    }
                 }
-                .buttonStyle(BorderlessButtonStyle())
             }
             
             KeySignaturePicker(selectedKeySignature: $selectedKeySignature)
@@ -384,7 +405,8 @@ struct PreviewContainer: View {
                     isAddingMovement: $isAddingMovement,
                     isEditingMovements: $isEditingMovements,
                     editingMovementId: $editingMovementId,
-                    newMovementName: $newMovementName
+                    newMovementName: $newMovementName,
+                    isCreatingNewPiece: true
                 )
             }
             .navigationTitle("Movements Preview")

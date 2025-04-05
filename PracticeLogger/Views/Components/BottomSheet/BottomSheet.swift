@@ -37,7 +37,7 @@ struct BottomSheet: View {
 
 struct MusicInfo: View {
     @Binding var expandedSheet: Bool
-    @State var activeSession: PracticeSessionDetails
+    var activeSession: PracticeSessionDetails
     var animation: Namespace.ID
     @State private var elapsedTime: String = "00:00"
     @EnvironmentObject var sessionManager: PracticeSessionViewModel

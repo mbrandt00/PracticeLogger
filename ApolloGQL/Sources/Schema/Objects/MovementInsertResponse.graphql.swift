@@ -6,6 +6,7 @@ import ApolloAPI
 public extension Objects {
   static let MovementInsertResponse = ApolloAPI.Object(
     typename: "MovementInsertResponse",
-    implementedInterfaces: []
+    implementedInterfaces: [],
+    keyFields: nil
   )
 }

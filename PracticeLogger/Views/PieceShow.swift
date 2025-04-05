@@ -9,14 +9,18 @@ import ApolloGQL
 import SwiftUI
 
 struct PieceShow: View {
-    var piece: PieceDetails
+    @State var piece: PieceDetails
     @ObservedObject var sessionManager: PracticeSessionViewModel
-    
+    @State private var editingMode = false
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 16) {
-                // Piece Header Section
                 VStack(alignment: .leading, spacing: 8) {
+                    if let nickname = piece.nickname {
+                        Text(nickname)
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                    }
                     if let composer = piece.composer?.name {
                         Text(composer)
                             .font(.subheadline)
@@ -24,16 +28,32 @@ struct PieceShow: View {
                     }
                     
                     if let catalogueDesc = piece.catalogueType, let catalogueNumber = piece.catalogueNumber {
-                        Text("\(catalogueDesc.rawValue) \(catalogueNumber)")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                        HStack(spacing: 4) {
+                            Text("\(catalogueDesc.displayName) \(catalogueNumber)")
+                            if let compositionYear = piece.compositionYear {
+                                Text("(\(String(compositionYear)))")
+                            }
+                        }
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    }
+                    if let collection = piece.collection, let collectionId = piece.collectionId {
+                        VStack(alignment: .leading, spacing: 4) {
+                            NavigationLink(destination: CollectionListView(collectionId: collectionId)) {
+                                HStack {
+                                    Text("\(collection.name) collection")
+                                        .font(.body)
+                                        .foregroundColor(.accentColor)
+                                                
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                        }
+                        .padding(.vertical, 8)
                     }
                     
-                    if let nickname = piece.nickname {
-                        Text(nickname)
-                            .font(.headline)
-                            .foregroundColor(.secondary)
-                    }
                     if let totalTime = piece.totalPracticeTime {
                         HStack {
                             Image(systemName: "clock")
@@ -73,13 +93,13 @@ struct PieceShow: View {
                 
                 // Movements Section
                 if let movementsEdges = piece.movements?.edges, !movementsEdges.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Movements")
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(piece.subPieceType?.capitalized ?? "Movements")
                             .font(.headline)
                             .padding(.horizontal)
                         
                         ForEach(movementsEdges, id: \.node.id) { movement in
-                            MovementRow(movement: movement)
+                            MovementRow(movement: movement, subPieceType: piece.subPieceType)
                             
                             if movement.node.id != movementsEdges.last?.node.id {
                                 Divider()
@@ -87,7 +107,7 @@ struct PieceShow: View {
                             }
                         }
                     }
-                    .padding(.vertical)
+                    .padding(.vertical, 4)
                 }
                 
                 // External Links
@@ -127,50 +147,96 @@ struct PieceShow: View {
         }
         .navigationTitle(piece.workName)
         .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            Button {
+                editingMode = true
+            } label: {
+                Image(systemName: "pencil")
+            }
+        }
+        .sheet(isPresented: $editingMode) {
+            editingMode = false
+        } content: {
+            NavigationStack {
+                PieceEdit(piece: piece, isCreatingNewPiece: false, onPieceCreated: { updatedPiece in
+                    piece = updatedPiece
+                })
+                .navigationTitle("Edit \(piece.workName)")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    Button("Cancel") {
+                        editingMode = false
+                    }
+                }
+            }
+        }
     }
     
-    private func MovementRow(movement: PieceDetails.Movements.Edge) -> some View {
-        HStack {
+    private func MovementRow(movement: PieceDetails.Movements.Edge, subPieceType: String?) -> some View {
+        HStack(alignment: .center) {
+            if let number = movement.node.number {
+                Text("\(number)")
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                    .frame(width: 40, height: 40)
+                    .background(Color.gray.opacity(0.1))
+                    .cornerRadius(8)
+            } else {
+                // Empty space with same dimensions when there's no number
+                Color.clear
+                    .frame(width: 40, height: 40)
+            }
+            
+            // Main content
             VStack(alignment: .leading, spacing: 4) {
                 if let movementName = movement.node.name {
                     Text(movementName)
                         .font(.body)
                 }
                 
-                if let number = movement.node.number {
-                    Text("Movement \(number)")
+                if let keySignature = movement.node.keySignature, let value = keySignature.value {
+                    Text(value.displayName)
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
+                
                 if let totalTime = movement.node.totalPracticeTime {
                     HStack(spacing: 4) {
                         Image(systemName: "clock")
                         Text(formatDuration(seconds: totalTime))
                     }
+                    .font(.caption)
+                    .foregroundColor(.secondary)
                 }
             }
-            
+            .frame(maxHeight: .infinity)
+
             Spacer()
             
             Button(action: {
                 Task {
-                    if let movementId = sessionManager.activeSession?.movement?.id {
-                        if movementId == movement.node.id {
-                            await sessionManager.stopSession()
-                        }
+                    let isActiveMovement = sessionManager.activeSession?.movement?.id == movement.node.id
+                            
+                    if isActiveMovement {
+                        // Stop the current session
+                        await sessionManager.stopSession()
                     } else {
+                        // Start a new session for this movement
+                        // The database trigger will automatically stop any active session
                         _ = try? await sessionManager.startSession(pieceId: Int(piece.id) ?? 0, movementId: Int(movement.node.id) ?? 0)
                     }
                 }
             }, label: {
                 let isActiveMovement = sessionManager.activeSession?.movement?.id == movement.node.id
                 Image(systemName: isActiveMovement ? "stop.circle.fill" : "play.circle.fill")
-                    .font(.title3)
-                    .foregroundColor(.accentColor)
+                    .font(.title2)
+                    .foregroundColor(Color.accentColor)
+                    .frame(width: 60, height: 40)
             })
         }
-        .padding(.horizontal)
-        .padding(.vertical, 8)
+        .padding(.top, 8)
+        .padding(.bottom, 4)
+        .padding(.horizontal, 4)
     }
 
     private func formatDuration(seconds: Int) -> String {
@@ -188,7 +254,7 @@ struct PieceShow: View {
 #Preview {
     NavigationView {
         PieceShow(
-            piece: PieceDetails.preview,
+            piece: PieceDetails.allPreviews[2],
             sessionManager: PracticeSessionViewModel()
         )
     }

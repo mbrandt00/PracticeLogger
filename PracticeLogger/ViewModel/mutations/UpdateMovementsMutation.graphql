@@ -1,0 +1,12 @@
+mutation UpdateMovementsMutation(
+  $set: MovementUpdateInput!
+  $filter: MovementFilter
+) {
+  updateMovementCollection(set: $set, filter: $filter) {
+    records {
+      number
+      name
+      id
+    }
+  }
+}

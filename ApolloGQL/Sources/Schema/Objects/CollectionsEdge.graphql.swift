@@ -4,8 +4,9 @@
 import ApolloAPI
 
 public extension Objects {
-  static let ImslpPieceConnection = ApolloAPI.Object(
-    typename: "ImslpPieceConnection",
-    implementedInterfaces: []
+  static let CollectionsEdge = ApolloAPI.Object(
+    typename: "CollectionsEdge",
+    implementedInterfaces: [],
+    keyFields: nil
   )
 }
