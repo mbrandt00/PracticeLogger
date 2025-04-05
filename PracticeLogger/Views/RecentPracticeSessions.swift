@@ -14,6 +14,7 @@ struct RecentPracticeSessions: View {
     @State private var recentSessions = [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge]()
     @StateObject private var searchViewModel = SearchViewModel()
     @State private var isSearching = false
+    @EnvironmentObject var keyboardResponder: KeyboardResponder
     @State private var path = NavigationPath()
 
     var groupedSessionsByDay: [Date: [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge]] {
@@ -58,6 +59,14 @@ struct RecentPracticeSessions: View {
                     .padding(.vertical, 2)
                 }
             }
+            .onChange(of: isSearching) { _, newValue in
+                if newValue {
+                    keyboardResponder.isKeyboardVisible = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        keyboardResponder.isKeyboardVisible = true
+                    }
+                }
+            }
             .navigationDestination(for: PieceNavigationContext.self) { context in
                 switch context {
                 case .userPiece(let piece):
@@ -69,6 +78,9 @@ struct RecentPracticeSessions: View {
             }
         }
         .searchable(text: $searchViewModel.searchTerm, isPresented: $isSearching, prompt: "Search pieces")
+        .onSubmit(of: .search) {
+            keyboardResponder.isKeyboardVisible = false
+        }
     }
 
     private func sessionRow(session: RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge) -> some View {

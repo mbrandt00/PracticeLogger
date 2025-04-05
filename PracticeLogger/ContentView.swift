@@ -22,7 +22,6 @@ struct ContentView: View {
     @Namespace private var animation
     @StateObject private var practiceSessionViewModel = PracticeSessionViewModel()
     @State private var keyboardResponder = KeyboardResponder()
-    @State var searchIsFocused = false
 
     init(isSignedIn: Binding<Bool>, practiceSessionViewModel: PracticeSessionViewModel = PracticeSessionViewModel()) {
         self._isSignedIn = isSignedIn
@@ -56,7 +55,7 @@ struct ContentView: View {
                             .tag(Tabs.profile)
                     }
 
-                    if let activeSession = practiceSessionViewModel.activeSession {
+                    if let activeSession = practiceSessionViewModel.activeSession, !keyboardResponder.isKeyboardVisible {
                         VStack {
                             Spacer()
                             BottomSheet(

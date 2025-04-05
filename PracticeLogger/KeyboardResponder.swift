@@ -20,8 +20,23 @@ final class KeyboardResponder: ObservableObject {
         let keyboardWillHide = NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
             .map { _ in false }
 
-        Publishers.Merge(keyboardWillShow, keyboardWillHide)
+        let keyboardDidShow = NotificationCenter.default.publisher(for: UIResponder.keyboardDidShowNotification)
+            .map { _ in true }
+
+        let keyboardDidHide = NotificationCenter.default.publisher(for: UIResponder.keyboardDidHideNotification)
+            .map { _ in false }
+
+        Publishers.MergeMany(keyboardWillShow, keyboardWillHide, keyboardDidShow, keyboardDidHide)
+            .receive(on: RunLoop.main)
+            .removeDuplicates()
             .assign(to: \.isKeyboardVisible, on: self)
             .store(in: &cancellables)
+    }
+
+    // Method to manually set keyboard visibility
+    func setKeyboardVisible(_ isVisible: Bool) {
+        DispatchQueue.main.async {
+            self.isKeyboardVisible = isVisible
+        }
     }
 }
