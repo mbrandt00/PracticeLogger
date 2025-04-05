@@ -11,21 +11,21 @@ import SwiftUI
 struct CollectionListView: View {
     @State var collectionId: ApolloGQL.BigInt
     @State private var isLoading: Bool
-    @State private var collectionInformation: [CollectionPieceWithFallbackQuery.Data.CollectionPiecesWithFallbackCollection.Edge]
-    
+    @State private var collectionInformation: [CollectionsQuery.Data.CollectionsCollection.Edge]
+
     init(collectionId: ApolloGQL.BigInt) {
         self.collectionId = collectionId
         self._isLoading = State(initialValue: true)
         self._collectionInformation = State(initialValue: [])
     }
-    
+
     // Preview initializer
-    init(preview: CollectionPieceWithFallbackQuery.Data.CollectionPiecesWithFallbackCollection) {
+    init(preview: [CollectionsQuery.Data.CollectionsCollection.Edge]) {
         self.collectionId = BigInt(0) // Dummy ID for preview
         self._isLoading = State(initialValue: false)
-        self._collectionInformation = State(initialValue: preview.edges)
+        self._collectionInformation = State(initialValue: preview)
     }
-    
+
     var body: some View {
         VStack {
             if isLoading {
@@ -39,11 +39,11 @@ struct CollectionListView: View {
                     .foregroundColor(.secondary)
             } else {
                 List {
-                    ForEach(collectionInformation, id: \.self) { item in
+                    ForEach(collectionInformation[0].node.pieces?.edges ?? [], id: \.self) { item in
                         HStack {
-                            Text(item.node.piece?.workName ?? "")
+                            Text(item.node.workName)
                             Spacer()
-                            if item.node.piece?.userId != nil {
+                            if item.node.userId != nil {
                                 Text("Added")
                                     .foregroundColor(.green)
                             } else {
@@ -62,17 +62,17 @@ struct CollectionListView: View {
             }
         }
     }
-    
+
     private func loadCollectionData() async {
         do {
             collectionInformation = try await withCheckedThrowingContinuation { continuation in
-                let filter = GraphQLNullable(CollectionPiecesWithFallbackFilter(collectionId: .some(BigIntFilter(eq: .some(collectionId)))))
-                
-                Network.shared.apollo.fetch(query: CollectionPieceWithFallbackQuery(filter: filter)) { result in
+                let filter = GraphQLNullable(CollectionsFilter(id: .some(BigIntFilter(eq: .some(collectionId)))))
+
+                Network.shared.apollo.fetch(query: CollectionsQuery(filter: filter)) { result in
                     switch result {
                     case .success(let graphQLResult):
-                        if let pieces = graphQLResult.data?.collectionPiecesWithFallbackCollection?.edges {
-                            continuation.resume(returning: pieces)
+                        if let collection = graphQLResult.data?.collectionsCollection?.edges {
+                            continuation.resume(returning: collection)
                         } else {
                             continuation.resume(returning: [])
                         }
@@ -81,7 +81,7 @@ struct CollectionListView: View {
                     }
                 }
             }
-            
+
             isLoading = false
         } catch {
             print("Error loading collection data: \(error)")
@@ -92,8 +92,6 @@ struct CollectionListView: View {
 
 #Preview {
     NavigationView {
-        CollectionListView(
-            preview: CollectionPieceWithFallbackQuery.Data.CollectionPiecesWithFallbackCollection.previewRachmaninoff
-        )
+        CollectionListView.previewWithRachmaninoff
     }
 }

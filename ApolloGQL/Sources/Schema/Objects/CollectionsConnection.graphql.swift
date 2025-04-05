@@ -4,8 +4,8 @@
 import ApolloAPI
 
 public extension Objects {
-  static let CollectionPiecesWithFallbackConnection = ApolloAPI.Object(
-    typename: "collectionPiecesWithFallbackConnection",
+  static let CollectionsConnection = ApolloAPI.Object(
+    typename: "CollectionsConnection",
     implementedInterfaces: [],
     keyFields: nil
   )

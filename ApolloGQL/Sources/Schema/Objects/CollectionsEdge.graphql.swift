@@ -4,9 +4,9 @@
 import ApolloAPI
 
 public extension Objects {
-  static let UserPiece = ApolloAPI.Object(
-    typename: "userPiece",
-    implementedInterfaces: [Interfaces.Node.self],
+  static let CollectionsEdge = ApolloAPI.Object(
+    typename: "CollectionsEdge",
+    implementedInterfaces: [],
     keyFields: nil
   )
 }

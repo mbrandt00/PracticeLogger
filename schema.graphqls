@@ -158,6 +158,10 @@ type Collections implements Node {
   url: String
   composerId: BigInt!
   composer: Composers!
+
+  """
+  Returns pieces belonging to this collection, prioritizing user-customized pieces over default pieces with the same IMSLP URL
+  """
   pieces(
     """Query the first `n` records in the collection"""
     first: Int
@@ -182,54 +186,6 @@ type Collections implements Node {
     """Sort order to apply to the collection"""
     orderBy: [PieceOrderBy!]
   ): PieceConnection
-  userPieceCollection(
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """
-    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
-    """
-    offset: Int
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: userPieceFilter
-
-    """Sort order to apply to the collection"""
-    orderBy: [userPieceOrderBy!]
-  ): userPieceConnection
-  collectionPiecesWithFallbackCollection(
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """
-    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
-    """
-    offset: Int
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: collectionPiecesWithFallbackFilter
-
-    """Sort order to apply to the collection"""
-    orderBy: [collectionPiecesWithFallbackOrderBy!]
-  ): collectionPiecesWithFallbackConnection
 }
 
 type CollectionsConnection {
@@ -337,30 +293,6 @@ type Composers implements Node {
     """Sort order to apply to the collection"""
     orderBy: [PieceOrderBy!]
   ): PieceConnection
-  imslpPieceCollection(
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """
-    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
-    """
-    offset: Int
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: ImslpPieceFilter
-
-    """Sort order to apply to the collection"""
-    orderBy: [ImslpPieceOrderBy!]
-  ): ImslpPieceConnection
   collectionsCollection(
     """Query the first `n` records in the collection"""
     first: Int
@@ -385,54 +317,6 @@ type Composers implements Node {
     """Sort order to apply to the collection"""
     orderBy: [CollectionsOrderBy!]
   ): CollectionsConnection
-  userPieceCollection(
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """
-    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
-    """
-    offset: Int
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: userPieceFilter
-
-    """Sort order to apply to the collection"""
-    orderBy: [userPieceOrderBy!]
-  ): userPieceConnection
-  collectionPiecesWithFallbackCollection(
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """
-    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
-    """
-    offset: Int
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: collectionPiecesWithFallbackFilter
-
-    """Sort order to apply to the collection"""
-    orderBy: [collectionPiecesWithFallbackOrderBy!]
-  ): collectionPiecesWithFallbackConnection
 }
 
 type ComposersConnection {
@@ -599,335 +483,6 @@ input IDFilter {
   eq: ID
 }
 
-type ImslpMovement implements Node {
-  """Globally Unique Record Identifier"""
-  nodeId: ID!
-  id: BigInt!
-  pieceId: BigInt!
-  name: String
-  number: Int
-  keySignature: KeySignatureType
-  nickname: String
-  downloadUrl: String
-  piece: ImslpPiece!
-}
-
-type ImslpMovementConnection {
-  edges: [ImslpMovementEdge!]!
-  pageInfo: PageInfo!
-}
-
-type ImslpMovementDeleteResponse {
-  """Count of the records impacted by the mutation"""
-  affectedCount: Int!
-
-  """Array of records impacted by the mutation"""
-  records: [ImslpMovement!]!
-}
-
-type ImslpMovementEdge {
-  cursor: String!
-  node: ImslpMovement!
-}
-
-input ImslpMovementFilter {
-  id: BigIntFilter
-  pieceId: BigIntFilter
-  name: StringFilter
-  number: IntFilter
-  keySignature: KeySignatureTypeFilter
-  nickname: StringFilter
-  downloadUrl: StringFilter
-  nodeId: IDFilter
-
-  """
-  Returns true only if all its inner filters are true, otherwise returns false
-  """
-  and: [ImslpMovementFilter!]
-
-  """
-  Returns true if at least one of its inner filters is true, otherwise returns false
-  """
-  or: [ImslpMovementFilter!]
-
-  """Negates a filter"""
-  not: ImslpMovementFilter
-}
-
-input ImslpMovementInsertInput {
-  id: BigInt
-  pieceId: BigInt
-  name: String
-  number: Int
-  keySignature: KeySignatureType
-  nickname: String
-  downloadUrl: String
-}
-
-type ImslpMovementInsertResponse {
-  """Count of the records impacted by the mutation"""
-  affectedCount: Int!
-
-  """Array of records impacted by the mutation"""
-  records: [ImslpMovement!]!
-}
-
-input ImslpMovementOrderBy {
-  id: OrderByDirection
-  pieceId: OrderByDirection
-  name: OrderByDirection
-  number: OrderByDirection
-  keySignature: OrderByDirection
-  nickname: OrderByDirection
-  downloadUrl: OrderByDirection
-}
-
-input ImslpMovementUpdateInput {
-  id: BigInt
-  pieceId: BigInt
-  name: String
-  number: Int
-  keySignature: KeySignatureType
-  nickname: String
-  downloadUrl: String
-}
-
-type ImslpMovementUpdateResponse {
-  """Count of the records impacted by the mutation"""
-  affectedCount: Int!
-
-  """Array of records impacted by the mutation"""
-  records: [ImslpMovement!]!
-}
-
-type ImslpPiece implements Node {
-  """Globally Unique Record Identifier"""
-  nodeId: ID!
-  id: BigInt!
-  workName: String!
-  composerId: BigInt
-  nickname: String
-  format: PieceFormat
-  keySignature: KeySignatureType
-  catalogueType: CatalogueType
-  catalogueNumber: Int
-  updatedAt: Datetime
-  createdAt: Datetime
-  searchableText: String
-  catalogueTypeNumDesc: String
-  catalogueNumberSecondary: Int
-  compositionYear: Int
-  compositionYearDesc: String
-  pieceStyle: String
-  wikipediaUrl: String
-  instrumentation: [String]
-  compositionYearString: String
-  subPieceType: String
-  subPieceCount: Int
-  imslpUrl: String
-  collectionId: BigInt
-  composer: Composers
-  pieceCollection(
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """
-    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
-    """
-    offset: Int
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: PieceFilter
-
-    """Sort order to apply to the collection"""
-    orderBy: [PieceOrderBy!]
-  ): PieceConnection
-  imslpMovementCollection(
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """
-    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
-    """
-    offset: Int
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: ImslpMovementFilter
-
-    """Sort order to apply to the collection"""
-    orderBy: [ImslpMovementOrderBy!]
-  ): ImslpMovementConnection
-}
-
-type ImslpPieceConnection {
-  edges: [ImslpPieceEdge!]!
-  pageInfo: PageInfo!
-}
-
-type ImslpPieceDeleteResponse {
-  """Count of the records impacted by the mutation"""
-  affectedCount: Int!
-
-  """Array of records impacted by the mutation"""
-  records: [ImslpPiece!]!
-}
-
-type ImslpPieceEdge {
-  cursor: String!
-  node: ImslpPiece!
-}
-
-input ImslpPieceFilter {
-  id: BigIntFilter
-  workName: StringFilter
-  composerId: BigIntFilter
-  nickname: StringFilter
-  format: PieceFormatFilter
-  keySignature: KeySignatureTypeFilter
-  catalogueType: CatalogueTypeFilter
-  catalogueNumber: IntFilter
-  updatedAt: DatetimeFilter
-  createdAt: DatetimeFilter
-  searchableText: StringFilter
-  catalogueTypeNumDesc: StringFilter
-  catalogueNumberSecondary: IntFilter
-  compositionYear: IntFilter
-  compositionYearDesc: StringFilter
-  pieceStyle: StringFilter
-  wikipediaUrl: StringFilter
-  instrumentation: StringListFilter
-  compositionYearString: StringFilter
-  subPieceType: StringFilter
-  subPieceCount: IntFilter
-  imslpUrl: StringFilter
-  collectionId: BigIntFilter
-  nodeId: IDFilter
-
-  """
-  Returns true only if all its inner filters are true, otherwise returns false
-  """
-  and: [ImslpPieceFilter!]
-
-  """
-  Returns true if at least one of its inner filters is true, otherwise returns false
-  """
-  or: [ImslpPieceFilter!]
-
-  """Negates a filter"""
-  not: ImslpPieceFilter
-}
-
-input ImslpPieceInsertInput {
-  id: BigInt
-  workName: String
-  composerId: BigInt
-  nickname: String
-  format: PieceFormat
-  keySignature: KeySignatureType
-  catalogueType: CatalogueType
-  catalogueNumber: Int
-  updatedAt: Datetime
-  createdAt: Datetime
-  searchableText: String
-  catalogueTypeNumDesc: String
-  catalogueNumberSecondary: Int
-  compositionYear: Int
-  compositionYearDesc: String
-  pieceStyle: String
-  wikipediaUrl: String
-  instrumentation: [String]
-  compositionYearString: String
-  subPieceType: String
-  subPieceCount: Int
-  imslpUrl: String
-  collectionId: BigInt
-}
-
-type ImslpPieceInsertResponse {
-  """Count of the records impacted by the mutation"""
-  affectedCount: Int!
-
-  """Array of records impacted by the mutation"""
-  records: [ImslpPiece!]!
-}
-
-input ImslpPieceOrderBy {
-  id: OrderByDirection
-  workName: OrderByDirection
-  composerId: OrderByDirection
-  nickname: OrderByDirection
-  format: OrderByDirection
-  keySignature: OrderByDirection
-  catalogueType: OrderByDirection
-  catalogueNumber: OrderByDirection
-  updatedAt: OrderByDirection
-  createdAt: OrderByDirection
-  searchableText: OrderByDirection
-  catalogueTypeNumDesc: OrderByDirection
-  catalogueNumberSecondary: OrderByDirection
-  compositionYear: OrderByDirection
-  compositionYearDesc: OrderByDirection
-  pieceStyle: OrderByDirection
-  wikipediaUrl: OrderByDirection
-  compositionYearString: OrderByDirection
-  subPieceType: OrderByDirection
-  subPieceCount: OrderByDirection
-  imslpUrl: OrderByDirection
-  collectionId: OrderByDirection
-}
-
-input ImslpPieceUpdateInput {
-  id: BigInt
-  workName: String
-  composerId: BigInt
-  nickname: String
-  format: PieceFormat
-  keySignature: KeySignatureType
-  catalogueType: CatalogueType
-  catalogueNumber: Int
-  updatedAt: Datetime
-  createdAt: Datetime
-  searchableText: String
-  catalogueTypeNumDesc: String
-  catalogueNumberSecondary: Int
-  compositionYear: Int
-  compositionYearDesc: String
-  pieceStyle: String
-  wikipediaUrl: String
-  instrumentation: [String]
-  compositionYearString: String
-  subPieceType: String
-  subPieceCount: Int
-  imslpUrl: String
-  collectionId: BigInt
-}
-
-type ImslpPieceUpdateResponse {
-  """Count of the records impacted by the mutation"""
-  affectedCount: Int!
-
-  """Array of records impacted by the mutation"""
-  records: [ImslpPiece!]!
-}
-
 """
 Boolean expression comparing fields on type "Int"
 """
@@ -1023,7 +578,6 @@ type Movement implements Node {
   downloadUrl: String
   totalPracticeTime: Int
   lastPracticed: Datetime
-  imslpPieceId: BigInt
   piece: Piece!
   practiceSessionsCollection(
     """Query the first `n` records in the collection"""
@@ -1079,7 +633,6 @@ input MovementFilter {
   downloadUrl: StringFilter
   totalPracticeTime: IntFilter
   lastPracticed: DatetimeFilter
-  imslpPieceId: BigIntFilter
   nodeId: IDFilter
 
   """
@@ -1105,7 +658,6 @@ input MovementInsertInput {
   downloadUrl: String
   totalPracticeTime: Int
   lastPracticed: Datetime
-  imslpPieceId: BigInt
 }
 
 type MovementInsertResponse {
@@ -1126,7 +678,6 @@ input MovementOrderBy {
   downloadUrl: OrderByDirection
   totalPracticeTime: OrderByDirection
   lastPracticed: OrderByDirection
-  imslpPieceId: OrderByDirection
 }
 
 input MovementUpdateInput {
@@ -1138,7 +689,6 @@ input MovementUpdateInput {
   downloadUrl: String
   totalPracticeTime: Int
   lastPracticed: Datetime
-  imslpPieceId: BigInt
 }
 
 type MovementUpdateResponse {
@@ -1173,28 +723,6 @@ type Mutation {
     atMost: Int! = 1
   ): ComposersDeleteResponse!
 
-  """Deletes zero or more records from the `ImslpMovement` collection"""
-  deleteFromImslpMovementCollection(
-    """Restricts the mutation's impact to records matching the criteria"""
-    filter: ImslpMovementFilter
-
-    """
-    The maximum number of records in the collection permitted to be affected
-    """
-    atMost: Int! = 1
-  ): ImslpMovementDeleteResponse!
-
-  """Deletes zero or more records from the `ImslpPiece` collection"""
-  deleteFromImslpPieceCollection(
-    """Restricts the mutation's impact to records matching the criteria"""
-    filter: ImslpPieceFilter
-
-    """
-    The maximum number of records in the collection permitted to be affected
-    """
-    atMost: Int! = 1
-  ): ImslpPieceDeleteResponse!
-
   """Deletes zero or more records from the `Movement` collection"""
   deleteFromMovementCollection(
     """Restricts the mutation's impact to records matching the criteria"""
@@ -1227,43 +755,14 @@ type Mutation {
     """
     atMost: Int! = 1
   ): PracticeSessionsDeleteResponse!
-
-  """
-  Deletes zero or more records from the `collectionPiecesWithFallback` collection
-  """
-  deleteFromcollectionPiecesWithFallbackCollection(
-    """Restricts the mutation's impact to records matching the criteria"""
-    filter: collectionPiecesWithFallbackFilter
-
-    """
-    The maximum number of records in the collection permitted to be affected
-    """
-    atMost: Int! = 1
-  ): collectionPiecesWithFallbackDeleteResponse!
-
-  """Deletes zero or more records from the `userPiece` collection"""
-  deleteFromuserPieceCollection(
-    """Restricts the mutation's impact to records matching the criteria"""
-    filter: userPieceFilter
-
-    """
-    The maximum number of records in the collection permitted to be affected
-    """
-    atMost: Int! = 1
-  ): userPieceDeleteResponse!
   findOrCreateComposer(name: String!): Composers
+  getPieceSearchableText(pieceId: BigInt!): String
 
   """Adds one or more `Collections` records to the collection"""
   insertIntoCollectionsCollection(objects: [CollectionsInsertInput!]!): CollectionsInsertResponse
 
   """Adds one or more `Composers` records to the collection"""
   insertIntoComposersCollection(objects: [ComposersInsertInput!]!): ComposersInsertResponse
-
-  """Adds one or more `ImslpMovement` records to the collection"""
-  insertIntoImslpMovementCollection(objects: [ImslpMovementInsertInput!]!): ImslpMovementInsertResponse
-
-  """Adds one or more `ImslpPiece` records to the collection"""
-  insertIntoImslpPieceCollection(objects: [ImslpPieceInsertInput!]!): ImslpPieceInsertResponse
 
   """Adds one or more `Movement` records to the collection"""
   insertIntoMovementCollection(objects: [MovementInsertInput!]!): MovementInsertResponse
@@ -1273,15 +772,6 @@ type Mutation {
 
   """Adds one or more `PracticeSessions` records to the collection"""
   insertIntoPracticeSessionsCollection(objects: [PracticeSessionsInsertInput!]!): PracticeSessionsInsertResponse
-
-  """
-  Adds one or more `collectionPiecesWithFallback` records to the collection
-  """
-  insertIntocollectionPiecesWithFallbackCollection(objects: [collectionPiecesWithFallbackInsertInput!]!): collectionPiecesWithFallbackInsertResponse
-
-  """Adds one or more `userPiece` records to the collection"""
-  insertIntouserPieceCollection(objects: [userPieceInsertInput!]!): userPieceInsertResponse
-  refreshAllSearchableText: Opaque
 
   """Updates zero or more records in the `Collections` collection"""
   updateCollectionsCollection(
@@ -1314,38 +804,6 @@ type Mutation {
     """
     atMost: Int! = 1
   ): ComposersUpdateResponse!
-
-  """Updates zero or more records in the `ImslpMovement` collection"""
-  updateImslpMovementCollection(
-    """
-    Fields that are set will be updated for all records matching the `filter`
-    """
-    set: ImslpMovementUpdateInput!
-
-    """Restricts the mutation's impact to records matching the criteria"""
-    filter: ImslpMovementFilter
-
-    """
-    The maximum number of records in the collection permitted to be affected
-    """
-    atMost: Int! = 1
-  ): ImslpMovementUpdateResponse!
-
-  """Updates zero or more records in the `ImslpPiece` collection"""
-  updateImslpPieceCollection(
-    """
-    Fields that are set will be updated for all records matching the `filter`
-    """
-    set: ImslpPieceUpdateInput!
-
-    """Restricts the mutation's impact to records matching the criteria"""
-    filter: ImslpPieceFilter
-
-    """
-    The maximum number of records in the collection permitted to be affected
-    """
-    atMost: Int! = 1
-  ): ImslpPieceUpdateResponse!
 
   """Updates zero or more records in the `Movement` collection"""
   updateMovementCollection(
@@ -1394,40 +852,6 @@ type Mutation {
     """
     atMost: Int! = 1
   ): PracticeSessionsUpdateResponse!
-
-  """
-  Updates zero or more records in the `collectionPiecesWithFallback` collection
-  """
-  updatecollectionPiecesWithFallbackCollection(
-    """
-    Fields that are set will be updated for all records matching the `filter`
-    """
-    set: collectionPiecesWithFallbackUpdateInput!
-
-    """Restricts the mutation's impact to records matching the criteria"""
-    filter: collectionPiecesWithFallbackFilter
-
-    """
-    The maximum number of records in the collection permitted to be affected
-    """
-    atMost: Int! = 1
-  ): collectionPiecesWithFallbackUpdateResponse!
-
-  """Updates zero or more records in the `userPiece` collection"""
-  updateuserPieceCollection(
-    """
-    Fields that are set will be updated for all records matching the `filter`
-    """
-    set: userPieceUpdateInput!
-
-    """Restricts the mutation's impact to records matching the criteria"""
-    filter: userPieceFilter
-
-    """
-    The maximum number of records in the collection permitted to be affected
-    """
-    atMost: Int! = 1
-  ): userPieceUpdateResponse!
 }
 
 interface Node {
@@ -1499,7 +923,6 @@ type Piece implements Node {
   lastPracticed: Datetime
   collectionId: BigInt
   composer: Composers
-  imslpPiece: ImslpPiece
   collection: Collections
   movementCollection(
     """Query the first `n` records in the collection"""
@@ -1549,54 +972,6 @@ type Piece implements Node {
     """Sort order to apply to the collection"""
     orderBy: [PracticeSessionsOrderBy!]
   ): PracticeSessionsConnection
-  userPieceCollection(
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """
-    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
-    """
-    offset: Int
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: userPieceFilter
-
-    """Sort order to apply to the collection"""
-    orderBy: [userPieceOrderBy!]
-  ): userPieceConnection
-  collectionPiecesWithFallbackCollection(
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """
-    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
-    """
-    offset: Int
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: collectionPiecesWithFallbackFilter
-
-    """Sort order to apply to the collection"""
-    orderBy: [collectionPiecesWithFallbackOrderBy!]
-  ): collectionPiecesWithFallbackConnection
 }
 
 type PieceConnection {
@@ -1917,32 +1292,6 @@ type PracticeSessionsUpdateResponse {
 
 """The root type for querying data"""
 type Query {
-  """A pagable collection of type `collectionPiecesWithFallback`"""
-  collectionPiecesWithFallbackCollection(
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """
-    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
-    """
-    offset: Int
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: collectionPiecesWithFallbackFilter
-
-    """Sort order to apply to the collection"""
-    orderBy: [collectionPiecesWithFallbackOrderBy!]
-  ): collectionPiecesWithFallbackConnection
-
   """A pagable collection of type `Collections`"""
   collectionsCollection(
     """Query the first `n` records in the collection"""
@@ -1994,58 +1343,6 @@ type Query {
     """Sort order to apply to the collection"""
     orderBy: [ComposersOrderBy!]
   ): ComposersConnection
-
-  """A pagable collection of type `ImslpMovement`"""
-  imslpMovementCollection(
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """
-    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
-    """
-    offset: Int
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: ImslpMovementFilter
-
-    """Sort order to apply to the collection"""
-    orderBy: [ImslpMovementOrderBy!]
-  ): ImslpMovementConnection
-
-  """A pagable collection of type `ImslpPiece`"""
-  imslpPieceCollection(
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """
-    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
-    """
-    offset: Int
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: ImslpPieceFilter
-
-    """Sort order to apply to the collection"""
-    orderBy: [ImslpPieceOrderBy!]
-  ): ImslpPieceConnection
 
   """A pagable collection of type `Movement`"""
   movementCollection(
@@ -2130,33 +1427,6 @@ type Query {
     """Sort order to apply to the collection"""
     orderBy: [PracticeSessionsOrderBy!]
   ): PracticeSessionsConnection
-  searchImslpPieces(
-    query: String!
-    filterUserPieces: Boolean = false
-
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """
-    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
-    """
-    offset: Int
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: ImslpPieceFilter
-
-    """Sort order to apply to the collection"""
-    orderBy: [ImslpPieceOrderBy!]
-  ): ImslpPieceConnection
   searchPieces(
     query: String!
 
@@ -2183,59 +1453,7 @@ type Query {
     """Sort order to apply to the collection"""
     orderBy: [PieceOrderBy!]
   ): PieceConnection
-  searchUserPieces(
-    query: String!
-
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """
-    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
-    """
-    offset: Int
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: PieceFilter
-
-    """Sort order to apply to the collection"""
-    orderBy: [PieceOrderBy!]
-  ): PieceConnection
   showLimit: Float
-
-  """A pagable collection of type `userPiece`"""
-  userPieceCollection(
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """
-    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
-    """
-    offset: Int
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: userPieceFilter
-
-    """Sort order to apply to the collection"""
-    orderBy: [userPieceOrderBy!]
-  ): userPieceConnection
 }
 
 """
@@ -2318,206 +1536,4 @@ input UUIDListFilter {
   eq: [UUID!]
   is: FilterIs
   overlaps: [UUID!]
-}
-
-type collectionPiecesWithFallback implements Node {
-  """Globally Unique Record Identifier"""
-  nodeId: ID!
-  pieceId: BigInt
-  workName: String
-  catalogueNumber: Int
-  userId: UUID
-  collectionId: BigInt
-  composerId: BigInt
-  composer: Composers
-  piece: Piece
-  collection: Collections
-}
-
-type collectionPiecesWithFallbackConnection {
-  edges: [collectionPiecesWithFallbackEdge!]!
-  pageInfo: PageInfo!
-
-  """The total number of records matching the `filter` criteria"""
-  totalCount: Int!
-}
-
-type collectionPiecesWithFallbackDeleteResponse {
-  """Count of the records impacted by the mutation"""
-  affectedCount: Int!
-
-  """Array of records impacted by the mutation"""
-  records: [collectionPiecesWithFallback!]!
-}
-
-type collectionPiecesWithFallbackEdge {
-  cursor: String!
-  node: collectionPiecesWithFallback!
-}
-
-input collectionPiecesWithFallbackFilter {
-  pieceId: BigIntFilter
-  workName: StringFilter
-  catalogueNumber: IntFilter
-  userId: UUIDFilter
-  collectionId: BigIntFilter
-  composerId: BigIntFilter
-  nodeId: IDFilter
-
-  """
-  Returns true only if all its inner filters are true, otherwise returns false
-  """
-  and: [collectionPiecesWithFallbackFilter!]
-
-  """
-  Returns true if at least one of its inner filters is true, otherwise returns false
-  """
-  or: [collectionPiecesWithFallbackFilter!]
-
-  """Negates a filter"""
-  not: collectionPiecesWithFallbackFilter
-}
-
-input collectionPiecesWithFallbackInsertInput {
-  pieceId: BigInt
-  workName: String
-  catalogueNumber: Int
-  userId: UUID
-  collectionId: BigInt
-  composerId: BigInt
-}
-
-type collectionPiecesWithFallbackInsertResponse {
-  """Count of the records impacted by the mutation"""
-  affectedCount: Int!
-
-  """Array of records impacted by the mutation"""
-  records: [collectionPiecesWithFallback!]!
-}
-
-input collectionPiecesWithFallbackOrderBy {
-  pieceId: OrderByDirection
-  workName: OrderByDirection
-  catalogueNumber: OrderByDirection
-  userId: OrderByDirection
-  collectionId: OrderByDirection
-  composerId: OrderByDirection
-}
-
-input collectionPiecesWithFallbackUpdateInput {
-  pieceId: BigInt
-  workName: String
-  catalogueNumber: Int
-  userId: UUID
-  collectionId: BigInt
-  composerId: BigInt
-}
-
-type collectionPiecesWithFallbackUpdateResponse {
-  """Count of the records impacted by the mutation"""
-  affectedCount: Int!
-
-  """Array of records impacted by the mutation"""
-  records: [collectionPiecesWithFallback!]!
-}
-
-type userPiece implements Node {
-  """Globally Unique Record Identifier"""
-  nodeId: ID!
-  pieceId: BigInt
-  workName: String
-  catalogueNumber: Int
-  userId: UUID
-  collectionId: BigInt
-  composerId: BigInt
-  composer: Composers
-  piece: Piece
-  collection: Collections
-}
-
-type userPieceConnection {
-  edges: [userPieceEdge!]!
-  pageInfo: PageInfo!
-
-  """The total number of records matching the `filter` criteria"""
-  totalCount: Int!
-}
-
-type userPieceDeleteResponse {
-  """Count of the records impacted by the mutation"""
-  affectedCount: Int!
-
-  """Array of records impacted by the mutation"""
-  records: [userPiece!]!
-}
-
-type userPieceEdge {
-  cursor: String!
-  node: userPiece!
-}
-
-input userPieceFilter {
-  pieceId: BigIntFilter
-  workName: StringFilter
-  catalogueNumber: IntFilter
-  userId: UUIDFilter
-  collectionId: BigIntFilter
-  composerId: BigIntFilter
-  nodeId: IDFilter
-
-  """
-  Returns true only if all its inner filters are true, otherwise returns false
-  """
-  and: [userPieceFilter!]
-
-  """
-  Returns true if at least one of its inner filters is true, otherwise returns false
-  """
-  or: [userPieceFilter!]
-
-  """Negates a filter"""
-  not: userPieceFilter
-}
-
-input userPieceInsertInput {
-  pieceId: BigInt
-  workName: String
-  catalogueNumber: Int
-  userId: UUID
-  collectionId: BigInt
-  composerId: BigInt
-}
-
-type userPieceInsertResponse {
-  """Count of the records impacted by the mutation"""
-  affectedCount: Int!
-
-  """Array of records impacted by the mutation"""
-  records: [userPiece!]!
-}
-
-input userPieceOrderBy {
-  pieceId: OrderByDirection
-  workName: OrderByDirection
-  catalogueNumber: OrderByDirection
-  userId: OrderByDirection
-  collectionId: OrderByDirection
-  composerId: OrderByDirection
-}
-
-input userPieceUpdateInput {
-  pieceId: BigInt
-  workName: String
-  catalogueNumber: Int
-  userId: UUID
-  collectionId: BigInt
-  composerId: BigInt
-}
-
-type userPieceUpdateResponse {
-  """Count of the records impacted by the mutation"""
-  affectedCount: Int!
-
-  """Array of records impacted by the mutation"""
-  records: [userPiece!]!
 }

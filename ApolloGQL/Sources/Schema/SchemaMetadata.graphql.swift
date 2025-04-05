@@ -21,9 +21,9 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
   public static func objectType(forTypename typename: String) -> ApolloAPI.Object? {
     switch typename {
     case "Collections": return ApolloGQL.Objects.Collections
+    case "CollectionsConnection": return ApolloGQL.Objects.CollectionsConnection
+    case "CollectionsEdge": return ApolloGQL.Objects.CollectionsEdge
     case "Composers": return ApolloGQL.Objects.Composers
-    case "ImslpMovement": return ApolloGQL.Objects.ImslpMovement
-    case "ImslpPiece": return ApolloGQL.Objects.ImslpPiece
     case "Movement": return ApolloGQL.Objects.Movement
     case "MovementConnection": return ApolloGQL.Objects.MovementConnection
     case "MovementEdge": return ApolloGQL.Objects.MovementEdge
@@ -40,10 +40,6 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
     case "PracticeSessionsEdge": return ApolloGQL.Objects.PracticeSessionsEdge
     case "PracticeSessionsInsertResponse": return ApolloGQL.Objects.PracticeSessionsInsertResponse
     case "Query": return ApolloGQL.Objects.Query
-    case "collectionPiecesWithFallback": return ApolloGQL.Objects.CollectionPiecesWithFallback
-    case "collectionPiecesWithFallbackConnection": return ApolloGQL.Objects.CollectionPiecesWithFallbackConnection
-    case "collectionPiecesWithFallbackEdge": return ApolloGQL.Objects.CollectionPiecesWithFallbackEdge
-    case "userPiece": return ApolloGQL.Objects.UserPiece
     default: return nil
     }
   }

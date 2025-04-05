@@ -10,13 +10,9 @@ public extension Interfaces {
     implementingObjects: [
       "Collections",
       "Composers",
-      "ImslpMovement",
-      "ImslpPiece",
       "Movement",
       "Piece",
-      "PracticeSessions",
-      "CollectionPiecesWithFallback",
-      "UserPiece"
+      "PracticeSessions"
     ]
   )
 }
