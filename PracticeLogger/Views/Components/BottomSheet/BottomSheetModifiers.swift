@@ -9,10 +9,12 @@ import SwiftUI
 
 struct BottomSheetAware: ViewModifier {
     @EnvironmentObject var practiceSessionViewModel: PracticeSessionViewModel
+    @EnvironmentObject var keyboardResponder: KeyboardResponder
     let geometry: GeometryProxy
 
     func body(content: Content) -> some View {
-        content.padding(.bottom, practiceSessionViewModel.activeSession != nil ? 70 : 0)
+        content.padding(.bottom,
+                        practiceSessionViewModel.activeSession != nil && !keyboardResponder.isKeyboardVisible ? 70 : 0)
     }
 }
 
