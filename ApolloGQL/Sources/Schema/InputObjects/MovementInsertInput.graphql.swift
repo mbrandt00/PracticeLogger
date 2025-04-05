@@ -19,8 +19,7 @@ public struct MovementInsertInput: InputObject {
     downloadUrl: GraphQLNullable<String> = nil,
     totalPracticeTime: GraphQLNullable<Int> = nil,
     lastPracticed: GraphQLNullable<Datetime> = nil,
-    imslpPieceId: GraphQLNullable<BigInt> = nil,
-    imslpMovementId: GraphQLNullable<BigInt> = nil
+    imslpPieceId: GraphQLNullable<BigInt> = nil
   ) {
     __data = InputDict([
       "pieceId": pieceId,
@@ -31,8 +30,7 @@ public struct MovementInsertInput: InputObject {
       "downloadUrl": downloadUrl,
       "totalPracticeTime": totalPracticeTime,
       "lastPracticed": lastPracticed,
-      "imslpPieceId": imslpPieceId,
-      "imslpMovementId": imslpMovementId
+      "imslpPieceId": imslpPieceId
     ])
   }
 
@@ -79,10 +77,5 @@ public struct MovementInsertInput: InputObject {
   public var imslpPieceId: GraphQLNullable<BigInt> {
     get { __data["imslpPieceId"] }
     set { __data["imslpPieceId"] = newValue }
-  }
-
-  public var imslpMovementId: GraphQLNullable<BigInt> {
-    get { __data["imslpMovementId"] }
-    set { __data["imslpMovementId"] = newValue }
   }
 }

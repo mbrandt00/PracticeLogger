@@ -5,7 +5,7 @@
 
 public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
   public static var fragmentDefinition: StaticString {
-    #"fragment PieceDetails on Piece { __typename lastPracticed totalPracticeTime id workName catalogueType keySignature format instrumentation wikipediaUrl imslpUrl compositionYear catalogueNumberSecondary catalogueTypeNumDesc compositionYearDesc compositionYearString pieceStyle totalPracticeTime subPieceType subPieceCount userId collectionId catalogueNumber nickname composerId composer { __typename name } movements: movementCollection(orderBy: [{ number: AscNullsLast }]) { __typename edges { __typename node { __typename id lastPracticed totalPracticeTime name totalPracticeTime keySignature nickname downloadUrl pieceId number } } } }"#
+    #"fragment PieceDetails on Piece { __typename lastPracticed totalPracticeTime id workName catalogueType keySignature format instrumentation wikipediaUrl imslpUrl compositionYear catalogueNumberSecondary catalogueTypeNumDesc compositionYearDesc compositionYearString pieceStyle totalPracticeTime subPieceType subPieceCount userId collectionId collection { __typename name } catalogueNumber nickname composerId composer { __typename name } movements: movementCollection(orderBy: [{ number: AscNullsLast }]) { __typename edges { __typename node { __typename id lastPracticed totalPracticeTime name totalPracticeTime keySignature nickname downloadUrl pieceId number } } } }"#
   }
 
   public let __data: DataDict
@@ -34,6 +34,7 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
     .field("subPieceCount", Int?.self),
     .field("userId", ApolloGQL.UUID?.self),
     .field("collectionId", ApolloGQL.BigInt?.self),
+    .field("collection", Collection?.self),
     .field("catalogueNumber", Int?.self),
     .field("nickname", String?.self),
     .field("composerId", ApolloGQL.BigInt?.self),
@@ -61,6 +62,7 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
   public var subPieceCount: Int? { __data["subPieceCount"] }
   public var userId: ApolloGQL.UUID? { __data["userId"] }
   public var collectionId: ApolloGQL.BigInt? { __data["collectionId"] }
+  public var collection: Collection? { __data["collection"] }
   public var catalogueNumber: Int? { __data["catalogueNumber"] }
   public var nickname: String? { __data["nickname"] }
   public var composerId: ApolloGQL.BigInt? { __data["composerId"] }
@@ -88,6 +90,7 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
     subPieceCount: Int? = nil,
     userId: ApolloGQL.UUID? = nil,
     collectionId: ApolloGQL.BigInt? = nil,
+    collection: Collection? = nil,
     catalogueNumber: Int? = nil,
     nickname: String? = nil,
     composerId: ApolloGQL.BigInt? = nil,
@@ -117,6 +120,7 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
         "subPieceCount": subPieceCount,
         "userId": userId,
         "collectionId": collectionId,
+        "collection": collection._fieldData,
         "catalogueNumber": catalogueNumber,
         "nickname": nickname,
         "composerId": composerId,
@@ -127,6 +131,36 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
         ObjectIdentifier(PieceDetails.self)
       ]
     ))
+  }
+
+  /// Collection
+  ///
+  /// Parent Type: `Collections`
+  public struct Collection: ApolloGQL.SelectionSet {
+    public let __data: DataDict
+    public init(_dataDict: DataDict) { __data = _dataDict }
+
+    public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Collections }
+    public static var __selections: [ApolloAPI.Selection] { [
+      .field("__typename", String.self),
+      .field("name", String.self),
+    ] }
+
+    public var name: String { __data["name"] }
+
+    public init(
+      name: String
+    ) {
+      self.init(_dataDict: DataDict(
+        data: [
+          "__typename": ApolloGQL.Objects.Collections.typename,
+          "name": name,
+        ],
+        fulfilledFragments: [
+          ObjectIdentifier(PieceDetails.Collection.self)
+        ]
+      ))
+    }
   }
 
   /// Composer

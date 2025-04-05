@@ -14,7 +14,9 @@ public extension Interfaces {
       "ImslpPiece",
       "Movement",
       "Piece",
-      "PracticeSessions"
+      "PracticeSessions",
+      "CollectionPiecesWithFallback",
+      "UserPiece"
     ]
   )
 }

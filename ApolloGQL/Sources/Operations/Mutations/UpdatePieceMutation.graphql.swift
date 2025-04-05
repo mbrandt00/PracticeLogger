@@ -119,6 +119,7 @@ public class UpdatePieceMutation: GraphQLMutation {
         public var subPieceCount: Int? { __data["subPieceCount"] }
         public var userId: ApolloGQL.UUID? { __data["userId"] }
         public var collectionId: ApolloGQL.BigInt? { __data["collectionId"] }
+        public var collection: Collection? { __data["collection"] }
         public var catalogueNumber: Int? { __data["catalogueNumber"] }
         public var nickname: String? { __data["nickname"] }
         public var composerId: ApolloGQL.BigInt? { __data["composerId"] }
@@ -153,6 +154,7 @@ public class UpdatePieceMutation: GraphQLMutation {
           subPieceCount: Int? = nil,
           userId: ApolloGQL.UUID? = nil,
           collectionId: ApolloGQL.BigInt? = nil,
+          collection: Collection? = nil,
           catalogueNumber: Int? = nil,
           nickname: String? = nil,
           composerId: ApolloGQL.BigInt? = nil,
@@ -182,6 +184,7 @@ public class UpdatePieceMutation: GraphQLMutation {
               "subPieceCount": subPieceCount,
               "userId": userId,
               "collectionId": collectionId,
+              "collection": collection._fieldData,
               "catalogueNumber": catalogueNumber,
               "nickname": nickname,
               "composerId": composerId,
@@ -194,6 +197,8 @@ public class UpdatePieceMutation: GraphQLMutation {
             ]
           ))
         }
+
+        public typealias Collection = PieceDetails.Collection
 
         public typealias Composer = PieceDetails.Composer
 

@@ -37,6 +37,22 @@ struct PieceShow: View {
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                     }
+                    if let collection = piece.collection, let collectionId = piece.collectionId {
+                        VStack(alignment: .leading, spacing: 4) {
+                            NavigationLink(destination: CollectionListView(collectionId: collectionId)) {
+                                HStack {
+                                    Text("\(collection.name) collection")
+                                        .font(.body)
+                                        .foregroundColor(.accentColor)
+                                                
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                        }
+                        .padding(.vertical, 8)
+                    }
                     
                     if let totalTime = piece.totalPracticeTime {
                         HStack {

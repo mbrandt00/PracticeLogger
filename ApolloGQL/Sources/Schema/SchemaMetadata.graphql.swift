@@ -40,6 +40,10 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
     case "PracticeSessionsEdge": return ApolloGQL.Objects.PracticeSessionsEdge
     case "PracticeSessionsInsertResponse": return ApolloGQL.Objects.PracticeSessionsInsertResponse
     case "Query": return ApolloGQL.Objects.Query
+    case "collectionPiecesWithFallback": return ApolloGQL.Objects.CollectionPiecesWithFallback
+    case "collectionPiecesWithFallbackConnection": return ApolloGQL.Objects.CollectionPiecesWithFallbackConnection
+    case "collectionPiecesWithFallbackEdge": return ApolloGQL.Objects.CollectionPiecesWithFallbackEdge
+    case "userPiece": return ApolloGQL.Objects.UserPiece
     default: return nil
     }
   }
