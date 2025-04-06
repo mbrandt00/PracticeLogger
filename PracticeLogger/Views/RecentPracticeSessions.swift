@@ -79,6 +79,9 @@ struct RecentPracticeSessions: View {
             }
         }
         .searchable(text: $searchViewModel.searchTerm, isPresented: $isSearching, prompt: "Search pieces")
+        .onSubmit(of: .search) {
+            keyboardResponder.isKeyboardVisible = false
+        }
     }
 
     private func sessionRow(session: RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge) -> some View {
