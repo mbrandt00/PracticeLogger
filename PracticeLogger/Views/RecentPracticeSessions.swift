@@ -15,6 +15,7 @@ struct RecentPracticeSessions: View {
     @StateObject private var searchViewModel = SearchViewModel()
     @State private var isSearching = false
     @EnvironmentObject var keyboardResponder: KeyboardResponder
+    @EnvironmentObject var uiState: UIState
     @State private var path = NavigationPath()
 
     var groupedSessionsByDay: [Date: [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge]] {
@@ -60,11 +61,11 @@ struct RecentPracticeSessions: View {
                 }
             }
             .onChange(of: isSearching) { _, newValue in
-                if newValue {
-                    keyboardResponder.isKeyboardVisible = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        keyboardResponder.isKeyboardVisible = true
-                    }
+                uiState.isScreenBusy = newValue
+            }
+            .onDisappear {
+                if isSearching { // Only reset if we were searching when disappearing
+                    uiState.isScreenBusy = false
                 }
             }
             .navigationDestination(for: PieceNavigationContext.self) { context in

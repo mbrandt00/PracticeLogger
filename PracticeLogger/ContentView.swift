@@ -21,12 +21,22 @@ struct ContentView: View {
     @State private var selectedTab: Tabs = .practice
     @Namespace private var animation
     @StateObject private var practiceSessionViewModel = PracticeSessionViewModel()
-    @State private var keyboardResponder = KeyboardResponder()
+    @StateObject private var keyboardResponder = KeyboardResponder()
+    @StateObject private var uiState = UIState()
 
     init(isSignedIn: Binding<Bool>, practiceSessionViewModel: PracticeSessionViewModel = PracticeSessionViewModel()) {
         self._isSignedIn = isSignedIn
         self._practiceSessionViewModel = StateObject(wrappedValue: practiceSessionViewModel)
     }
+
+    private var shouldShowBottomSheet: Bool {
+        practiceSessionViewModel.activeSession != nil &&
+            !keyboardResponder.isKeyboardVisible &&
+            !uiState.isScreenBusy
+    }
+
+    private let bottomSheetHeight: CGFloat = 70
+    private let standardTabBarHeight: CGFloat = 49
 
     var body: some View {
         if isSignedIn {
@@ -34,41 +44,38 @@ struct ContentView: View {
                 ZStack(alignment: .bottom) {
                     TabView(selection: $selectedTab) {
                         ProgressView()
-                            .bottomSheetAware(geometry: geometry)
-                            .tabItem {
-                                Label("Progress", systemImage: "chart.xyaxis.line")
-                            }
+                            .padding(.bottom, shouldShowBottomSheet ? bottomSheetHeight : 0) // Apply padding *inside*
+                            .animation(.easeInOut(duration: 0.25), value: shouldShowBottomSheet) // Animate padding
+                            .tabItem { Label("Progress", systemImage: "chart.xyaxis.line") }
                             .tag(Tabs.progress)
 
                         RecentPracticeSessions(practiceSessionViewModel: practiceSessionViewModel)
-                            .bottomSheetAware(geometry: geometry)
-                            .tabItem {
-                                Label("Practice", systemImage: "metronome")
-                            }
+                            .padding(.bottom, shouldShowBottomSheet ? bottomSheetHeight : 0)
+                            .tabItem { Label("Practice", systemImage: "metronome") }
                             .tag(Tabs.practice)
 
                         Profile(isSignedIn: $isSignedIn)
-                            .bottomSheetAware(geometry: geometry)
-                            .tabItem {
-                                Label("Profile", systemImage: "person")
-                            }
+                            .padding(.bottom, shouldShowBottomSheet ? bottomSheetHeight : 0) // Apply padding *inside*
+                            .animation(.easeInOut(duration: 0.25), value: shouldShowBottomSheet) // Animate padding
+                            .tabItem { Label("Profile", systemImage: "person") }
                             .tag(Tabs.profile)
                     }
+                    // Make TabView ignore keyboard safe area IF the keyboard pushes the whole tabview up
+                    // .ignoresSafeArea(.keyboard, edges: .bottom)
 
-                    if let activeSession = practiceSessionViewModel.activeSession, !keyboardResponder.isKeyboardVisible {
-                        VStack {
-                            Spacer()
-                            BottomSheet(
-                                animation: animation,
-                                expandedSheet: .constant(false),
-                                activeSession: activeSession
-                            )
-                            .padding(.bottom, geometry.safeAreaInsets.bottom + 49)
-                            .transition(.move(edge: .bottom))
-                        }
-                        .edgesIgnoringSafeArea(.bottom)
+                    // Conditional BottomSheet Overlay Layer
+                    if shouldShowBottomSheet {
+                        BottomSheet(
+                            animation: animation,
+                            expandedSheet: .constant(false),
+                            activeSession: practiceSessionViewModel.activeSession!
+                        )
+                        .padding(.bottom, geometry.safeAreaInsets.bottom + standardTabBarHeight)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
                     }
                 }
+                .animation(.easeInOut(duration: 0.25), value: shouldShowBottomSheet)
+                .edgesIgnoringSafeArea(.bottom)
             }
             .onAppear {
                 Task {
@@ -89,6 +96,7 @@ struct ContentView: View {
             }
             .environmentObject(practiceSessionViewModel)
             .environmentObject(keyboardResponder)
+            .environmentObject(uiState)
             .toolbarBackground(.ultraThickMaterial, for: .tabBar)
         } else {
             SignIn(isSignedIn: $isSignedIn)
