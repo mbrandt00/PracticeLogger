@@ -25,6 +25,8 @@
 		D131F17B2B8B090D002261BC /* MetronomeShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F17A2B8B090D002261BC /* MetronomeShape.swift */; };
 		D13D0EDA2BCC2FA1006B2683 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13D0ED92BCC2FA1006B2683 /* Int.swift */; };
 		D13D0EDC2BCC4B23006B2683 /* SetString.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13D0EDB2BCC4B23006B2683 /* SetString.swift */; };
+		D144A65B2DA7D4E8002A682A /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D144A65A2DA7D4E8002A682A /* ApolloGQL */; };
+		D144A65D2DA7D512002A682A /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D144A65C2DA7D512002A682A /* ApolloGQL */; };
 		D148F5FE2DA18E8600EA70CB /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D148F5FD2DA18E8600EA70CB /* ApolloGQL */; };
 		D148F6002DA18E9E00EA70CB /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D148F5FF2DA18E9E00EA70CB /* ApolloGQL */; };
 		D148F6022DA18F0100EA70CB /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D148F6012DA18F0100EA70CB /* ApolloGQL */; };
@@ -244,7 +246,9 @@
 				D18ADB152D872540007760E5 /* ApolloGQL in Frameworks */,
 				D18ADB142D872540007760E5 /* ApolloGQL in Frameworks */,
 				D1D74EA72DA0CDEA004B5238 /* ApolloGQL in Frameworks */,
+				D144A65D2DA7D512002A682A /* ApolloGQL in Frameworks */,
 				D1BCDDAE2DA193EF00D29B18 /* ApolloGQL in Frameworks */,
+				D144A65B2DA7D4E8002A682A /* ApolloGQL in Frameworks */,
 				D18ADB132D872540007760E5 /* ApolloGQL in Frameworks */,
 				D18ADB342D872628007760E5 /* ApolloGQL in Frameworks */,
 				D18ADB122D872540007760E5 /* ApolloGQL in Frameworks */,
@@ -582,6 +586,8 @@
 				D1BCDDAD2DA193EF00D29B18 /* ApolloGQL */,
 				D1BCDDAF2DA1940100D29B18 /* ApolloGQL */,
 				D1BCDDB12DA1942800D29B18 /* ApolloGQL */,
+				D144A65A2DA7D4E8002A682A /* ApolloGQL */,
+				D144A65C2DA7D512002A682A /* ApolloGQL */,
 			);
 			productName = PracticeLogger;
 			productReference = D19E733B2B898F9300BB3EC7 /* PracticeLogger.app */;
@@ -1242,6 +1248,14 @@
 			productName = ApolloTestSupport;
 		};
 		D138E6922CE0565C00FE2BA6 /* ApolloGQL */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ApolloGQL;
+		};
+		D144A65A2DA7D4E8002A682A /* ApolloGQL */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ApolloGQL;
+		};
+		D144A65C2DA7D512002A682A /* ApolloGQL */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ApolloGQL;
 		};

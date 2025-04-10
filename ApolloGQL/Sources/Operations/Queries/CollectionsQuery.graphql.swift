@@ -7,7 +7,7 @@ public class CollectionsQuery: GraphQLQuery {
   public static let operationName: String = "CollectionsQuery"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query CollectionsQuery($filter: CollectionsFilter = {  }, $orderBy: [CollectionsOrderBy!] = [], $piecesOrderBy: [PieceOrderBy!] = [{ catalogueNumber: AscNullsLast }]) { collectionsCollection(filter: $filter, orderBy: $orderBy) { __typename edges { __typename node { __typename name composer { __typename name } pieces(orderBy: $piecesOrderBy) { __typename edges { __typename node { __typename workName userId } } } } } } }"#
+      #"query CollectionsQuery($filter: CollectionsFilter = {  }, $orderBy: [CollectionsOrderBy!] = [], $piecesOrderBy: [PieceOrderBy!] = [{ catalogueNumber: AscNullsLast }]) { collectionsCollection(filter: $filter, orderBy: $orderBy) { __typename edges { __typename node { __typename name composer { __typename name } pieces(orderBy: $piecesOrderBy) { __typename edges { __typename node { __typename id workName totalPracticeTime userId } } } } } } }"#
     ))
 
   public var filter: GraphQLNullable<CollectionsFilter>
@@ -255,21 +255,29 @@ public class CollectionsQuery: GraphQLQuery {
                 public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Piece }
                 public static var __selections: [ApolloAPI.Selection] { [
                   .field("__typename", String.self),
+                  .field("id", ApolloGQL.BigInt.self),
                   .field("workName", String.self),
+                  .field("totalPracticeTime", Int?.self),
                   .field("userId", ApolloGQL.UUID?.self),
                 ] }
 
+                public var id: ApolloGQL.BigInt { __data["id"] }
                 public var workName: String { __data["workName"] }
+                public var totalPracticeTime: Int? { __data["totalPracticeTime"] }
                 public var userId: ApolloGQL.UUID? { __data["userId"] }
 
                 public init(
+                  id: ApolloGQL.BigInt,
                   workName: String,
+                  totalPracticeTime: Int? = nil,
                   userId: ApolloGQL.UUID? = nil
                 ) {
                   self.init(_dataDict: DataDict(
                     data: [
                       "__typename": ApolloGQL.Objects.Piece.typename,
+                      "id": id,
                       "workName": workName,
+                      "totalPracticeTime": totalPracticeTime,
                       "userId": userId,
                     ],
                     fulfilledFragments: [
