@@ -12,6 +12,7 @@ struct CollectionListView: View {
     @State var collectionId: ApolloGQL.BigInt
     @State private var isLoading: Bool
     @State private var collectionInformation: [CollectionsQuery.Data.CollectionsCollection.Edge]
+    @State private var hasAppeared = false
 
     init(collectionId: ApolloGQL.BigInt) {
         self.collectionId = collectionId
@@ -20,11 +21,11 @@ struct CollectionListView: View {
     }
 
     // Preview initializer
-    init(preview: [CollectionsQuery.Data.CollectionsCollection.Edge]) {
-        self.collectionId = BigInt(0) // Dummy ID for preview
-        self._isLoading = State(initialValue: false)
-        self._collectionInformation = State(initialValue: preview)
-    }
+//    init(preview: [CollectionsQuery.Data.CollectionsCollection.Edge]) {
+//        self.collectionId = BigInt(0) // Dummy ID for preview
+//        self._isLoading = State(initialValue: false)
+//        self._collectionInformation = State(initialValue: preview)
+//    }
 
     var body: some View {
         VStack {
@@ -37,27 +38,38 @@ struct CollectionListView: View {
             } else if collectionInformation.isEmpty {
                 Text("No pieces found in this collection")
                     .foregroundColor(.secondary)
-            } else {
-                List {
-                    ForEach(collectionInformation[0].node.pieces?.edges ?? [], id: \.self) { item in
-                        HStack {
-                            Text(item.node.workName)
-                            Spacer()
-                            if item.node.userId != nil {
-                                Text("Added")
-                                    .foregroundColor(.green)
-                            } else {
-                                Text("Not added")
-                                    .foregroundColor(.secondary)
+            } else if let edges = collectionInformation.first?.node.pieces?.edges {
+                if edges.isEmpty {
+                    Text("No pieces found in this collection")
+                        .foregroundColor(.secondary)
+                } else {
+                    List {
+                        ForEach(edges, id: \.node.id) { item in
+                            VStack {
+                                Text(item.node.workName)
+                                    .font(.headline)
+                                if item.node.userId != nil {
+                                    if let totalPracticeTime = item.node.totalPracticeTime {
+                                        Text(totalPracticeTime.formattedTimeDuration)
+                                            .foregroundColor(.secondary)
+                                    }
+                                } else {
+                                    Text("Not added")
+                                        .foregroundColor(.secondary)
+                                }
                             }
                         }
                     }
                 }
+            } else {
+                Text("No pieces found in this collection")
+                    .foregroundColor(.secondary)
             }
         }
-        .navigationTitle("Collection")
-        .task {
-            if isLoading {
+        .onAppear {
+            guard !hasAppeared else { return }
+            hasAppeared = true
+            Task {
                 await loadCollectionData()
             }
         }
@@ -84,14 +96,13 @@ struct CollectionListView: View {
 
             isLoading = false
         } catch {
-            print("Error loading collection data: \(error)")
             isLoading = false
         }
     }
 }
 
-#Preview {
-    NavigationView {
-        CollectionListView.previewWithRachmaninoff
-    }
-}
+// #Preview {
+//    NavigationView {
+//        CollectionListView.previewWithRachmaninoff
+//    }
+// }
