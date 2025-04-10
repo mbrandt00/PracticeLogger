@@ -12,6 +12,7 @@ struct CollectionListView: View {
     @State var collectionId: ApolloGQL.BigInt
     @State private var isLoading: Bool
     @State private var collectionInformation: [CollectionsQuery.Data.CollectionsCollection.Edge]
+    @State private var hasAppeared = false
 
     init(collectionId: ApolloGQL.BigInt) {
         self.collectionId = collectionId
@@ -65,9 +66,10 @@ struct CollectionListView: View {
                     .foregroundColor(.secondary)
             }
         }
-        .navigationTitle(collectionInformation.first?.node.name ?? "Collection")
-        .task {
-            if isLoading {
+        .onAppear {
+            guard !hasAppeared else { return }
+            hasAppeared = true
+            Task {
                 await loadCollectionData()
             }
         }
@@ -94,7 +96,6 @@ struct CollectionListView: View {
 
             isLoading = false
         } catch {
-            print("Error loading collection data: \(error)")
             isLoading = false
         }
     }

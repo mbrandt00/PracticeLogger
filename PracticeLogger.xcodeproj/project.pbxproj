@@ -88,6 +88,7 @@
 		D18ADB342D872628007760E5 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D18ADB332D872628007760E5 /* ApolloGQL */; };
 		D18ADB362D8727E4007760E5 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D18ADB352D8727E4007760E5 /* ApolloGQL */; };
 		D18ADB382D872917007760E5 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D18ADB372D872917007760E5 /* ApolloGQL */; };
+		D18C66B72DA7EA65005A1A0A /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D18C66B62DA7EA65005A1A0A /* ApolloGQL */; };
 		D197387E2C153F7100EBF53F /* PieceShow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197387D2C153F7100EBF53F /* PieceShow.swift */; };
 		D19738802C1540B600EBF53F /* PracticeSessionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197387F2C1540B600EBF53F /* PracticeSessionViewModel.swift */; };
 		D19940FA2D4E0201003889AF /* PieceDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19940F92D4E01FC003889AF /* PieceDetails.swift */; };
@@ -277,6 +278,7 @@
 				D1AE23AF2D4FE008004E0551 /* ApolloAPI in Frameworks */,
 				D1C6B0DC2B8BC81300F7B877 /* PostgREST in Frameworks */,
 				D148F6022DA18F0100EA70CB /* ApolloGQL in Frameworks */,
+				D18C66B72DA7EA65005A1A0A /* ApolloGQL in Frameworks */,
 				D15C882F2BF05E5000AAC950 /* AlertToast in Frameworks */,
 				D1C6B0DA2B8BC81300F7B877 /* Functions in Frameworks */,
 				D1C2BEBD2BDD63A200E8E39F /* Supabase in Frameworks */,
@@ -588,6 +590,7 @@
 				D1BCDDB12DA1942800D29B18 /* ApolloGQL */,
 				D144A65A2DA7D4E8002A682A /* ApolloGQL */,
 				D144A65C2DA7D512002A682A /* ApolloGQL */,
+				D18C66B62DA7EA65005A1A0A /* ApolloGQL */,
 			);
 			productName = PracticeLogger;
 			productReference = D19E733B2B898F9300BB3EC7 /* PracticeLogger.app */;
@@ -1353,6 +1356,10 @@
 			productName = ApolloGQL;
 		};
 		D18ADB372D872917007760E5 /* ApolloGQL */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ApolloGQL;
+		};
+		D18C66B62DA7EA65005A1A0A /* ApolloGQL */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ApolloGQL;
 		};

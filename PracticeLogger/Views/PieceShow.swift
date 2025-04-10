@@ -12,6 +12,8 @@ struct PieceShow: View {
     @State var piece: PieceDetails
     @ObservedObject var sessionManager: PracticeSessionViewModel
     @State private var editingMode = false
+    @State private var showingCollectionSheet = false
+    @State private var selectedCollection: (id: String, name: String)?
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 16) {
@@ -39,12 +41,15 @@ struct PieceShow: View {
                     }
                     if let collection = piece.collection, let collectionId = piece.collectionId {
                         VStack(alignment: .leading, spacing: 4) {
-                            NavigationLink(destination: CollectionListView(collectionId: collectionId)) {
+                            Button {
+                                selectedCollection = (id: collectionId, name: collection.name)
+                                showingCollectionSheet = true
+                            } label: {
                                 HStack {
                                     Text("\(collection.name) collection")
                                         .font(.body)
                                         .foregroundColor(.accentColor)
-                                                
+
                                     Image(systemName: "chevron.right")
                                         .font(.caption)
                                         .foregroundColor(.secondary)
@@ -155,15 +160,29 @@ struct PieceShow: View {
             }
         }
         .sheet(isPresented: $editingMode) {
-            editingMode = false
-        } content: {
-            NavigationStack {
-                PieceEdit(piece: piece, isCreatingNewPiece: false, onPieceCreated: { updatedPiece in
-                    piece = updatedPiece
-                })
-                .navigationTitle("Edit \(piece.workName)")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
+            EditPieceSheetView()
+        }
+        .sheet(isPresented: $showingCollectionSheet) {
+            if let collectionId = piece.collectionId, let collectionName = piece.collection?.name {
+                CollectionSheetContent(collectionId: collectionId, collectionName: collectionName)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func CollectionSheetContent(collectionId: BigInt, collectionName: String) -> some View {
+        CollectionSheetView(collectionId: collectionId, collectionName: collectionName)
+    }
+
+    private func EditPieceSheetView() -> some View {
+        NavigationStack {
+            PieceEdit(piece: piece, isCreatingNewPiece: false, onPieceCreated: { updatedPiece in
+                piece = updatedPiece
+            })
+            .navigationTitle("Edit \(piece.workName)")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         editingMode = false
                     }
@@ -171,7 +190,22 @@ struct PieceShow: View {
             }
         }
     }
-    
+
+    private func CollectionSheetView(collectionId: BigInt, collectionName: String) -> some View {
+        NavigationStack {
+            CollectionListView(collectionId: collectionId)
+                .navigationTitle(collectionName)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Done") {
+                            showingCollectionSheet = false
+                        }
+                    }
+                }
+        }
+    }
+
     private func MovementRow(movement: PieceDetails.Movements.Edge, subPieceType: String?) -> some View {
         HStack(alignment: .center) {
             if let number = movement.node.number {
