@@ -19,7 +19,39 @@ struct CollectionListView: View {
     @State private var selectedPieceForShow: PieceDetails?
     var navigatePieceShow: ((PieceDetails) -> Void)?
     var allPieceEdges: [CollectionsQuery.Data.CollectionsCollection.Edge.Node.Pieces.Edge] {
-        collectionInformation.flatMap { $0.node.pieces?.edges ?? [] }
+        var result: [CollectionsQuery.Data.CollectionsCollection.Edge.Node.Pieces.Edge] = []
+
+        for edge in collectionInformation {
+            if let edges = edge.node.pieces?.edges {
+                result.append(contentsOf: edges)
+            }
+        }
+
+        return result.sorted {
+            let lhsPrimary = $0.node.catalogueNumber
+            let rhsPrimary = $1.node.catalogueNumber
+
+            if let lhs = lhsPrimary, let rhs = rhsPrimary, lhs != rhs {
+                return lhs < rhs
+            } else if lhsPrimary == nil && rhsPrimary != nil {
+                return false // nil goes last
+            } else if lhsPrimary != nil && rhsPrimary == nil {
+                return true
+            }
+
+            let lhsSecondary = $0.node.catalogueNumberSecondary
+            let rhsSecondary = $1.node.catalogueNumberSecondary
+
+            if let lhs = lhsSecondary, let rhs = rhsSecondary, lhs != rhs {
+                return lhs < rhs
+            } else if lhsSecondary == nil && rhsSecondary != nil {
+                return false
+            } else if lhsSecondary != nil && rhsSecondary == nil {
+                return true
+            }
+
+            return false
+        }
     }
 
     init(collectionId: ApolloGQL.BigInt, collectionName: String, onPieceChanged: ((PieceDetails) -> Void)? = nil) {

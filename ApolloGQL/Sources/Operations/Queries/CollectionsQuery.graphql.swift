@@ -7,7 +7,7 @@ public class CollectionsQuery: GraphQLQuery {
   public static let operationName: String = "CollectionsQuery"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query CollectionsQuery($filter: CollectionsFilter = {  }, $orderBy: [CollectionsOrderBy!] = [], $piecesOrderBy: [PieceOrderBy!] = [{ catalogueNumber: AscNullsLast }]) { collectionsCollection(filter: $filter, orderBy: $orderBy) { __typename edges { __typename node { __typename name composer { __typename name } pieces(orderBy: $piecesOrderBy) { __typename edges { __typename node { __typename ...PieceDetails id workName totalPracticeTime userId } } } } } } }"#,
+      #"query CollectionsQuery($filter: CollectionsFilter = {  }, $orderBy: [CollectionsOrderBy!] = [], $piecesOrderBy: [PieceOrderBy!] = [{ catalogueNumber: AscNullsLast, catalogueNumberSecondary: AscNullsLast }]) { collectionsCollection(filter: $filter, orderBy: $orderBy) { __typename edges { __typename node { __typename name composer { __typename name } pieces(orderBy: $piecesOrderBy, first: 1000) { __typename edges { __typename node { __typename ...PieceDetails id workName catalogueNumber catalogueNumberSecondary totalPracticeTime userId } } } } } } }"#,
       fragments: [PieceDetails.self]
     ))
 
@@ -20,7 +20,10 @@ public class CollectionsQuery: GraphQLQuery {
       CollectionsFilter()
     ),
     orderBy: GraphQLNullable<[CollectionsOrderBy]> = [],
-    piecesOrderBy: GraphQLNullable<[PieceOrderBy]> = [PieceOrderBy(catalogueNumber: .init(.ascNullsLast))]
+    piecesOrderBy: GraphQLNullable<[PieceOrderBy]> = [PieceOrderBy(
+      catalogueNumber: .init(.ascNullsLast),
+      catalogueNumberSecondary: .init(.ascNullsLast)
+    )]
   ) {
     self.filter = filter
     self.orderBy = orderBy
@@ -132,7 +135,10 @@ public class CollectionsQuery: GraphQLQuery {
             .field("__typename", String.self),
             .field("name", String.self),
             .field("composer", Composer.self),
-            .field("pieces", Pieces?.self, arguments: ["orderBy": .variable("piecesOrderBy")]),
+            .field("pieces", Pieces?.self, arguments: [
+              "orderBy": .variable("piecesOrderBy"),
+              "first": 1000
+            ]),
           ] }
 
           public var name: String { __data["name"] }
@@ -258,6 +264,8 @@ public class CollectionsQuery: GraphQLQuery {
                   .field("__typename", String.self),
                   .field("id", ApolloGQL.BigInt.self),
                   .field("workName", String.self),
+                  .field("catalogueNumber", Int?.self),
+                  .field("catalogueNumberSecondary", Int?.self),
                   .field("totalPracticeTime", Int?.self),
                   .field("userId", ApolloGQL.UUID?.self),
                   .fragment(PieceDetails.self),
@@ -265,6 +273,8 @@ public class CollectionsQuery: GraphQLQuery {
 
                 public var id: ApolloGQL.BigInt { __data["id"] }
                 public var workName: String { __data["workName"] }
+                public var catalogueNumber: Int? { __data["catalogueNumber"] }
+                public var catalogueNumberSecondary: Int? { __data["catalogueNumberSecondary"] }
                 public var totalPracticeTime: Int? { __data["totalPracticeTime"] }
                 public var userId: ApolloGQL.UUID? { __data["userId"] }
                 public var lastPracticed: ApolloGQL.Datetime? { __data["lastPracticed"] }
@@ -275,7 +285,6 @@ public class CollectionsQuery: GraphQLQuery {
                 public var wikipediaUrl: String? { __data["wikipediaUrl"] }
                 public var imslpUrl: String? { __data["imslpUrl"] }
                 public var compositionYear: Int? { __data["compositionYear"] }
-                public var catalogueNumberSecondary: Int? { __data["catalogueNumberSecondary"] }
                 public var catalogueTypeNumDesc: String? { __data["catalogueTypeNumDesc"] }
                 public var compositionYearDesc: String? { __data["compositionYearDesc"] }
                 public var compositionYearString: String? { __data["compositionYearString"] }
@@ -284,7 +293,6 @@ public class CollectionsQuery: GraphQLQuery {
                 public var subPieceCount: Int? { __data["subPieceCount"] }
                 public var collectionId: ApolloGQL.BigInt? { __data["collectionId"] }
                 public var collection: Collection? { __data["collection"] }
-                public var catalogueNumber: Int? { __data["catalogueNumber"] }
                 public var nickname: String? { __data["nickname"] }
                 public var composerId: ApolloGQL.BigInt? { __data["composerId"] }
                 public var composer: Composer? { __data["composer"] }
@@ -300,6 +308,8 @@ public class CollectionsQuery: GraphQLQuery {
                 public init(
                   id: ApolloGQL.BigInt,
                   workName: String,
+                  catalogueNumber: Int? = nil,
+                  catalogueNumberSecondary: Int? = nil,
                   totalPracticeTime: Int? = nil,
                   userId: ApolloGQL.UUID? = nil,
                   lastPracticed: ApolloGQL.Datetime? = nil,
@@ -310,7 +320,6 @@ public class CollectionsQuery: GraphQLQuery {
                   wikipediaUrl: String? = nil,
                   imslpUrl: String? = nil,
                   compositionYear: Int? = nil,
-                  catalogueNumberSecondary: Int? = nil,
                   catalogueTypeNumDesc: String? = nil,
                   compositionYearDesc: String? = nil,
                   compositionYearString: String? = nil,
@@ -319,7 +328,6 @@ public class CollectionsQuery: GraphQLQuery {
                   subPieceCount: Int? = nil,
                   collectionId: ApolloGQL.BigInt? = nil,
                   collection: Collection? = nil,
-                  catalogueNumber: Int? = nil,
                   nickname: String? = nil,
                   composerId: ApolloGQL.BigInt? = nil,
                   composer: Composer? = nil,
@@ -330,6 +338,8 @@ public class CollectionsQuery: GraphQLQuery {
                       "__typename": ApolloGQL.Objects.Piece.typename,
                       "id": id,
                       "workName": workName,
+                      "catalogueNumber": catalogueNumber,
+                      "catalogueNumberSecondary": catalogueNumberSecondary,
                       "totalPracticeTime": totalPracticeTime,
                       "userId": userId,
                       "lastPracticed": lastPracticed,
@@ -340,7 +350,6 @@ public class CollectionsQuery: GraphQLQuery {
                       "wikipediaUrl": wikipediaUrl,
                       "imslpUrl": imslpUrl,
                       "compositionYear": compositionYear,
-                      "catalogueNumberSecondary": catalogueNumberSecondary,
                       "catalogueTypeNumDesc": catalogueTypeNumDesc,
                       "compositionYearDesc": compositionYearDesc,
                       "compositionYearString": compositionYearString,
@@ -349,7 +358,6 @@ public class CollectionsQuery: GraphQLQuery {
                       "subPieceCount": subPieceCount,
                       "collectionId": collectionId,
                       "collection": collection._fieldData,
-                      "catalogueNumber": catalogueNumber,
                       "nickname": nickname,
                       "composerId": composerId,
                       "composer": composer._fieldData,

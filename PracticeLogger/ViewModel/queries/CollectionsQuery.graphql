@@ -1,7 +1,9 @@
 query CollectionsQuery(
   $filter: CollectionsFilter = {}
   $orderBy: [CollectionsOrderBy!] = []
-  $piecesOrderBy: [PieceOrderBy!] = [{ catalogueNumber: AscNullsLast }]
+  $piecesOrderBy: [PieceOrderBy!] = [
+    { catalogueNumber: AscNullsLast, catalogueNumberSecondary: AscNullsLast }
+  ]
 ) {
   collectionsCollection(filter: $filter, orderBy: $orderBy) {
     edges {
@@ -10,12 +12,14 @@ query CollectionsQuery(
         composer {
           name
         }
-        pieces(orderBy: $piecesOrderBy) {
+        pieces(orderBy: $piecesOrderBy, first: 1000) {
           edges {
             node {
               ...PieceDetails
               id
               workName
+              catalogueNumber
+              catalogueNumberSecondary
               totalPracticeTime
               userId
             }
