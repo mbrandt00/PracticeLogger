@@ -10,7 +10,7 @@ import OSLog
 import Supabase
 
 extension Logger {
-    static let main = Self(subsystem: "com.supabase.SlackClone", category: "app")
+    static let main = Self(subsystem: "com.MichaelBrandt.PracticeLogger", category: "app")
 }
 
 @Observable
