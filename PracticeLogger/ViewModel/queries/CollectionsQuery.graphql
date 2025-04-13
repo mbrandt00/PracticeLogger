@@ -13,7 +13,10 @@ query CollectionsQuery(
         pieces(orderBy: $piecesOrderBy) {
           edges {
             node {
+              ...PieceDetails
+              id
               workName
+              totalPracticeTime
               userId
             }
           }
