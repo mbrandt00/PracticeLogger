@@ -24,3 +24,10 @@ COMMENT ON FUNCTION pieces("collection" public.collections) IS
     "description": "Returns pieces belonging to this collection, prioritizing user-customized pieces over default pieces with the same IMSLP URL",
     "totalCount": {"enabled": true}
   })';
+
+COMMENT ON SCHEMA public IS e'@graphql({
+    "inflect_names": true,
+    "name": "public",
+    "max_rows": 1000
+})';
+
