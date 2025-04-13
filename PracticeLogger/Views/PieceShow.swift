@@ -164,16 +164,28 @@ struct PieceShow: View {
         }
         .sheet(isPresented: $showingCollectionSheet) {
             if let collectionId = piece.collectionId, let collectionName = piece.collection?.name {
-                CollectionSheetContent(collectionId: collectionId, collectionName: collectionName)
+                NavigationStack {
+                    CollectionListView(
+                        collectionId: collectionId,
+                        collectionName: collectionName,
+                        onPieceChanged: { newPiece in
+                            piece = newPiece
+                            showingCollectionSheet = false
+                        }
+                    )
+                }
+               
+                .toolbar {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Done") {
+                            showingCollectionSheet = false
+                        }
+                    }
+                }
             }
         }
     }
     
-    @ViewBuilder
-    private func CollectionSheetContent(collectionId: BigInt, collectionName: String) -> some View {
-        CollectionSheetView(collectionId: collectionId, collectionName: collectionName)
-    }
-
     private func EditPieceSheetView() -> some View {
         NavigationStack {
             PieceEdit(piece: piece, isCreatingNewPiece: false, onPieceCreated: { updatedPiece in
@@ -191,20 +203,20 @@ struct PieceShow: View {
         }
     }
 
-    private func CollectionSheetView(collectionId: BigInt, collectionName: String) -> some View {
-        NavigationStack {
-            CollectionListView(collectionId: collectionId)
-                .navigationTitle(collectionName)
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button("Done") {
-                            showingCollectionSheet = false
-                        }
-                    }
-                }
-        }
-    }
+//    private func CollectionSheetView(collectionId: BigInt, collectionName: String) -> some View {
+//        NavigationStack {
+//            CollectionListView(collectionId: collectionId, onPieceCreated:)
+//                .navigationTitle(collectionName)
+//                .navigationBarTitleDisplayMode(.inline)
+//                .toolbar {
+//                    ToolbarItem(placement: .confirmationAction) {
+//                        Button("Done") {
+//                            showingCollectionSheet = false
+//                        }
+//                    }
+//                }
+//        }
+//    }
 
     private func MovementRow(movement: PieceDetails.Movements.Edge, subPieceType: String?) -> some View {
         HStack(alignment: .center) {
