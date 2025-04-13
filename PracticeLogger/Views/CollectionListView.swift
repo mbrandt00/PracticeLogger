@@ -5,6 +5,7 @@
 //  Created by Michael Brandt on 3/23/25.
 //
 
+import Apollo
 import ApolloGQL
 import SwiftUI
 
@@ -16,7 +17,7 @@ struct CollectionListView: View {
     @State private var hasAppeared = false
     @State private var selectedPieceForEditing: PieceDetails?
     @State private var selectedPieceForShow: PieceDetails?
-    var onPieceCreated: ((PieceDetails) -> Void)?
+    var navigatePieceShow: ((PieceDetails) -> Void)?
     var allPieceEdges: [CollectionsQuery.Data.CollectionsCollection.Edge.Node.Pieces.Edge] {
         collectionInformation.flatMap { $0.node.pieces?.edges ?? [] }
     }
@@ -25,7 +26,7 @@ struct CollectionListView: View {
         self.collectionId = collectionId
         self.collectionName = collectionName
         self._isLoading = State(initialValue: true)
-        self.onPieceCreated = onPieceChanged
+        self.navigatePieceShow = onPieceChanged
         self._collectionInformation = State(initialValue: [])
     }
 
@@ -54,37 +55,49 @@ struct CollectionListView: View {
                 } else {
                     List {
                         ForEach(allPieceEdges, id: \.node.id) { item in
-                            VStack(alignment: .leading) {
-                                Text(item.node.workName)
-                                    .font(.headline)
-
-                                if let catalogueType = item.node.catalogueType, let catalogueNumber = item.node.catalogueNumber {
-                                    Text("\(catalogueType.displayName) \(catalogueNumber)")
-                                }
-
-                                if let userId = item.node.userId {
-                                    if let totalPracticeTime = item.node.totalPracticeTime {
-                                        Text(totalPracticeTime.formattedTimeDuration)
-                                            .foregroundColor(.secondary)
-                                    }
-                                } else {
-                                    HStack {
-                                        Image(systemName: "plus.rectangle")
-                                            .foregroundColor(.gray)
-                                    }
-                                }
-                            }
-                            .contentShape(Rectangle())
-                            .onTapGesture {
+                            Button(action: {
+                                let userId = item.node.userId
                                 let tappedPiece = item.node.fragments.pieceDetails
-
-                                if tappedPiece.userId == nil {
+                                if userId == nil {
                                     selectedPieceForEditing = tappedPiece
                                 } else {
                                     selectedPieceForShow = tappedPiece
-                                    onPieceCreated?(tappedPiece)
+                                    navigatePieceShow?(tappedPiece)
                                 }
+                            }) {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(item.node.workName)
+                                            .font(.headline)
+                                            .foregroundColor(.primary)
+
+                                        if let catalogueType = item.node.catalogueType,
+                                           let catalogueNumber = item.node.catalogueNumber
+                                        {
+                                            Text("\(catalogueType.displayName) \(catalogueNumber)")
+                                                .foregroundColor(.secondary)
+                                                .font(.subheadline)
+                                        }
+                                    }
+
+                                    Spacer()
+
+                                    if item.node.userId == nil {
+                                        Image(systemName: "plus.rectangle")
+                                            .foregroundColor(.gray)
+                                    } else if let totalPracticeTime = item.node.totalPracticeTime {
+                                        Text("\(totalPracticeTime.formattedTimeDuration) practiced")
+                                            .foregroundColor(.secondary)
+                                            .font(.footnote)
+                                    } else {
+                                        NewItemBadge()
+                                    }
+                                }
+                                .padding(.vertical, 8)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .contentShape(Rectangle())
                             }
+                            .buttonStyle(PlainButtonStyle())
                         }
                     }
                 }
@@ -99,7 +112,12 @@ struct CollectionListView: View {
             PieceEdit(
                 piece: piece,
                 isCreatingNewPiece: true,
-                onPieceCreated: onPieceCreated
+                onPieceCreated: { newPiece in
+                    Task {
+                        await loadCollectionData(forceRefresh: true)
+                    }
+                    navigatePieceShow?(newPiece)
+                }
             )
         }
 
@@ -112,12 +130,16 @@ struct CollectionListView: View {
         }
     }
 
-    private func loadCollectionData() async {
+    private func loadCollectionData(forceRefresh: Bool = false) async {
         do {
             collectionInformation = try await withCheckedThrowingContinuation { continuation in
                 let filter = GraphQLNullable(CollectionsFilter(id: .some(BigIntFilter(eq: .some(collectionId)))))
+                let policy: CachePolicy = forceRefresh ? .fetchIgnoringCacheData : .returnCacheDataElseFetch
 
-                Network.shared.apollo.fetch(query: CollectionsQuery(filter: filter)) { result in
+                Network.shared.apollo.fetch(
+                    query: CollectionsQuery(filter: filter),
+                    cachePolicy: policy
+                ) { result in
                     switch result {
                     case .success(let graphQLResult):
                         if let collection = graphQLResult.data?.collectionsCollection?.edges {
