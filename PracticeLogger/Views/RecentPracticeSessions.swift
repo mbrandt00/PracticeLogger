@@ -70,9 +70,9 @@ struct RecentPracticeSessions: View {
             .navigationDestination(for: PieceNavigationContext.self) { context in
                 switch context {
                 case let .userPiece(piece):
-                    PieceShow(piece: piece, sessionManager: practiceSessionViewModel)
+                    pieceShowDestination(for: piece)
+
                 case .newPiece:
-                    // Handle navigation for new pieces if needed
                     EmptyView()
                 }
             }
@@ -81,6 +81,22 @@ struct RecentPracticeSessions: View {
         .onSubmit(of: .search) {
             keyboardResponder.isKeyboardVisible = false
         }
+    }
+
+    @ViewBuilder
+    private func pieceShowDestination(for piece: PieceDetails) -> some View {
+        PieceShow(
+            piece: piece,
+            sessionManager: practiceSessionViewModel,
+            onDelete: {
+                Task { @MainActor in
+                    searchViewModel.userPieces.removeAll(where: { $0.id == piece.id })
+                    searchViewModel.searchTerm = ""
+                    isSearching = false
+                    await searchViewModel.searchPieces()
+                }
+            }
+        )
     }
 
     private func sessionRow(session: RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge) -> some View {

@@ -1,5 +1,6 @@
 
 
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -12,31 +13,17 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 
-CREATE SCHEMA IF NOT EXISTS "imslp";
-
-
-ALTER SCHEMA "imslp" OWNER TO "postgres";
-
-
-COMMENT ON SCHEMA "imslp" IS '@graphql({"inflect_names": true})';
-
-
-
-CREATE EXTENSION IF NOT EXISTS "pg_net" WITH SCHEMA "extensions";
+CREATE EXTENSION IF NOT EXISTS "pgsodium";
 
 
 
 
 
 
-CREATE EXTENSION IF NOT EXISTS "pgsodium" WITH SCHEMA "pgsodium";
-
-
-
-
-
-
-COMMENT ON SCHEMA "public" IS '@graphql({"inflect_names": true})';
+COMMENT ON SCHEMA "public" IS '@graphql({
+    "inflect_names": true,
+    "name": "public"
+})';
 
 
 
@@ -134,7 +121,8 @@ CREATE TYPE "public"."catalogue_type" AS ENUM (
     'wd',
     'wq',
     'jw',
-    'trv'
+    'trv',
+    'mwv'
 );
 
 
@@ -237,213 +225,6 @@ CREATE TYPE "public"."piece_format" AS ENUM (
 ALTER TYPE "public"."piece_format" OWNER TO "postgres";
 
 
-CREATE OR REPLACE FUNCTION "imslp"."get_piece_searchable_text"("piece_id" bigint) RETURNS "text"
-    LANGUAGE "sql" SECURITY DEFINER
-    AS $_$
-    SELECT 
-        CONCAT_WS(' ',
-            unaccent(COALESCE(p.work_name, '')),
-            unaccent(COALESCE(p.nickname, '')),
-            COALESCE(p.catalogue_type::text, ''),
-            COALESCE(p.catalogue_number::text, ''),
-            CASE COALESCE(p.key_signature::text, '')
-                WHEN 'csharp' THEN 'C sharp'
-                WHEN 'cflat' THEN 'C flat'
-                WHEN 'dsharp' THEN 'D sharp'
-                WHEN 'dflat' THEN 'D flat'
-                WHEN 'esharp' THEN 'E sharp'
-                WHEN 'eflat' THEN 'E flat'
-                WHEN 'fsharp' THEN 'F sharp'
-                WHEN 'fflat' THEN 'F flat'
-                WHEN 'gsharp' THEN 'G sharp'
-                WHEN 'gflat' THEN 'G flat'
-                WHEN 'asharp' THEN 'A sharp'
-                WHEN 'aflat' THEN 'A flat'
-                WHEN 'bsharp' THEN 'B sharp'
-                WHEN 'bflat' THEN 'B flat'
-                WHEN 'csharpminor' THEN 'C sharp minor'
-                WHEN 'cflatminor' THEN 'C flat minor'
-                WHEN 'dsharpminor' THEN 'D sharp minor'
-                WHEN 'dflatminor' THEN 'D flat minor'
-                WHEN 'esharpminor' THEN 'E sharp minor'
-                WHEN 'eflatminor' THEN 'E flat minor'
-                WHEN 'fsharpminor' THEN 'F sharp minor'
-                WHEN 'fflatminor' THEN 'F flat minor'
-                WHEN 'gsharpminor' THEN 'G sharp minor'
-                WHEN 'gflatminor' THEN 'G flat minor'
-                WHEN 'asharpminor' THEN 'A sharp minor'
-                WHEN 'aflatminor' THEN 'A flat minor'
-                WHEN 'bsharpminor' THEN 'B sharp minor'
-                WHEN 'bflatminor' THEN 'B flat minor'
-                WHEN 'cminor' THEN 'C minor'
-                WHEN 'dminor' THEN 'D minor'
-                WHEN 'eminor' THEN 'E minor'
-                WHEN 'fminor' THEN 'F minor'
-                WHEN 'gminor' THEN 'G minor'
-                WHEN 'aminor' THEN 'A minor'
-                WHEN 'bminor' THEN 'B minor'
-                WHEN 'c' THEN 'C'
-                WHEN 'd' THEN 'D'
-                WHEN 'e' THEN 'E'
-                WHEN 'f' THEN 'F'
-                WHEN 'g' THEN 'G'
-                WHEN 'a' THEN 'A'
-                WHEN 'b' THEN 'B'
-                ELSE ''
-            END,
-            unaccent(COALESCE(c.name, '')),
-            (SELECT COALESCE(string_agg(
-                CONCAT_WS(' ', 
-                    unaccent(COALESCE(name, '')), 
-                    unaccent(COALESCE(nickname, ''))
-                ), ' '), '')
-             FROM imslp.movements 
-             WHERE piece_id = $1)
-        )
-    FROM imslp.pieces p
-    LEFT JOIN composers c ON c.id = p.composer_id
-    WHERE p.id = piece_id;
-$_$;
-
-
-ALTER FUNCTION "imslp"."get_piece_searchable_text"("piece_id" bigint) OWNER TO "postgres";
-
-SET default_tablespace = '';
-
-SET default_table_access_method = "heap";
-
-
-CREATE TABLE IF NOT EXISTS "public"."pieces" (
-    "id" bigint NOT NULL,
-    "work_name" character varying(255) NOT NULL,
-    "composer_id" bigint,
-    "nickname" "text",
-    "user_id" "uuid" DEFAULT "auth"."uid"() NOT NULL,
-    "format" "public"."piece_format",
-    "key_signature" "public"."key_signature_type",
-    "catalogue_type" "public"."catalogue_type",
-    "catalogue_number" integer,
-    "updated_at" timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    "created_at" timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    "searchable_text" "text",
-    "catalogue_type_num_desc" "text",
-    "catalogue_number_secondary" integer,
-    "composition_year" integer,
-    "composition_year_desc" "text",
-    "piece_style" "text",
-    "wikipedia_url" "text",
-    "instrumentation" "text"[],
-    "composition_year_string" "text",
-    "sub_piece_type" "text",
-    "sub_piece_count" integer,
-    "imslp_url" "text",
-    "imslp_piece_id" bigint
-);
-
-
-ALTER TABLE "public"."pieces" OWNER TO "postgres";
-
-
-CREATE SEQUENCE IF NOT EXISTS "public"."pieces_id_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE "public"."pieces_id_seq" OWNER TO "postgres";
-
-
-ALTER SEQUENCE "public"."pieces_id_seq" OWNED BY "public"."pieces"."id";
-
-
-
-CREATE TABLE IF NOT EXISTS "imslp"."pieces" (
-    "id" bigint DEFAULT "nextval"('"public"."pieces_id_seq"'::"regclass") NOT NULL,
-    "work_name" character varying(255) NOT NULL,
-    "composer_id" bigint,
-    "nickname" "text",
-    "format" "public"."piece_format",
-    "key_signature" "public"."key_signature_type",
-    "catalogue_type" "public"."catalogue_type",
-    "catalogue_number" integer,
-    "updated_at" timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    "created_at" timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    "searchable_text" "text",
-    "catalogue_type_num_desc" "text",
-    "catalogue_number_secondary" integer,
-    "composition_year" integer,
-    "composition_year_desc" "text",
-    "piece_style" "text",
-    "wikipedia_url" "text",
-    "instrumentation" "text"[],
-    "composition_year_string" "text",
-    "sub_piece_type" "text",
-    "sub_piece_count" integer,
-    "imslp_url" "text"
-);
-
-
-ALTER TABLE "imslp"."pieces" OWNER TO "postgres";
-
-
-CREATE OR REPLACE FUNCTION "imslp"."search_imslp_pieces"("query" "text") RETURNS SETOF "imslp"."pieces"
-    LANGUAGE "sql" STABLE SECURITY DEFINER
-    AS $$
-    WITH terms AS (
-        SELECT unnest(string_to_array(lower(unaccent(query)), ' ')) as term
-    )
-    SELECT p.*
-    FROM imslp.pieces p
-    WHERE searchable_text IS NOT NULL
-    AND NOT EXISTS (
-        SELECT 1 FROM terms
-        WHERE lower(p.searchable_text) NOT LIKE '%' || term || '%'
-    )
-    ORDER BY similarity(p.searchable_text, unaccent(query)) DESC;
-$$;
-
-
-ALTER FUNCTION "imslp"."search_imslp_pieces"("query" "text") OWNER TO "postgres";
-
-
-CREATE OR REPLACE FUNCTION "imslp"."update_movement_piece_searchable_text"() RETURNS "trigger"
-    LANGUAGE "plpgsql"
-    AS $$
-BEGIN
-    UPDATE imslp.pieces
-    SET searchable_text = imslp.get_piece_searchable_text(
-        CASE 
-            WHEN TG_OP = 'DELETE' THEN OLD.piece_id 
-            ELSE NEW.piece_id 
-        END
-    )
-    WHERE id = CASE 
-        WHEN TG_OP = 'DELETE' THEN OLD.piece_id 
-        ELSE NEW.piece_id 
-    END;
-    RETURN NULL;
-END;
-$$;
-
-
-ALTER FUNCTION "imslp"."update_movement_piece_searchable_text"() OWNER TO "postgres";
-
-
-CREATE OR REPLACE FUNCTION "imslp"."update_piece_searchable_text"() RETURNS "trigger"
-    LANGUAGE "plpgsql"
-    AS $$
-BEGIN
-    NEW.searchable_text := imslp.get_piece_searchable_text(NEW.id);
-    RETURN NEW;
-END;
-$$;
-
-
-ALTER FUNCTION "imslp"."update_piece_searchable_text"() OWNER TO "postgres";
-
-
 CREATE OR REPLACE FUNCTION "public"."before_insert_practice_session"() RETURNS "trigger"
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
@@ -481,6 +262,51 @@ $$;
 
 
 ALTER FUNCTION "public"."before_update_practice_session"() OWNER TO "postgres";
+
+SET default_tablespace = '';
+
+SET default_table_access_method = "heap";
+
+
+CREATE TABLE IF NOT EXISTS "public"."pieces" (
+    "id" bigint NOT NULL,
+    "work_name" character varying(255) NOT NULL,
+    "composer_id" bigint,
+    "nickname" "text",
+    "user_id" "uuid" DEFAULT "auth"."uid"(),
+    "format" "public"."piece_format",
+    "key_signature" "public"."key_signature_type",
+    "catalogue_type" "public"."catalogue_type",
+    "catalogue_number" integer,
+    "updated_at" timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    "created_at" timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    "searchable_text" "text",
+    "catalogue_type_num_desc" "text",
+    "catalogue_number_secondary" integer,
+    "composition_year" integer,
+    "composition_year_desc" "text",
+    "piece_style" "text",
+    "wikipedia_url" "text",
+    "instrumentation" "text"[],
+    "composition_year_string" "text",
+    "sub_piece_type" "text",
+    "sub_piece_count" integer,
+    "imslp_url" "text",
+    "imslp_piece_id" bigint,
+    "total_practice_time" integer,
+    "last_practiced" timestamp with time zone,
+    "collection_id" bigint
+);
+
+
+ALTER TABLE "public"."pieces" OWNER TO "postgres";
+
+
+COMMENT ON TABLE "public"."pieces" IS '@graphql({
+    "primary_key_columns": ["id"],
+    "name": "Piece"
+})';
+
 
 
 CREATE OR REPLACE FUNCTION "public"."find_duplicate_piece"("catalogue_number" integer, "catalogue_type" "public"."catalogue_type", "user_id" "uuid", "composer_name" "text") RETURNS "public"."pieces"
@@ -551,8 +377,8 @@ CREATE OR REPLACE FUNCTION "public"."get_piece_searchable_text"("piece_id" bigin
     AS $_$
     SELECT 
         CONCAT_WS(' ',
-            unaccent(COALESCE(p.work_name, '')),
-            unaccent(COALESCE(p.nickname, '')),
+            unaccent(REPLACE(COALESCE(p.work_name, ''), '''', '')),
+            unaccent(REPLACE(COALESCE(p.nickname, ''), '''', '')),
             COALESCE(p.catalogue_number::text, ''),
             CASE COALESCE(p.key_signature::text, '')
                 WHEN 'csharp' THEN 'C sharp'
@@ -599,11 +425,11 @@ CREATE OR REPLACE FUNCTION "public"."get_piece_searchable_text"("piece_id" bigin
                 WHEN 'b' THEN 'B'
                 ELSE ''
             END,
-            unaccent(COALESCE(c.name, '')),
+            unaccent(REPLACE(COALESCE(c.name, ''), '''', '')),
             (SELECT COALESCE(string_agg(
                 CONCAT_WS(' ', 
-                    unaccent(COALESCE(name, '')), 
-                    unaccent(COALESCE(nickname, ''))
+                    unaccent(REPLACE(COALESCE(name, ''), '''', '')), 
+                    unaccent(REPLACE(COALESCE(nickname, ''), '''', ''))
                 ), ' '), '')
              FROM movements 
              WHERE piece_id = $1)
@@ -634,7 +460,58 @@ $$;
 ALTER FUNCTION "public"."parse_piece_format"("work_name" "text") OWNER TO "postgres";
 
 
-CREATE OR REPLACE FUNCTION "public"."search_piece_with_associations"("query" "text") RETURNS SETOF "public"."pieces"
+CREATE SEQUENCE IF NOT EXISTS "public"."collections_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "public"."collections_id_seq" OWNER TO "postgres";
+
+
+CREATE TABLE IF NOT EXISTS "public"."collections" (
+    "id" bigint DEFAULT "nextval"('"public"."collections_id_seq"'::"regclass") NOT NULL,
+    "name" "text" NOT NULL,
+    "url" "text",
+    "composer_id" bigint NOT NULL
+);
+
+
+ALTER TABLE "public"."collections" OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."pieces"("collection" "public"."collections") RETURNS SETOF "public"."pieces"
+    LANGUAGE "sql" STABLE
+    AS $$
+    SELECT DISTINCT ON (COALESCE(user_piece.imslp_url, default_piece.imslp_url))
+        COALESCE(user_piece, default_piece) AS piece
+    FROM 
+        public.pieces default_piece
+    LEFT JOIN 
+        public.pieces user_piece 
+        ON user_piece.imslp_url = default_piece.imslp_url
+        AND user_piece.collection_id = default_piece.collection_id
+        AND user_piece.user_id = auth.uid()
+    WHERE 
+        default_piece.collection_id = "collection".id
+    ORDER BY COALESCE(user_piece.imslp_url, default_piece.imslp_url), user_piece.id DESC NULLS LAST;
+$$;
+
+
+ALTER FUNCTION "public"."pieces"("collection" "public"."collections") OWNER TO "postgres";
+
+
+COMMENT ON FUNCTION "public"."pieces"("collection" "public"."collections") IS '@graphql({
+    "name": "pieces",
+    "description": "Returns pieces belonging to this collection, prioritizing user-customized pieces over default pieces with the same IMSLP URL",
+    "totalCount": {"enabled": true}
+  })';
+
+
+
+CREATE OR REPLACE FUNCTION "public"."search_pieces"("query" "text") RETURNS SETOF "public"."pieces"
     LANGUAGE "sql" STABLE SECURITY DEFINER
     AS $$
     WITH terms AS (
@@ -647,28 +524,68 @@ CREATE OR REPLACE FUNCTION "public"."search_piece_with_associations"("query" "te
         SELECT 1 FROM terms
         WHERE lower(p.searchable_text) NOT LIKE '%' || term || '%'
     )
-    ORDER BY similarity(p.searchable_text, unaccent(query)) DESC;
+    ORDER BY similarity(p.searchable_text, unaccent(query)) DESC
+    LIMIT 25
 $$;
 
 
-ALTER FUNCTION "public"."search_piece_with_associations"("query" "text") OWNER TO "postgres";
+ALTER FUNCTION "public"."search_pieces"("query" "text") OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."search_user_pieces"("query" "text") RETURNS SETOF "public"."pieces"
+    LANGUAGE "sql" STABLE SECURITY DEFINER
+    AS $$
+    WITH terms AS (
+        SELECT unnest(string_to_array(lower(unaccent(REPLACE(query, '''', ''))), ' ')) as term
+    )
+    SELECT p.*
+    FROM pieces p
+    WHERE searchable_text IS NOT NULL
+    AND NOT EXISTS (
+        SELECT 1 FROM terms
+        WHERE lower(p.searchable_text) NOT LIKE '%' || term || '%'
+    )
+    AND p.user_id = auth.uid()
+    ORDER BY similarity(p.searchable_text, unaccent(REPLACE(query, '''', ''))) DESC
+    LIMIT 25
+$$;
+
+
+ALTER FUNCTION "public"."search_user_pieces"("query" "text") OWNER TO "postgres";
 
 
 CREATE OR REPLACE FUNCTION "public"."update_movement_piece_searchable_text"() RETURNS "trigger"
-    LANGUAGE "plpgsql"
+    LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
+DECLARE
+    current_text TEXT;
+    new_text TEXT;
 BEGIN
-    UPDATE pieces
-    SET searchable_text = get_piece_searchable_text(
-        CASE 
-            WHEN TG_OP = 'DELETE' THEN OLD.piece_id 
-            ELSE NEW.piece_id 
-        END
-    )
+    -- Get the current and new searchable text
+    SELECT searchable_text INTO current_text 
+    FROM pieces 
     WHERE id = CASE 
         WHEN TG_OP = 'DELETE' THEN OLD.piece_id 
         ELSE NEW.piece_id 
     END;
+    
+    SELECT get_piece_searchable_text(
+        CASE 
+            WHEN TG_OP = 'DELETE' THEN OLD.piece_id 
+            ELSE NEW.piece_id 
+        END
+    ) INTO new_text;
+    
+    -- Only update if the text would actually change
+    IF new_text IS DISTINCT FROM current_text THEN
+        UPDATE pieces
+        SET searchable_text = new_text
+        WHERE id = CASE 
+            WHEN TG_OP = 'DELETE' THEN OLD.piece_id 
+            ELSE NEW.piece_id 
+        END;
+    END IF;
+    
     RETURN NULL;
 END;
 $$;
@@ -678,11 +595,22 @@ ALTER FUNCTION "public"."update_movement_piece_searchable_text"() OWNER TO "post
 
 
 CREATE OR REPLACE FUNCTION "public"."update_piece_searchable_text"() RETURNS "trigger"
-    LANGUAGE "plpgsql"
+    LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
+DECLARE
+    new_text TEXT;
 BEGIN
-    NEW.searchable_text := get_piece_searchable_text(NEW.id);
-    RETURN NEW;
+    -- Get the new searchable text
+    SELECT get_piece_searchable_text(NEW.id) INTO new_text;
+    
+    -- Only update if the text would actually change
+    IF new_text IS DISTINCT FROM NEW.searchable_text THEN
+        UPDATE pieces 
+        SET searchable_text = new_text
+        WHERE id = NEW.id;
+    END IF;
+    
+    RETURN NULL;
 END;
 $$;
 
@@ -690,28 +618,77 @@ $$;
 ALTER FUNCTION "public"."update_piece_searchable_text"() OWNER TO "postgres";
 
 
-CREATE TABLE IF NOT EXISTS "imslp"."collection_pieces" (
-    "collection_id" integer NOT NULL,
-    "piece_id" integer NOT NULL
-);
+CREATE OR REPLACE FUNCTION "public"."update_practice_stats"() RETURNS "trigger"
+    LANGUAGE "plpgsql"
+    AS $$
+BEGIN
+    -- Update pieces stats
+    UPDATE public.pieces
+    SET 
+        total_practice_time = (
+            SELECT COALESCE(SUM(duration_seconds), 0) 
+            FROM public.practice_sessions 
+            WHERE piece_id = pieces.id
+        ),
+        last_practiced = (
+            SELECT GREATEST(
+                COALESCE((
+                    SELECT GREATEST(
+                        MAX(end_time),
+                        MAX(start_time)
+                    ) 
+                    FROM public.practice_sessions 
+                    WHERE piece_id = pieces.id
+                ), NULL),
+                COALESCE((
+                    SELECT GREATEST(
+                        MAX(end_time),
+                        MAX(start_time)
+                    ) 
+                    FROM public.practice_sessions 
+                    WHERE movement_id IN (SELECT id FROM public.movements WHERE piece_id = pieces.id)
+                ), NULL)
+            )
+        )
+    WHERE id IN (
+        CASE 
+            WHEN TG_OP = 'DELETE' THEN OLD.piece_id 
+            ELSE NEW.piece_id 
+        END
+    );
+
+    -- Update movements stats
+    UPDATE public.movements
+    SET 
+        total_practice_time = (
+            SELECT COALESCE(SUM(duration_seconds), 0) 
+            FROM public.practice_sessions 
+            WHERE movement_id = movements.id
+        ),
+        last_practiced = (
+            SELECT GREATEST(
+                MAX(end_time),
+                MAX(start_time)
+            )
+            FROM public.practice_sessions 
+            WHERE movement_id = movements.id
+        )
+    WHERE id IN (
+        CASE 
+            WHEN TG_OP = 'DELETE' THEN OLD.movement_id 
+            ELSE NEW.movement_id 
+        END
+    );
+    
+    RETURN NULL;
+END;
+$$;
 
 
-ALTER TABLE "imslp"."collection_pieces" OWNER TO "postgres";
+ALTER FUNCTION "public"."update_practice_stats"() OWNER TO "postgres";
 
 
-CREATE TABLE IF NOT EXISTS "imslp"."collections" (
-    "id" integer NOT NULL,
-    "name" character varying(255) NOT NULL,
-    "url" character varying(1024),
-    "composer_id" integer
-);
-
-
-ALTER TABLE "imslp"."collections" OWNER TO "postgres";
-
-
-CREATE SEQUENCE IF NOT EXISTS "imslp"."collections_id_seq"
-    AS integer
+CREATE SEQUENCE IF NOT EXISTS "public"."composers_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -719,10 +696,10 @@ CREATE SEQUENCE IF NOT EXISTS "imslp"."collections_id_seq"
     CACHE 1;
 
 
-ALTER TABLE "imslp"."collections_id_seq" OWNER TO "postgres";
+ALTER TABLE "public"."composers_id_seq" OWNER TO "postgres";
 
 
-ALTER SEQUENCE "imslp"."collections_id_seq" OWNED BY "imslp"."collections"."id";
+ALTER SEQUENCE "public"."composers_id_seq" OWNED BY "public"."composers"."id";
 
 
 
@@ -733,11 +710,20 @@ CREATE TABLE IF NOT EXISTS "public"."movements" (
     "number" integer,
     "key_signature" "public"."key_signature_type",
     "nickname" "text",
-    "download_url" "text"
+    "download_url" "text",
+    "total_practice_time" integer,
+    "last_practiced" timestamp with time zone
 );
 
 
 ALTER TABLE "public"."movements" OWNER TO "postgres";
+
+
+COMMENT ON TABLE "public"."movements" IS '@graphql({
+    "primary_key_columns": ["id"],
+    "name": "Movement"
+})';
+
 
 
 CREATE SEQUENCE IF NOT EXISTS "public"."movements_id_seq"
@@ -755,21 +741,7 @@ ALTER SEQUENCE "public"."movements_id_seq" OWNED BY "public"."movements"."id";
 
 
 
-CREATE TABLE IF NOT EXISTS "imslp"."movements" (
-    "id" bigint DEFAULT "nextval"('"public"."movements_id_seq"'::"regclass") NOT NULL,
-    "piece_id" bigint NOT NULL,
-    "name" character varying(255),
-    "number" integer,
-    "key_signature" "public"."key_signature_type",
-    "nickname" "text",
-    "download_url" "text"
-);
-
-
-ALTER TABLE "imslp"."movements" OWNER TO "postgres";
-
-
-CREATE SEQUENCE IF NOT EXISTS "public"."composers_id_seq"
+CREATE SEQUENCE IF NOT EXISTS "public"."pieces_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -777,10 +749,10 @@ CREATE SEQUENCE IF NOT EXISTS "public"."composers_id_seq"
     CACHE 1;
 
 
-ALTER TABLE "public"."composers_id_seq" OWNER TO "postgres";
+ALTER TABLE "public"."pieces_id_seq" OWNER TO "postgres";
 
 
-ALTER SEQUENCE "public"."composers_id_seq" OWNED BY "public"."composers"."id";
+ALTER SEQUENCE "public"."pieces_id_seq" OWNED BY "public"."pieces"."id";
 
 
 
@@ -817,25 +789,6 @@ ALTER SEQUENCE "public"."practice_sessions_id_seq" OWNED BY "public"."practice_s
 
 
 
-CREATE OR REPLACE VIEW "public"."user_unique_piece_sessions_v" AS
- SELECT DISTINCT ON ("practice_sessions"."user_id", "practice_sessions"."piece_id") "practice_sessions"."id",
-    "practice_sessions"."start_time",
-    "practice_sessions"."end_time",
-    "practice_sessions"."piece_id",
-    "practice_sessions"."movement_id",
-    "practice_sessions"."duration_seconds",
-    "practice_sessions"."user_id"
-   FROM "public"."practice_sessions"
-  WHERE ("practice_sessions"."end_time" IS NOT NULL);
-
-
-ALTER TABLE "public"."user_unique_piece_sessions_v" OWNER TO "postgres";
-
-
-ALTER TABLE ONLY "imslp"."collections" ALTER COLUMN "id" SET DEFAULT "nextval"('"imslp"."collections_id_seq"'::"regclass");
-
-
-
 ALTER TABLE ONLY "public"."composers" ALTER COLUMN "id" SET DEFAULT "nextval"('"public"."composers_id_seq"'::"regclass");
 
 
@@ -852,33 +805,8 @@ ALTER TABLE ONLY "public"."practice_sessions" ALTER COLUMN "id" SET DEFAULT "nex
 
 
 
-ALTER TABLE ONLY "imslp"."collection_pieces"
-    ADD CONSTRAINT "collection_pieces_pkey" PRIMARY KEY ("collection_id", "piece_id");
-
-
-
-ALTER TABLE ONLY "imslp"."collections"
+ALTER TABLE ONLY "public"."collections"
     ADD CONSTRAINT "collections_pkey" PRIMARY KEY ("id");
-
-
-
-ALTER TABLE ONLY "imslp"."collections"
-    ADD CONSTRAINT "collections_url_key" UNIQUE ("url");
-
-
-
-ALTER TABLE ONLY "imslp"."movements"
-    ADD CONSTRAINT "movements_pkey" PRIMARY KEY ("id");
-
-
-
-ALTER TABLE ONLY "imslp"."pieces"
-    ADD CONSTRAINT "pieces_pkey" PRIMARY KEY ("id");
-
-
-
-ALTER TABLE ONLY "imslp"."pieces"
-    ADD CONSTRAINT "unique_on_imslp_url" UNIQUE ("imslp_url");
 
 
 
@@ -902,23 +830,7 @@ ALTER TABLE ONLY "public"."practice_sessions"
 
 
 
-CREATE INDEX "idx_pieces_searchable_text_trgm" ON "imslp"."pieces" USING "gin" ("searchable_text" "public"."gin_trgm_ops");
-
-
-
-CREATE INDEX "pieces_searchable_text_idx" ON "imslp"."pieces" USING "gin" ("searchable_text" "public"."gin_trgm_ops");
-
-
-
 CREATE INDEX "idx_pieces_searchable_text_trgm" ON "public"."pieces" USING "gin" ("searchable_text" "public"."gin_trgm_ops");
-
-
-
-CREATE OR REPLACE TRIGGER "movement_update_piece_searchable_text" AFTER INSERT OR DELETE OR UPDATE ON "imslp"."movements" FOR EACH ROW EXECUTE FUNCTION "imslp"."update_movement_piece_searchable_text"();
-
-
-
-CREATE OR REPLACE TRIGGER "piece_searchable_text_update" BEFORE INSERT OR UPDATE ON "imslp"."pieces" FOR EACH ROW EXECUTE FUNCTION "imslp"."update_piece_searchable_text"();
 
 
 
@@ -938,37 +850,25 @@ CREATE OR REPLACE TRIGGER "movement_update_piece_searchable_text" AFTER INSERT O
 
 
 
-CREATE OR REPLACE TRIGGER "piece_searchable_text_update" BEFORE INSERT OR UPDATE ON "public"."pieces" FOR EACH ROW EXECUTE FUNCTION "public"."update_piece_searchable_text"();
+CREATE OR REPLACE TRIGGER "piece_searchable_text_update" AFTER INSERT OR UPDATE ON "public"."pieces" FOR EACH ROW EXECUTE FUNCTION "public"."update_piece_searchable_text"();
 
 
 
-ALTER TABLE ONLY "imslp"."collection_pieces"
-    ADD CONSTRAINT "collection_pieces_collection_id_fkey" FOREIGN KEY ("collection_id") REFERENCES "imslp"."collections"("id");
+CREATE OR REPLACE TRIGGER "practice_sessions_stats_trigger" AFTER INSERT OR DELETE OR UPDATE ON "public"."practice_sessions" FOR EACH ROW EXECUTE FUNCTION "public"."update_practice_stats"();
 
 
 
-ALTER TABLE ONLY "imslp"."collection_pieces"
-    ADD CONSTRAINT "collection_pieces_piece_id_fkey" FOREIGN KEY ("piece_id") REFERENCES "imslp"."pieces"("id");
-
-
-
-ALTER TABLE ONLY "imslp"."collections"
+ALTER TABLE ONLY "public"."collections"
     ADD CONSTRAINT "collections_composer_id_fkey" FOREIGN KEY ("composer_id") REFERENCES "public"."composers"("id");
 
 
 
-ALTER TABLE ONLY "imslp"."pieces"
-    ADD CONSTRAINT "composers_piece_id_fkey" FOREIGN KEY ("composer_id") REFERENCES "public"."composers"("id") ON DELETE SET NULL;
-
-
-
-ALTER TABLE ONLY "imslp"."movements"
-    ADD CONSTRAINT "movements_piece_id_fkey" FOREIGN KEY ("piece_id") REFERENCES "imslp"."pieces"("id") ON DELETE CASCADE;
-
-
-
 ALTER TABLE ONLY "public"."pieces"
-    ADD CONSTRAINT "fk_imslp_piece" FOREIGN KEY ("imslp_piece_id") REFERENCES "imslp"."pieces"("id") ON DELETE SET NULL;
+    ADD CONSTRAINT "fk_collection" FOREIGN KEY ("collection_id") REFERENCES "public"."collections"("id");
+
+
+
+COMMENT ON CONSTRAINT "fk_collection" ON "public"."pieces" IS '@graphql({"foreign_name": "collection", "local_name": "pieces"})';
 
 
 
@@ -1002,6 +902,14 @@ ALTER TABLE ONLY "public"."practice_sessions"
 
 
 
+CREATE POLICY "Allow updates from trigger" ON "public"."movements" FOR UPDATE TO "authenticated" USING (true) WITH CHECK (true);
+
+
+
+CREATE POLICY "Allow updates from trigger" ON "public"."pieces" FOR UPDATE TO "authenticated" USING (true) WITH CHECK (true);
+
+
+
 CREATE POLICY "auth_delete_practice_sessions" ON "public"."practice_sessions" FOR DELETE TO "authenticated" USING (("user_id" = "auth"."uid"()));
 
 
@@ -1019,6 +927,14 @@ CREATE POLICY "auth_insert_pieces" ON "public"."pieces" FOR INSERT TO "authentic
 
 
 CREATE POLICY "auth_insert_practice_sessions" ON "public"."practice_sessions" FOR INSERT TO "authenticated" WITH CHECK (true);
+
+
+
+CREATE POLICY "auth_read_collections" ON "public"."collections" FOR SELECT TO "authenticated" USING (true);
+
+
+
+CREATE POLICY "auth_read_collections" ON "public"."practice_sessions" FOR SELECT TO "authenticated" USING (true);
 
 
 
@@ -1042,6 +958,9 @@ CREATE POLICY "auth_update_practice_sessions" ON "public"."practice_sessions" FO
 
 
 
+ALTER TABLE "public"."collections" ENABLE ROW LEVEL SECURITY;
+
+
 ALTER TABLE "public"."composers" ENABLE ROW LEVEL SECURITY;
 
 
@@ -1060,15 +979,6 @@ ALTER PUBLICATION "supabase_realtime" OWNER TO "postgres";
 
 
 ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."practice_sessions";
-
-
-
-GRANT USAGE ON SCHEMA "imslp" TO "authenticated";
-GRANT USAGE ON SCHEMA "imslp" TO "service_role";
-GRANT USAGE ON SCHEMA "imslp" TO "anon";
-
-
-
 
 
 
@@ -1261,54 +1171,6 @@ GRANT ALL ON FUNCTION "public"."gtrgm_out"("public"."gtrgm") TO "service_role";
 
 
 
-GRANT ALL ON FUNCTION "imslp"."get_piece_searchable_text"("piece_id" bigint) TO "authenticated";
-GRANT ALL ON FUNCTION "imslp"."get_piece_searchable_text"("piece_id" bigint) TO "service_role";
-GRANT ALL ON FUNCTION "imslp"."get_piece_searchable_text"("piece_id" bigint) TO "anon";
-
-
-
-GRANT ALL ON TABLE "public"."pieces" TO "anon";
-GRANT ALL ON TABLE "public"."pieces" TO "authenticated";
-GRANT ALL ON TABLE "public"."pieces" TO "service_role";
-
-
-
-GRANT ALL ON SEQUENCE "public"."pieces_id_seq" TO "anon";
-GRANT ALL ON SEQUENCE "public"."pieces_id_seq" TO "authenticated";
-GRANT ALL ON SEQUENCE "public"."pieces_id_seq" TO "service_role";
-
-
-
-GRANT ALL ON TABLE "imslp"."pieces" TO "authenticated";
-GRANT ALL ON TABLE "imslp"."pieces" TO "service_role";
-GRANT ALL ON TABLE "imslp"."pieces" TO "anon";
-
-
-
-GRANT ALL ON FUNCTION "imslp"."search_imslp_pieces"("query" "text") TO "authenticated";
-GRANT ALL ON FUNCTION "imslp"."search_imslp_pieces"("query" "text") TO "service_role";
-GRANT ALL ON FUNCTION "imslp"."search_imslp_pieces"("query" "text") TO "anon";
-
-
-
-GRANT ALL ON FUNCTION "imslp"."update_movement_piece_searchable_text"() TO "authenticated";
-GRANT ALL ON FUNCTION "imslp"."update_movement_piece_searchable_text"() TO "service_role";
-GRANT ALL ON FUNCTION "imslp"."update_movement_piece_searchable_text"() TO "anon";
-
-
-
-GRANT ALL ON FUNCTION "imslp"."update_piece_searchable_text"() TO "authenticated";
-GRANT ALL ON FUNCTION "imslp"."update_piece_searchable_text"() TO "service_role";
-GRANT ALL ON FUNCTION "imslp"."update_piece_searchable_text"() TO "anon";
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1327,6 +1189,12 @@ GRANT ALL ON FUNCTION "public"."before_insert_practice_session"() TO "service_ro
 GRANT ALL ON FUNCTION "public"."before_update_practice_session"() TO "anon";
 GRANT ALL ON FUNCTION "public"."before_update_practice_session"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."before_update_practice_session"() TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."pieces" TO "anon";
+GRANT ALL ON TABLE "public"."pieces" TO "authenticated";
+GRANT ALL ON TABLE "public"."pieces" TO "service_role";
 
 
 
@@ -1458,9 +1326,33 @@ GRANT ALL ON FUNCTION "public"."parse_piece_format"("work_name" "text") TO "serv
 
 
 
-GRANT ALL ON FUNCTION "public"."search_piece_with_associations"("query" "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."search_piece_with_associations"("query" "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."search_piece_with_associations"("query" "text") TO "service_role";
+GRANT ALL ON SEQUENCE "public"."collections_id_seq" TO "anon";
+GRANT ALL ON SEQUENCE "public"."collections_id_seq" TO "authenticated";
+GRANT ALL ON SEQUENCE "public"."collections_id_seq" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."collections" TO "anon";
+GRANT ALL ON TABLE "public"."collections" TO "authenticated";
+GRANT ALL ON TABLE "public"."collections" TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."pieces"("collection" "public"."collections") TO "anon";
+GRANT ALL ON FUNCTION "public"."pieces"("collection" "public"."collections") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."pieces"("collection" "public"."collections") TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."search_pieces"("query" "text") TO "anon";
+GRANT ALL ON FUNCTION "public"."search_pieces"("query" "text") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."search_pieces"("query" "text") TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."search_user_pieces"("query" "text") TO "anon";
+GRANT ALL ON FUNCTION "public"."search_user_pieces"("query" "text") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."search_user_pieces"("query" "text") TO "service_role";
 
 
 
@@ -1581,6 +1473,12 @@ GRANT ALL ON FUNCTION "public"."update_piece_searchable_text"() TO "service_role
 
 
 
+GRANT ALL ON FUNCTION "public"."update_practice_stats"() TO "anon";
+GRANT ALL ON FUNCTION "public"."update_practice_stats"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."update_practice_stats"() TO "service_role";
+
+
+
 GRANT ALL ON FUNCTION "public"."word_similarity"("text", "text") TO "postgres";
 GRANT ALL ON FUNCTION "public"."word_similarity"("text", "text") TO "anon";
 GRANT ALL ON FUNCTION "public"."word_similarity"("text", "text") TO "authenticated";
@@ -1622,34 +1520,6 @@ GRANT ALL ON FUNCTION "public"."word_similarity_op"("text", "text") TO "service_
 
 
 
-GRANT SELECT ON TABLE "imslp"."collection_pieces" TO "authenticated";
-GRANT ALL ON TABLE "imslp"."collection_pieces" TO "service_role";
-
-
-
-GRANT SELECT ON TABLE "imslp"."collections" TO "authenticated";
-GRANT ALL ON TABLE "imslp"."collections" TO "service_role";
-
-
-
-GRANT ALL ON TABLE "public"."movements" TO "anon";
-GRANT ALL ON TABLE "public"."movements" TO "authenticated";
-GRANT ALL ON TABLE "public"."movements" TO "service_role";
-
-
-
-GRANT ALL ON SEQUENCE "public"."movements_id_seq" TO "anon";
-GRANT ALL ON SEQUENCE "public"."movements_id_seq" TO "authenticated";
-GRANT ALL ON SEQUENCE "public"."movements_id_seq" TO "service_role";
-
-
-
-GRANT ALL ON TABLE "imslp"."movements" TO "authenticated";
-GRANT ALL ON TABLE "imslp"."movements" TO "service_role";
-GRANT ALL ON TABLE "imslp"."movements" TO "anon";
-
-
-
 
 
 
@@ -1665,6 +1535,24 @@ GRANT ALL ON SEQUENCE "public"."composers_id_seq" TO "service_role";
 
 
 
+GRANT ALL ON TABLE "public"."movements" TO "anon";
+GRANT ALL ON TABLE "public"."movements" TO "authenticated";
+GRANT ALL ON TABLE "public"."movements" TO "service_role";
+
+
+
+GRANT ALL ON SEQUENCE "public"."movements_id_seq" TO "anon";
+GRANT ALL ON SEQUENCE "public"."movements_id_seq" TO "authenticated";
+GRANT ALL ON SEQUENCE "public"."movements_id_seq" TO "service_role";
+
+
+
+GRANT ALL ON SEQUENCE "public"."pieces_id_seq" TO "anon";
+GRANT ALL ON SEQUENCE "public"."pieces_id_seq" TO "authenticated";
+GRANT ALL ON SEQUENCE "public"."pieces_id_seq" TO "service_role";
+
+
+
 GRANT ALL ON TABLE "public"."practice_sessions" TO "anon";
 GRANT ALL ON TABLE "public"."practice_sessions" TO "authenticated";
 GRANT ALL ON TABLE "public"."practice_sessions" TO "service_role";
@@ -1674,17 +1562,6 @@ GRANT ALL ON TABLE "public"."practice_sessions" TO "service_role";
 GRANT ALL ON SEQUENCE "public"."practice_sessions_id_seq" TO "anon";
 GRANT ALL ON SEQUENCE "public"."practice_sessions_id_seq" TO "authenticated";
 GRANT ALL ON SEQUENCE "public"."practice_sessions_id_seq" TO "service_role";
-
-
-
-GRANT ALL ON TABLE "public"."user_unique_piece_sessions_v" TO "anon";
-GRANT ALL ON TABLE "public"."user_unique_piece_sessions_v" TO "authenticated";
-GRANT ALL ON TABLE "public"."user_unique_piece_sessions_v" TO "service_role";
-
-
-
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "imslp" GRANT SELECT ON TABLES  TO "authenticated";
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "imslp" GRANT ALL ON TABLES  TO "service_role";
 
 
 
