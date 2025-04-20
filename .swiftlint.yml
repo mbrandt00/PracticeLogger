@@ -4,4 +4,9 @@ disabled_rules:
   - file_length
   - type_body_length
   - cyclomatic_complexity
+  - trailing_comma
 
+excluded:
+  - ApolloGQL
+  - Sources
+  - Generated

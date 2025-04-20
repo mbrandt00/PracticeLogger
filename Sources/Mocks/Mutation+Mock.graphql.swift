@@ -1,30 +1,30 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import ApolloTestSupport
 import ApolloGQL
+import ApolloTestSupport
 
 public class Mutation: MockObject {
-  public static let objectType: ApolloAPI.Object = ApolloGQL.Objects.Mutation
-  public static let _mockFields = MockFields()
-  public typealias MockValueCollectionType = Array<Mock<Mutation>>
+    public static let objectType: ApolloAPI.Object = ApolloGQL.Objects.Mutation
+    public static let _mockFields = MockFields()
+    public typealias MockValueCollectionType = [Mock<Mutation>]
 
-  public struct MockFields {
-    @Field<MovementsInsertResponse>("insertIntoMovementsCollection") public var insertIntoMovementsCollection
-    @Field<PiecesInsertResponse>("insertIntoPiecesCollection") public var insertIntoPiecesCollection
-    @Field<PracticeSessionsInsertResponse>("insertIntoPracticeSessionsCollection") public var insertIntoPracticeSessionsCollection
-  }
+    public struct MockFields {
+        @Field<MovementsInsertResponse>("insertIntoMovementsCollection") public var insertIntoMovementsCollection
+        @Field<PiecesInsertResponse>("insertIntoPiecesCollection") public var insertIntoPiecesCollection
+        @Field<PracticeSessionsInsertResponse>("insertIntoPracticeSessionsCollection") public var insertIntoPracticeSessionsCollection
+    }
 }
 
 public extension Mock where O == Mutation {
-  convenience init(
-    insertIntoMovementsCollection: Mock<MovementsInsertResponse>? = nil,
-    insertIntoPiecesCollection: Mock<PiecesInsertResponse>? = nil,
-    insertIntoPracticeSessionsCollection: Mock<PracticeSessionsInsertResponse>? = nil
-  ) {
-    self.init()
-    _setEntity(insertIntoMovementsCollection, for: \.insertIntoMovementsCollection)
-    _setEntity(insertIntoPiecesCollection, for: \.insertIntoPiecesCollection)
-    _setEntity(insertIntoPracticeSessionsCollection, for: \.insertIntoPracticeSessionsCollection)
-  }
+    convenience init(
+        insertIntoMovementsCollection: Mock<MovementsInsertResponse>? = nil,
+        insertIntoPiecesCollection: Mock<PiecesInsertResponse>? = nil,
+        insertIntoPracticeSessionsCollection: Mock<PracticeSessionsInsertResponse>? = nil
+    ) {
+        self.init()
+        _setEntity(insertIntoMovementsCollection, for: \.insertIntoMovementsCollection)
+        _setEntity(insertIntoPiecesCollection, for: \.insertIntoPiecesCollection)
+        _setEntity(insertIntoPracticeSessionsCollection, for: \.insertIntoPracticeSessionsCollection)
+    }
 }

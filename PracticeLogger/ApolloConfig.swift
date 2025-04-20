@@ -1,5 +1,5 @@
 //
-//  Apollo.swift
+//  ApolloConfig.swift
 //  PracticeLogger
 //
 //  Created by Michael Brandt on 9/28/24.

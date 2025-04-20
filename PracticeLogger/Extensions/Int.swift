@@ -19,7 +19,7 @@ extension Int {
             31: "XXXI", 32: "XXXII", 33: "XXXIII", 34: "XXXIV", 35: "XXXV",
             36: "XXXVI", 37: "XXXVII", 38: "XXXVIII", 39: "XXXIX", 40: "XL",
             41: "XLI", 42: "XLII", 43: "XLIII", 44: "XLIV", 45: "XLV",
-            46: "XLVI", 47: "XLVII", 48: "XLVIII", 49: "XLIX", 50: "L"
+            46: "XLVI", 47: "XLVII", 48: "XLVIII", 49: "XLIX", 50: "L",
         ]
         return numberToRoman[self]
     }

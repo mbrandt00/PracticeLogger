@@ -17,7 +17,7 @@ extension Foundation.Date: CustomScalarType {
             "yyyy-MM-dd'T'HH:mm:ssZ", // With timezone (like 2025-03-02T04:13:06+00:00)
             "yyyy-MM-dd'T'HH:mm:ss.SSSZ", // With milliseconds and timezone
             "yyyy-MM-dd'T'HH:mm:ss", // Without timezone (like 2025-03-02T04:13:06)
-            "yyyy-MM-dd'T'HH:mm:ss.SSS" // With milliseconds, without timezone
+            "yyyy-MM-dd'T'HH:mm:ss.SSS", // With milliseconds, without timezone
         ]
 
         return formats.map { format in

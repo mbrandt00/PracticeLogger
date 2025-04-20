@@ -56,7 +56,7 @@ extension CollectionPieceWithFallbackQuery.Data.CollectionPiecesWithFallbackColl
                     userId: nil // Default piece, not user-specific
                 ),
                 composer: Edge.Node.Composer(name: "Sergei Rachmaninoff")
-            )
+            ),
         ]
 
         // Create the edges using the nodes

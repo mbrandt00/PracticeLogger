@@ -31,8 +31,6 @@ class PieceEditViewModel: ObservableObject {
     }
 
     func updateMovement(at index: Int, newName: String) {
-        let movements = self.editablePiece.movements
-
         // Update directly on the existing array
         self.editablePiece.movements[index].name = newName
 
@@ -190,7 +188,7 @@ extension EditablePiece {
 
     func toGraphQLUpdateInput() -> PieceUpdateInput {
         return PieceUpdateInput(
-            workName: self.workName != nil ? .some(self.workName) : .null,
+            workName: .some(self.workName),
             composerId: self.composerId != nil ? .some(self.composerId!) : .null,
             nickname: self.nickname != nil ? .some(self.nickname!) : .null,
             format: self.format != nil ? .some(self.format!) : .null,

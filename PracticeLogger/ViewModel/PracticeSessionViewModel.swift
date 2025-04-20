@@ -22,12 +22,12 @@ class PracticeSessionViewModel: ObservableObject {
         _ = try await withCheckedThrowingContinuation { continuation in
             Network.shared.apollo.perform(mutation: CreatePracticeSessionMutation(input: graphqlInsertObject)) { result in
                 switch result {
-                case .success(let graphqlResult):
+                case let .success(graphqlResult):
                     if let insertedPiece = graphqlResult.data?.insertIntoPracticeSessionsCollection?.records.first {
                         self.activeSession = insertedPiece.fragments.practiceSessionDetails
                         continuation.resume(returning: insertedPiece)
                     }
-                case .failure(let error):
+                case let .failure(error):
                     print("error in starting session", error)
                     continuation.resume(throwing: RuntimeError(error.localizedDescription))
                 }
@@ -41,20 +41,21 @@ class PracticeSessionViewModel: ObservableObject {
         return try await withCheckedThrowingContinuation { continuation in
             Network.shared.apollo.fetch(query: RecentUserSessionsQuery(userId: userId)) { result in
                 switch result {
-                case .success(let graphQlResult):
+                case let .success(graphQlResult):
                     if let practiceSessions = graphQlResult.data?.practiceSessionsCollection?.edges {
                         self.recentSessions = practiceSessions
                         continuation.resume(returning: practiceSessions)
                     } else {
                         continuation.resume(returning: [])
                     }
-                case .failure(let error):
+                case let .failure(error):
                     continuation.resume(throwing: error)
                 }
             }
         }
     }
 
+    @MainActor
     func stopSession() async {
         do {
             _ = try await Database.client
@@ -62,9 +63,7 @@ class PracticeSessionViewModel: ObservableObject {
                 .update(["end_time": Date()])
                 .eq("id", value: activeSession?.id)
                 .execute()
-            DispatchQueue.main.async {
-                self.activeSession = nil
-            }
+            activeSession = nil
         } catch {
             print("Error updating end_time: \(error)")
         }
@@ -76,7 +75,7 @@ class PracticeSessionViewModel: ObservableObject {
         return try await withCheckedThrowingContinuation { continuation in
             Network.shared.apollo.fetch(query: ActiveUserSessionQuery(userId: userId)) { result in
                 switch result {
-                case .success(let graphQlResult):
+                case let .success(graphQlResult):
                     if let currentlyActiveSession = graphQlResult.data?.practiceSessionsCollection?.edges.first?.node.fragments.practiceSessionDetails {
                         self.activeSession = currentlyActiveSession
 
@@ -85,7 +84,7 @@ class PracticeSessionViewModel: ObservableObject {
                         // Resume with nil if no sessions found
                         continuation.resume(returning: nil)
                     }
-                case .failure(let error):
+                case let .failure(error):
                     print("GraphQL query failed: \(error)")
                     continuation.resume(throwing: error)
                 }

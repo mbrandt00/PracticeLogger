@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PracticeSessionView: View {
     var session: RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge
-    
+
     private var formattedDuration: String {
         if let seconds = session.node.durationSeconds {
             let minutes = seconds / 60
@@ -20,7 +20,7 @@ struct PracticeSessionView: View {
             return "Unknown"
         }
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
             HStack(alignment: .top, spacing: 16) {
@@ -29,31 +29,31 @@ struct PracticeSessionView: View {
                     Circle()
                         .fill(session.node.endTime == nil ? Color.green : Color.secondary)
                         .frame(width: 8, height: 8)
-                    
+
                     Text(formattedDuration)
                         .font(.callout)
                         .foregroundStyle(session.node.endTime == nil ? .green : .secondary)
                         .frame(width: 80)
                 }
-                
+
                 // Piece and movement info
                 VStack(alignment: .leading, spacing: 6) {
                     Text(session.node.piece.workName)
                         .font(.headline)
                         .lineLimit(2)
-                    
+
                     if let composer = session.node.piece.composer?.name {
                         Text(composer)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
-                    
+
                     if let movement = session.node.movement?.name {
                         Text(movement)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
-                    
+
                     // Time details
                     HStack(spacing: 8) {
                         HStack(spacing: 4) {
@@ -61,7 +61,7 @@ struct PracticeSessionView: View {
                                 .font(.caption)
                             Text(session.node.startTime.formatted(date: .omitted, time: .shortened))
                         }
-                        
+
                         if let endTime = session.node.endTime {
                             Text("→")
                             Text(endTime.formatted(date: .omitted, time: .shortened))
@@ -70,11 +70,11 @@ struct PracticeSessionView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 }
-                
+
                 Spacer()
             }
             .padding()
-            
+
             Divider()
         }
         .background(Color(uiColor: .systemBackground))
@@ -102,7 +102,7 @@ struct PracticeSessionView: View {
                 movement: .init(name: "I. Adagio sostenuto")
             )
         ))
-        
+
         // In-progress session
         PracticeSessionView(session: .init(
             node: .init(
@@ -120,7 +120,7 @@ struct PracticeSessionView: View {
                 movement: nil
             )
         ))
-        
+
         // Long piece name with full session details
         PracticeSessionView(session: .init(
             node: .init(
@@ -168,7 +168,7 @@ extension RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.Node {
                 "durationSeconds": durationSeconds,
                 "piece": piece._fieldData,
                 "endTime": endTime,
-                "movement": movement._fieldData
+                "movement": movement._fieldData,
             ],
             fulfilledFragments: []
         ))
@@ -189,7 +189,7 @@ extension RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.Node.Piec
                 "id": id,
                 "workName": workName,
                 "catalogueTypeNumDesc": catalogueTypeNumDesc,
-                "composer": composer._fieldData
+                "composer": composer._fieldData,
             ],
             fulfilledFragments: [ObjectIdentifier(PieceDetails.self)]
         ))

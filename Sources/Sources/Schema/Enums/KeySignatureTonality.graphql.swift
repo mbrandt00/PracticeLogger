@@ -4,6 +4,6 @@
 import ApolloAPI
 
 public enum KeySignatureTonality: String, EnumType {
-  case major = "major"
-  case minor = "minor"
+    case major
+    case minor
 }

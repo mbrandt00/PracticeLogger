@@ -6,4 +6,4 @@
 //
 import ApolloGQL
 
-extension PieceDetails: Identifiable {}
+extension PieceDetails: @retroactive Identifiable {}

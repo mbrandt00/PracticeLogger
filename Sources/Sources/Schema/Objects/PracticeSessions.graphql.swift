@@ -4,8 +4,8 @@
 import ApolloAPI
 
 public extension Objects {
-  static let PracticeSessions = ApolloAPI.Object(
-    typename: "PracticeSessions",
-    implementedInterfaces: [Interfaces.Node.self]
-  )
+    static let PracticeSessions = ApolloAPI.Object(
+        typename: "PracticeSessions",
+        implementedInterfaces: [Interfaces.Node.self]
+    )
 }

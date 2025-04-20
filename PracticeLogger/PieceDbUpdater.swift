@@ -1,5 +1,5 @@
 //
-//  PieceUpdater.swift
+//  PieceDbUpdater.swift
 //  PracticeLogger
 //
 //  Created on 3/15/25.
@@ -12,19 +12,19 @@ class PieceDbUpdater {
     private let pieceId: ApolloGQL.BigInt?
     private var attempts = 0
     private let maxAttempts = 2
-    
+
     /// Initialize with an EditablePiece for insert operations
     init(piece: EditablePiece) {
         self.piece = piece
-        self.pieceId = nil
+        pieceId = nil
     }
-    
+
     /// Initialize with a pieceId and EditablePiece for update operations
     init(pieceId: ApolloGQL.BigInt, piece: EditablePiece) {
         self.piece = piece
         self.pieceId = pieceId
     }
-    
+
     /// Save the piece - automatically determines whether to insert or update
     func save() async throws -> PieceDetails {
         do {
@@ -39,64 +39,64 @@ class PieceDbUpdater {
             attempts += 1
             if attempts < maxAttempts {
                 print("🔵 Schema mismatch detected, clearing cache and retrying...")
-                try await Network.shared.apollo.clearCache()
-                return try await save() // Recursive retry
+                Network.shared.apollo.clearCache()
+                return try await save()
             }
             throw error
         }
     }
-    
+
     // MARK: - Insert Operations
-    
+
     private func insertPiece() async throws -> PieceDetails {
         let inputObject = try await piece.toGraphQLInput()
         print("🔵 Inserting piece:", inputObject)
-        
+
         let pieceDetails = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<PieceDetails, Error>) in
             apollo.perform(mutation: InsertNewPieceMutation(input: [inputObject])) { result in
                 switch result {
-                case .success(let graphQlResult):
+                case let .success(graphQlResult):
                     if let errors = graphQlResult.errors {
                         let errorMessage = errors.map { $0.message ?? "" }.joined(separator: ", ")
                         continuation.resume(throwing: RuntimeError("GraphQL errors: \(errorMessage)"))
                         return
                     }
-                    
+
                     guard let collection = graphQlResult.data?.insertIntoPieceCollection else {
                         continuation.resume(throwing: RuntimeError("Missing insertIntoPiecesCollection in response"))
                         return
                     }
-                    
+
                     guard !collection.records.isEmpty else {
                         continuation.resume(throwing: RuntimeError("No records returned from insertion"))
                         return
                     }
-                    
+
                     guard let insertedPiece = collection.records.first else {
                         continuation.resume(throwing: RuntimeError("Failed to get inserted piece from records"))
                         return
                     }
-                    
+
                     continuation.resume(returning: insertedPiece.fragments.pieceDetails)
-                    
-                case .failure(let error):
+
+                case let .failure(error):
                     continuation.resume(throwing: RuntimeError("Failed to insert piece: \(error.localizedDescription)"))
                 }
             }
         }
-        
+
         // Only insert movements if there are any
         if !piece.movements.isEmpty {
             return try await insertMovements(forPieceId: pieceDetails.id)
         }
-        
+
         return pieceDetails
     }
-    
+
     private func insertMovements(forPieceId pieceId: ApolloGQL.BigInt) async throws -> PieceDetails {
         let movementsInput = piece.movements.map { movement in
             MovementInsertInput(
-                pieceId: pieceId != nil ? .some(pieceId) : .null,
+                pieceId: .some(pieceId),
                 name: movement.name != nil ? .some(movement.name!) : .null,
                 number: movement.number != nil ? .some(movement.number!) : .null,
                 keySignature: movement.keySignature != nil ? .some(movement.keySignature!) : .null,
@@ -104,11 +104,11 @@ class PieceDbUpdater {
                 downloadUrl: movement.downloadUrl != nil ? .some(movement.downloadUrl!) : .null
             )
         }
-        
+
         return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<PieceDetails, Error>) in
             apollo.perform(mutation: CreateMovementsMutation(input: movementsInput)) { result in
                 switch result {
-                case .success(let movementResult):
+                case let .success(movementResult):
                     if let errors = movementResult.errors {
                         if let error = errors.first {
                             continuation.resume(throwing: RuntimeError("""
@@ -119,61 +119,61 @@ class PieceDbUpdater {
                         }
                         return
                     }
-                    
+
                     self.fetchPieceDetails(pieceId, continuation: continuation)
-                    
-                case .failure(let error):
+
+                case let .failure(error):
                     continuation.resume(throwing: error)
                 }
             }
         }
     }
-    
+
     // MARK: - Update Operations
-    
+
     private func updatePiece(pieceId: ApolloGQL.BigInt) async throws -> PieceDetails {
         let updateInput = piece.toGraphQLUpdateInput()
         let filter = GraphQLNullable(PieceFilter(id: .some(BigIntFilter(eq: .some(pieceId)))))
 
         print("🔵 Updating piece \(pieceId):", updateInput)
-        
+
         let pieceDetails = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<PieceDetails, Error>) in
             apollo.perform(mutation: UpdatePieceMutation(set: updateInput, filter: filter)) { result in
                 switch result {
-                case .success(let graphQlResult):
+                case let .success(graphQlResult):
                     if let errors = graphQlResult.errors {
                         let errorMessage = errors.map { $0.message ?? "" }.joined(separator: ", ")
                         continuation.resume(throwing: RuntimeError("GraphQL errors: \(errorMessage)"))
                         return
                     }
-                    
+
                     guard let collection = graphQlResult.data?.updatePieceCollection else {
                         continuation.resume(throwing: RuntimeError("Missing updatePieceCollection in response"))
                         return
                     }
-                    
+
                     guard !collection.records.isEmpty else {
                         continuation.resume(throwing: RuntimeError("No records returned from update"))
                         return
                     }
-                    
+
                     guard let updatedPiece = collection.records.first else {
                         continuation.resume(throwing: RuntimeError("Failed to get updated piece from records"))
                         return
                     }
-                    
+
                     continuation.resume(returning: updatedPiece.fragments.pieceDetails)
-                    
-                case .failure(let error):
+
+                case let .failure(error):
                     continuation.resume(throwing: RuntimeError("Failed to update piece: \(error.localizedDescription)"))
                 }
             }
         }
-        
+
         // Handle movements update
         return try await updateMovements(forPieceDetails: pieceDetails)
     }
-    
+
     private func updateMovements(forPieceDetails pieceDetails: PieceDetails) async throws -> PieceDetails {
         // First, let's fetch existing movements to determine what needs to be updated or created
         let existingMovementEdges = pieceDetails.movements?.edges ?? []
@@ -213,57 +213,57 @@ class PieceDbUpdater {
 
         return try await fetchPieceDetails(pieceDetails.id)
     }
-    
+
     private func updateMovement(set: MovementUpdateInput, filter: GraphQLNullable<MovementFilter>) async throws {
         return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             apollo.perform(mutation: UpdateMovementsMutation(set: set, filter: filter)) { result in
 
                 switch result {
-                case .success(let graphQlResult):
+                case let .success(graphQlResult):
                     if let errors = graphQlResult.errors {
                         let errorMessage = errors.map { $0.message ?? "" }.joined(separator: ", ")
                         continuation.resume(throwing: RuntimeError("GraphQL errors updating movement: \(errorMessage)"))
                         return
                     }
-                    
+
                     continuation.resume(returning: ())
-                    
-                case .failure(let error):
+
+                case let .failure(error):
                     continuation.resume(throwing: RuntimeError("Failed to update movement: \(error.localizedDescription)"))
                 }
             }
         }
     }
-    
+
     private func insertNewMovements(inputs: [MovementInsertInput]) async throws {
         return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             apollo.perform(mutation: CreateMovementsMutation(input: inputs)) { result in
                 switch result {
-                case .success(let graphQlResult):
+                case let .success(graphQlResult):
                     if let errors = graphQlResult.errors {
                         let errorMessage = errors.map { $0.message ?? "" }.joined(separator: ", ")
                         continuation.resume(throwing: RuntimeError("GraphQL errors inserting movements: \(errorMessage)"))
                         return
                     }
-                    
+
                     continuation.resume(returning: ())
-                    
-                case .failure(let error):
+
+                case let .failure(error):
                     continuation.resume(throwing: RuntimeError("Failed to insert movements: \(error.localizedDescription)"))
                 }
             }
         }
     }
-    
+
     // MARK: - Shared Utilities
-    
+
     private func fetchPieceDetails(_ pieceId: ApolloGQL.BigInt, continuation: CheckedContinuation<PieceDetails, Error>? = nil) {
         apollo.fetch(query: PiecesQuery(
             pieceFilter: PieceFilter(
                 id: .some(BigIntFilter(eq: .some(pieceId))))
         ), cachePolicy: .fetchIgnoringCacheData) { result in
             switch result {
-            case .success(let pieceResult):
+            case let .success(pieceResult):
                 if let completePiece = pieceResult.data?.pieceCollection?.edges.first {
                     if let continuation = continuation {
                         continuation.resume(returning: completePiece.node.fragments.pieceDetails)
@@ -273,14 +273,15 @@ class PieceDbUpdater {
                         continuation.resume(throwing: RuntimeError("Complete piece not found"))
                     }
                 }
-            case .failure(let error):
+
+            case let .failure(error):
                 if let continuation = continuation {
                     continuation.resume(throwing: error)
                 }
             }
         }
     }
-    
+
     private func fetchPieceDetails(_ pieceId: ApolloGQL.BigInt) async throws -> PieceDetails {
         return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<PieceDetails, Error>) in
             fetchPieceDetails(pieceId, continuation: continuation)

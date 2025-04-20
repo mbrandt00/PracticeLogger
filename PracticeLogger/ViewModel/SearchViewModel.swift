@@ -13,7 +13,6 @@ import Foundation
 
 class SearchViewModel: ObservableObject {
     @Published var searchTerm = ""
-    @Published var selectedKeySignature: KeySignatureType?
     @Published var userPieces: [PieceDetails] = []
     @Published var newPieces: [PieceDetails] = []
     @Published var selectedPiece: PieceDetails?
@@ -21,33 +20,10 @@ class SearchViewModel: ObservableObject {
     func searchPieces() async {
         do {
             if !searchTerm.isEmpty {
-                // First get the user's pieces
                 userPieces = try await getUserPieces() ?? []
 
-                // Then get the new pieces
                 newPieces = try await searchNewPieces() ?? []
 
-//                // Create a set of IMSLP URLs that the user already has
-//                let userImslpUrls = Set(userPieces.compactMap { piece in
-//                    // We want to collect imslpUrl values from user pieces that aren't IMSLP pieces themselves
-//                    // but reference IMSLP pieces
-//                    if let isImslp = piece.isImslp, !isImslp {
-//                        return piece.imslpUrl
-//                    }
-//                    return nil
-//                })
-
-//                // Filter out pieces that the user already has
-//                newPieces = allNewPieces.filter { piece in
-//                    // Keep the piece only if its imslpUrl is not in the user's pieces
-//                    if let imslpUrl = piece.imslpUrl {
-//                        return !userImslpUrls.contains(imslpUrl)
-//                    }
-//                    // If the piece doesn't have an imslpUrl, keep it
-//                    return true
-//                }
-
-                print("new Pieces", newPieces)
             } else {
                 userPieces = try await getRecentUserPieces(forceFetch: true) ?? []
                 newPieces = []
@@ -74,7 +50,7 @@ class SearchViewModel: ObservableObject {
                 cachePolicy: fetchPolicy
             ) { result in
                 switch result {
-                case .success(let graphQlResult):
+                case let .success(graphQlResult):
                     if let data = graphQlResult.data?.pieceCollection {
                         let pieces = data.edges.map { edge in
                             edge.node.fragments.pieceDetails
@@ -83,7 +59,7 @@ class SearchViewModel: ObservableObject {
                     } else {
                         continuation.resume(returning: nil)
                     }
-                case .failure(let error):
+                case let .failure(error):
                     print("Error fetching recent pieces: \(error)")
                     continuation.resume(throwing: error)
                 }
@@ -103,7 +79,7 @@ class SearchViewModel: ObservableObject {
             ))
             Network.shared.apollo.fetch(query: SearchPiecesQuery(query: searchTerm, pieceFilter: filter, orderBy: orderBy)) { result in
                 switch result {
-                case .success(let graphQlResult):
+                case let .success(graphQlResult):
                     if let data = graphQlResult.data?.searchPieces {
                         let pieces = data.edges.map { edge in
                             edge.node.fragments.pieceDetails
@@ -112,7 +88,7 @@ class SearchViewModel: ObservableObject {
                     } else {
                         continuation.resume(returning: nil)
                     }
-                case .failure(let error):
+                case let .failure(error):
                     print(error)
                     continuation.resume(throwing: error)
                 }
@@ -121,7 +97,7 @@ class SearchViewModel: ObservableObject {
     }
 
     func searchNewPieces() async throws -> [PieceDetails]? {
-        guard let userId = Database.client.auth.currentUser?.id else {
+        guard (Database.client.auth.currentUser?.id) != nil else {
             return []
         }
         return try await withCheckedThrowingContinuation { continuation in
@@ -129,7 +105,7 @@ class SearchViewModel: ObservableObject {
             let orderBy: GraphQLNullable<[PieceOrderBy]> = .some([PieceOrderBy(catalogueNumber: .some(direction))])
             Network.shared.apollo.fetch(query: SearchPiecesQuery(query: searchTerm, orderBy: orderBy)) { result in
                 switch result {
-                case .success(let graphQlResult):
+                case let .success(graphQlResult):
                     if let data = graphQlResult.data?.searchPieces {
                         let pieces = data.edges.map { edge in
                             edge.node.fragments.pieceDetails
@@ -138,7 +114,7 @@ class SearchViewModel: ObservableObject {
                     } else {
                         continuation.resume(returning: [])
                     }
-                case .failure(let error):
+                case let .failure(error):
                     print(error)
                     continuation.resume(throwing: error)
                 }

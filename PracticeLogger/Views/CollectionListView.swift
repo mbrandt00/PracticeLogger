@@ -57,9 +57,9 @@ struct CollectionListView: View {
     init(collectionId: ApolloGQL.BigInt, collectionName: String, onPieceChanged: ((PieceDetails) -> Void)? = nil) {
         self.collectionId = collectionId
         self.collectionName = collectionName
-        self._isLoading = State(initialValue: true)
-        self.navigatePieceShow = onPieceChanged
-        self._collectionInformation = State(initialValue: [])
+        _isLoading = State(initialValue: true)
+        navigatePieceShow = onPieceChanged
+        _collectionInformation = State(initialValue: [])
     }
 
     // Preview initializer
@@ -96,40 +96,9 @@ struct CollectionListView: View {
                                     selectedPieceForShow = tappedPiece
                                     navigatePieceShow?(tappedPiece)
                                 }
-                            }) {
-                                HStack {
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text(item.node.workName)
-                                            .font(.headline)
-                                            .foregroundColor(.primary)
-
-                                        if let catalogueType = item.node.catalogueType,
-                                           let catalogueNumber = item.node.catalogueNumber
-                                        {
-                                            Text("\(catalogueType.displayName) \(catalogueNumber)")
-                                                .foregroundColor(.secondary)
-                                                .font(.subheadline)
-                                        }
-                                    }
-
-                                    Spacer()
-
-                                    if item.node.userId == nil {
-                                        Image(systemName: "plus.rectangle")
-                                            .foregroundColor(.gray)
-                                    } else if let totalPracticeTime = item.node.totalPracticeTime {
-                                        Text("\(totalPracticeTime.formattedTimeDuration) practiced")
-                                            .foregroundColor(.secondary)
-                                            .font(.footnote)
-                                    } else {
-                                        NewItemBadge()
-                                    }
-                                }
-                                .padding(.vertical, 8)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .contentShape(Rectangle())
-                            }
-                            .buttonStyle(PlainButtonStyle())
+                            }, label: {
+                                pieceRow(for: item)
+                            })
                         }
                     }
                 }
@@ -162,6 +131,43 @@ struct CollectionListView: View {
         }
     }
 
+    @ViewBuilder
+    private func pieceRow(for item: CollectionsQuery.Data.CollectionsCollection.Edge.Node.Pieces.Edge) -> some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(item.node.workName)
+                    .font(.headline)
+                    .foregroundColor(.primary)
+
+                let catalogueType = item.node.catalogueType
+                let catalogueNumber = item.node.catalogueNumber
+
+                if let catalogueType, let catalogueNumber {
+                    Text("\(catalogueType.displayName) \(catalogueNumber)")
+                        .foregroundColor(.secondary)
+                        .font(.subheadline)
+                }
+            }
+
+            Spacer()
+
+            if item.node.userId == nil {
+                Image(systemName: "plus.rectangle")
+                    .foregroundColor(.gray)
+            } else if let totalPracticeTime = item.node.totalPracticeTime {
+                Text("\(totalPracticeTime.formattedTimeDuration) practiced")
+                    .foregroundColor(.secondary)
+                    .font(.footnote)
+            } else {
+                NewItemBadge()
+            }
+        }
+        .padding(.vertical, 8)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
+        .buttonStyle(PlainButtonStyle())
+    }
+
     private func loadCollectionData(forceRefresh: Bool = false) async {
         do {
             collectionInformation = try await withCheckedThrowingContinuation { continuation in
@@ -173,13 +179,14 @@ struct CollectionListView: View {
                     cachePolicy: policy
                 ) { result in
                     switch result {
-                    case .success(let graphQLResult):
+                    case let .success(graphQLResult):
                         if let collection = graphQLResult.data?.collectionsCollection?.edges {
                             continuation.resume(returning: collection)
                         } else {
                             continuation.resume(returning: [])
                         }
-                    case .failure(let error):
+
+                    case let .failure(error):
                         continuation.resume(throwing: error)
                     }
                 }

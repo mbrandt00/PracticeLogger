@@ -45,7 +45,7 @@ class NetworkInterceptorProvider: InterceptorProvider {
         self.client = client
     }
 
-    func interceptors<Operation: GraphQLOperation>(for operation: Operation) -> [ApolloInterceptor] {
+    func interceptors<Operation: GraphQLOperation>(for _: Operation) -> [ApolloInterceptor] {
         return [
             AuthorizationInterceptor(),
             MaxRetryInterceptor(),

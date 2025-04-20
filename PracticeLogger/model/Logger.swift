@@ -14,9 +14,12 @@ extension Logger {
 }
 
 @Observable
-final class LogStore: SupabaseLogger {
+final class LogStore: SupabaseLogger, @unchecked Sendable {
     private let lock = NSLock()
+
+    @ObservationIgnored
     private var loggers: [String: Logger] = [:]
+
     private var currentTaskID: UUID = .init()
 
     static let shared = LogStore()

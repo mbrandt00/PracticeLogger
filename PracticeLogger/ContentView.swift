@@ -25,8 +25,8 @@ struct ContentView: View {
     @StateObject private var uiState = UIState()
 
     init(isSignedIn: Binding<Bool>, practiceSessionViewModel: PracticeSessionViewModel = PracticeSessionViewModel()) {
-        self._isSignedIn = isSignedIn
-        self._practiceSessionViewModel = StateObject(wrappedValue: practiceSessionViewModel)
+        _isSignedIn = isSignedIn
+        _practiceSessionViewModel = StateObject(wrappedValue: practiceSessionViewModel)
     }
 
     private var shouldShowBottomSheet: Bool {

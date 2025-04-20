@@ -4,9 +4,9 @@
 import ApolloAPI
 
 public extension Objects {
-  /// The root type for querying data
-  static let Query = ApolloAPI.Object(
-    typename: "Query",
-    implementedInterfaces: []
-  )
+    /// The root type for querying data
+    static let Query = ApolloAPI.Object(
+        typename: "Query",
+        implementedInterfaces: []
+    )
 }

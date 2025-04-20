@@ -22,7 +22,7 @@ struct SearchView: View {
                     }
                 }
             }
-            
+
             if !searchViewModel.newPieces.isEmpty {
                 Section(header: Text("New Pieces")) {
                     ForEach(searchViewModel.newPieces, id: \.id) { piece in
@@ -43,7 +43,7 @@ struct SearchView: View {
             }
         }
     }
-    
+
     private func userPieceRow(_ piece: PieceDetails) -> some View {
         NavigationLink(value: PieceNavigationContext.userPiece(piece)) {
             RepertoireRow(
@@ -52,7 +52,7 @@ struct SearchView: View {
             )
         }
     }
-    
+
     private func newPieceRow(_ piece: PieceDetails) -> some View {
         Button {
             searchViewModel.selectedPiece = piece
@@ -60,29 +60,30 @@ struct SearchView: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text(piece.workName).font(.headline)
-                    
-                    if let catalogueNumber = piece.catalogueNumber,
-                       let catalogueType = piece.catalogueType
-                    {
-                        Text(catalogueType.displayName + " " + String(catalogueNumber))
+
+                    let catalogueNumber = piece.catalogueNumber
+                    let catalogueType = piece.catalogueType
+
+                    if let catalogueNumber, let catalogueType {
+                        Text("\(catalogueType.displayName) \(catalogueNumber)")
                     }
-                    
+
                     if let composer = piece.composer {
                         Text(composer.name)
                             .font(.subheadline)
                             .foregroundColor(.gray)
                     }
                 }
-                
+
                 Spacer()
-                
+
                 Image(systemName: "plus.rectangle")
                     .foregroundColor(.gray)
             }
             .contentShape(Rectangle())
         }
     }
-    
+
     private func handlePieceCreated(_ piece: PieceDetails) async {
         path.append(PieceNavigationContext.userPiece(piece))
         await MainActor.run {
@@ -95,7 +96,7 @@ struct SearchView: View {
 struct RepertoireRow: View {
     var piece: PieceDetails
     var isActive: Bool = false
-    
+
     var body: some View {
         HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 4) {
@@ -103,24 +104,24 @@ struct RepertoireRow: View {
                     Text(piece.workName)
                         .font(.headline)
                         .lineLimit(1)
-                    
+
                     if isActive {
                         Image(systemName: "music.quarternote.3")
                             .foregroundStyle(Color.theme.accent.opacity(0.6))
                     }
-                    
+
                     if piece.lastPracticed == nil {
                         NewItemBadge()
                     }
                 }
-                
+
                 if let composerName = piece.composer?.name {
                     Text(composerName)
                         .font(.subheadline)
                         .foregroundColor(.gray)
                 }
             }
-            
+
             Spacer()
         }
     }
@@ -149,7 +150,7 @@ struct SearchView_Previews: PreviewProvider {
         let searchViewModel = SearchViewModel()
         searchViewModel.newPieces = []
         searchViewModel.userPieces = PieceDetails.allPreviews
-        
+
         let practiceSessionViewModel = PracticeSessionViewModel()
 
         return NavigationStack {
@@ -164,7 +165,7 @@ struct SearchView_Previews: PreviewProvider {
         let searchViewModel: SearchViewModel
         let practiceSessionViewModel: PracticeSessionViewModel
         @State private var path = NavigationPath()
-        
+
         var body: some View {
             SearchView(searchViewModel: searchViewModel, path: $path)
                 .environmentObject(practiceSessionViewModel)

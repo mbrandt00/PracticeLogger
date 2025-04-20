@@ -45,16 +45,16 @@ struct SignIn: View {
         .fixedSize()
 
         #if DEBUG
-        Button("Test Account") {
-            Task {
-                do {
-                    try await viewModel.signInWithEmail()
-                    isSignedIn = true
-                } catch {
-                    errorMessage = error.localizedDescription
+            Button("Test Account") {
+                Task {
+                    do {
+                        try await viewModel.signInWithEmail()
+                        isSignedIn = true
+                    } catch {
+                        errorMessage = error.localizedDescription
+                    }
                 }
             }
-        }
         #endif
         if !errorMessage.isEmpty {
             AlertToast(type: .error(.red), title: errorMessage)

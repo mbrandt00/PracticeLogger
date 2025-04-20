@@ -4,6 +4,6 @@
 import ApolloAPI
 
 public enum FilterIs: String, EnumType {
-  case null = "NULL"
-  case notNull = "NOT_NULL"
+    case null = "NULL"
+    case notNull = "NOT_NULL"
 }

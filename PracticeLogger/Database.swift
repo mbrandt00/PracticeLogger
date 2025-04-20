@@ -1,5 +1,5 @@
 //
-//  Supabase.swift
+//  Database.swift
 //  PracticeLogger
 //
 //  Created by Michael Brandt on 4/27/24.

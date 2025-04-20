@@ -9,7 +9,7 @@ import ApolloGQL
 
 extension GraphQLEnum where T == ApolloGQL.CatalogueType {
     var displayName: String {
-        let typeString = self.rawValue
+        let typeString = rawValue
 
         switch typeString {
         case "op": return "Op."

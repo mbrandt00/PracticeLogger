@@ -24,6 +24,6 @@ let package = Package(
                     package: "supabase-swift"
                 ),
             ]
-        )
+        ),
     ]
 )

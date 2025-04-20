@@ -4,8 +4,8 @@
 import ApolloAPI
 
 public extension Objects {
-  static let MovementsEdge = ApolloAPI.Object(
-    typename: "MovementsEdge",
-    implementedInterfaces: []
-  )
+    static let MovementsEdge = ApolloAPI.Object(
+        typename: "MovementsEdge",
+        implementedInterfaces: []
+    )
 }

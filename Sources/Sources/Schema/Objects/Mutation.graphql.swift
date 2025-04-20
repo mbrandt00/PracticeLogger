@@ -4,9 +4,9 @@
 import ApolloAPI
 
 public extension Objects {
-  /// The root type for creating and mutating data
-  static let Mutation = ApolloAPI.Object(
-    typename: "Mutation",
-    implementedInterfaces: []
-  )
+    /// The root type for creating and mutating data
+    static let Mutation = ApolloAPI.Object(
+        typename: "Mutation",
+        implementedInterfaces: []
+    )
 }

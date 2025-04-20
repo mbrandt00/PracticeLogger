@@ -19,7 +19,7 @@ struct PieceEdit: View {
     @State private var newMovementName = ""
     @State private var isAddingMovement = false
     @State private var isEditingMovements = false
-    @State private var editingMovementId: ApolloGQL.BigInt? = nil
+    @State private var editingMovementId: ApolloGQL.BigInt?
     var onPieceCreated: (@Sendable (PieceDetails) async -> Void)?
 
     init(piece: PieceDetails, isCreatingNewPiece: Bool, onPieceCreated: ((PieceDetails) async -> Void)? = nil) {
@@ -44,7 +44,7 @@ struct PieceEdit: View {
             catalogueSection
             instrumentationSection
             externalInformation
-            
+
             if duplicatePiece != nil {
                 Text("Duplicate Piece Found!")
                     .font(.subheadline)
@@ -58,7 +58,7 @@ struct PieceEdit: View {
             AlertToast(type: .error(.red), title: errorMessage)
         }
     }
-    
+
     private var nameFields: some View {
         Section("Name") {
             workNameField
@@ -66,7 +66,7 @@ struct PieceEdit: View {
             composerField
         }
     }
-    
+
     private var workNameField: some View {
         HStack {
             Text("Work Name")
@@ -77,7 +77,7 @@ struct PieceEdit: View {
                 .textFieldStyle(PlainTextFieldStyle())
         }
     }
-    
+
     private var nickNameField: some View {
         HStack {
             Text("Nickname")
@@ -94,7 +94,7 @@ struct PieceEdit: View {
             .fixedSize(horizontal: false, vertical: true)
         }
     }
-    
+
     public var composerField: some View {
         HStack {
             Text("Composer")
@@ -112,7 +112,7 @@ struct PieceEdit: View {
             .multilineTextAlignment(.trailing)
         }
     }
-    
+
     private var catalogueSection: some View {
         Section("Meta Attributes") {
             cataloguePicker
@@ -122,7 +122,7 @@ struct PieceEdit: View {
             compositionYearField
         }
     }
-    
+
     private var externalInformation: some View {
         Section("External Information") {
             HStack {
@@ -141,7 +141,7 @@ struct PieceEdit: View {
             }
         }
     }
-    
+
     private var instrumentationSection: some View {
         Section("Instrumentation") {
             ForEach(viewModel.editablePiece.instrumentation ?? [], id: \.self) { instrument in
@@ -150,16 +150,16 @@ struct PieceEdit: View {
                     Spacer()
                     Button(action: {
                         viewModel.editablePiece.instrumentation?.removeAll(where: { $0 == instrument })
-                    }) {
+                    }, label: {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundColor(.red)
-                    }
+                    })
                 }
             }
-            
+
             HStack {
                 TextField("Add instrument", text: $newInstrument)
-                
+
                 Button(action: {
                     guard !newInstrument.isEmpty else { return }
                     if viewModel.editablePiece.instrumentation == nil {
@@ -168,15 +168,15 @@ struct PieceEdit: View {
                         viewModel.editablePiece.instrumentation?.append(newInstrument)
                     }
                     newInstrument = ""
-                }) {
+                }, label: {
                     Image(systemName: "plus.circle.fill")
                         .foregroundColor(.accentColor)
-                }
-                .disabled(newInstrument.isEmpty)
+                        .disabled(newInstrument.isEmpty)
+                })
             }
         }
     }
-    
+
     private var cataloguePicker: some View {
         Picker("Identifier", selection: $viewModel.editablePiece.catalogueType) {
             Text("None").tag(nil as GraphQLEnum<CatalogueType>?)
@@ -187,7 +187,7 @@ struct PieceEdit: View {
             }
         }
     }
-    
+
     private var catalogueNumberField: some View {
         HStack {
             Text("Number")
@@ -225,7 +225,7 @@ struct PieceEdit: View {
             .keyboardType(.numberPad)
         }
     }
-    
+
     private var keySignaturePicker: some View {
         Picker("Key Signature", selection: $viewModel.editablePiece.keySignature) {
             Text("None").tag(nil as GraphQLEnum<ApolloGQL.KeySignatureType>?)
@@ -245,7 +245,7 @@ struct PieceEdit: View {
             }
         }
     }
-   
+
     private var createButton: some View {
         Button(isCreatingNewPiece ? "Submit" : "Save") {
             Task {

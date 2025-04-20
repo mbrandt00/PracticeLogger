@@ -36,7 +36,6 @@ struct RecentPracticeSessions: View {
                                 let daySessions = groupedSessionsByDay[day] ?? []
 
                                 ForEach(daySessions, id: \.node.id) { session in
-                                    let piece = session
                                     NavigationLink(destination: PieceShow(piece: session.node.piece.fragments.pieceDetails, sessionManager: practiceSessionViewModel)) {
                                         sessionRow(session: session)
                                     }
@@ -70,9 +69,9 @@ struct RecentPracticeSessions: View {
             }
             .navigationDestination(for: PieceNavigationContext.self) { context in
                 switch context {
-                case .userPiece(let piece):
+                case let .userPiece(piece):
                     PieceShow(piece: piece, sessionManager: practiceSessionViewModel)
-                case .newPiece(let piece):
+                case .newPiece:
                     // Handle navigation for new pieces if needed
                     EmptyView()
                 }
@@ -113,7 +112,7 @@ struct RecentPracticeSessions: View {
                             .execute()
 
                         print(result)
-                    } catch (let err) {
+                    } catch let err {
                         print(err)
                         // Handle errors here
                     }
@@ -136,9 +135,9 @@ struct RecentPracticeSessions: View {
 
     private func destination(for context: PieceNavigationContext) -> some View {
         switch context {
-        case .newPiece(let piece):
+        case let .newPiece(piece):
             return AnyView(PieceEdit(piece: piece, isCreatingNewPiece: true))
-        case .userPiece(let piece):
+        case let .userPiece(piece):
             return AnyView(PieceShow(piece: piece, sessionManager: practiceSessionViewModel))
         }
     }

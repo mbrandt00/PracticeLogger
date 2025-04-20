@@ -4,8 +4,8 @@
 import ApolloAPI
 
 public extension Objects {
-  static let Composers = ApolloAPI.Object(
-    typename: "Composers",
-    implementedInterfaces: [Interfaces.Node.self]
-  )
+    static let Composers = ApolloAPI.Object(
+        typename: "Composers",
+        implementedInterfaces: [Interfaces.Node.self]
+    )
 }

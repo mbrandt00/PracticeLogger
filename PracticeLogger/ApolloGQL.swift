@@ -13,10 +13,10 @@ extension ApolloGQL.Datetime: ScalarType {
     public static func decode(from decoder: Decoder) throws -> ApolloGQL.Datetime {
         let container = try decoder.singleValueContainer()
 
-        if let stringValue = try? container.decode(String.self),
-           let date = DateFormatter.iso8601Full.date(from: stringValue)
-        {
-            // Assuming ApolloGQL.Datetime has an initializer that takes a Date
+        let stringValue = try? container.decode(String.self)
+        let date = stringValue.flatMap { DateFormatter.iso8601Full.date(from: $0) }
+
+        if let date {
             return ApolloGQL.Datetime(_jsonValue: date)
         } else {
             throw DecodingError.dataCorruptedError(
