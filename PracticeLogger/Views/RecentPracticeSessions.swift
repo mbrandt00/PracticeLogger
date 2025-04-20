@@ -31,13 +31,49 @@ struct RecentPracticeSessions: View {
                     if !isSearching {
                         let sortedDays = groupedSessionsByDay.keys.sorted(by: >)
 
-                        ForEach(sortedDays, id: \.self) { day in
-                            Section(header: Text(day.formatted(.dateTime.year().month().day()))) {
-                                let daySessions = groupedSessionsByDay[day] ?? []
+                        if sortedDays.isEmpty {
+                            VStack(spacing: 16) {
+                                Image(systemName: "music.note.list")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 60, height: 60)
+                                    .foregroundColor(.accentColor.opacity(0.7))
 
-                                ForEach(daySessions, id: \.node.id) { session in
-                                    NavigationLink(destination: PieceShow(piece: session.node.piece.fragments.pieceDetails, sessionManager: practiceSessionViewModel)) {
-                                        sessionRow(session: session)
+                                Text("No Practice Sessions")
+                                    .font(.title3)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.primary)
+
+                                Text("Start practicing a piece to see your sessions here.")
+                                    .font(.body)
+                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(.secondary)
+                                    .padding(.horizontal)
+
+                                Button {
+                                    isSearching = true
+                                } label: {
+                                    Label("Start Practicing", systemImage: "play.circle.fill")
+                                        .font(.headline)
+                                        .padding()
+                                        .frame(maxWidth: .infinity)
+                                        .background(Color.accentColor)
+                                        .foregroundColor(.white)
+                                        .cornerRadius(12)
+                                }
+                                .padding(.horizontal, 32)
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .padding()
+                        } else {
+                            ForEach(sortedDays, id: \.self) { day in
+                                Section(header: Text(day.formatted(.dateTime.year().month().day()))) {
+                                    let daySessions = groupedSessionsByDay[day] ?? []
+
+                                    ForEach(daySessions, id: \.node.id) { session in
+                                        NavigationLink(destination: PieceShow(piece: session.node.piece.fragments.pieceDetails, sessionManager: practiceSessionViewModel)) {
+                                            sessionRow(session: session)
+                                        }
                                     }
                                 }
                             }
