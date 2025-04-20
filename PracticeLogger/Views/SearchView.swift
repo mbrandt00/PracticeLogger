@@ -11,31 +11,84 @@ import SwiftUI
 struct SearchView: View {
     @ObservedObject var searchViewModel: SearchViewModel
     @EnvironmentObject var practiceSessionViewModel: PracticeSessionViewModel
+    @State var isLoading: Bool = true
     @Binding var path: NavigationPath
 
+    private var isEmpty: Bool {
+        searchViewModel.userPieces.isEmpty && searchViewModel.newPieces.isEmpty
+    }
+
+    private var shouldShowSpinner: Bool {
+        isLoading && isEmpty
+    }
+
+    private var shouldShowEmptyState: Bool {
+        !isLoading && isEmpty
+    }
+
     var body: some View {
-        List {
-            if !searchViewModel.userPieces.isEmpty {
-                Section(header: Text("Pieces")) {
-                    ForEach(searchViewModel.userPieces, id: \.id) { piece in
-                        userPieceRow(piece)
+        ZStack {
+            List {
+                if !searchViewModel.userPieces.isEmpty {
+                    Section(header: Text("Pieces")) {
+                        ForEach(searchViewModel.userPieces, id: \.id) { piece in
+                            userPieceRow(piece)
+                        }
+                    }
+                }
+
+                if !searchViewModel.newPieces.isEmpty {
+                    Section(header: Text("New Pieces")) {
+                        ForEach(searchViewModel.newPieces, id: \.id) { piece in
+                            newPieceRow(piece)
+                        }
                     }
                 }
             }
+            if shouldShowSpinner {
+                ProgressView("Searching...")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
 
-            if !searchViewModel.newPieces.isEmpty {
-                Section(header: Text("New Pieces")) {
-                    ForEach(searchViewModel.newPieces, id: \.id) { piece in
-                        newPieceRow(piece)
-                    }
+            if shouldShowEmptyState {
+                VStack(spacing: 16) {
+                    Image(systemName: "magnifyingglass")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 60, height: 60)
+                        .foregroundColor(.accentColor.opacity(0.6))
+
+                    Text("No results found")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+
+                    Text("Try searching for a different piece, or check back later.")
+                        .font(.body)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding()
+            }
+        }
+        .onAppear {
+            Task {
+                isLoading = true
+                await searchViewModel.searchPieces()
+                isLoading = false
             }
         }
         .onChange(of: searchViewModel.searchTerm) { _, _ in
-            Task { await searchViewModel.searchPieces() }
-        }
-        .onAppear {
-            Task { await searchViewModel.searchPieces() }
+            // Only show loading if we don't already have results
+            if searchViewModel.userPieces.isEmpty && searchViewModel.newPieces.isEmpty {
+                isLoading = true
+            }
+
+            Task {
+                await searchViewModel.searchPieces()
+                isLoading = false
+            }
         }
         .sheet(item: $searchViewModel.selectedPiece) { piece in
             NavigationStack {

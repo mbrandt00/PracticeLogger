@@ -15,6 +15,7 @@ struct RecentPracticeSessions: View {
     @StateObject private var searchViewModel = SearchViewModel()
     @State private var isSearching = false
     @EnvironmentObject var keyboardResponder: KeyboardResponder
+    @State private var isLoading = true
     @EnvironmentObject var uiState: UIState
     @State private var path = NavigationPath()
 
@@ -31,17 +32,57 @@ struct RecentPracticeSessions: View {
                     if !isSearching {
                         let sortedDays = groupedSessionsByDay.keys.sorted(by: >)
 
-                        ForEach(sortedDays, id: \.self) { day in
-                            Section(header: Text(day.formatted(.dateTime.year().month().day()))) {
-                                let daySessions = groupedSessionsByDay[day] ?? []
+                        if sortedDays.isEmpty && !isLoading {
+                            VStack(spacing: 16) {
+                                Image(systemName: "music.note.list")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 60, height: 60)
+                                    .foregroundColor(.accentColor.opacity(0.7))
 
-                                ForEach(daySessions, id: \.node.id) { session in
-                                    NavigationLink(destination: PieceShow(piece: session.node.piece.fragments.pieceDetails, sessionManager: practiceSessionViewModel)) {
-                                        sessionRow(session: session)
+                                Text("No Practice Sessions")
+                                    .font(.title3)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.primary)
+
+                                Text("Start practicing a piece to see your sessions here.")
+                                    .font(.body)
+                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(.secondary)
+                                    .padding(.horizontal)
+
+                                Button {
+                                    isSearching = true
+                                } label: {
+                                    Label("Start Practicing", systemImage: "play.circle.fill")
+                                        .font(.headline)
+                                        .padding()
+                                        .frame(maxWidth: .infinity)
+                                        .background(Color.accentColor)
+                                        .foregroundColor(.white)
+                                        .cornerRadius(12)
+                                }
+                                .padding(.horizontal, 32)
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .padding()
+                        } else {
+                            ForEach(sortedDays, id: \.self) { day in
+                                Section(header: Text(day.formatted(.dateTime.year().month().day()))) {
+                                    let daySessions = groupedSessionsByDay[day] ?? []
+
+                                    ForEach(daySessions, id: \.node.id) { session in
+                                        NavigationLink(destination: PieceShow(piece: session.node.piece.fragments.pieceDetails, sessionManager: practiceSessionViewModel)) {
+                                            sessionRow(session: session)
+                                        }
                                     }
                                 }
                             }
                         }
+                    }
+                    if isLoading {
+                        ProgressView("Loading recent sessions…")
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                 }
                 .navigationTitle("Recent Sessions")
@@ -70,9 +111,9 @@ struct RecentPracticeSessions: View {
             .navigationDestination(for: PieceNavigationContext.self) { context in
                 switch context {
                 case let .userPiece(piece):
-                    PieceShow(piece: piece, sessionManager: practiceSessionViewModel)
+                    pieceShowDestination(for: piece)
+
                 case .newPiece:
-                    // Handle navigation for new pieces if needed
                     EmptyView()
                 }
             }
@@ -81,6 +122,22 @@ struct RecentPracticeSessions: View {
         .onSubmit(of: .search) {
             keyboardResponder.isKeyboardVisible = false
         }
+    }
+
+    @ViewBuilder
+    private func pieceShowDestination(for piece: PieceDetails) -> some View {
+        PieceShow(
+            piece: piece,
+            sessionManager: practiceSessionViewModel,
+            onDelete: {
+                Task { @MainActor in
+                    searchViewModel.userPieces.removeAll(where: { $0.id == piece.id })
+                    searchViewModel.searchTerm = ""
+                    isSearching = false
+                    await searchViewModel.searchPieces()
+                }
+            }
+        )
     }
 
     private func sessionRow(session: RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge) -> some View {
@@ -126,10 +183,12 @@ struct RecentPracticeSessions: View {
     private func loadRecentSessions() {
         Task {
             do {
+                isLoading = true
                 recentSessions = try await practiceSessionViewModel.getRecentUserPracticeSessions()
             } catch {
                 print("Error fetching recent sessions: \(error)")
             }
+            isLoading = false
         }
     }
 

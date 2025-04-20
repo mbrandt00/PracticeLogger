@@ -5,6 +5,7 @@
 //  Created by Michael Brandt on 6/8/24.
 //
 
+import Apollo
 import ApolloGQL
 import SwiftUI
 
@@ -12,8 +13,12 @@ struct PieceShow: View {
     @State var piece: PieceDetails
     @ObservedObject var sessionManager: PracticeSessionViewModel
     @State private var editingMode = false
+    @State private var showingDeleteConfirmation = false
     @State private var showingCollectionSheet = false
     @State private var selectedCollection: (id: String, name: String)?
+    var onDelete: (() -> Void)?
+    @Environment(\.dismiss) private var dismiss
+
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 16) {
@@ -148,6 +153,22 @@ struct PieceShow: View {
                     }
                     .padding(.vertical)
                 }
+                Button(role: .destructive, action: {
+                    showingDeleteConfirmation = true
+                }, label: {
+                    HStack {
+                        Spacer()
+                        Label("Delete Piece", systemImage: "trash")
+                            .font(.body)
+                            .padding()
+                        Spacer()
+                    }
+                })
+                .padding(.horizontal)
+                .background(Color.red.opacity(0.1))
+                .cornerRadius(12)
+                .padding(.top, 32)
+                .padding(.horizontal)
             }
         }
         .navigationTitle(piece.workName)
@@ -159,6 +180,12 @@ struct PieceShow: View {
                 Image(systemName: "pencil")
             }
         }
+        .alert("Delete Piece?", isPresented: $showingDeleteConfirmation, actions: {
+            Button("Delete", role: .destructive, action: deletePiece)
+            Button("Cancel", role: .cancel) {}
+        }, message: {
+            Text("This action cannot be undone.")
+        })
         .sheet(isPresented: $editingMode) {
             EditPieceSheetView()
         }
@@ -182,6 +209,39 @@ struct PieceShow: View {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private func deletePiece() {
+        Task {
+            do {
+                let pieceId = piece.id
+                print("Deleting piece \(pieceId)")
+
+                let result = try await Database.client.from("pieces")
+                    .delete()
+                    .eq("id", value: pieceId)
+                    .execute()
+
+                print("RESULT", result)
+
+                Network.shared.apollo.store.withinReadWriteTransaction { transaction in
+                    let cacheKey = CacheKey("\(piece.__typename):\(piece.id)")
+                    try transaction.removeObject(for: cacheKey)
+                }
+
+                await MainActor.run {
+                    if piece.id == sessionManager.activeSession?.piece.id {
+                        sessionManager.activeSession = nil
+                    }
+
+                    onDelete?()
+                    dismiss()
+                }
+
+            } catch {
+                print("Error deleting piece:", error)
             }
         }
     }
