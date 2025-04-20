@@ -15,6 +15,7 @@ struct RecentPracticeSessions: View {
     @StateObject private var searchViewModel = SearchViewModel()
     @State private var isSearching = false
     @EnvironmentObject var keyboardResponder: KeyboardResponder
+    @State private var isLoading = true
     @EnvironmentObject var uiState: UIState
     @State private var path = NavigationPath()
 
@@ -31,7 +32,7 @@ struct RecentPracticeSessions: View {
                     if !isSearching {
                         let sortedDays = groupedSessionsByDay.keys.sorted(by: >)
 
-                        if sortedDays.isEmpty {
+                        if sortedDays.isEmpty && !isLoading {
                             VStack(spacing: 16) {
                                 Image(systemName: "music.note.list")
                                     .resizable()
@@ -78,6 +79,10 @@ struct RecentPracticeSessions: View {
                                 }
                             }
                         }
+                    }
+                    if isLoading {
+                        ProgressView("Loading recent sessions…")
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                 }
                 .navigationTitle("Recent Sessions")
@@ -178,10 +183,12 @@ struct RecentPracticeSessions: View {
     private func loadRecentSessions() {
         Task {
             do {
+                isLoading = true
                 recentSessions = try await practiceSessionViewModel.getRecentUserPracticeSessions()
             } catch {
                 print("Error fetching recent sessions: \(error)")
             }
+            isLoading = false
         }
     }
 

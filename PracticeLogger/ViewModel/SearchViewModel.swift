@@ -16,14 +16,13 @@ class SearchViewModel: ObservableObject {
     @Published var userPieces: [PieceDetails] = []
     @Published var newPieces: [PieceDetails] = []
     @Published var selectedPiece: PieceDetails?
+
     @MainActor
     func searchPieces() async {
         do {
             if !searchTerm.isEmpty {
                 userPieces = try await getUserPieces() ?? []
-
                 newPieces = try await searchNewPieces() ?? []
-
             } else {
                 userPieces = try await getRecentUserPieces(forceFetch: true) ?? []
                 newPieces = []
@@ -59,6 +58,7 @@ class SearchViewModel: ObservableObject {
                     } else {
                         continuation.resume(returning: nil)
                     }
+
                 case let .failure(error):
                     print("Error fetching recent pieces: \(error)")
                     continuation.resume(throwing: error)
@@ -88,6 +88,7 @@ class SearchViewModel: ObservableObject {
                     } else {
                         continuation.resume(returning: nil)
                     }
+
                 case let .failure(error):
                     print(error)
                     continuation.resume(throwing: error)
@@ -114,6 +115,7 @@ class SearchViewModel: ObservableObject {
                     } else {
                         continuation.resume(returning: [])
                     }
+
                 case let .failure(error):
                     print(error)
                     continuation.resume(throwing: error)
