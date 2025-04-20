@@ -108,7 +108,6 @@ class SearchViewModel: ObservableObject {
                         let pieces = data.edges.map { edge in
                             edge.node.fragments.pieceDetails
                         }
-                        print("user pieces", pieces)
                         continuation.resume(returning: pieces)
                     } else {
                         continuation.resume(returning: nil)
@@ -126,16 +125,15 @@ class SearchViewModel: ObservableObject {
             return []
         }
         return try await withCheckedThrowingContinuation { continuation in
-            let direction = GraphQLEnum(OrderByDirection.descNullsFirst)
-            let orderBy: GraphQLNullable<[PieceOrderBy]> = .some([PieceOrderBy(lastPracticed: .some(direction))])
-            Network.shared.apollo.fetch(query: SearchPiecesQuery(query: searchTerm)) { result in
+            let direction = GraphQLEnum(OrderByDirection.ascNullsLast)
+            let orderBy: GraphQLNullable<[PieceOrderBy]> = .some([PieceOrderBy(catalogueNumber: .some(direction))])
+            Network.shared.apollo.fetch(query: SearchPiecesQuery(query: searchTerm, orderBy: orderBy)) { result in
                 switch result {
                 case .success(let graphQlResult):
                     if let data = graphQlResult.data?.searchPieces {
                         let pieces = data.edges.map { edge in
                             edge.node.fragments.pieceDetails
                         }
-                        print("NEW PIECES", pieces)
                         continuation.resume(returning: pieces)
                     } else {
                         continuation.resume(returning: [])
