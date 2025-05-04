@@ -15,7 +15,7 @@ class PieceEditViewModel: ObservableObject {
 
     // Constructor for PieceDetails
     init(piece: PieceDetails) {
-        self.editablePiece = EditablePiece(from: piece)
+        editablePiece = EditablePiece(from: piece)
     }
 
     func insertPiece() async throws -> PieceDetails {
@@ -25,22 +25,22 @@ class PieceEditViewModel: ObservableObject {
     }
 
     func updatePiece() async throws -> PieceDetails {
-        let updater = PieceDbUpdater(pieceId: editablePiece.id, piece: self.editablePiece)
+        let updater = PieceDbUpdater(pieceId: editablePiece.id, piece: editablePiece)
 
         return try await updater.save()
     }
 
     func updateMovement(at index: Int, newName: String) {
         // Update directly on the existing array
-        self.editablePiece.movements[index].name = newName
+        editablePiece.movements[index].name = newName
 
         // Force a view update by reassigning the array
-        let updatedMovements = self.editablePiece.movements
-        self.editablePiece.movements = updatedMovements
+        let updatedMovements = editablePiece.movements
+        editablePiece.movements = updatedMovements
     }
 
     func deleteMovement(at index: Int) {
-        var movements = self.editablePiece.movements
+        var movements = editablePiece.movements
 
         movements.remove(at: index)
 
@@ -48,11 +48,11 @@ class PieceEditViewModel: ObservableObject {
         for (idx, movement) in movements.enumerated() {
             movement.number = idx + 1
         }
-        self.editablePiece.movements = movements
+        editablePiece.movements = movements
     }
 
     func moveMovements(from source: IndexSet, to destination: Int) {
-        var movements = self.editablePiece.movements
+        var movements = editablePiece.movements
         movements.move(fromOffsets: source, toOffset: destination)
 
         // Update numbering
@@ -60,7 +60,7 @@ class PieceEditViewModel: ObservableObject {
             movement.number = idx + 1
         }
 
-        self.editablePiece.movements = movements
+        editablePiece.movements = movements
     }
 }
 
@@ -94,22 +94,22 @@ class EditablePiece: ObservableObject {
 
     // Constructor for PieceDetails
     init(from piece: PieceDetails) {
-        self.id = piece.id
-        self.workName = piece.workName
-        self.catalogueType = piece.catalogueType
-        self.catalogueNumber = piece.catalogueNumber
-        self.nickname = piece.nickname
-        self.collectionId = piece.collectionId
-        self.keySignature = piece.keySignature
-        self.instrumentation = piece.instrumentation
-        self.subPieceType = piece.subPieceType
-        self.format = piece.format
-        self.compositionYear = piece.compositionYear
-        self.composerId = piece.composerId
-        self.wikipediaUrl = piece.wikipediaUrl
-        self.imslpUrl = piece.imslpUrl
-        self.lastPracticed = piece.lastPracticed
-        self.totalPracticeTime = piece.totalPracticeTime
+        id = piece.id
+        workName = piece.workName
+        catalogueType = piece.catalogueType
+        catalogueNumber = piece.catalogueNumber
+        nickname = piece.nickname
+        collectionId = piece.collectionId
+        keySignature = piece.keySignature
+        instrumentation = piece.instrumentation
+        subPieceType = piece.subPieceType
+        format = piece.format
+        compositionYear = piece.compositionYear
+        composerId = piece.composerId
+        wikipediaUrl = piece.wikipediaUrl
+        imslpUrl = piece.imslpUrl
+        lastPracticed = piece.lastPracticed
+        totalPracticeTime = piece.totalPracticeTime
 
         if let movements = piece.movements?.edges {
             self.movements = movements.compactMap { edge in
@@ -136,15 +136,15 @@ class EditableMovement: Identifiable, ObservableObject, Equatable {
 
     // Constructor for PieceDetails movement
     init(from node: PieceDetails.Movements.Edge.Node) {
-        self.id = node.id
-        self.name = node.name
-        self.number = node.number
-        self.pieceId = node.pieceId
-        self.keySignature = node.keySignature
-        self.downloadUrl = node.downloadUrl
-        self.nickname = node.nickname
-        self.lastPracticed = node.lastPracticed
-        self.totalPracticeTime = node.totalPracticeTime
+        id = node.id
+        name = node.name
+        number = node.number
+        pieceId = node.pieceId
+        keySignature = node.keySignature
+        downloadUrl = node.downloadUrl
+        nickname = node.nickname
+        lastPracticed = node.lastPracticed
+        totalPracticeTime = node.totalPracticeTime
     }
 
     static func == (lhs: EditableMovement, rhs: EditableMovement) -> Bool {
@@ -157,7 +157,7 @@ class EditableComposer {
     var id: ApolloGQL.BigInt?
 
     init(from composer: PieceDetails.Composer) {
-        self.name = composer.name
+        name = composer.name
     }
 
     init(name: String) {
@@ -168,44 +168,44 @@ class EditableComposer {
 extension EditablePiece {
     func toGraphQLInput() async throws -> PieceInsertInput {
         try PieceInsertInput(
-            workName: .some(self.workName),
-            composerId: self.composerId.map { .some($0) } ?? .null,
-            nickname: self.nickname.map { .some($0) } ?? .null,
+            workName: .some(workName),
+            composerId: composerId.map { .some($0) } ?? .null,
+            nickname: nickname.map { .some($0) } ?? .null,
             userId: .some(await Database.client.auth.user().id.uuidString),
-            format: self.format.map { .some($0) } ?? .null,
-            keySignature: self.keySignature.map { .some($0) } ?? .null,
-            catalogueType: self.catalogueType.map { .some($0) } ?? .null,
-            catalogueNumber: self.catalogueNumber.map { .some($0) } ?? .null,
-            catalogueNumberSecondary: self.catalogueNumberSecondary.map { .some($0) } ?? .null,
-            compositionYear: self.compositionYear.map { .some($0) } ?? .null,
-            wikipediaUrl: self.wikipediaUrl.map { .some($0) } ?? .null,
-            instrumentation: self.instrumentation.map { .some($0) } ?? .null,
-            subPieceType: self.subPieceType.map { .some($0) } ?? .null,
-            imslpUrl: self.imslpUrl.map { .some($0) } ?? .null,
-            collectionId: self.collectionId.map { .some($0) } ?? .null
+            format: format.map { .some($0) } ?? .null,
+            keySignature: keySignature.map { .some($0) } ?? .null,
+            catalogueType: catalogueType.map { .some($0) } ?? .null,
+            catalogueNumber: catalogueNumber.map { .some($0) } ?? .null,
+            catalogueNumberSecondary: catalogueNumberSecondary.map { .some($0) } ?? .null,
+            compositionYear: compositionYear.map { .some($0) } ?? .null,
+            wikipediaUrl: wikipediaUrl.map { .some($0) } ?? .null,
+            instrumentation: instrumentation.map { .some($0) } ?? .null,
+            subPieceType: subPieceType.map { .some($0) } ?? .null,
+            imslpUrl: imslpUrl.map { .some($0) } ?? .null,
+            collectionId: collectionId.map { .some($0) } ?? .null
         )
     }
 
     func toGraphQLUpdateInput() -> PieceUpdateInput {
         return PieceUpdateInput(
-            workName: .some(self.workName),
-            composerId: self.composerId != nil ? .some(self.composerId!) : .null,
-            nickname: self.nickname != nil ? .some(self.nickname!) : .null,
-            format: self.format != nil ? .some(self.format!) : .null,
-            keySignature: self.keySignature != nil ? .some(self.keySignature!) : .null,
-            catalogueType: self.catalogueType != nil ? .some(self.catalogueType!) : .null,
-            catalogueNumber: self.catalogueNumber != nil ? .some(self.catalogueNumber!) : .null,
-            catalogueTypeNumDesc: self.catalogueTypeNumDesc != nil ? .some(self.catalogueTypeNumDesc!) : .null,
-            catalogueNumberSecondary: self.catalogueNumberSecondary != nil ? .some(self.catalogueNumberSecondary!) : .null,
-            compositionYear: self.compositionYear != nil ? .some(self.compositionYear!) : .null,
-            compositionYearDesc: self.compositionYearDesc != nil ? .some(self.compositionYearDesc!) : .null,
-            pieceStyle: self.pieceStyle != nil ? .some(self.pieceStyle!) : .null,
-            wikipediaUrl: self.wikipediaUrl != nil ? .some(self.wikipediaUrl!) : .null,
-            instrumentation: self.instrumentation != nil ? .some(self.instrumentation!) : .null,
-            compositionYearString: self.compositionYearString != nil ? .some(self.compositionYearString!) : .null,
-            subPieceType: self.subPieceType != nil ? .some(self.subPieceType!) : .null,
-            subPieceCount: self.subPieceCount != nil ? .some(self.subPieceCount!) : .null,
-            imslpUrl: self.imslpUrl != nil ? .some(self.imslpUrl!) : .null
+            workName: .some(workName),
+            composerId: composerId != nil ? .some(composerId!) : .null,
+            nickname: nickname != nil ? .some(nickname!) : .null,
+            format: format != nil ? .some(format!) : .null,
+            keySignature: keySignature != nil ? .some(keySignature!) : .null,
+            catalogueType: catalogueType != nil ? .some(catalogueType!) : .null,
+            catalogueNumber: catalogueNumber != nil ? .some(catalogueNumber!) : .null,
+            catalogueTypeNumDesc: catalogueTypeNumDesc != nil ? .some(catalogueTypeNumDesc!) : .null,
+            catalogueNumberSecondary: catalogueNumberSecondary != nil ? .some(catalogueNumberSecondary!) : .null,
+            compositionYear: compositionYear != nil ? .some(compositionYear!) : .null,
+            compositionYearDesc: compositionYearDesc != nil ? .some(compositionYearDesc!) : .null,
+            pieceStyle: pieceStyle != nil ? .some(pieceStyle!) : .null,
+            wikipediaUrl: wikipediaUrl != nil ? .some(wikipediaUrl!) : .null,
+            instrumentation: instrumentation != nil ? .some(instrumentation!) : .null,
+            compositionYearString: compositionYearString != nil ? .some(compositionYearString!) : .null,
+            subPieceType: subPieceType != nil ? .some(subPieceType!) : .null,
+            subPieceCount: subPieceCount != nil ? .some(subPieceCount!) : .null,
+            imslpUrl: imslpUrl != nil ? .some(imslpUrl!) : .null
         )
     }
 }

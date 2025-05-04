@@ -68,12 +68,15 @@ struct RecentPracticeSessions: View {
                             .padding()
                         } else {
                             ForEach(sortedDays, id: \.self) { day in
-                                Section(header: Text(day.formatted(.dateTime.year().month().day()))) {
-                                    let daySessions = groupedSessionsByDay[day] ?? []
-
-                                    ForEach(daySessions, id: \.node.id) { session in
-                                        NavigationLink(destination: PieceShow(piece: session.node.piece.fragments.pieceDetails, sessionManager: practiceSessionViewModel)) {
-                                            sessionRow(session: session)
+                                if let daySessions = groupedSessionsByDay[day] {
+                                    Section(header: Text(day.formatted(.dateTime.year().month().day()))) {
+                                        ForEach(daySessions, id: \.node.id) { session in
+                                            NavigationLink(
+                                                destination: PieceShow(piece: session.node.piece.fragments.pieceDetails, sessionManager: practiceSessionViewModel),
+                                                label: {
+                                                    RecentPracticeSessionListItem(session: session.node)
+                                                }
+                                            )
                                         }
                                     }
                                 }
@@ -138,46 +141,6 @@ struct RecentPracticeSessions: View {
                 }
             }
         )
-    }
-
-    private func sessionRow(session: RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge) -> some View {
-        VStack(alignment: .leading) {
-            Text(session.node.piece.workName)
-                .font(.title3)
-            if let movement = session.node.movement, let name = movement.name {
-                Text(name)
-                    .font(.body)
-                    .fontWeight(.medium)
-            }
-
-            Text(session.node.startTime.formatted(.dateTime.hour().minute()))
-                .font(.subheadline)
-                .fontWeight(.regular)
-
-            Text(session.node.durationSeconds?.formattedTimeDuration ?? "")
-                .font(.subheadline)
-                .fontWeight(.regular)
-        }
-        .padding(.vertical, 2)
-        .swipeActions {
-            Button(role: .destructive) {
-                Task {
-                    do {
-                        let result = try await Database.client.from("practice_sessions")
-                            .delete()
-                            .eq("id", value: session.node.id)
-                            .execute()
-
-                        print(result)
-                    } catch let err {
-                        print(err)
-                        // Handle errors here
-                    }
-                }
-            } label: {
-                Label("Delete", systemImage: "trash")
-            }
-        }
     }
 
     private func loadRecentSessions() {
