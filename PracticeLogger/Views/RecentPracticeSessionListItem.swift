@@ -9,26 +9,80 @@ import SwiftUI
 
 struct RecentPracticeSessionListItem: View {
     let session: RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.Node
+    private var pieceDetails: PieceDetails {
+        session.piece.fragments.pieceDetails
+    }
+
+    private var formattedCatalogueInfo: String {
+        if let catalogueType = pieceDetails.catalogueType, let catalogueNumber = pieceDetails.catalogueNumber {
+            return "\(catalogueType.displayName) \(catalogueNumber)"
+        }
+        return ""
+    }
+
+    private var durationText: String {
+        session.durationSeconds?.formattedTimeDuration ?? ""
+    }
+
+    private var hasMovement: Bool {
+        session.movement != nil && session.movement?.name != nil
+    }
 
     var body: some View {
-        VStack(alignment: .leading) {
-            Text(session.piece.workName)
-                .font(.title3)
-            if let movement = session.movement, let name = movement.name {
-                Text(name)
-                    .font(.body)
-                    .fontWeight(.medium)
+        VStack(alignment: .leading, spacing: 2) {
+            // First line: Composer + catalog
+            HStack {
+                if let composerName = session.piece.fragments.pieceDetails.composer?.name {
+                    Text(composerName)
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                }
+
+                if !formattedCatalogueInfo.isEmpty {
+                    Text("•")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+
+                    Text(formattedCatalogueInfo)
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                }
             }
 
-            Text(session.startTime.formatted(.dateTime.hour().minute()))
+            // Second line: Work name
+            Text(session.piece.fragments.pieceDetails.workName)
                 .font(.subheadline)
-                .fontWeight(.regular)
+                .fontWeight(.medium)
+                .foregroundColor(.primary)
+                .lineLimit(1)
 
-            Text(session.durationSeconds?.formattedTimeDuration ?? "")
-                .font(.subheadline)
-                .fontWeight(.regular)
+            // Third line: Movement + duration or just duration
+            HStack {
+                if hasMovement, let movementName = session.movement?.name {
+                    Text(movementName)
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
+
+                    Text("•")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+
+                Text(session.startTime.formatted(.dateTime.hour().minute()))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                Text("•")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                Text(durationText)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
         }
-        .padding(.vertical, 2)
+        .padding(.vertical, 4)
         .swipeActions {
             Button(role: .destructive) {
                 Task {
