@@ -4,6 +4,7 @@
 //
 //  Created by Michael Brandt on 6/8/24.
 //
+import ActivityKit
 import Apollo
 import ApolloGQL
 import Foundation
@@ -12,6 +13,20 @@ import Supabase
 class PracticeSessionViewModel: ObservableObject {
     @Published var activeSession: PracticeSessionDetails?
     @Published private var recentSessions: [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge] = []
+    private var liveActivity: Activity<LiveActivityAttributes>?
+
+    init() {
+        NotificationCenter.default.addObserver(
+            forName: .endPracticeSessionFromWidget,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task {
+                await self?.stopSession()
+                self?.stopLiveActivity()
+            }
+        }
+    }
 
     func startSession(pieceId: Int, movementId: Int?) async throws {
         let graphqlInsertObject = PracticeSessionsInsertInput(
@@ -25,8 +40,15 @@ class PracticeSessionViewModel: ObservableObject {
                 case let .success(graphqlResult):
                     if let insertedPiece = graphqlResult.data?.insertIntoPracticeSessionsCollection?.records.first {
                         self.activeSession = insertedPiece.fragments.practiceSessionDetails
+                        let attributes = LiveActivityAttributes(pieceName: insertedPiece.piece.workName, movementName: insertedPiece.movement?.name, movementNumber: insertedPiece.movement?.number)
+                        let state = LiveActivityAttributes.ContentState(startTime: Date())
+                        let content = ActivityContent(state: state, staleDate: nil)
+
+                        self.liveActivity = try? Activity<LiveActivityAttributes>.request(attributes: attributes, content: content)
+
                         continuation.resume(returning: insertedPiece)
                     }
+
                 case let .failure(error):
                     print("error in starting session", error)
                     continuation.resume(throwing: RuntimeError(error.localizedDescription))
@@ -48,6 +70,7 @@ class PracticeSessionViewModel: ObservableObject {
                     } else {
                         continuation.resume(returning: [])
                     }
+
                 case let .failure(error):
                     continuation.resume(throwing: error)
                 }
@@ -57,6 +80,7 @@ class PracticeSessionViewModel: ObservableObject {
 
     @MainActor
     func stopSession() async {
+        print("In stop session block")
         do {
             _ = try await Database.client
                 .from("practice_sessions")
@@ -84,11 +108,19 @@ class PracticeSessionViewModel: ObservableObject {
                         // Resume with nil if no sessions found
                         continuation.resume(returning: nil)
                     }
+
                 case let .failure(error):
                     print("GraphQL query failed: \(error)")
                     continuation.resume(throwing: error)
                 }
             }
+        }
+    }
+
+    func stopLiveActivity() {
+        Task {
+            await liveActivity?.end(nil, dismissalPolicy: .immediate)
+            liveActivity = nil
         }
     }
 }
