@@ -84,7 +84,7 @@ struct ContentView: View {
                         let token = try await Database.client.auth.session.accessToken
                         let keychain = Keychain(
                             service: "com.brandt.practiceLogger",
-                            accessGroup: "michaelbrandt.PracticeLogger.shared"
+                            accessGroup: "PZARYFA5MD.michaelbrandt.PracticeLogger"
                         )
                         try? keychain.set(token, key: "supabase_access_token")
 

@@ -32,11 +32,12 @@ class SignInViewModel: ObservableObject {
 
         let keychain = Keychain(
             service: "com.brandt.practiceLogger",
-            accessGroup: "michaelbrandt.PracticeLogger.shared"
+            accessGroup: "PZARYFA5MD.michaelbrandt.PracticeLogger"
         )
-
         do {
             try keychain.set(token, key: "supabase_access_token")
+            print("Using access group: \(keychain.accessGroup ?? "nil")")
+
             print("✅ Token saved successfully")
         } catch {
             print("❌ Failed to save token: \(error)")

@@ -10,7 +10,7 @@
 	</array>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>michaelbrandt.PracticeLogger.shared</string>
+		<string>$(AppIdentifierPrefix)michaelbrandt.PracticeLogger</string>
 	</array>
 </dict>
 </plist>

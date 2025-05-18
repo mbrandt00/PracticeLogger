@@ -23,7 +23,7 @@ class AuthorizationInterceptor: ApolloInterceptor {
                 guard let accessToken = Database.client.auth.currentSession?.accessToken else {
                     fatalError("NO ACCESS TOKEN FOR GQL")
                 }
-                guard let supabaseKey = Bundle.main.infoDictionary?["SUPABASE_KEY"] as? String else {
+                guard let supabaseKey = GlobalSettings.apiServiceKey else {
                     fatalError("SUPABASE_KEY in Info.plist is missing!")
                 }
                 request.addHeader(name: "Authorization", value: "Bearer \(accessToken)")
@@ -67,7 +67,7 @@ class Network {
         let cache = InMemoryNormalizedCache()
         let store = ApolloStore(cache: cache)
         let provider = NetworkInterceptorProvider(store: store, client: client)
-        guard let supabaseUrlString = Bundle.main.infoDictionary?["SUPABASE_URL"] as? String
+        guard let supabaseUrlString = GlobalSettings.baseApiUrl
         else {
             fatalError("Missing SUPABASE_URL for Graphql URL")
         }

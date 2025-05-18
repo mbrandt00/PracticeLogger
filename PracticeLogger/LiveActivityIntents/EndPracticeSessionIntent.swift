@@ -16,7 +16,7 @@ struct EndPracticeSessionIntent: AppIntent {
     func perform() async throws -> some IntentResult {
         let keychain = Keychain(
             service: "com.brandt.practiceLogger",
-            accessGroup: "michaelbrandt.PracticeLogger.shared"
+            accessGroup: "PZARYFA5MD.michaelbrandt.PracticeLogger"
         )
 
         guard let token = try? keychain.get("supabase_access_token") else {

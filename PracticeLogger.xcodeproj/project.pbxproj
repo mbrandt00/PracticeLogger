@@ -11,8 +11,6 @@
 		D10DBD6C2D87C75900A5F1E0 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D10DBD6B2D87C75900A5F1E0 /* ApolloGQL */; };
 		D111D6FF2DA1A32900E2ED66 /* Collections+SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D111D6FE2DA1A32400E2ED66 /* Collections+SampleData.swift */; };
 		D117BFAF2CA8B0880046A1E5 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = D117BFAE2CA8B0840046A1E5 /* Network.swift */; };
-		D11990622B9CBC160031E8A0 /* MusicKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11990612B9CBC160031E8A0 /* MusicKitTests.swift */; };
-		D11990652B9CC58D0031E8A0 /* MusicKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D11990642B9CC58D0031E8A0 /* MusicKit.framework */; };
 		D11D58A82C39A06300501C6F /* ExpandedBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11D58A72C39A06300501C6F /* ExpandedBottomSheet.swift */; };
 		D11D792C2C6C5B9D0073BA21 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11D792B2C6C5B9D0073BA21 /* Array.swift */; };
 		D1254D532D4E9F2900095600 /* PieceDbUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1254D522D4E9F2900095600 /* PieceDbUpdater.swift */; };
@@ -98,8 +96,6 @@
 		D19E73412B898F9300BB3EC7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E73402B898F9300BB3EC7 /* ContentView.swift */; };
 		D19E73432B898F9400BB3EC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D19E73422B898F9400BB3EC7 /* Assets.xcassets */; };
 		D19E73462B898F9400BB3EC7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D19E73452B898F9400BB3EC7 /* Preview Assets.xcassets */; };
-		D19E735A2B898F9400BB3EC7 /* PracticeLoggerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E73592B898F9400BB3EC7 /* PracticeLoggerUITests.swift */; };
-		D19E735C2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19E735B2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift */; };
 		D1A056112CB1A9E30024DC2A /* PracticeSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1A056102CB1A9E30024DC2A /* PracticeSessionView.swift */; };
 		D1AD15052DD4494400CB9172 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1AD15042DD4494300CB9172 /* WidgetKit.framework */; };
 		D1AD15072DD4494400CB9172 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1AD15062DD4494400CB9172 /* SwiftUI.framework */; };
@@ -125,6 +121,8 @@
 		D1C6B0E02B8BC81300F7B877 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = D1C6B0DF2B8BC81300F7B877 /* Storage */; };
 		D1C778C92DD6AEB300E8CE9C /* EndPracticeSessionIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C778C72DD6AEB300E8CE9C /* EndPracticeSessionIntent.swift */; };
 		D1CACE832D87346D0057E951 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D1CACE822D87346D0057E951 /* ApolloGQL */; };
+		D1D0F3272DDA2AD0007D10C8 /* GlobalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D0F3262DDA2AD0007D10C8 /* GlobalSettings.swift */; };
+		D1D0F3282DDA2AD0007D10C8 /* GlobalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D0F3262DDA2AD0007D10C8 /* GlobalSettings.swift */; };
 		D1D3CEFB2DA2D089006502AE /* UIState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D3CEFA2DA2D089006502AE /* UIState.swift */; };
 		D1D6548E2BDDB9BE008D4868 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D6548D2BDDB9BE008D4868 /* ProfileViewModel.swift */; };
 		D1D74EA52DA0CDBC004B5238 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D1D74EA42DA0CDBC004B5238 /* ApolloGQL */; };
@@ -141,21 +139,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		D19E734C2B898F9400BB3EC7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D19E73332B898F9300BB3EC7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D19E733A2B898F9300BB3EC7;
-			remoteInfo = PracticeLogger;
-		};
-		D19E73562B898F9400BB3EC7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D19E73332B898F9300BB3EC7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D19E733A2B898F9300BB3EC7;
-			remoteInfo = PracticeLogger;
-		};
-		D1AD15122DD4494600CB9172 /* PBXContainerItemProxy */ = {
+		D1D0F3292DDA4393007D10C8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D19E73332B898F9300BB3EC7 /* Project object */;
 			proxyType = 1;
@@ -181,7 +165,6 @@
 /* Begin PBXFileReference section */
 		D111D6FE2DA1A32400E2ED66 /* Collections+SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collections+SampleData.swift"; sourceTree = "<group>"; };
 		D117BFAE2CA8B0840046A1E5 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
-		D11990612B9CBC160031E8A0 /* MusicKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicKitTests.swift; sourceTree = "<group>"; };
 		D11990642B9CC58D0031E8A0 /* MusicKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MusicKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/MusicKit.framework; sourceTree = DEVELOPER_DIR; };
 		D11D58A72C39A06300501C6F /* ExpandedBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedBottomSheet.swift; sourceTree = "<group>"; };
 		D11D792B2C6C5B9D0073BA21 /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
@@ -209,10 +192,6 @@
 		D19E73402B898F9300BB3EC7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D19E73422B898F9400BB3EC7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D19E73452B898F9400BB3EC7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		D19E734B2B898F9400BB3EC7 /* PracticeLoggerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PracticeLoggerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D19E73552B898F9400BB3EC7 /* PracticeLoggerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PracticeLoggerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D19E73592B898F9400BB3EC7 /* PracticeLoggerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLoggerUITests.swift; sourceTree = "<group>"; };
-		D19E735B2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLoggerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		D1A056102CB1A9E30024DC2A /* PracticeSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSessionView.swift; sourceTree = "<group>"; };
 		D1AD15032DD4494300CB9172 /* ActiveSessionExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ActiveSessionExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1AD15042DD4494300CB9172 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -223,10 +202,11 @@
 		D1C2BEB42BDCE22600E8E39F /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		D1C2BEB62BDD612F00E8E39F /* SignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
 		D1C2BEB82BDD61A800E8E39F /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
-		D1C2BEC02BDD687E00E8E39F /* PracticeLogger.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PracticeLogger.entitlements; sourceTree = "<group>"; };
+		D1C2BEC02BDD687E00E8E39F /* PracticeLogger.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = PracticeLogger.entitlements; path = PracticeLogger/PracticeLogger.entitlements; sourceTree = SOURCE_ROOT; };
 		D1C2BEC12BDD76A300E8E39F /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		D1C2BEC32BDD7A9100E8E39F /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		D1C778C72DD6AEB300E8CE9C /* EndPracticeSessionIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPracticeSessionIntent.swift; sourceTree = "<group>"; };
+		D1D0F3262DDA2AD0007D10C8 /* GlobalSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettings.swift; sourceTree = "<group>"; };
 		D1D3CEFA2DA2D089006502AE /* UIState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIState.swift; sourceTree = "<group>"; };
 		D1D6548D2BDDB9BE008D4868 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		D1DF5B5E2BB882CD00FFED0F /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
@@ -342,21 +322,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D19E73482B898F9400BB3EC7 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D11990652B9CC58D0031E8A0 /* MusicKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D19E73522B898F9400BB3EC7 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		D1AD15002DD4494300CB9172 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -455,11 +420,10 @@
 		D19E73322B898F9300BB3EC7 = {
 			isa = PBXGroup;
 			children = (
+				D1D0F3262DDA2AD0007D10C8 /* GlobalSettings.swift */,
 				D1AD151D2DD4530F00CB9172 /* ActiveSessionExtension.entitlements */,
 				D1F3AA3A2DD959CD00A0C1E7 /* ActiveSessionExtensionRelease.entitlements */,
 				D19E733D2B898F9300BB3EC7 /* PracticeLogger */,
-				D19E734E2B898F9400BB3EC7 /* PracticeLoggerTests */,
-				D19E73582B898F9400BB3EC7 /* PracticeLoggerUITests */,
 				D1AD15082DD4494400CB9172 /* ActiveSession */,
 				D19E733C2B898F9300BB3EC7 /* Products */,
 				D11990632B9CC58C0031E8A0 /* Frameworks */,
@@ -470,8 +434,6 @@
 			isa = PBXGroup;
 			children = (
 				D19E733B2B898F9300BB3EC7 /* PracticeLogger.app */,
-				D19E734B2B898F9400BB3EC7 /* PracticeLoggerTests.xctest */,
-				D19E73552B898F9400BB3EC7 /* PracticeLoggerUITests.xctest */,
 				D1AD15032DD4494300CB9172 /* ActiveSessionExtension.appex */,
 			);
 			name = Products;
@@ -480,10 +442,10 @@
 		D19E733D2B898F9300BB3EC7 /* PracticeLogger */ = {
 			isa = PBXGroup;
 			children = (
+				D1C2BEC02BDD687E00E8E39F /* PracticeLogger.entitlements */,
 				D1F3AA392DD958F800A0C1E7 /* PracticeLoggerRelease.entitlements */,
 				D111D6FE2DA1A32400E2ED66 /* Collections+SampleData.swift */,
 				D12F5E272D61628C001CB9B7 /* PieceDetails+SampleData.swift */,
-				D1C2BEC02BDD687E00E8E39F /* PracticeLogger.entitlements */,
 				D1C778C42DD6AD4000E8CE9C /* LiveActivityIntents */,
 				D1F5EE8D2BF8664C00E9DA23 /* utils */,
 				D188F6672B96D490005E0FA2 /* model */,
@@ -506,23 +468,6 @@
 				D19E73452B898F9400BB3EC7 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		D19E734E2B898F9400BB3EC7 /* PracticeLoggerTests */ = {
-			isa = PBXGroup;
-			children = (
-				D11990612B9CBC160031E8A0 /* MusicKitTests.swift */,
-			);
-			path = PracticeLoggerTests;
-			sourceTree = "<group>";
-		};
-		D19E73582B898F9400BB3EC7 /* PracticeLoggerUITests */ = {
-			isa = PBXGroup;
-			children = (
-				D19E73592B898F9400BB3EC7 /* PracticeLoggerUITests.swift */,
-				D19E735B2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift */,
-			);
-			path = PracticeLoggerUITests;
 			sourceTree = "<group>";
 		};
 		D1C778C42DD6AD4000E8CE9C /* LiveActivityIntents */ = {
@@ -565,7 +510,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D19E735F2B898F9400BB3EC7 /* Build configuration list for PBXNativeTarget "PracticeLogger" */;
 			buildPhases = (
-				D15756CF2BDDC3760091D47C /* Source variables */,
 				D19E73372B898F9300BB3EC7 /* Sources */,
 				D19E73382B898F9300BB3EC7 /* Frameworks */,
 				D19E73392B898F9300BB3EC7 /* Resources */,
@@ -575,7 +519,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				D1AD15132DD4494600CB9172 /* PBXTargetDependency */,
+				D1D0F32A2DDA4393007D10C8 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				D158536F2D0FB8450053B0F5 /* PieceEdit */,
@@ -665,47 +609,10 @@
 			productReference = D19E733B2B898F9300BB3EC7 /* PracticeLogger.app */;
 			productType = "com.apple.product-type.application";
 		};
-		D19E734A2B898F9400BB3EC7 /* PracticeLoggerTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = D19E73622B898F9400BB3EC7 /* Build configuration list for PBXNativeTarget "PracticeLoggerTests" */;
-			buildPhases = (
-				D19E73472B898F9400BB3EC7 /* Sources */,
-				D19E73482B898F9400BB3EC7 /* Frameworks */,
-				D19E73492B898F9400BB3EC7 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				D19E734D2B898F9400BB3EC7 /* PBXTargetDependency */,
-			);
-			name = PracticeLoggerTests;
-			productName = PracticeLoggerTests;
-			productReference = D19E734B2B898F9400BB3EC7 /* PracticeLoggerTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		D19E73542B898F9400BB3EC7 /* PracticeLoggerUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = D19E73652B898F9400BB3EC7 /* Build configuration list for PBXNativeTarget "PracticeLoggerUITests" */;
-			buildPhases = (
-				D19E73512B898F9400BB3EC7 /* Sources */,
-				D19E73522B898F9400BB3EC7 /* Frameworks */,
-				D19E73532B898F9400BB3EC7 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				D19E73572B898F9400BB3EC7 /* PBXTargetDependency */,
-			);
-			name = PracticeLoggerUITests;
-			productName = PracticeLoggerUITests;
-			productReference = D19E73552B898F9400BB3EC7 /* PracticeLoggerUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 		D1AD15022DD4494300CB9172 /* ActiveSessionExtension */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D1AD15192DD4494600CB9172 /* Build configuration list for PBXNativeTarget "ActiveSessionExtension" */;
 			buildPhases = (
-				D1F3AA432DD9968300A0C1E7 /* Source variables */,
 				D1AD14FF2DD4494300CB9172 /* Sources */,
 				D1AD15002DD4494300CB9172 /* Frameworks */,
 				D1AD15012DD4494300CB9172 /* Resources */,
@@ -738,14 +645,6 @@
 					D19E733A2B898F9300BB3EC7 = {
 						CreatedOnToolsVersion = 15.2;
 					};
-					D19E734A2B898F9400BB3EC7 = {
-						CreatedOnToolsVersion = 15.2;
-						TestTargetID = D19E733A2B898F9300BB3EC7;
-					};
-					D19E73542B898F9400BB3EC7 = {
-						CreatedOnToolsVersion = 15.2;
-						TestTargetID = D19E733A2B898F9300BB3EC7;
-					};
 					D1AD15022DD4494300CB9172 = {
 						CreatedOnToolsVersion = 16.2;
 					};
@@ -772,8 +671,6 @@
 			projectRoot = "";
 			targets = (
 				D19E733A2B898F9300BB3EC7 /* PracticeLogger */,
-				D19E734A2B898F9400BB3EC7 /* PracticeLoggerTests */,
-				D19E73542B898F9400BB3EC7 /* PracticeLoggerUITests */,
 				D1AD15022DD4494300CB9172 /* ActiveSessionExtension */,
 			);
 		};
@@ -789,20 +686,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D19E73492B898F9400BB3EC7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D19E73532B898F9400BB3EC7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		D1AD15012DD4494300CB9172 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -813,25 +696,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		D15756CF2BDDC3760091D47C /* Source variables */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 12;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Source variables";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\necho \"Stage: PRE-Xcode Build is activated .... \"\necho \"REFRESH\"\n\n# Make sure .env file exists\nif [ -f .env ]; then\n    source .env\nfi\nSUPABASE_URL=\"$SUPABASE_URL\"\nSUPABASE_KEY=\"$SUPABASE_KEY\"\necho $SUPABASE_URL >> $HOME/Desktop/test.txt\necho \"SUPABASE_URL $SUPABASE_URL\"\necho \"SUPABASE_KEY $SUPABASE_KEY\"\npwd \ncd PracticeLogger\n# Replace the values in Info.plist with the environment variable values\nplutil -replace SUPABASE_URL -string \"$SUPABASE_URL\" Info.plist\nplutil -replace SUPABASE_KEY -string \"$SUPABASE_KEY\" Info.plist\n\n# Verify the changes\nplutil -p Info.plist\n\necho \"Stage: PRE-Xcode Build is DONE .... \"\n\nexit 0\n";
-		};
 		D1C2BEB22BDCD91400E8E39F /* Swift lint */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -851,25 +715,6 @@
 			shellPath = /bin/sh;
 			shellScript = "if [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
-		D1F3AA432DD9968300A0C1E7 /* Source variables */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Source variables";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "
-";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -884,6 +729,7 @@
 				D1AD151B2DD44ACF00CB9172 /* LiveActivityAttributes.swift in Sources */,
 				D177FDA92C55855C00830F0D /* View.swift in Sources */,
 				D117BFAF2CA8B0880046A1E5 /* Network.swift in Sources */,
+				D1D0F3282DDA2AD0007D10C8 /* GlobalSettings.swift in Sources */,
 				D11D58A82C39A06300501C6F /* ExpandedBottomSheet.swift in Sources */,
 				D111D6FF2DA1A32900E2ED66 /* Collections+SampleData.swift in Sources */,
 				D1E98BCD2C59D0F80065D27D /* SearchViewModel.swift in Sources */,
@@ -921,28 +767,12 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D19E73472B898F9400BB3EC7 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D11990622B9CBC160031E8A0 /* MusicKitTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D19E73512B898F9400BB3EC7 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D19E735A2B898F9400BB3EC7 /* PracticeLoggerUITests.swift in Sources */,
-				D19E735C2B898F9400BB3EC7 /* PracticeLoggerUITestsLaunchTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		D1AD14FF2DD4494300CB9172 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				D1C778C92DD6AEB300E8CE9C /* EndPracticeSessionIntent.swift in Sources */,
+				D1D0F3272DDA2AD0007D10C8 /* GlobalSettings.swift in Sources */,
 				D1AD151C2DD44ACF00CB9172 /* LiveActivityAttributes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -950,20 +780,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		D19E734D2B898F9400BB3EC7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D19E733A2B898F9300BB3EC7 /* PracticeLogger */;
-			targetProxy = D19E734C2B898F9400BB3EC7 /* PBXContainerItemProxy */;
-		};
-		D19E73572B898F9400BB3EC7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D19E733A2B898F9300BB3EC7 /* PracticeLogger */;
-			targetProxy = D19E73562B898F9400BB3EC7 /* PBXContainerItemProxy */;
-		};
-		D1AD15132DD4494600CB9172 /* PBXTargetDependency */ = {
+		D1D0F32A2DDA4393007D10C8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = D1AD15022DD4494300CB9172 /* ActiveSessionExtension */;
-			targetProxy = D1AD15122DD4494600CB9172 /* PBXContainerItemProxy */;
+			targetProxy = D1D0F3292DDA4393007D10C8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1173,80 +993,6 @@
 			};
 			name = Release;
 		};
-		D19E73632B898F9400BB3EC7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = michaelbrandt.PracticeLoggerTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PracticeLogger.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PracticeLogger";
-			};
-			name = Debug;
-		};
-		D19E73642B898F9400BB3EC7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = PZARYFA5MD;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = michaelbrandt.PracticeLoggerTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PracticeLogger.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PracticeLogger";
-			};
-			name = Release;
-		};
-		D19E73662B898F9400BB3EC7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = michaelbrandt.PracticeLoggerUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = PracticeLogger;
-			};
-			name = Debug;
-		};
-		D19E73672B898F9400BB3EC7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = michaelbrandt.PracticeLoggerUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = PracticeLogger;
-			};
-			name = Release;
-		};
 		D1AD15162DD4494600CB9172 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1324,24 +1070,6 @@
 			buildConfigurations = (
 				D19E73602B898F9400BB3EC7 /* Debug */,
 				D19E73612B898F9400BB3EC7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		D19E73622B898F9400BB3EC7 /* Build configuration list for PBXNativeTarget "PracticeLoggerTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D19E73632B898F9400BB3EC7 /* Debug */,
-				D19E73642B898F9400BB3EC7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		D19E73652B898F9400BB3EC7 /* Build configuration list for PBXNativeTarget "PracticeLoggerUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D19E73662B898F9400BB3EC7 /* Debug */,
-				D19E73672B898F9400BB3EC7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

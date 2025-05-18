@@ -10,11 +10,11 @@ import Supabase
 
 class Database: ObservableObject {
     static let client: SupabaseClient = {
-        guard let supabaseUrlString = Bundle.main.infoDictionary?["SUPABASE_URL"] as? String,
+        guard let supabaseUrlString = GlobalSettings.baseApiUrl,
               let supabaseUrl = URL(string: supabaseUrlString),
-              let supabaseKey = Bundle.main.infoDictionary?["SUPABASE_KEY"] as? String
+              let supabaseKey = GlobalSettings.apiServiceKey
         else {
-            fatalError("Missing SUPABASE_URL or SUPABASE_KEY in Info.plist")
+            fatalError("Missing SUPABASE_URL or SUPABASE_KEY in Environment")
         }
 
         return SupabaseClient(
