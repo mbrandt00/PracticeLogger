@@ -87,11 +87,13 @@ struct ContentView: View {
                             accessGroup: "michaelbrandt.PracticeLogger.shared"
                         )
                         try? keychain.set(token, key: "supabase_access_token")
+
                         practiceSessionViewModel.activeSession = try await practiceSessionViewModel.fetchCurrentActiveSession()
                     } catch {
                         print("Something went wrong in on appear: \(error.localizedDescription)")
                     }
                 }
+
                 // correct the transparency bug for Tab bars
                 let tabBarAppearance = UITabBarAppearance()
                 tabBarAppearance.configureWithOpaqueBackground()

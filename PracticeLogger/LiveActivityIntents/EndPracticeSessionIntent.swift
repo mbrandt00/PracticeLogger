@@ -1,4 +1,3 @@
-
 //
 //  EndPracticeSessionIntent.swift
 //  PracticeLogger
@@ -20,7 +19,6 @@ struct EndPracticeSessionIntent: AppIntent {
             accessGroup: "michaelbrandt.PracticeLogger.shared"
         )
 
-        print("keychain.accessGroup", keychain.accessGroup)
         guard let token = try? keychain.get("supabase_access_token") else {
             throw NSError(domain: "AppIntent", code: 1, userInfo: [NSLocalizedDescriptionKey: "Token not found in keychain"])
         }
