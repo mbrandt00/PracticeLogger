@@ -7,6 +7,7 @@
 import Apollo
 import ApolloAPI
 import ApolloGQL
+import KeychainAccess
 import MusicKit
 import SwiftUI
 
@@ -80,6 +81,12 @@ struct ContentView: View {
             .onAppear {
                 Task {
                     do {
+                        let token = try await Database.client.auth.session.accessToken
+                        let keychain = Keychain(
+                            service: "com.brandt.practiceLogger",
+                            accessGroup: "michaelbrandt.PracticeLogger.shared"
+                        )
+                        try? keychain.set(token, key: "supabase_access_token")
                         practiceSessionViewModel.activeSession = try await practiceSessionViewModel.fetchCurrentActiveSession()
                     } catch {
                         print("Something went wrong in on appear: \(error.localizedDescription)")
