@@ -123,7 +123,6 @@
 		D1C6B0DC2B8BC81300F7B877 /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = D1C6B0DB2B8BC81300F7B877 /* PostgREST */; };
 		D1C6B0DE2B8BC81300F7B877 /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = D1C6B0DD2B8BC81300F7B877 /* Realtime */; };
 		D1C6B0E02B8BC81300F7B877 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = D1C6B0DF2B8BC81300F7B877 /* Storage */; };
-		D1C778C82DD6AEB300E8CE9C /* EndPracticeSessionIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C778C72DD6AEB300E8CE9C /* EndPracticeSessionIntent.swift */; };
 		D1C778C92DD6AEB300E8CE9C /* EndPracticeSessionIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C778C72DD6AEB300E8CE9C /* EndPracticeSessionIntent.swift */; };
 		D1CACE832D87346D0057E951 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D1CACE822D87346D0057E951 /* ApolloGQL */; };
 		D1D3CEFB2DA2D089006502AE /* UIState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D3CEFA2DA2D089006502AE /* UIState.swift */; };
@@ -137,6 +136,8 @@
 		D1E98BDA2C59EFF40065D27D /* CatalogueType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E98BD92C59EFF40065D27D /* CatalogueType.swift */; };
 		D1ED6C442C4CB0BF00300FE9 /* KeyboardResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1ED6C432C4CB0BF00300FE9 /* KeyboardResponder.swift */; };
 		D1F29CE92C6C52F000FC5E74 /* RecentPracticeSessions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F29CE82C6C52F000FC5E74 /* RecentPracticeSessions.swift */; };
+		D1F3AA402DD974F600A0C1E7 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = D1F3AA3F2DD974F600A0C1E7 /* KeychainAccess */; };
+		D1F3AA422DD9757B00A0C1E7 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = D1F3AA412DD9757B00A0C1E7 /* KeychainAccess */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -236,6 +237,8 @@
 		D1EA64CD2B8A7E7B00D95E1F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D1ED6C432C4CB0BF00300FE9 /* KeyboardResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardResponder.swift; sourceTree = "<group>"; };
 		D1F29CE82C6C52F000FC5E74 /* RecentPracticeSessions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentPracticeSessions.swift; sourceTree = "<group>"; };
+		D1F3AA392DD958F800A0C1E7 /* PracticeLoggerRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PracticeLoggerRelease.entitlements; sourceTree = "<group>"; };
+		D1F3AA3A2DD959CD00A0C1E7 /* ActiveSessionExtensionRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ActiveSessionExtensionRelease.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -302,6 +305,7 @@
 				D18ADB122D872540007760E5 /* ApolloGQL in Frameworks */,
 				D18ADB112D872540007760E5 /* ApolloGQL in Frameworks */,
 				D148F5FE2DA18E8600EA70CB /* ApolloGQL in Frameworks */,
+				D1F3AA402DD974F600A0C1E7 /* KeychainAccess in Frameworks */,
 				D18ADB102D872540007760E5 /* ApolloGQL in Frameworks */,
 				D18ADB0F2D872540007760E5 /* ApolloGQL in Frameworks */,
 				D18ADB0E2D872540007760E5 /* ApolloGQL in Frameworks */,
@@ -359,6 +363,7 @@
 			files = (
 				D1AD15072DD4494400CB9172 /* SwiftUI.framework in Frameworks */,
 				D1AD15052DD4494400CB9172 /* WidgetKit.framework in Frameworks */,
+				D1F3AA422DD9757B00A0C1E7 /* KeychainAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -451,6 +456,7 @@
 			isa = PBXGroup;
 			children = (
 				D1AD151D2DD4530F00CB9172 /* ActiveSessionExtension.entitlements */,
+				D1F3AA3A2DD959CD00A0C1E7 /* ActiveSessionExtensionRelease.entitlements */,
 				D19E733D2B898F9300BB3EC7 /* PracticeLogger */,
 				D19E734E2B898F9400BB3EC7 /* PracticeLoggerTests */,
 				D19E73582B898F9400BB3EC7 /* PracticeLoggerUITests */,
@@ -474,6 +480,7 @@
 		D19E733D2B898F9300BB3EC7 /* PracticeLogger */ = {
 			isa = PBXGroup;
 			children = (
+				D1F3AA392DD958F800A0C1E7 /* PracticeLoggerRelease.entitlements */,
 				D111D6FE2DA1A32400E2ED66 /* Collections+SampleData.swift */,
 				D12F5E272D61628C001CB9B7 /* PieceDetails+SampleData.swift */,
 				D1C2BEC02BDD687E00E8E39F /* PracticeLogger.entitlements */,
@@ -652,6 +659,7 @@
 				D166222E2DAB188B004F28AC /* ApolloGQL */,
 				D18D53EA2DAB1911008FAD37 /* ApolloGQL */,
 				D1265E452DAC3D83000FB7DC /* ApolloGQL */,
+				D1F3AA3F2DD974F600A0C1E7 /* KeychainAccess */,
 			);
 			productName = PracticeLogger;
 			productReference = D19E733B2B898F9300BB3EC7 /* PracticeLogger.app */;
@@ -697,6 +705,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D1AD15192DD4494600CB9172 /* Build configuration list for PBXNativeTarget "ActiveSessionExtension" */;
 			buildPhases = (
+				D1F3AA432DD9968300A0C1E7 /* Source variables */,
 				D1AD14FF2DD4494300CB9172 /* Sources */,
 				D1AD15002DD4494300CB9172 /* Frameworks */,
 				D1AD15012DD4494300CB9172 /* Resources */,
@@ -710,6 +719,7 @@
 			);
 			name = ActiveSessionExtension;
 			packageProductDependencies = (
+				D1F3AA412DD9757B00A0C1E7 /* KeychainAccess */,
 			);
 			productName = ActiveSessionExtension;
 			productReference = D1AD15032DD4494300CB9172 /* ActiveSessionExtension.appex */;
@@ -755,6 +765,7 @@
 				D15C882D2BF05E5000AAC950 /* XCRemoteSwiftPackageReference "AlertToast" */,
 				D12F1F362CFD749200235C16 /* XCRemoteSwiftPackageReference "apollo-ios" */,
 				D123ABAA2D58482800C693C9 /* XCLocalSwiftPackageReference "ApolloGQL" */,
+				D1F3AA3E2DD974F600A0C1E7 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 			);
 			productRefGroup = D19E733C2B898F9300BB3EC7 /* Products */;
 			projectDirPath = "";
@@ -840,6 +851,25 @@
 			shellPath = /bin/sh;
 			shellScript = "if [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
+		D1F3AA432DD9968300A0C1E7 /* Source variables */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Source variables";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "
+";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -850,7 +880,6 @@
 				D12E1BB02C37B64500A4DC28 /* DateFormatter.swift in Sources */,
 				D1ED6C442C4CB0BF00300FE9 /* KeyboardResponder.swift in Sources */,
 				D1254D532D4E9F2900095600 /* PieceDbUpdater.swift in Sources */,
-				D1C778C82DD6AEB300E8CE9C /* EndPracticeSessionIntent.swift in Sources */,
 				D1DF5B5F2BB882CD00FFED0F /* String.swift in Sources */,
 				D1AD151B2DD44ACF00CB9172 /* LiveActivityAttributes.swift in Sources */,
 				D177FDA92C55855C00830F0D /* View.swift in Sources */,
@@ -1110,7 +1139,7 @@
 				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_ENTITLEMENTS = PracticeLogger/PracticeLogger.entitlements;
+				CODE_SIGN_ENTITLEMENTS = PracticeLogger/PracticeLoggerRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PracticeLogger/Preview Content\"";
@@ -1253,7 +1282,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_ENTITLEMENTS = ActiveSessionExtension.entitlements;
+				CODE_SIGN_ENTITLEMENTS = ActiveSessionExtensionRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = PZARYFA5MD;
@@ -1358,6 +1387,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.3.1;
+			};
+		};
+		D1F3AA3E2DD974F600A0C1E7 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
+			requirement = {
+				branch = master;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1672,6 +1709,16 @@
 		D1E086CA2D053134003AE2B4 /* ApolloGQL */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ApolloGQL;
+		};
+		D1F3AA3F2DD974F600A0C1E7 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1F3AA3E2DD974F600A0C1E7 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
+		};
+		D1F3AA412DD9757B00A0C1E7 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1F3AA3E2DD974F600A0C1E7 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
 		};
 		D1F87A102CDAF10D00F5C70D /* ApolloGQL */ = {
 			isa = XCSwiftPackageProductDependency;

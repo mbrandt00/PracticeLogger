@@ -15,19 +15,6 @@ class PracticeSessionViewModel: ObservableObject {
     @Published private var recentSessions: [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge] = []
     private var liveActivity: Activity<LiveActivityAttributes>?
 
-    init() {
-        NotificationCenter.default.addObserver(
-            forName: .endPracticeSessionFromWidget,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            Task {
-                await self?.stopSession()
-                self?.stopLiveActivity()
-            }
-        }
-    }
-
     func startSession(pieceId: Int, movementId: Int?) async throws {
         let graphqlInsertObject = PracticeSessionsInsertInput(
             startTime: .some(Date()),
@@ -38,15 +25,21 @@ class PracticeSessionViewModel: ObservableObject {
             Network.shared.apollo.perform(mutation: CreatePracticeSessionMutation(input: graphqlInsertObject)) { result in
                 switch result {
                 case let .success(graphqlResult):
-                    if let insertedPiece = graphqlResult.data?.insertIntoPracticeSessionsCollection?.records.first {
-                        self.activeSession = insertedPiece.fragments.practiceSessionDetails
-                        let attributes = LiveActivityAttributes(pieceName: insertedPiece.piece.workName, movementName: insertedPiece.movement?.name, movementNumber: insertedPiece.movement?.number)
+                    if let practiceSession = graphqlResult.data?.insertIntoPracticeSessionsCollection?.records.first {
+                        self.activeSession = practiceSession.fragments.practiceSessionDetails
+                        let attributes = LiveActivityAttributes(
+                            pieceName: practiceSession.piece.workName,
+                            movementName: practiceSession.movement?.name,
+                            movementNumber: practiceSession.movement?.number
+                        )
                         let state = LiveActivityAttributes.ContentState(startTime: Date())
                         let content = ActivityContent(state: state, staleDate: nil)
 
                         self.liveActivity = try? Activity<LiveActivityAttributes>.request(attributes: attributes, content: content)
 
-                        continuation.resume(returning: insertedPiece)
+                        self.persistSessionToAppGroup(sessionId: practiceSession.id, startTime: Date())
+
+                        continuation.resume(returning: practiceSession)
                     }
 
                 case let .failure(error):
@@ -122,5 +115,16 @@ class PracticeSessionViewModel: ObservableObject {
             await liveActivity?.end(nil, dismissalPolicy: .immediate)
             liveActivity = nil
         }
+    }
+
+    private func persistSessionToAppGroup(sessionId: String, startTime: Date) {
+        guard let sharedDefaults = UserDefaults(suiteName: "group.michaelbrandt.PracticeLogger") else {
+            print("❌ Failed to get shared UserDefaults")
+            return
+        }
+
+        sharedDefaults.set(sessionId, forKey: "current_session_id")
+        sharedDefaults.set(startTime, forKey: "current_session_start_time")
+        sharedDefaults.synchronize()
     }
 }
