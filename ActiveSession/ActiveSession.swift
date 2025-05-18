@@ -11,7 +11,7 @@ import WidgetKit
 
 struct TimerActivityView: View {
     let context: ActivityViewContext<LiveActivityAttributes>
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
@@ -28,81 +28,34 @@ struct TimerActivityView: View {
                 Text(
                     [
                         context.attributes.movementNumber.map { "Movement \($0):" },
-                        movementName,
+                        movementName
                     ].compactMap { $0 }.joined(separator: " ")
                 )
-            
-            VStack(spacing: 10) {
-                // Header
-                HStack {
-                    Image(systemName: "music.note")
-                        .foregroundColor(.purple)
-                    
-                    Text("Practice Session")
-                        .font(.headline)
-                        .fontWeight(.bold)
-                    
-                    Spacer()
-                    
-                    Text(context.state.startTime, style: .timer)
-                        .font(.system(.headline, design: .monospaced))
-                        .fontWeight(.bold)
-                        .foregroundColor(.blue)
-                }
-                .padding(.horizontal, 8)
-                
-                Divider()
-                    .background(Color.gray.opacity(0.3))
-                
-                // Piece information
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(context.attributes.pieceName)
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                        .lineLimit(1)
-                    
-                    if let movementName = context.attributes.movementName {
-                        HStack {
-                            if let movementNumber = context.attributes.movementNumber {
-                                Text("Movement \(movementNumber):")
-                                    .fontWeight(.medium)
-                                    .foregroundColor(.secondary)
-                            }
-                            
-                            Text(movementName)
-                                .italic()
-                                .foregroundColor(.secondary)
-                        }
-                        .font(.subheadline)
-                        .lineLimit(1)
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 8)
-                
-                Spacer()
-                Button(intent: EndPracticeSessionIntent()) {
-                    Label("End Session", systemImage: "xmark.circle.fill")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(.red)
-                }
-                .buttonStyle(.plain)
+                .font(.subheadline)
+                .foregroundColor(.secondary)
             }
-            .padding(12)
+
+            Spacer()
+
+            Button(intent: EndPracticeSessionIntent()) {
+                Text("End Session")
+                    .foregroundColor(.red)
+            }
         }
+        .padding()
     }
 }
 
 struct TimerView: View {
     let startTime: Date
     @State private var currentTime = Date()
-    
+
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    
+
     var elapsedTime: TimeInterval {
         currentTime.timeIntervalSince(startTime)
     }
-    
+
     var body: some View {
         Text(timeString(from: elapsedTime))
             .font(.system(.headline, design: .monospaced))
@@ -112,12 +65,12 @@ struct TimerView: View {
                 currentTime = Date()
             }
     }
-    
+
     func timeString(from timeInterval: TimeInterval) -> String {
         let hours = Int(timeInterval) / 3600
         let minutes = (Int(timeInterval) % 3600) / 60
         let seconds = Int(timeInterval) % 60
-        
+
         if hours > 0 {
             return String(format: "%d:%02d:%02d", hours, minutes, seconds)
         } else {
@@ -146,7 +99,7 @@ struct ActiveSession: Widget {
                             Image(systemName: "music.note")
                                 .foregroundColor(.purple)
                         }
-                        
+
                         if let movementName = context.attributes.movementName,
                            let movementNumber = context.attributes.movementNumber
                         {
@@ -158,7 +111,7 @@ struct ActiveSession: Widget {
                     }
                     .padding(.leading, 4)
                 }
-                
+
                 DynamicIslandExpandedRegion(.trailing) {
                     // Elapsed time counter
                     Label {
@@ -172,7 +125,7 @@ struct ActiveSession: Widget {
                     }
                     .font(.headline)
                 }
-                
+
                 DynamicIslandExpandedRegion(.bottom) {
                     // Practice stats or controls could go here
                     HStack {
@@ -184,9 +137,9 @@ struct ActiveSession: Widget {
                                 .foregroundColor(.orange)
                         }
                         .buttonStyle(.plain)
-                        
+
                         Spacer()
-                        
+
                         Button(intent: EndPracticeSessionIntent()) {
                             Label("End Session", systemImage: "xmark.circle.fill")
                                 .font(.system(size: 14, weight: .semibold))

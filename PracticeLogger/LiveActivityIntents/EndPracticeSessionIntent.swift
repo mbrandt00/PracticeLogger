@@ -5,12 +5,13 @@
 //  Created by Michael Brandt on 5/15/25.
 //
 
+import ActivityKit
 import AppIntents
 import Foundation
+import KeychainAccess
 
 struct EndPracticeSessionIntent: AppIntent {
     static var title: LocalizedStringResource = "End Practice Session"
-    static var description = IntentDescription("Stops the current practice session.")
 
     func perform() async throws -> some IntentResult {
         let keychain = Keychain(
@@ -67,8 +68,4 @@ struct EndPracticeSessionIntent: AppIntent {
 
         return .result()
     }
-}
-
-extension Notification.Name {
-    static let endPracticeSessionFromWidget = Notification.Name("endPracticeSessionFromWidget")
 }
