@@ -13,17 +13,23 @@ struct TimerActivityView: View {
     let context: ActivityViewContext<LiveActivityAttributes>
     
     var body: some View {
-        ZStack {
-            // Background
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.black.opacity(0.1))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .strokeBorder(LinearGradient(
-                            colors: [.purple, .blue],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ), lineWidth: 2)
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("Practice")
+                Spacer()
+                Text(context.state.startTime, style: .timer)
+                    .monospacedDigit()
+            }
+
+            Text(context.attributes.pieceName)
+                .font(.headline)
+
+            if let movementName = context.attributes.movementName {
+                Text(
+                    [
+                        context.attributes.movementNumber.map { "Movement \($0):" },
+                        movementName,
+                    ].compactMap { $0 }.joined(separator: " ")
                 )
             
             VStack(spacing: 10) {
