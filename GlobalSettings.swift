@@ -9,14 +9,22 @@ import Foundation
 
 enum GlobalSettings {
     static var baseApiUrl: String? {
-        let key = "SUPABASE_URL"
-        guard ProcessInfo.processInfo.environment.contains(where: { $0.key == key }) else { return nil }
-        return ProcessInfo.processInfo.environment[key]
+        // First try Info.plist (for TestFlight/Production)
+        if let plistValue = Bundle.main.infoDictionary?["SUPABASE_URL"] as? String, !plistValue.isEmpty {
+            return plistValue
+        }
+
+        // Then fall back to environment (for development)
+        return ProcessInfo.processInfo.environment["SUPABASE_URL"]
     }
 
     static var apiServiceKey: String? {
-        let key = "SUPABASE_KEY"
-        guard ProcessInfo.processInfo.environment.contains(where: { $0.key == key }) else { return nil }
-        return ProcessInfo.processInfo.environment[key]
+        // First try Info.plist (for TestFlight/Production)
+        if let plistValue = Bundle.main.infoDictionary?["SUPABASE_KEY"] as? String, !plistValue.isEmpty {
+            return plistValue
+        }
+
+        // Then fall back to environment (for development)
+        return ProcessInfo.processInfo.environment["SUPABASE_KEY"]
     }
 }
