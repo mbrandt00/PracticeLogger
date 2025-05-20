@@ -10,7 +10,7 @@ import AppIntents
 import Foundation
 import KeychainAccess
 
-struct EndPracticeSessionIntent: AppIntent {
+struct EndPracticeSessionIntent: LiveActivityIntent {
     static var title: LocalizedStringResource = "End Practice Session"
 
     func perform() async throws -> some IntentResult {
@@ -29,10 +29,11 @@ struct EndPracticeSessionIntent: AppIntent {
             throw NSError(domain: "AppIntent", code: 1, userInfo: [NSLocalizedDescriptionKey: "No session ID available"])
         }
         // Make the PATCH request to Supabase
-        guard let supabaseUrlString = Bundle.main.infoDictionary?["SUPABASE_URL"] as? String
+        guard let supabaseUrlString = GlobalSettings.baseApiUrl
         else {
             fatalError("Missing SUPABASE_URL for Graphql URL")
         }
+        print("SupabaseUrl String", supabaseUrlString)
         guard let url = URL(string: "\(supabaseUrlString)/rest/v1/practice_sessions?id=eq.\(sessionID)") else {
             throw NSError(domain: "AppIntent", code: 2, userInfo: [NSLocalizedDescriptionKey: "Invalid Supabase URL"])
         }
@@ -57,13 +58,10 @@ struct EndPracticeSessionIntent: AppIntent {
                 userInfo: [NSLocalizedDescriptionKey: "Failed to end session: \(message)"]
             )
         }
-        NSLog("Posted successfully, attempting to end activity", response)
 
-        Task {
-            for activity in Activity<LiveActivityAttributes>.activities {
-                NSLog("Ending Live Activity: \(activity.id)")
-                await activity.end(nil, dismissalPolicy: .immediate)
-            }
+        for activity in Activity<LiveActivityAttributes>.activities {
+            NSLog("Ending Live Activity: \(activity.id)")
+            await activity.end(nil, dismissalPolicy: .immediate)
         }
 
         return .result()

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D10017E42DDC3FBA0031DDF7 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13D0ED92BCC2FA1006B2683 /* Int.swift */; };
 		D10DBD6A2D87C72100A5F1E0 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D10DBD692D87C72100A5F1E0 /* ApolloGQL */; };
 		D10DBD6C2D87C75900A5F1E0 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D10DBD6B2D87C75900A5F1E0 /* ApolloGQL */; };
 		D111D6FF2DA1A32900E2ED66 /* Collections+SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D111D6FE2DA1A32400E2ED66 /* Collections+SampleData.swift */; };
@@ -119,10 +120,11 @@
 		D1C6B0DC2B8BC81300F7B877 /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = D1C6B0DB2B8BC81300F7B877 /* PostgREST */; };
 		D1C6B0DE2B8BC81300F7B877 /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = D1C6B0DD2B8BC81300F7B877 /* Realtime */; };
 		D1C6B0E02B8BC81300F7B877 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = D1C6B0DF2B8BC81300F7B877 /* Storage */; };
-		D1C778C92DD6AEB300E8CE9C /* EndPracticeSessionIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C778C72DD6AEB300E8CE9C /* EndPracticeSessionIntent.swift */; };
 		D1CACE832D87346D0057E951 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D1CACE822D87346D0057E951 /* ApolloGQL */; };
 		D1D0F3272DDA2AD0007D10C8 /* GlobalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D0F3262DDA2AD0007D10C8 /* GlobalSettings.swift */; };
 		D1D0F3282DDA2AD0007D10C8 /* GlobalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D0F3262DDA2AD0007D10C8 /* GlobalSettings.swift */; };
+		D1D0F32D2DDAA3CC007D10C8 /* EndPracticeSessionIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D0F32C2DDAA3CC007D10C8 /* EndPracticeSessionIntent.swift */; };
+		D1D0F32E2DDAA3CC007D10C8 /* EndPracticeSessionIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D0F32C2DDAA3CC007D10C8 /* EndPracticeSessionIntent.swift */; };
 		D1D3CEFB2DA2D089006502AE /* UIState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D3CEFA2DA2D089006502AE /* UIState.swift */; };
 		D1D6548E2BDDB9BE008D4868 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D6548D2BDDB9BE008D4868 /* ProfileViewModel.swift */; };
 		D1D74EA52DA0CDBC004B5238 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D1D74EA42DA0CDBC004B5238 /* ApolloGQL */; };
@@ -205,8 +207,8 @@
 		D1C2BEC02BDD687E00E8E39F /* PracticeLogger.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = PracticeLogger.entitlements; path = PracticeLogger/PracticeLogger.entitlements; sourceTree = SOURCE_ROOT; };
 		D1C2BEC12BDD76A300E8E39F /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		D1C2BEC32BDD7A9100E8E39F /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
-		D1C778C72DD6AEB300E8CE9C /* EndPracticeSessionIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPracticeSessionIntent.swift; sourceTree = "<group>"; };
 		D1D0F3262DDA2AD0007D10C8 /* GlobalSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettings.swift; sourceTree = "<group>"; };
+		D1D0F32C2DDAA3CC007D10C8 /* EndPracticeSessionIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPracticeSessionIntent.swift; sourceTree = "<group>"; };
 		D1D3CEFA2DA2D089006502AE /* UIState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIState.swift; sourceTree = "<group>"; };
 		D1D6548D2BDDB9BE008D4868 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		D1DF5B5E2BB882CD00FFED0F /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
@@ -473,7 +475,7 @@
 		D1C778C42DD6AD4000E8CE9C /* LiveActivityIntents */ = {
 			isa = PBXGroup;
 			children = (
-				D1C778C72DD6AEB300E8CE9C /* EndPracticeSessionIntent.swift */,
+				D1D0F32C2DDAA3CC007D10C8 /* EndPracticeSessionIntent.swift */,
 			);
 			path = LiveActivityIntents;
 			sourceTree = "<group>";
@@ -756,6 +758,7 @@
 				D19940FA2D4E0201003889AF /* PieceDetails.swift in Sources */,
 				D1D6548E2BDDB9BE008D4868 /* ProfileViewModel.swift in Sources */,
 				D1840DD02C48902F001ED849 /* Logger.swift in Sources */,
+				D1D0F32D2DDAA3CC007D10C8 /* EndPracticeSessionIntent.swift in Sources */,
 				D1BE01D22C67EE1E00529BAE /* NavigationContext.swift in Sources */,
 				D1C2BEB52BDCE22600E8E39F /* Tag.swift in Sources */,
 				D131F17B2B8B090D002261BC /* MetronomeShape.swift in Sources */,
@@ -771,7 +774,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D1C778C92DD6AEB300E8CE9C /* EndPracticeSessionIntent.swift in Sources */,
+				D1D0F32E2DDAA3CC007D10C8 /* EndPracticeSessionIntent.swift in Sources */,
+				D10017E42DDC3FBA0031DDF7 /* Int.swift in Sources */,
 				D1D0F3272DDA2AD0007D10C8 /* GlobalSettings.swift in Sources */,
 				D1AD151C2DD44ACF00CB9172 /* LiveActivityAttributes.swift in Sources */,
 			);
