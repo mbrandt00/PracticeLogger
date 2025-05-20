@@ -98,7 +98,7 @@ class PracticeSessionViewModel: ObservableObject {
 
                         continuation.resume(returning: currentlyActiveSession)
                     } else {
-                        // Resume with nil if no sessions found
+                        self.clearAppGroupSessionDefaults()
                         continuation.resume(returning: nil)
                     }
 
@@ -125,6 +125,13 @@ class PracticeSessionViewModel: ObservableObject {
 
         sharedDefaults.set(sessionId, forKey: "current_session_id")
         sharedDefaults.set(startTime, forKey: "current_session_start_time")
+        sharedDefaults.synchronize()
+    }
+
+    private func clearAppGroupSessionDefaults() {
+        guard let sharedDefaults = UserDefaults(suiteName: "group.michaelbrandt.PracticeLogger") else { return }
+        sharedDefaults.removeObject(forKey: "current_session_id")
+        sharedDefaults.removeObject(forKey: "current_session_start_time")
         sharedDefaults.synchronize()
     }
 }

@@ -24,6 +24,7 @@ struct ContentView: View {
     @StateObject private var practiceSessionViewModel = PracticeSessionViewModel()
     @StateObject private var keyboardResponder = KeyboardResponder()
     @StateObject private var uiState = UIState()
+    @Environment(\.scenePhase) private var scenePhase
 
     init(isSignedIn: Binding<Bool>, practiceSessionViewModel: PracticeSessionViewModel = PracticeSessionViewModel()) {
         _isSignedIn = isSignedIn
@@ -102,6 +103,17 @@ struct ContentView: View {
                 let navigationBarAppearance = UINavigationBarAppearance()
                 navigationBarAppearance.configureWithOpaqueBackground()
                 UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
+            }
+            .onChange(of: scenePhase) {
+                if scenePhase == .active {
+                    Task {
+                        do {
+                            practiceSessionViewModel.activeSession = try await practiceSessionViewModel.fetchCurrentActiveSession()
+                        } catch {
+                            print("Failed to refresh session on foreground: \(error)")
+                        }
+                    }
+                }
             }
             .environmentObject(practiceSessionViewModel)
             .environmentObject(keyboardResponder)
