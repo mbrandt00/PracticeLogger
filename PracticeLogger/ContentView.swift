@@ -62,8 +62,6 @@ struct ContentView: View {
                             .tabItem { Label("Profile", systemImage: "person") }
                             .tag(Tabs.profile)
                     }
-                    // Make TabView ignore keyboard safe area IF the keyboard pushes the whole tabview up
-                    // .ignoresSafeArea(.keyboard, edges: .bottom)
 
                     // Conditional BottomSheet Overlay Layer
                     if shouldShowBottomSheet {
