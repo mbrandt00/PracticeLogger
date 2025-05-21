@@ -29,11 +29,11 @@ struct EndPracticeSessionIntent: LiveActivityIntent {
             throw NSError(domain: "AppIntent", code: 1, userInfo: [NSLocalizedDescriptionKey: "No session ID available"])
         }
         // Make the PATCH request to Supabase
-        guard let supabaseUrlString = GlobalSettings.baseApiUrl
+        guard let supabaseUrlString = Bundle.main.infoDictionary?["SUPABASE_URL"] as? String
         else {
-            fatalError("Missing SUPABASE_URL for Graphql URL")
+            fatalError("Missing SUPABASE_URL for endpracticesession intent")
         }
-        print("SupabaseUrl String", supabaseUrlString)
+
         guard let url = URL(string: "\(supabaseUrlString)/rest/v1/practice_sessions?id=eq.\(sessionID)") else {
             throw NSError(domain: "AppIntent", code: 2, userInfo: [NSLocalizedDescriptionKey: "Invalid Supabase URL"])
         }
