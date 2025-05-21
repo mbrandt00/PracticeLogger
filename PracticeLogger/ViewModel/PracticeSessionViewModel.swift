@@ -25,20 +25,9 @@ class PracticeSessionViewModel: ObservableObject {
             Network.shared.apollo.perform(mutation: CreatePracticeSessionMutation(input: graphqlInsertObject)) { result in
                 switch result {
                 case let .success(graphqlResult):
-                    if let practiceSession = graphqlResult.data?.insertIntoPracticeSessionsCollection?.records.first {
-                        self.activeSession = practiceSession.fragments.practiceSessionDetails
-                        let attributes = LiveActivityAttributes(
-                            pieceName: practiceSession.piece.workName,
-                            movementName: practiceSession.movement?.name,
-                            movementNumber: practiceSession.movement?.number
-                        )
-                        let state = LiveActivityAttributes.ContentState(startTime: Date())
-                        let content = ActivityContent(state: state, staleDate: nil)
-
-                        self.liveActivity = try? Activity<LiveActivityAttributes>.request(attributes: attributes, content: content)
-
-                        self.persistSessionToAppGroup(sessionId: practiceSession.id, startTime: Date())
-
+                    if let practiceSession = graphqlResult.data?.insertIntoPracticeSessionsCollection?.records.first?.fragments.practiceSessionDetails {
+                        self.activeSession = practiceSession
+                        self.startLiveActivity(practiceSession: practiceSession)
                         continuation.resume(returning: practiceSession)
                     }
 
@@ -78,29 +67,34 @@ class PracticeSessionViewModel: ObservableObject {
             _ = try await Database.client
                 .from("practice_sessions")
                 .update(["end_time": Date()])
-                .eq("id", value: activeSession?.id)
+                .eq("id", value: self.activeSession?.id)
                 .execute()
-            activeSession = nil
+            self.activeSession = nil
         } catch {
             print("Error updating end_time: \(error)")
         }
         Task {
-            await liveActivity?.end(nil, dismissalPolicy: .immediate)
-            liveActivity = nil
+            await self.liveActivity?.end(nil, dismissalPolicy: .immediate)
+            self.liveActivity = nil
         }
     }
 
     func fetchCurrentActiveSession() async throws -> PracticeSessionDetails? {
         let userId = try await Database.client.auth.user().id.uuidString
 
-        return try await withCheckedThrowingContinuation { continuation in
+        return try await withCheckedThrowingContinuation { [weak self] continuation in
             Network.shared.apollo.fetch(query: ActiveUserSessionQuery(userId: userId)) { result in
+                guard let self else {
+                    continuation.resume(returning: nil)
+                    return
+                }
+
                 switch result {
                 case let .success(graphQlResult):
-                    if let currentlyActiveSession = graphQlResult.data?.practiceSessionsCollection?.edges.first?.node.fragments.practiceSessionDetails {
-                        self.activeSession = currentlyActiveSession
-
-                        continuation.resume(returning: currentlyActiveSession)
+                    if let session = graphQlResult.data?.practiceSessionsCollection?.edges.first?.node.fragments.practiceSessionDetails {
+                        self.activeSession = session
+                        self.startLiveActivity(practiceSession: session, startTime: session.startTime)
+                        continuation.resume(returning: session)
                     } else {
                         self.clearAppGroupSessionDefaults()
                         continuation.resume(returning: nil)
@@ -116,9 +110,25 @@ class PracticeSessionViewModel: ObservableObject {
 
     func stopLiveActivity() {
         Task {
-            await liveActivity?.end(nil, dismissalPolicy: .immediate)
-            liveActivity = nil
+            await self.liveActivity?.end(nil, dismissalPolicy: .immediate)
+            self.liveActivity = nil
         }
+    }
+
+    private func startLiveActivity(practiceSession: PracticeSessionDetails, startTime: Date = Date()) {
+        self.activeSession = practiceSession
+        let attributes = LiveActivityAttributes(
+            pieceName: practiceSession.piece.workName,
+            movementName: practiceSession.movement?.name,
+            movementNumber: practiceSession.movement?.number
+        )
+        let state = LiveActivityAttributes.ContentState(startTime: startTime)
+        let content = ActivityContent(state: state, staleDate: nil)
+        if Activity<LiveActivityAttributes>.activities.isEmpty {
+            self.liveActivity = try? Activity<LiveActivityAttributes>.request(attributes: attributes, content: content)
+        }
+
+        self.persistSessionToAppGroup(sessionId: practiceSession.id, startTime: Date())
     }
 
     private func persistSessionToAppGroup(sessionId: String, startTime: Date) {
