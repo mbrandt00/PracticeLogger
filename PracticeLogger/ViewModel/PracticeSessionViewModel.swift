@@ -84,6 +84,10 @@ class PracticeSessionViewModel: ObservableObject {
         } catch {
             print("Error updating end_time: \(error)")
         }
+        Task {
+            await liveActivity?.end(nil, dismissalPolicy: .immediate)
+            liveActivity = nil
+        }
     }
 
     func fetchCurrentActiveSession() async throws -> PracticeSessionDetails? {

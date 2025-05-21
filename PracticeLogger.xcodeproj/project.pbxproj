@@ -111,6 +111,7 @@
 		D1BE01D22C67EE1E00529BAE /* NavigationContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1BE01D12C67EE1E00529BAE /* NavigationContext.swift */; };
 		D1BE1C9D2DDD6C4F005160FE /* Dev.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D1BE1C9C2DDD6C4F005160FE /* Dev.xcconfig */; };
 		D1BE1C9E2DDD6C4F005160FE /* Dev.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D1BE1C9C2DDD6C4F005160FE /* Dev.xcconfig */; };
+		D1BE1CA02DDD7A6E005160FE /* EndPracticeSessionIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D0F32C2DDAA3CC007D10C8 /* EndPracticeSessionIntent.swift */; };
 		D1C2BEB52BDCE22600E8E39F /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C2BEB42BDCE22600E8E39F /* Tag.swift */; };
 		D1C2BEB72BDD612F00E8E39F /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C2BEB62BDD612F00E8E39F /* SignIn.swift */; };
 		D1C2BEB92BDD61A800E8E39F /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C2BEB82BDD61A800E8E39F /* SignInViewModel.swift */; };
@@ -763,6 +764,7 @@
 				D19940FA2D4E0201003889AF /* PieceDetails.swift in Sources */,
 				D1D6548E2BDDB9BE008D4868 /* ProfileViewModel.swift in Sources */,
 				D1840DD02C48902F001ED849 /* Logger.swift in Sources */,
+				D1BE1CA02DDD7A6E005160FE /* EndPracticeSessionIntent.swift in Sources */,
 				D1BE01D22C67EE1E00529BAE /* NavigationContext.swift in Sources */,
 				D1C2BEB52BDCE22600E8E39F /* Tag.swift in Sources */,
 				D131F17B2B8B090D002261BC /* MetronomeShape.swift in Sources */,

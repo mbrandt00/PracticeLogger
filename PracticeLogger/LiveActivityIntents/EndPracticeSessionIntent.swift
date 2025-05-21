@@ -9,6 +9,7 @@ import ActivityKit
 import AppIntents
 import Foundation
 import KeychainAccess
+import SwiftUI
 
 struct EndPracticeSessionIntent: LiveActivityIntent {
     static var title: LocalizedStringResource = "End Practice Session"
@@ -23,7 +24,6 @@ struct EndPracticeSessionIntent: LiveActivityIntent {
             throw NSError(domain: "AppIntent", code: 1, userInfo: [NSLocalizedDescriptionKey: "Token not found in keychain"])
         }
 
-        // You also need the session ID – load it from shared defaults:
         let defaults = UserDefaults(suiteName: "group.michaelbrandt.PracticeLogger")
         guard let sessionID = defaults?.string(forKey: "current_session_id") else {
             throw NSError(domain: "AppIntent", code: 1, userInfo: [NSLocalizedDescriptionKey: "No session ID available"])
@@ -47,6 +47,7 @@ struct EndPracticeSessionIntent: LiveActivityIntent {
         request.httpBody = try JSONEncoder().encode(payload)
         dump(request)
         print("HERE")
+        NSLog("Preparing to PATCH to supabase api")
         let (data, response) = try await URLSession.shared.data(for: request)
         guard let httpResponse = response as? HTTPURLResponse,
               (200 ..< 300).contains(httpResponse.statusCode)
@@ -61,7 +62,12 @@ struct EndPracticeSessionIntent: LiveActivityIntent {
 
         for activity in Activity<LiveActivityAttributes>.activities {
             NSLog("Ending Live Activity: \(activity.id)")
-            await activity.end(nil, dismissalPolicy: .immediate)
+            let finalState = LiveActivityAttributes.ContentState(
+                startTime: activity.content.state.startTime,
+                endTime: Date()
+            )
+            let finalContent = ActivityContent(state: finalState, staleDate: Date())
+            await activity.end(finalContent, dismissalPolicy: .immediate)
         }
 
         return .result()

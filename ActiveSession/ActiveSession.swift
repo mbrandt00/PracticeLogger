@@ -26,10 +26,7 @@ struct TimerActivityView: View {
 
                 Spacer()
 
-                Text(context.state.startTime, style: .timer)
-                    .font(.system(size: 15, design: .monospaced))
-                    .fontWeight(.medium)
-                    .monospacedDigit()
+                sessionTimer(start: context.state.startTime, end: context.state.endTime)
             }
 
             Text(context.attributes.pieceName)
@@ -63,6 +60,22 @@ struct TimerActivityView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
+    }
+}
+
+@ViewBuilder
+func sessionTimer(start: Date, end: Date?) -> some View {
+    if let end = end {
+        let duration = Duration(secondsComponent: Int64(Int(end.timeIntervalSince(start))), attosecondsComponent: 0)
+        Text(duration.formatted(.units()))
+            .font(.system(size: 15, design: .monospaced))
+            .fontWeight(.medium)
+            .monospacedDigit()
+    } else {
+        Text(start, style: .timer)
+            .font(.system(size: 15, design: .monospaced))
+            .fontWeight(.medium)
+            .monospacedDigit()
     }
 }
 
@@ -102,7 +115,7 @@ struct ActiveSession: Widget {
                 }
 
                 DynamicIslandExpandedRegion(.trailing) {
-                    Text(context.state.startTime, style: .timer)
+                    sessionTimer(start: context.state.startTime, end: context.state.endTime)
                         .font(.system(size: 15, design: .monospaced))
                         .fontWeight(.medium)
                         .monospacedDigit()
@@ -146,9 +159,7 @@ struct ActiveSession: Widget {
                 Text(context.state.startTime, style: .timer)
                     .font(.system(size: 13, weight: .medium, design: .rounded))
                     .frame(width: 40)
-
             } minimal: {
-                // Minimal - just a play icon
                 Image(systemName: "music.note")
                     .foregroundColor(.purple)
             }
@@ -165,7 +176,8 @@ struct ActiveSessionLiveActivityPreviews: PreviewProvider {
     )
 
     static let contentState = LiveActivityAttributes.ContentState(
-        startTime: Date().addingTimeInterval(-300)
+        startTime: Date().addingTimeInterval(-300),
+        endTime: Date()
     )
 
     static var previews: some View {
