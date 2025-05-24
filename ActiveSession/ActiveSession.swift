@@ -15,67 +15,67 @@ struct TimerActivityView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Text("Practice")
+                HStack(spacing: 4) {
+                    Image(systemName: "music.note")
+                        .foregroundColor(.purple)
+                        .imageScale(.medium)
+
+                    Text("Practice")
+                        .font(.system(size: 15, weight: .semibold))
+                }
+
                 Spacer()
-                Text(context.state.startTime, style: .timer)
-                    .monospacedDigit()
+
+                sessionTimer(start: context.state.startTime, end: context.state.endTime)
             }
 
             Text(context.attributes.pieceName)
-                .font(.headline)
+                .font(.system(size: 16, weight: .bold))
+                .lineLimit(1)
+                .truncationMode(.tail)
+                .padding(.top, 2)
 
-            if let movementName = context.attributes.movementName {
-                Text(
-                    [
-                        context.attributes.movementNumber.map { "Movement \($0):" },
-                        movementName
-                    ].compactMap { $0 }.joined(separator: " ")
-                )
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+            if let movementName = context.attributes.movementName,
+               let movementNumber = context.attributes.movementNumber,
+               let romanNumeral = movementNumber.toRomanNumeral()
+            {
+                Text("\(romanNumeral). \(movementName)")
+                    .font(.system(size: 14))
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+                    .truncationMode(.tail)
+                    .layoutPriority(1)
             }
 
             Spacer()
+                .frame(height: 8)
 
             Button(intent: EndPracticeSessionIntent()) {
-                Text("End Session")
+                Label("End Session", systemImage: "xmark.circle.fill")
+                    .font(.system(size: 14, weight: .semibold))
                     .foregroundColor(.red)
             }
+            .cornerRadius(12)
         }
-        .padding()
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
     }
 }
 
-struct TimerView: View {
-    let startTime: Date
-    @State private var currentTime = Date()
-
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-
-    var elapsedTime: TimeInterval {
-        currentTime.timeIntervalSince(startTime)
-    }
-
-    var body: some View {
-        Text(timeString(from: elapsedTime))
-            .font(.system(.headline, design: .monospaced))
-            .fontWeight(.bold)
-            .foregroundColor(.blue)
-            .onReceive(timer) { _ in
-                currentTime = Date()
-            }
-    }
-
-    func timeString(from timeInterval: TimeInterval) -> String {
-        let hours = Int(timeInterval) / 3600
-        let minutes = (Int(timeInterval) % 3600) / 60
-        let seconds = Int(timeInterval) % 60
-
-        if hours > 0 {
-            return String(format: "%d:%02d:%02d", hours, minutes, seconds)
-        } else {
-            return String(format: "%02d:%02d", minutes, seconds)
-        }
+@ViewBuilder
+func sessionTimer(start: Date, end: Date?) -> some View {
+    if let end = end {
+        let duration = Duration(secondsComponent: Int64(Int(end.timeIntervalSince(start))), attosecondsComponent: 0)
+        Text(duration.formatted(.units()))
+            .font(.system(size: 15, design: .monospaced))
+            .fontWeight(.medium)
+            .monospacedDigit()
+    } else {
+        Text(start, style: .timer)
+            .font(.system(size: 15, design: .monospaced))
+            .fontWeight(.medium)
+            .monospacedDigit()
     }
 }
 
@@ -89,45 +89,41 @@ struct ActiveSession: Widget {
         } dynamicIsland: { context in
             DynamicIsland {
                 // Expanded UI
-                DynamicIslandExpandedRegion(.leading) {
+                DynamicIslandExpandedRegion(.center) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Label {
-                            Text(context.attributes.pieceName)
-                                .font(.system(size: 14, weight: .semibold))
-                                .lineLimit(1)
-                        } icon: {
-                            Image(systemName: "music.note")
-                                .foregroundColor(.purple)
-                        }
+                        Text(context.attributes.pieceName)
+                            .font(.system(size: 16, weight: .semibold))
+                            .multilineTextAlignment(.leading)
 
                         if let movementName = context.attributes.movementName,
-                           let movementNumber = context.attributes.movementNumber
+                           let movementNumber = context.attributes.movementNumber,
+                           let romanNumeral = movementNumber.toRomanNumeral()
                         {
-                            Text("Mvt. \(movementNumber): \(movementName)")
-                                .font(.system(size: 12))
+                            Text("\(romanNumeral). \(movementName)")
+                                .font(.system(size: 13))
                                 .foregroundColor(.secondary)
-                                .lineLimit(1)
                         }
                     }
-                    .padding(.leading, 4)
+                }
+
+                DynamicIslandExpandedRegion(.leading) {
+                    Image(systemName: "music.note")
+                        .foregroundColor(.purple)
+                        .imageScale(.large)
+                        .frame(width: 40)
+                        .padding(.leading, 4)
                 }
 
                 DynamicIslandExpandedRegion(.trailing) {
-                    // Elapsed time counter
-                    Label {
-                        Text(context.state.startTime, style: .timer)
-                            .font(.system(.headline, design: .monospaced))
-                            .fontWeight(.bold)
-                            .foregroundColor(.blue)
-                    } icon: {
-                        Image(systemName: "timer")
-                            .foregroundColor(.blue)
-                    }
-                    .font(.headline)
+                    sessionTimer(start: context.state.startTime, end: context.state.endTime)
+                        .font(.system(size: 15, design: .monospaced))
+                        .fontWeight(.medium)
+                        .monospacedDigit()
+                        .frame(width: 55, alignment: .trailing)
+                        .padding(.trailing, 6)
                 }
 
                 DynamicIslandExpandedRegion(.bottom) {
-                    // Practice stats or controls could go here
                     HStack {
                         Button {
                             // Action to pause practice session
@@ -147,24 +143,56 @@ struct ActiveSession: Widget {
                         }
                         .buttonStyle(.plain)
                     }
-                    .padding(.horizontal, 12)
+                    .padding(.horizontal, 16)
                     .padding(.vertical, 8)
                     .background(Color.black.opacity(0.05))
-                    .cornerRadius(10)
+                    .cornerRadius(12)
+                    .padding(.horizontal, 8)
+                    .padding(.bottom, 4)
                 }
             } compactLeading: {
-                // Compact leading - music icon
                 Image(systemName: "music.note")
                     .foregroundColor(.purple)
+                    .frame(width: 20)
+                    .padding(.leading, 4)
             } compactTrailing: {
-                // Compact trailing - timer
-                TimerView(startTime: context.state.startTime)
+                Text(context.state.startTime, style: .timer)
+                    .font(.system(size: 13, weight: .medium, design: .rounded))
                     .frame(width: 40)
             } minimal: {
-                // Minimal - just a play icon
-                Image(systemName: "play.circle.fill")
+                Image(systemName: "music.note")
                     .foregroundColor(.purple)
             }
+        }
+    }
+}
+
+@available(iOS 16.2, *)
+struct ActiveSessionLiveActivityPreviews: PreviewProvider {
+    static let attributes = LiveActivityAttributes(
+        pieceName: "Hammerklavier",
+        movementName: "Introduzione: Largo... Allegro – Fuga: Allegro risoluto",
+        movementNumber: 4
+    )
+
+    static let contentState = LiveActivityAttributes.ContentState(
+        startTime: Date().addingTimeInterval(-300),
+        endTime: Date()
+    )
+
+    static var previews: some View {
+        Group {
+            attributes.previewContext(contentState, viewKind: .content)
+                .previewDisplayName("Lock Screen")
+
+            attributes.previewContext(contentState, viewKind: .dynamicIsland(.expanded))
+                .previewDisplayName("Dynamic Island Expanded")
+
+            attributes.previewContext(contentState, viewKind: .dynamicIsland(.compact))
+                .previewDisplayName("Dynamic Island Compact")
+
+            attributes.previewContext(contentState, viewKind: .dynamicIsland(.minimal))
+                .previewDisplayName("Dynamic Island Minimal")
         }
     }
 }

@@ -8,11 +8,12 @@
 import ActivityKit
 import SwiftUI
 
-struct LiveActivityAttributes: ActivityAttributes {
+struct LiveActivityAttributes: ActivityAttributes, Codable {
     public typealias TimerStatus = ContentState
 
     public struct ContentState: Codable, Hashable {
         var startTime: Date
+        var endTime: Date?
     }
 
     // attributes that dont change go outside of content state
