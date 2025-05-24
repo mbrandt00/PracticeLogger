@@ -12,9 +12,8 @@ import MusicKit
 import SwiftUI
 
 enum Tabs: String {
-    case progress = "Progress"
     case practice = "Practice"
-    case profile = "Profile"
+    case settings = "Settings"
 }
 
 struct ContentView: View {
@@ -50,11 +49,11 @@ struct ContentView: View {
                             .tabItem { Label("Practice", systemImage: "metronome") }
                             .tag(Tabs.practice)
 
-                        Profile(isSignedIn: $isSignedIn)
+                        Settings(isSignedIn: $isSignedIn)
                             .padding(.bottom, shouldShowBottomSheet ? bottomSheetHeight : 0)
                             .animation(.easeInOut(duration: 0.25), value: shouldShowBottomSheet)
-                            .tabItem { Label("Profile", systemImage: "person") }
-                            .tag(Tabs.profile)
+                            .tabItem { Label("Settings", systemImage: "gear") }
+                            .tag(Tabs.settings)
                     }
 
                     // Conditional BottomSheet Overlay Layer
