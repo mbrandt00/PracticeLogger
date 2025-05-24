@@ -67,9 +67,9 @@ class PracticeSessionViewModel: ObservableObject {
             _ = try await Database.client
                 .from("practice_sessions")
                 .update(["end_time": Date()])
-                .eq("id", value: self.activeSession?.id)
+                .eq("id", value: activeSession?.id)
                 .execute()
-            self.activeSession = nil
+            activeSession = nil
         } catch {
             print("Error updating end_time: \(error)")
         }
@@ -116,7 +116,7 @@ class PracticeSessionViewModel: ObservableObject {
     }
 
     private func startLiveActivity(practiceSession: PracticeSessionDetails, startTime: Date = Date()) {
-        self.activeSession = practiceSession
+        activeSession = practiceSession
         let attributes = LiveActivityAttributes(
             pieceName: practiceSession.piece.workName,
             movementName: practiceSession.movement?.name,
@@ -125,10 +125,10 @@ class PracticeSessionViewModel: ObservableObject {
         let state = LiveActivityAttributes.ContentState(startTime: startTime)
         let content = ActivityContent(state: state, staleDate: nil)
         if Activity<LiveActivityAttributes>.activities.isEmpty {
-            self.liveActivity = try? Activity<LiveActivityAttributes>.request(attributes: attributes, content: content)
+            liveActivity = try? Activity<LiveActivityAttributes>.request(attributes: attributes, content: content)
         }
 
-        self.persistSessionToAppGroup(sessionId: practiceSession.id, startTime: Date())
+        persistSessionToAppGroup(sessionId: practiceSession.id, startTime: Date())
     }
 
     private func persistSessionToAppGroup(sessionId: String, startTime: Date) {
