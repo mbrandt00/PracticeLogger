@@ -101,6 +101,8 @@ class SearchViewModel: ObservableObject {
         guard (Database.client.auth.currentUser?.id) != nil else {
             return []
         }
+        let userPieceUrls = Set(userPieces.compactMap { $0.imslpUrl })
+
         return try await withCheckedThrowingContinuation { continuation in
             let direction = GraphQLEnum(OrderByDirection.ascNullsLast)
             let orderBy: GraphQLNullable<[PieceOrderBy]> = .some([PieceOrderBy(catalogueNumber: .some(direction))])
@@ -110,6 +112,10 @@ class SearchViewModel: ObservableObject {
                     if let data = graphQlResult.data?.searchPieces {
                         let pieces = data.edges.map { edge in
                             edge.node.fragments.pieceDetails
+                        }.filter { piece in
+                            // Filter out pieces the user already has
+                            guard let imslpUrl = piece.imslpUrl else { return true }
+                            return !userPieceUrls.contains(imslpUrl)
                         }
                         continuation.resume(returning: pieces)
                     } else {
