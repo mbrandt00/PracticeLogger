@@ -12,9 +12,8 @@ import MusicKit
 import SwiftUI
 
 enum Tabs: String {
-    case progress = "Progress"
     case practice = "Practice"
-    case profile = "Profile"
+    case settings = "Settings"
 }
 
 struct ContentView: View {
@@ -45,22 +44,16 @@ struct ContentView: View {
             GeometryReader { geometry in
                 ZStack(alignment: .bottom) {
                     TabView(selection: $selectedTab) {
-                        ProgressView()
-                            .padding(.bottom, shouldShowBottomSheet ? bottomSheetHeight : 0) // Apply padding *inside*
-                            .animation(.easeInOut(duration: 0.25), value: shouldShowBottomSheet) // Animate padding
-                            .tabItem { Label("Progress", systemImage: "chart.xyaxis.line") }
-                            .tag(Tabs.progress)
-
                         RecentPracticeSessions(practiceSessionViewModel: practiceSessionViewModel)
                             .padding(.bottom, shouldShowBottomSheet ? bottomSheetHeight : 0)
                             .tabItem { Label("Practice", systemImage: "metronome") }
                             .tag(Tabs.practice)
 
-                        Profile(isSignedIn: $isSignedIn)
-                            .padding(.bottom, shouldShowBottomSheet ? bottomSheetHeight : 0) // Apply padding *inside*
-                            .animation(.easeInOut(duration: 0.25), value: shouldShowBottomSheet) // Animate padding
-                            .tabItem { Label("Profile", systemImage: "person") }
-                            .tag(Tabs.profile)
+                        Settings(isSignedIn: $isSignedIn)
+                            .padding(.bottom, shouldShowBottomSheet ? bottomSheetHeight : 0)
+                            .animation(.easeInOut(duration: 0.25), value: shouldShowBottomSheet)
+                            .tabItem { Label("Settings", systemImage: "gear") }
+                            .tag(Tabs.settings)
                     }
 
                     // Conditional BottomSheet Overlay Layer

@@ -15,65 +15,113 @@ struct EndPracticeSessionIntent: LiveActivityIntent {
     static var title: LocalizedStringResource = "End Practice Session"
 
     func perform() async throws -> some IntentResult {
-        let keychain = Keychain(
-            service: "com.brandt.practiceLogger",
-            accessGroup: "PZARYFA5MD.michaelbrandt.PracticeLogger"
-        )
+        let sessionID = try getSessionID()
+        let request = try buildEndSessionRequest(sessionID: sessionID)
 
-        guard let token = try? keychain.get("supabase_access_token") else {
-            throw NSError(domain: "AppIntent", code: 1, userInfo: [NSLocalizedDescriptionKey: "Token not found in keychain"])
-        }
-        guard let supabaseKey = Bundle.main.infoDictionary?["SUPABASE_KEY"] as? String else {
-            throw NSError(domain: "AppIntent", code: 2, userInfo: [NSLocalizedDescriptionKey: "Missing SUPABASE_KEY"])
-        }
+        try await performEndSessionRequest(request)
+        await endAllLiveActivities()
 
+        return .result()
+    }
+
+    private func getSessionID() throws -> String {
         let defaults = UserDefaults(suiteName: "group.michaelbrandt.PracticeLogger")
         guard let sessionID = defaults?.string(forKey: "current_session_id") else {
-            throw NSError(domain: "AppIntent", code: 1, userInfo: [NSLocalizedDescriptionKey: "No session ID available"])
+            throw AppIntentError.noSessionID
         }
-        // Make the PATCH request to Supabase
-        guard let supabaseUrlString = Bundle.main.infoDictionary?["SUPABASE_URL"] as? String
-        else {
-            fatalError("Missing SUPABASE_URL for endpracticesession intent")
+        return sessionID
+    }
+
+    private func buildEndSessionRequest(sessionID: String) throws -> URLRequest {
+        let keychain = Keychain(service: "com.brandt.practiceLogger", accessGroup: "PZARYFA5MD.michaelbrandt.PracticeLogger")
+        let token = try keychain.getString("supabase_access_token")
+        let supabaseKey = try Bundle.main.getRequiredString("SUPABASE_KEY")
+        let supabaseURL = try Bundle.main.getRequiredString("SUPABASE_URL")
+
+        guard let url = URL(string: "\(supabaseURL)/rest/v1/practice_sessions?id=eq.\(sessionID)") else {
+            throw AppIntentError.invalidURL
         }
 
-        guard let url = URL(string: "\(supabaseUrlString)/rest/v1/practice_sessions?id=eq.\(sessionID)") else {
-            throw NSError(domain: "AppIntent", code: 2, userInfo: [NSLocalizedDescriptionKey: "Invalid Supabase URL"])
-        }
         var request = URLRequest(url: url)
         request.httpMethod = "PATCH"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        request.setValue(supabaseKey, forHTTPHeaderField: "apikey")
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setHeaders([
+            "Content-Type": "application/json",
+            "Authorization": "Bearer \(token)",
+            "apikey": supabaseKey,
+            "Accept": "application/json",
+        ])
 
         let payload = ["end_time": ISO8601DateFormatter().string(from: Date())]
         request.httpBody = try JSONEncoder().encode(payload)
-        dump(request)
-        print("HERE")
-        NSLog("Preparing to PATCH to supabase api")
+
+        return request
+    }
+
+    private func performEndSessionRequest(_ request: URLRequest) async throws {
         let (data, response) = try await URLSession.shared.data(for: request)
         guard let httpResponse = response as? HTTPURLResponse,
-              (200 ..< 300).contains(httpResponse.statusCode)
+              httpResponse.statusCode.isSuccess
         else {
-            let message = String(data: data, encoding: .utf8) ?? "Unknown"
-            throw NSError(
-                domain: "AppIntent",
-                code: 3,
-                userInfo: [NSLocalizedDescriptionKey: "Failed to end session: \(message)"]
-            )
+            let message = String(data: data, encoding: .utf8) ?? "Unknown error"
+            throw AppIntentError.requestFailed(message)
         }
+    }
 
+    private func endAllLiveActivities() async {
         for activity in Activity<LiveActivityAttributes>.activities {
-            NSLog("Ending Live Activity: \(activity.id)")
             let finalState = LiveActivityAttributes.ContentState(
                 startTime: activity.content.state.startTime,
                 endTime: Date()
             )
-            let finalContent = ActivityContent(state: finalState, staleDate: Date())
-            await activity.end(finalContent, dismissalPolicy: .immediate)
+            await activity.end(ActivityContent(state: finalState, staleDate: Date()), dismissalPolicy: .immediate)
         }
-
-        return .result()
     }
+}
+
+enum AppIntentError: LocalizedError {
+    case noSessionID
+    case missingConfig(String)
+    case invalidURL
+    case requestFailed(String)
+    case tokenNotFound
+
+    var errorDescription: String? {
+        switch self {
+        case .noSessionID: return "No session ID available"
+        case let .missingConfig(key): return "Missing \(key)"
+        case .invalidURL: return "Invalid Supabase URL"
+        case let .requestFailed(message): return "Failed to end session: \(message)"
+        case .tokenNotFound: return "Token not found in keychain"
+        }
+    }
+}
+
+extension Keychain {
+    func getString(_ key: String) throws -> String {
+        guard let value = try? get(key) else {
+            throw AppIntentError.tokenNotFound
+        }
+        return value
+    }
+}
+
+extension Bundle {
+    func getRequiredString(_ key: String) throws -> String {
+        guard let value = infoDictionary?[key] as? String else {
+            throw AppIntentError.missingConfig(key)
+        }
+        return value
+    }
+}
+
+extension URLRequest {
+    mutating func setHeaders(_ headers: [String: String]) {
+        for (key, value) in headers {
+            setValue(value, forHTTPHeaderField: key)
+        }
+    }
+}
+
+extension Int {
+    var isSuccess: Bool { (200 ..< 300).contains(self) }
 }
