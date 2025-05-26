@@ -23,6 +23,7 @@ struct ContentView: View {
     @StateObject private var practiceSessionViewModel = PracticeSessionViewModel()
     @StateObject private var keyboardResponder = KeyboardResponder()
     @StateObject private var uiState = UIState()
+    @State private var isExpanded = false
     @Environment(\.scenePhase) private var scenePhase
 
     init(isSignedIn: Binding<Bool>, practiceSessionViewModel: PracticeSessionViewModel = PracticeSessionViewModel()) {
@@ -45,28 +46,28 @@ struct ContentView: View {
                 ZStack(alignment: .bottom) {
                     TabView(selection: $selectedTab) {
                         RecentPracticeSessions(practiceSessionViewModel: practiceSessionViewModel)
-                            .padding(.bottom, shouldShowBottomSheet ? bottomSheetHeight : 0)
+                            .padding(.bottom, shouldShowBottomSheet && !isExpanded ? bottomSheetHeight : 0)
                             .tabItem { Label("Practice", systemImage: "metronome") }
                             .tag(Tabs.practice)
 
                         Settings(isSignedIn: $isSignedIn)
-                            .padding(.bottom, shouldShowBottomSheet ? bottomSheetHeight : 0)
-                            .animation(.easeInOut(duration: 0.25), value: shouldShowBottomSheet)
+                            .padding(.bottom, shouldShowBottomSheet && !isExpanded ? bottomSheetHeight : 0)
                             .tabItem { Label("Settings", systemImage: "gear") }
                             .tag(Tabs.settings)
                     }
+                    .opacity(isExpanded ? 0 : 1)
 
-                    // Conditional BottomSheet Overlay Layer
-                    if shouldShowBottomSheet {
+                    if shouldShowBottomSheet || isExpanded {
                         BottomSheet(
                             animation: animation,
-                            expandedSheet: .constant(false),
+                            isExpanded: $isExpanded,
                             activeSession: practiceSessionViewModel.activeSession!
                         )
-                        .padding(.bottom, geometry.safeAreaInsets.bottom + standardTabBarHeight)
+                        .padding(.bottom, isExpanded ? 0 : geometry.safeAreaInsets.bottom + standardTabBarHeight)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                     }
                 }
+                .animation(.easeInOut(duration: 0.25), value: isExpanded)
                 .animation(.easeInOut(duration: 0.25), value: shouldShowBottomSheet)
                 .edgesIgnoringSafeArea(.bottom)
             }
