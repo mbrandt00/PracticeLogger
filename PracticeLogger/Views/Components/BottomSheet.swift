@@ -65,6 +65,25 @@ struct BottomSheet: View {
                             .padding(.vertical, size.height < 700 ? 10 : 30)
                             .offset(y: animateContent ? 0 : size.height)
 
+                        Text(elapsedTime)
+                            .font(.headline.bold())
+                            .matchedGeometryEffect(id: "timer", in: animation)
+
+                        HStack {
+                            if let movement = activeSession.movement {
+                                if let roman = movement.number?.toRomanNumeral() {
+                                    Text(roman)
+                                }
+                                Text(movement.name ?? "")
+                            }
+                        }
+                        .matchedGeometryEffect(id: "movement", in: animation)
+
+                        if let composer = activeSession.piece.composer?.name {
+                            Text(composer)
+                                .matchedGeometryEffect(id: "composer", in: animation)
+                        }
+
                         Spacer()
                     } else {
                         // Collapsed content
@@ -72,6 +91,7 @@ struct BottomSheet: View {
                             VStack(alignment: .leading, spacing: 0) {
                                 Text(elapsedTime)
                                     .font(.headline.bold())
+                                    .matchedGeometryEffect(id: "timer", in: animation)
 
                                 Text(activeSession.piece.workName)
                                     .font(.caption)
@@ -81,18 +101,22 @@ struct BottomSheet: View {
                                     .matchedGeometryEffect(id: "workName", in: animation)
 
                                 HStack {
-                                    if let movement = activeSession.movement {
-                                        if let roman = movement.number?.toRomanNumeral() {
-                                            Text(roman)
+                                    HStack {
+                                        if let movement = activeSession.movement {
+                                            if let roman = movement.number?.toRomanNumeral() {
+                                                Text(roman)
+                                            }
+                                            Text(movement.name ?? "")
                                         }
-                                        Text(movement.name ?? "")
                                     }
+                                    .matchedGeometryEffect(id: "movement", in: animation)
 
                                     if let composer = activeSession.piece.composer?.name {
                                         if activeSession.movement?.name != nil {
                                             Divider()
                                         }
                                         Text(composer)
+                                            .matchedGeometryEffect(id: "composer", in: animation)
                                     }
                                 }
                                 .font(.caption2)
