@@ -9,7 +9,7 @@ import AlertToast
 import Supabase
 import SwiftUI
 
-struct BugReportView: View {
+struct FeedbackView: View {
     @State private var title = ""
     @State private var description = ""
     @State private var issueType = "Bug"
