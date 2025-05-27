@@ -71,6 +71,7 @@ struct ContentView: View {
                 .animation(.easeInOut(duration: 0.25), value: shouldShowBottomSheet)
                 .edgesIgnoringSafeArea(.bottom)
             }
+            .ignoresSafeArea(.all, edges: isExpanded ? .all : [])
             .onAppear {
                 Task {
                     do {
