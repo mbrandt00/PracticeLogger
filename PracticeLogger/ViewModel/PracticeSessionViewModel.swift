@@ -136,15 +136,15 @@ class PracticeSessionViewModel: ObservableObject {
             return
         }
 
-        sharedDefaults.set(sessionId, forKey: "current_session_id")
-        sharedDefaults.set(startTime, forKey: "current_session_start_time")
+        sharedDefaults.set(sessionId, forKey: "currentSessionId")
+        sharedDefaults.set(startTime, forKey: "currentSessionStartTime")
         sharedDefaults.synchronize()
     }
 
     private func clearAppGroupSessionDefaults() {
         guard let sharedDefaults = UserDefaults(suiteName: "group.michaelbrandt.PracticeLogger") else { return }
-        sharedDefaults.removeObject(forKey: "current_session_id")
-        sharedDefaults.removeObject(forKey: "current_session_start_time")
+        sharedDefaults.removeObject(forKey: "currentSessionId")
+        sharedDefaults.removeObject(forKey: "currentSessionStartTime")
         sharedDefaults.synchronize()
     }
 }

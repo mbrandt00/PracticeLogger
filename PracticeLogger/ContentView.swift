@@ -78,11 +78,13 @@ struct ContentView: View {
                 Task {
                     do {
                         let token = try await Database.client.auth.session.accessToken
+                        let refreshToken = try await Database.client.auth.session.refreshToken
                         let keychain = Keychain(
                             service: "com.brandt.practiceLogger",
                             accessGroup: "PZARYFA5MD.michaelbrandt.PracticeLogger"
                         )
-                        try? keychain.set(token, key: "supabase_access_token")
+                        try? keychain.set(token, key: "supabaseAccessToken")
+                        try? keychain.set(refreshToken, key: "supabaseRefreshToken")
 
                         practiceSessionViewModel.activeSession = try await practiceSessionViewModel.fetchCurrentActiveSession()
                     } catch {
