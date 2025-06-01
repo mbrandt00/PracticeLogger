@@ -62,7 +62,6 @@ class PracticeSessionViewModel: ObservableObject {
 
     @MainActor
     func stopSession() async {
-        print("In stop session block")
         do {
             _ = try await Database.client
                 .from("practice_sessions")

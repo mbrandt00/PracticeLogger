@@ -42,7 +42,7 @@ struct BottomSheet: View {
                 .matchedGeometryEffect(id: "BGVIEW", in: animation)
 
                 // Content
-                VStack(spacing: 15) {
+                VStack(spacing: 5) {
                     // Drag indicator - only show when expanded
                     if isExpanded {
                         Capsule()
@@ -50,41 +50,96 @@ struct BottomSheet: View {
                             .frame(width: 40, height: 5)
                             .opacity(animateContent ? cornerProgress : 0)
                             .offset(y: animateContent ? 0 : size.height)
-                            .clipped()
+                            .padding(.top, safeArea.top + 50)
                     }
 
                     // Main content
                     if isExpanded {
-                        // Expanded content
+                        // Expanded content with circular timer as focus
                         Text(activeSession.piece.workName)
                             .font(.caption)
                             .fontWeight(.semibold)
                             .lineLimit(2)
                             .foregroundColor(.secondary)
                             .matchedGeometryEffect(id: "workName", in: animation)
-                            .padding(.vertical, size.height < 700 ? 10 : 30)
+                            .padding(.vertical, size.height < 700 ? 10 : 20)
                             .offset(y: animateContent ? 0 : size.height)
 
-                        Text(elapsedTime)
-                            .font(.headline.bold())
-                            .matchedGeometryEffect(id: "timer", in: animation)
+                        // Circular Timer
+                        ZStack {
+                            // Simple circle border
+                            Circle()
+                                .stroke(
+                                    Color.accentColor,
+                                    style: StrokeStyle(lineWidth: 8, lineCap: .round)
+                                )
+                                .frame(width: 200, height: 200)
 
-                        HStack {
-                            if let movement = activeSession.movement {
-                                if let roman = movement.number?.toRomanNumeral() {
-                                    Text(roman)
-                                }
-                                Text(movement.name ?? "")
+                            // Timer text in center
+                            VStack(spacing: 4) {
+                                Text(elapsedTime)
+                                    .font(.system(size: 36, weight: .bold, design: .rounded))
+                                    .foregroundColor(.primary)
+                                    .matchedGeometryEffect(id: "timer", in: animation)
+
+                                Text("ELAPSED")
+                                    .font(.caption2)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.secondary)
+                                    .tracking(1.2)
                             }
                         }
-                        .matchedGeometryEffect(id: "movement", in: animation)
+                        .padding(.vertical, 20)
+                        .offset(y: animateContent ? 0 : size.height)
 
-                        if let composer = activeSession.piece.composer?.name {
-                            Text(composer)
-                                .matchedGeometryEffect(id: "composer", in: animation)
+                        // Movement and composer info below the circle
+                        VStack(spacing: 8) {
+                            HStack {
+                                if let movement = activeSession.movement {
+                                    if let roman = movement.number?.toRomanNumeral() {
+                                        Text(roman)
+                                            .fontWeight(.medium)
+                                    }
+                                    Text(movement.name ?? "")
+                                        .fontWeight(.medium)
+                                }
+                            }
+                            .font(.subheadline)
+                            .foregroundColor(.primary)
+                            .matchedGeometryEffect(id: "movement", in: animation)
+
+                            if let composer = activeSession.piece.composer?.name {
+                                Text(composer)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                    .matchedGeometryEffect(id: "composer", in: animation)
+                            }
                         }
+                        .offset(y: animateContent ? 0 : size.height)
 
                         Spacer()
+
+                        // Stop button at bottom
+                        Button {
+                            Task { await sessionManager.stopSession() }
+                        } label: {
+                            HStack {
+                                Image(systemName: "stop.fill")
+                                    .font(.title3)
+                                Text("Stop Session")
+                                    .font(.headline)
+                                    .fontWeight(.semibold)
+                            }
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 50)
+                            .background(Color.secondary)
+                            .cornerRadius(12)
+                        }
+                        .padding(.horizontal, 25)
+                        .padding(.bottom, 20)
+                        .offset(y: animateContent ? 0 : size.height)
+
                     } else {
                         // Collapsed content
                         HStack(spacing: 0) {
@@ -142,7 +197,6 @@ struct BottomSheet: View {
                 .padding(.bottom, isExpanded ? (safeArea.bottom == 0 ? 10 : safeArea.bottom) : 0)
                 .padding(.horizontal, isExpanded ? 25 : 0)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: isExpanded ? .top : .center)
-                .clipped()
             }
             .contentShape(Rectangle())
             .offset(y: isExpanded ? offsetY : 0)
@@ -164,7 +218,7 @@ struct BottomSheet: View {
                         }
                     } : nil
             )
-            .ignoresSafeArea(.all, edges: isExpanded ? .all : .bottom)
+            .ignoresSafeArea(.container, edges: .bottom)
             .onAppear {
                 updateElapsedTime()
                 if isExpanded {
@@ -187,7 +241,7 @@ struct BottomSheet: View {
                     offsetY = 0
                 }
             }
-            .onReceive(Timer.publish(every: 1, on: .main, in: .common).autoconnect()) { _ in
+            .onReceive(Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()) { _ in
                 updateElapsedTime()
             }
         }
@@ -219,6 +273,24 @@ struct BottomSheet: View {
             elapsedTime = String(format: "%d:%02d:%02d", hours, minutes, seconds)
         } else {
             elapsedTime = String(format: "%02d:%02d", minutes, seconds)
+        }
+    }
+}
+
+struct BottomSheet_Previews: PreviewProvider {
+    static var previews: some View {
+        PreviewWrapper()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .ignoresSafeArea()
+    }
+
+    struct PreviewWrapper: View {
+        @Namespace var animation
+        @State private var isExpanded = true
+
+        var body: some View {
+            BottomSheet(animation: animation, isExpanded: $isExpanded, activeSession: PracticeSessionDetails.previewChopin)
+                .environmentObject(PracticeSessionViewModel())
         }
     }
 }
