@@ -12,7 +12,7 @@ struct BottomSheet: View {
     @Binding var isExpanded: Bool
     @State private var elapsedTime: String = "00:00"
     @State var animateContent = false
-    @State var offsetY: CGFloat = 0
+    @Binding var offsetY: CGFloat
     var activeSession: PracticeSessionDetails
     @EnvironmentObject var sessionManager: PracticeSessionViewModel
 
@@ -289,7 +289,7 @@ struct BottomSheet_Previews: PreviewProvider {
         @State private var isExpanded = true
 
         var body: some View {
-            BottomSheet(animation: animation, isExpanded: $isExpanded, activeSession: PracticeSessionDetails.previewChopin)
+            BottomSheet(animation: animation, isExpanded: $isExpanded, offsetY: .constant(0), activeSession: PracticeSessionDetails.previewChopin)
                 .environmentObject(PracticeSessionViewModel())
         }
     }

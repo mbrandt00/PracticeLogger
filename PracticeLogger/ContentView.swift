@@ -24,6 +24,7 @@ struct ContentView: View {
     @StateObject private var keyboardResponder = KeyboardResponder()
     @StateObject private var uiState = UIState()
     @State private var isExpanded = false
+    @State private var offsetY: CGFloat = 0
     @Environment(\.scenePhase) private var scenePhase
 
     init(isSignedIn: Binding<Bool>, practiceSessionViewModel: PracticeSessionViewModel = PracticeSessionViewModel()) {
@@ -55,12 +56,13 @@ struct ContentView: View {
                             .tabItem { Label("Settings", systemImage: "gear") }
                             .tag(Tabs.settings)
                     }
-                    .opacity(isExpanded ? 0 : 1)
+                    .opacity(isExpanded ? max(0, min(1, offsetY / 300)) : 1)
 
                     if shouldShowBottomSheet || isExpanded {
                         BottomSheet(
                             animation: animation,
                             isExpanded: $isExpanded,
+                            offsetY: $offsetY,
                             activeSession: practiceSessionViewModel.activeSession!
                         )
                         .padding(.bottom, isExpanded ? 0 : geometry.safeAreaInsets.bottom + standardTabBarHeight)
