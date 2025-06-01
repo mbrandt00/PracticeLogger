@@ -121,7 +121,16 @@ struct BottomSheet: View {
 
                         // Stop button at bottom
                         Button {
-                            Task { await sessionManager.stopSession() }
+                            Task {
+                                withAnimation {
+                                    isExpanded = false
+                                    offsetY = 0
+                                }
+
+                                try? await Task.sleep(nanoseconds: 300000000)
+
+                                await sessionManager.stopSession()
+                            }
                         } label: {
                             HStack {
                                 Image(systemName: "stop.fill")

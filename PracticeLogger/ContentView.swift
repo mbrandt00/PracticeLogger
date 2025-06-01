@@ -58,12 +58,12 @@ struct ContentView: View {
                     }
                     .opacity(isExpanded ? max(0, min(1, offsetY / 300)) : 1)
 
-                    if shouldShowBottomSheet || isExpanded {
+                    if shouldShowBottomSheet || isExpanded, let activeSession = practiceSessionViewModel.activeSession {
                         BottomSheet(
                             animation: animation,
                             isExpanded: $isExpanded,
                             offsetY: $offsetY,
-                            activeSession: practiceSessionViewModel.activeSession!
+                            activeSession: activeSession
                         )
                         .padding(.bottom, isExpanded ? 0 : geometry.safeAreaInsets.bottom + standardTabBarHeight)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
