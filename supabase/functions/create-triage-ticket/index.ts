@@ -12,11 +12,12 @@ Deno.serve(async (req) => {
       title,
       description,
       issueType,
-    }: { title: string; description: string; issueType: "bug" | "feature" } =
+    }: { title: string; description?: string; issueType: "bug" | "feature" } =
       await req.json();
 
-    if (!title || !description) {
-      return new Response("Missing required fields: title, description", {
+    console.log("DATA", title, description, issueType);
+    if (!title) {
+      return new Response("Missing required fields: title", {
         status: 400,
       });
     }
