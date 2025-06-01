@@ -9,7 +9,7 @@ import AlertToast
 import Supabase
 import SwiftUI
 
-struct BugReportView: View {
+struct FeedbackView: View {
     @State private var title = ""
     @State private var description = ""
     @State private var issueType = "Bug"
@@ -69,9 +69,10 @@ struct BugReportView: View {
                     isSubmitting = false
                 }
             }
-            .disabled(title.isEmpty || description.isEmpty || isSubmitting)
+            .disabled(title.isEmpty || isSubmitting)
         }
-        .navigationTitle("Report Bug")
+        .background(Color(UIColor.systemBackground))
+        .navigationTitle("Submit feedback")
         .toast(isPresenting: $showToast) {
             AlertToast(
                 displayMode: .banner(.pop),
@@ -91,4 +92,10 @@ struct BugReportResponse: Decodable {
 struct LinearIssue: Decodable {
     let id: String
     let title: String
+}
+
+#Preview {
+    NavigationStack {
+        FeedbackView()
+    }
 }

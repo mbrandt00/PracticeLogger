@@ -18,7 +18,7 @@ struct Settings: View {
         NavigationView {
             VStack {
                 List {
-                    NavigationLink("Report Bug", destination: BugReportView())
+                    NavigationLink("Submit feedback", destination: FeedbackView())
                     Button("Sign Out") {
                         Task {
                             do {
