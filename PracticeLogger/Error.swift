@@ -7,14 +7,6 @@
 
 import Foundation
 
-enum SupabaseError: Error {
-    case pieceAlreadyExists
-}
-
-enum AuthError: Error {
-    case notSignedIn, signInAppleNotEnabled
-}
-
 struct RuntimeError: LocalizedError {
     let description: String
 
