@@ -79,7 +79,7 @@ struct SignIn: View {
                 mode: $authMode,
                 viewModel: viewModel
             )
-            .presentationDetents([.height(320)])
+            .presentationDetents([.height(280)])
             .presentationDragIndicator(.visible)
         }
         .toast(isPresenting: $isShowingToast) {

@@ -32,7 +32,7 @@ struct EmailAuthForm: View {
                             .textContentType(.password)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                     }
-                    .padding(.horizontal)
+                    .padding()
                     if !errorMessage.isEmpty {
                         Text(errorMessage)
                             .foregroundColor(.red)
