@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RecentPracticeSessionListItem: View {
     let session: RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.Node
+    let onDelete: (String) -> Void
     private var pieceDetails: PieceDetails {
         session.piece.fragments.pieceDetails
     }
@@ -91,11 +92,12 @@ struct RecentPracticeSessionListItem: View {
                             .delete()
                             .eq("id", value: session.id)
                             .execute()
-
+                        await MainActor.run {
+                            onDelete(session.id)
+                        }
                         print(result)
                     } catch let err {
                         print(err)
-                        // Handle errors here
                     }
                 }
             } label: {
