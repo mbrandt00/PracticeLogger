@@ -59,11 +59,19 @@ struct RecentPracticeSessionListItem: View {
 
             // Third line: Movement + duration or just duration
             HStack {
-                if hasMovement, let movementName = session.movement?.name {
-                    Text(movementName)
-                        .font(.footnote)
-                        .foregroundColor(.secondary)
-                        .lineLimit(1)
+                if hasMovement, let movement = session.movement {
+                    if let number = movement.number?.toRomanNumeral(), let name = movement.name {
+                        Text("\(number) \(name)")
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                            .fontWeight(.medium)
+                            .lineLimit(1)
+                    } else if let name = movement.name {
+                        Text(name)
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                            .lineLimit(1)
+                    }
 
                     Text("•")
                         .font(.caption)
@@ -104,5 +112,19 @@ struct RecentPracticeSessionListItem: View {
                 Label("Delete", systemImage: "trash")
             }
         }
+    }
+}
+
+struct RecentPracticeSessionListItem_Previews: PreviewProvider {
+    static var previews: some View {
+        let previewSession = PracticeSessionDetails.previewBach.toRecentUserSessionEdge().node
+
+        List {
+            RecentPracticeSessionListItem(session: previewSession) { _ in
+                // No-op delete handler for preview
+            }
+        }
+        .listStyle(.insetGrouped)
+        .previewDisplayName("Bach Session Preview")
     }
 }

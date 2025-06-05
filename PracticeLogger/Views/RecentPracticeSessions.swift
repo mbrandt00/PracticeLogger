@@ -11,13 +11,22 @@ import SwiftUI
 
 struct RecentPracticeSessions: View {
     @ObservedObject var practiceSessionViewModel: PracticeSessionViewModel
-    @State private var recentSessions = [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge]()
+    @State private var recentSessions: [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge]
     @StateObject private var searchViewModel = SearchViewModel()
     @State private var isSearching = false
     @EnvironmentObject var keyboardResponder: KeyboardResponder
-    @State private var isLoading = true
+    @State private var isLoading: Bool
     @EnvironmentObject var uiState: UIState
     @State private var path = NavigationPath()
+
+    init(
+        practiceSessionViewModel: PracticeSessionViewModel,
+        previewSessions: [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge]? = nil
+    ) {
+        self.practiceSessionViewModel = practiceSessionViewModel
+        _recentSessions = State(initialValue: previewSessions ?? [])
+        _isLoading = State(initialValue: previewSessions == nil)
+    }
 
     var sessionSections: [SessionDaySection] {
         let grouped = Dictionary(grouping: recentSessions) { session in
@@ -180,4 +189,15 @@ struct SessionDaySection: Identifiable, Hashable {
     let id: Date
     let date: Date
     let sessions: [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge]
+}
+
+struct RecentPracticeSessions_Previews: PreviewProvider {
+    static var previews: some View {
+        RecentPracticeSessions(
+            practiceSessionViewModel: PracticeSessionViewModel(),
+            previewSessions: PracticeSessionDetails.allPreviews.map { $0.toRecentUserSessionEdge() }
+        )
+        .environmentObject(KeyboardResponder())
+        .environmentObject(UIState())
+    }
 }

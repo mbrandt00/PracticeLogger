@@ -93,6 +93,57 @@ extension PracticeSessionDetails {
         piece: .init(from: PieceDetails.previewBach)
     )
 
+    func toRecentUserSessionEdge() -> RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge {
+        let gqlPiece = RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.Node.Piece(
+            lastPracticed: piece.lastPracticed,
+            totalPracticeTime: piece.totalPracticeTime,
+            id: piece.id,
+            workName: piece.workName,
+            catalogueType: piece.catalogueType,
+            keySignature: piece.keySignature,
+            format: piece.format,
+            instrumentation: piece.instrumentation,
+            wikipediaUrl: piece.wikipediaUrl,
+            imslpUrl: piece.imslpUrl,
+            compositionYear: piece.compositionYear,
+            catalogueNumberSecondary: piece.catalogueNumberSecondary,
+            catalogueTypeNumDesc: piece.catalogueTypeNumDesc,
+            compositionYearDesc: piece.compositionYearDesc,
+            compositionYearString: piece.compositionYearString,
+            pieceStyle: piece.pieceStyle,
+            subPieceType: piece.subPieceType,
+            subPieceCount: piece.subPieceCount,
+            userId: piece.userId,
+            collectionId: piece.collectionId,
+            collection: piece.collection,
+            catalogueNumber: piece.catalogueNumber,
+            nickname: piece.nickname,
+            composerId: piece.composerId,
+            composer: piece.composer,
+            movements: piece.movements
+        )
+
+        let gqlMovement = movement.map {
+            RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.Node.Movement(
+                name: $0.name
+            )
+        }
+
+        let duration = 300
+        let endTime = startTime.addingTimeInterval(TimeInterval(duration))
+
+        let gqlNode = RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.Node(
+            id: id,
+            startTime: startTime,
+            durationSeconds: duration,
+            piece: gqlPiece,
+            endTime: endTime,
+            movement: gqlMovement
+        )
+
+        return RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge(node: gqlNode)
+    }
+
     static let allPreviews = [
         previewBach,
         previewChopin,

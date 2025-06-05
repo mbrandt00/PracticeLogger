@@ -7,7 +7,7 @@ public class RecentUserSessionsQuery: GraphQLQuery {
   public static let operationName: String = "RecentUserSessions"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query RecentUserSessions($userId: UUID!) { practiceSessionsCollection( filter: { userId: { eq: $userId } } orderBy: { endTime: DescNullsFirst } ) { __typename edges { __typename node { __typename id startTime durationSeconds piece { __typename ...PieceDetails } endTime movement { __typename name } } } } }"#,
+      #"query RecentUserSessions($userId: UUID!) { practiceSessionsCollection( filter: { userId: { eq: $userId } } orderBy: { endTime: DescNullsFirst } ) { __typename edges { __typename node { __typename id startTime durationSeconds piece { __typename ...PieceDetails } endTime movement { __typename name number } } } } }"#,
       fragments: [PieceDetails.self]
     ))
 
@@ -285,17 +285,21 @@ public class RecentUserSessionsQuery: GraphQLQuery {
             public static var __selections: [ApolloAPI.Selection] { [
               .field("__typename", String.self),
               .field("name", String?.self),
+              .field("number", Int?.self),
             ] }
 
             public var name: String? { __data["name"] }
+            public var number: Int? { __data["number"] }
 
             public init(
-              name: String? = nil
+              name: String? = nil,
+              number: Int? = nil
             ) {
               self.init(_dataDict: DataDict(
                 data: [
                   "__typename": ApolloGQL.Objects.Movement.typename,
                   "name": name,
+                  "number": number,
                 ],
                 fulfilledFragments: [
                   ObjectIdentifier(RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.Node.Movement.self)

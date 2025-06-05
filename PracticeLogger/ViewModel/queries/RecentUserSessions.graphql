@@ -14,9 +14,9 @@ query RecentUserSessions($userId: UUID!) {
         endTime
         movement {
           name
+          number
         }
       }
     }
   }
 }
-
