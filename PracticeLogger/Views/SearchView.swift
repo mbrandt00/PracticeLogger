@@ -11,8 +11,30 @@ import SwiftUI
 struct SearchView: View {
     @ObservedObject var searchViewModel: SearchViewModel
     @EnvironmentObject var practiceSessionViewModel: PracticeSessionViewModel
-    @State var isLoading: Bool = true
     @Binding var path: NavigationPath
+
+    @State private var isLoading: Bool
+    private var preview: Bool = false
+
+    init(
+        searchViewModel: SearchViewModel,
+        path: Binding<NavigationPath>,
+        previewUserPieces: [PieceDetails]? = nil,
+        previewNewPieces: [PieceDetails]? = nil
+    ) {
+        self.searchViewModel = searchViewModel
+        self._path = path
+        self._isLoading = State(initialValue: previewUserPieces == nil && previewNewPieces == nil)
+
+        // Preload pieces for preview
+        if let userPieces = previewUserPieces {
+            self.searchViewModel.userPieces = userPieces
+        }
+
+        if let newPieces = previewNewPieces {
+            self.searchViewModel.newPieces = newPieces
+        }
+    }
 
     private var isEmpty: Bool {
         searchViewModel.userPieces.isEmpty && searchViewModel.newPieces.isEmpty
@@ -150,33 +172,63 @@ struct RepertoireRow: View {
     var piece: PieceDetails
     var isActive: Bool = false
 
+    private var formattedCatalogueInfo: String {
+        if let type = piece.catalogueType?.displayName, let number = piece.catalogueNumber {
+            return "\(type) \(number)"
+        }
+        return ""
+    }
+
+    private var totalTimeText: String {
+        if let time = piece.totalPracticeTime, time > 0 {
+            return time.formattedTimeDuration
+        }
+        return ""
+    }
+
     var body: some View {
-        HStack(alignment: .center) {
-            VStack(alignment: .leading, spacing: 4) {
-                HStack(alignment: .center, spacing: 6) {
-                    Text(piece.workName)
-                        .font(.headline)
-                        .lineLimit(1)
-
-                    if isActive {
-                        Image(systemName: "music.quarternote.3")
-                            .foregroundStyle(Color.theme.accent.opacity(0.6))
-                    }
-
-                    if piece.lastPracticed == nil {
-                        NewItemBadge()
-                    }
+        VStack(alignment: .leading, spacing: 2) {
+            // Line 1: Composer • Catalogue
+            HStack(spacing: 4) {
+                if isActive {
+                    AnimatedQuarternotes()
+                        .padding(.trailing, 4)
                 }
 
-                if let composerName = piece.composer?.name {
-                    Text(composerName)
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
+                if let composer = piece.composer?.name {
+                    Text(composer)
+                }
+
+                if !formattedCatalogueInfo.isEmpty {
+                    Text("•")
+                    Text(formattedCatalogueInfo)
+                }
+            }
+            .font(.footnote)
+            .foregroundColor(.secondary)
+
+            // Line 2: Work name + status indicators
+            HStack(alignment: .center, spacing: 6) {
+                Text(piece.workName)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
+                    .padding(.trailing, isActive ? 4 : 0)
+
+                if piece.lastPracticed == nil {
+                    NewItemBadge()
                 }
             }
 
-            Spacer()
+            // Line 3: Total practice time
+            if !totalTimeText.isEmpty && totalTimeText != "0" {
+                Text(totalTimeText)
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+            }
         }
+        .padding(.vertical, 4)
     }
 }
 
@@ -198,30 +250,22 @@ enum PieceNavigationContext: Hashable {
     case newPiece(PieceDetails)
 }
 
-struct SearchView_Previews: PreviewProvider {
+struct RepertoireRow_Previews: PreviewProvider {
     static var previews: some View {
-        let searchViewModel = SearchViewModel()
-        searchViewModel.newPieces = []
-        searchViewModel.userPieces = PieceDetails.allPreviews
-
-        let practiceSessionViewModel = PracticeSessionViewModel()
-
-        return NavigationStack {
-            StateWrapper(
-                searchViewModel: searchViewModel,
-                practiceSessionViewModel: practiceSessionViewModel
+        Group {
+            RepertoireRow(
+                piece: PieceDetails.previewBach,
+                isActive: false
             )
-        }
-    }
+            .previewDisplayName("Practiced Piece")
 
-    private struct StateWrapper: View {
-        let searchViewModel: SearchViewModel
-        let practiceSessionViewModel: PracticeSessionViewModel
-        @State private var path = NavigationPath()
-
-        var body: some View {
-            SearchView(searchViewModel: searchViewModel, path: $path)
-                .environmentObject(practiceSessionViewModel)
+            RepertoireRow(
+                piece: PieceDetails.previewChopin,
+                isActive: true
+            )
+            .previewDisplayName("New & Active Piece")
         }
+        .padding()
+        .previewLayout(.sizeThatFits)
     }
 }
