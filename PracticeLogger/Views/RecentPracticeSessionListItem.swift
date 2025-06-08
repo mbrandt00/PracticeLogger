@@ -97,7 +97,7 @@ struct RecentPracticeSessionListItem: View {
                 Task {
                     do {
                         let result = try await Database.client.from("practice_sessions")
-                            .delete()
+                            .update(["deleted": true])
                             .eq("id", value: session.id)
                             .execute()
                         await MainActor.run {

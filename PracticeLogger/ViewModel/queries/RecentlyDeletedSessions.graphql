@@ -1,0 +1,11 @@
+query RecentlyDeletedSessions($userId: UUID!) {
+  practiceSessionsCollection(
+    filter: { userId: { eq: $userId }, deleted: { eq: true } }
+  ) {
+    edges {
+      node {
+        ...PracticeSessionDetails
+      }
+    }
+  }
+}

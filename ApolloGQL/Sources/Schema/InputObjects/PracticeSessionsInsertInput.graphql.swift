@@ -15,14 +15,16 @@ public struct PracticeSessionsInsertInput: InputObject {
     endTime: GraphQLNullable<Datetime> = nil,
     pieceId: GraphQLNullable<BigInt> = nil,
     movementId: GraphQLNullable<BigInt> = nil,
-    userId: GraphQLNullable<UUID> = nil
+    userId: GraphQLNullable<UUID> = nil,
+    deleted: GraphQLNullable<Bool> = nil
   ) {
     __data = InputDict([
       "startTime": startTime,
       "endTime": endTime,
       "pieceId": pieceId,
       "movementId": movementId,
-      "userId": userId
+      "userId": userId,
+      "deleted": deleted
     ])
   }
 
@@ -49,5 +51,10 @@ public struct PracticeSessionsInsertInput: InputObject {
   public var userId: GraphQLNullable<UUID> {
     get { __data["userId"] }
     set { __data["userId"] = newValue }
+  }
+
+  public var deleted: GraphQLNullable<Bool> {
+    get { __data["deleted"] }
+    set { __data["deleted"] = newValue }
   }
 }

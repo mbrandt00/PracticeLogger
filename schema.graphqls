@@ -772,6 +772,7 @@ type Mutation {
 
   """Adds one or more `PracticeSessions` records to the collection"""
   insertIntoPracticeSessionsCollection(objects: [PracticeSessionsInsertInput!]!): PracticeSessionsInsertResponse
+  refreshAllSearchableText: Opaque
 
   """Updates zero or more records in the `Collections` collection"""
   updateCollectionsCollection(
@@ -1202,6 +1203,7 @@ type PracticeSessions implements Node {
   movementId: BigInt
   userId: UUID!
   durationSeconds: Int
+  deleted: Boolean
   movement: Movement
   piece: Piece!
 }
@@ -1232,6 +1234,7 @@ input PracticeSessionsFilter {
   movementId: BigIntFilter
   userId: UUIDFilter
   durationSeconds: IntFilter
+  deleted: BooleanFilter
   nodeId: IDFilter
 
   """
@@ -1254,6 +1257,7 @@ input PracticeSessionsInsertInput {
   pieceId: BigInt
   movementId: BigInt
   userId: UUID
+  deleted: Boolean
 }
 
 type PracticeSessionsInsertResponse {
@@ -1272,6 +1276,7 @@ input PracticeSessionsOrderBy {
   movementId: OrderByDirection
   userId: OrderByDirection
   durationSeconds: OrderByDirection
+  deleted: OrderByDirection
 }
 
 input PracticeSessionsUpdateInput {
@@ -1280,6 +1285,7 @@ input PracticeSessionsUpdateInput {
   pieceId: BigInt
   movementId: BigInt
   userId: UUID
+  deleted: Boolean
 }
 
 type PracticeSessionsUpdateResponse {
@@ -1428,6 +1434,32 @@ type Query {
     orderBy: [PracticeSessionsOrderBy!]
   ): PracticeSessionsConnection
   searchPieces(
+    query: String!
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """
+    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
+    """
+    offset: Int
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: PieceFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [PieceOrderBy!]
+  ): PieceConnection
+  searchUserPieces(
     query: String!
 
     """Query the first `n` records in the collection"""
