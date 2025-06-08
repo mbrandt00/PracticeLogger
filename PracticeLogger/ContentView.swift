@@ -101,13 +101,20 @@ struct ContentView: View {
                 navigationBarAppearance.configureWithOpaqueBackground()
                 UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
             }
-            .onChange(of: scenePhase) {
-                if scenePhase == .active {
+            .onChange(of: scenePhase) { _, newPhase in
+                if newPhase == .active {
                     Task {
                         do {
+                            let session = try await Database.client.auth.session
+                            if session.isExpired {
+                                try await Database.client.auth.refreshSession()
+                            }
+
+                            isSignedIn = true
                             practiceSessionViewModel.activeSession = try await practiceSessionViewModel.fetchCurrentActiveSession()
                         } catch {
-                            print("Failed to refresh session on foreground: \(error)")
+                            print("Error checking or refreshing session: \(error)")
+                            isSignedIn = false
                         }
                     }
                 }

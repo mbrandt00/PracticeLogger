@@ -28,6 +28,7 @@
 		D144A65B2DA7D4E8002A682A /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D144A65A2DA7D4E8002A682A /* ApolloGQL */; };
 		D144A65D2DA7D512002A682A /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D144A65C2DA7D512002A682A /* ApolloGQL */; };
 		D146F87B2DC7CE6E00C4B7BD /* RecentPracticeSessionListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D146F87A2DC7CE6E00C4B7BD /* RecentPracticeSessionListItem.swift */; };
+		D148E76A2DF5EFED0012579E /* ApolloSQLite in Frameworks */ = {isa = PBXBuildFile; productRef = D148E7692DF5EFED0012579E /* ApolloSQLite */; };
 		D148F5FE2DA18E8600EA70CB /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D148F5FD2DA18E8600EA70CB /* ApolloGQL */; };
 		D148F6002DA18E9E00EA70CB /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D148F5FF2DA18E9E00EA70CB /* ApolloGQL */; };
 		D148F6022DA18F0100EA70CB /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D148F6012DA18F0100EA70CB /* ApolloGQL */; };
@@ -264,6 +265,7 @@
 				D18ADB272D872540007760E5 /* ApolloGQL in Frameworks */,
 				D18ADB262D872540007760E5 /* ApolloGQL in Frameworks */,
 				D18ADB252D872540007760E5 /* ApolloGQL in Frameworks */,
+				D148E76A2DF5EFED0012579E /* ApolloSQLite in Frameworks */,
 				D18ADB242D872540007760E5 /* ApolloGQL in Frameworks */,
 				D18ADB232D872540007760E5 /* ApolloGQL in Frameworks */,
 				D18ADB222D872540007760E5 /* ApolloGQL in Frameworks */,
@@ -627,6 +629,7 @@
 				D18D53EA2DAB1911008FAD37 /* ApolloGQL */,
 				D1265E452DAC3D83000FB7DC /* ApolloGQL */,
 				D1F3AA3F2DD974F600A0C1E7 /* KeychainAccess */,
+				D148E7692DF5EFED0012579E /* ApolloSQLite */,
 			);
 			productName = PracticeLogger;
 			productReference = D19E733B2B898F9300BB3EC7 /* PracticeLogger.app */;
@@ -1249,6 +1252,11 @@
 		D146A7502CFD2CD40066093A /* ApolloGQL */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ApolloGQL;
+		};
+		D148E7692DF5EFED0012579E /* ApolloSQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D12F1F362CFD749200235C16 /* XCRemoteSwiftPackageReference "apollo-ios" */;
+			productName = ApolloSQLite;
 		};
 		D148F5FD2DA18E8600EA70CB /* ApolloGQL */ = {
 			isa = XCSwiftPackageProductDependency;

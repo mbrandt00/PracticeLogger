@@ -27,23 +27,20 @@ class PieceDbUpdater {
 
     /// Save the piece - automatically determines whether to insert or update
     func save() async throws -> PieceDetails {
-        do {
-            if let pieceId = pieceId {
-                // Update existing piece
-                return try await updatePiece(pieceId: pieceId)
-            } else {
-                // Insert new piece
-                return try await insertPiece()
-            }
-        } catch let error as RuntimeError where error.description.contains("extra keys [\"imslpPieceId\"]") || error.description.contains("schema mismatch") {
-            attempts += 1
-            if attempts < maxAttempts {
-                print("🔵 Schema mismatch detected, clearing cache and retrying...")
-                Network.shared.apollo.clearCache()
-                return try await save()
-            }
-            throw error
+        let pieceDetails: PieceDetails
+
+        if let pieceId = pieceId {
+            pieceDetails = try await updatePiece(pieceId: pieceId)
+        } else {
+            pieceDetails = try await insertPiece()
         }
+
+        // 👇 Invalidate the cached Piece object
+        try? await Network.shared.apollo.store.withinReadWriteTransaction { transaction in
+            try transaction.removeObject(for: "Piece:\(pieceDetails.id)")
+        }
+
+        return pieceDetails
     }
 
     // MARK: - Insert Operations

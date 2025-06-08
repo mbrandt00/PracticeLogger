@@ -7,6 +7,7 @@
 import Apollo
 import ApolloAPI
 import ApolloGQL
+import ApolloSQLite
 import Foundation
 
 class AuthorizationInterceptor: ApolloInterceptor {
@@ -49,12 +50,12 @@ class NetworkInterceptorProvider: InterceptorProvider {
         return [
             AuthorizationInterceptor(),
             MaxRetryInterceptor(),
-//            CacheReadInterceptor(store: store),
+            CacheReadInterceptor(store: store),
             NetworkFetchInterceptor(client: client),
             ResponseCodeInterceptor(),
             JSONResponseParsingInterceptor(),
             AutomaticPersistedQueryInterceptor(),
-//            CacheWriteInterceptor(store: store)
+            CacheWriteInterceptor(store: store)
         ]
     }
 }
@@ -64,15 +65,29 @@ class Network {
 
     private(set) lazy var apollo: ApolloClient = {
         let client = URLSessionClient()
-        let cache = InMemoryNormalizedCache()
-        let store = ApolloStore(cache: cache)
-        let provider = NetworkInterceptorProvider(store: store, client: client)
-        guard let supabaseUrlString = GlobalSettings.baseApiUrl
-        else {
-            fatalError("Missing SUPABASE_URL for Graphql URL")
+
+        let store: ApolloStore
+        do {
+            let fileURL = FileManager.default
+                .urls(for: .cachesDirectory, in: .userDomainMask)
+                .first!
+                .appendingPathComponent("apollo.sqlite")
+
+            let sqliteCache = try SQLiteNormalizedCache(fileURL: fileURL)
+            store = ApolloStore(cache: sqliteCache)
+        } catch {
+            print("⚠️ Failed to initialize SQLiteNormalizedCache. Falling back to in-memory cache: \(error)")
+            store = ApolloStore(cache: InMemoryNormalizedCache())
         }
-        let url = URL(string: "\(supabaseUrlString)/graphql/v1")
-        let transport = RequestChainNetworkTransport(interceptorProvider: provider, endpointURL: url!)
+
+        guard let supabaseUrlString = GlobalSettings.baseApiUrl,
+              let endpointURL = URL(string: "\(supabaseUrlString)/graphql/v1")
+        else {
+            fatalError("❌ Missing or invalid Supabase GraphQL URL.")
+        }
+
+        let provider = NetworkInterceptorProvider(store: store, client: client)
+        let transport = RequestChainNetworkTransport(interceptorProvider: provider, endpointURL: endpointURL)
 
         return ApolloClient(networkTransport: transport, store: store)
     }()

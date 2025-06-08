@@ -10,6 +10,8 @@ import SwiftUI
 @main
 struct PracticeLoggerApp: App {
     @State private var isSignedIn = false
+    @State private var isLoading = true
+
     init() {
         DispatchQueue.main.async {
             UITextField.appearance().clearButtonMode = .whileEditing
@@ -18,26 +20,29 @@ struct PracticeLoggerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(isSignedIn: $isSignedIn)
-                .onAppear {
-                    updateSignInStatus()
+            Group {
+                if isLoading {
+                    ProgressView("Loading...")
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(Color(.systemBackground))
+                } else {
+                    ContentView(isSignedIn: $isSignedIn)
                 }
+            }
+            .task {
+                await updateSignInStatus()
+            }
         }
     }
 
-    private func updateSignInStatus() {
-        Task {
-            do {
-                let session = try await Database.client.auth.session
-                if session.isExpired {
-                    isSignedIn = false
-                } else {
-                    isSignedIn = true
-                }
-            } catch {
-                print("Error fetching session: \(error)")
-                isSignedIn = false
-            }
+    private func updateSignInStatus() async {
+        do {
+            let session = try await Database.client.auth.session
+            isSignedIn = !session.isExpired
+        } catch {
+            print("Error fetching session: \(error)")
+            isSignedIn = false
         }
+        isLoading = false
     }
 }
