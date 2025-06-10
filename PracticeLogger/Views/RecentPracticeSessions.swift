@@ -11,26 +11,26 @@ import SwiftUI
 
 struct RecentPracticeSessions: View {
     @ObservedObject var practiceSessionViewModel: PracticeSessionViewModel
-    @State private var recentSessions: [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge]
     @StateObject private var searchViewModel = SearchViewModel()
     @State private var isSearching = false
     @EnvironmentObject var keyboardResponder: KeyboardResponder
     @State private var isLoading: Bool
     @EnvironmentObject var uiState: UIState
     @State private var path = NavigationPath()
+    private let previewSessions: [PracticeSessionDetails]?
 
     init(
         practiceSessionViewModel: PracticeSessionViewModel,
-        previewSessions: [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge]? = nil
+        previewSessions: [PracticeSessionDetails]? = nil
     ) {
         self.practiceSessionViewModel = practiceSessionViewModel
-        _recentSessions = State(initialValue: previewSessions ?? [])
         _isLoading = State(initialValue: previewSessions == nil)
+        self.previewSessions = previewSessions
     }
 
     var sessionSections: [SessionDaySection] {
-        let grouped = Dictionary(grouping: recentSessions) { session in
-            Calendar.current.startOfDay(for: session.node.startTime)
+        let grouped = Dictionary(grouping: practiceSessionViewModel.recentSessions) { session in
+            Calendar.current.startOfDay(for: session.startTime)
         }
 
         return grouped
@@ -38,6 +38,26 @@ struct RecentPracticeSessions: View {
                 SessionDaySection(id: key, date: key, sessions: value)
             }
             .sorted(by: { $0.date > $1.date }) // Keep latest day at the top
+    }
+
+    private struct SessionListItemView: View {
+        let session: PracticeSessionDetails
+        let practiceSessionViewModel: PracticeSessionViewModel
+
+        var body: some View {
+            NavigationLink(
+                destination: PieceShow(
+                    piece: session.piece.fragments.pieceDetails,
+                    sessionManager: practiceSessionViewModel
+                ),
+                label: {
+                    RecentPracticeSessionListItem(
+                        practiceSessionViewModel: practiceSessionViewModel,
+                        session: session
+                    )
+                }
+            )
+        }
     }
 
     var body: some View {
@@ -82,26 +102,17 @@ struct RecentPracticeSessions: View {
                         } else {
                             ForEach(sessionSections) { section in
                                 Section(header: Text(section.date.formatted(.dateTime.year().month().day()))) {
-                                    ForEach(section.sessions, id: \.node.id) { session in
-                                        NavigationLink(
-                                            destination: PieceShow(
-                                                piece: session.node.piece.fragments.pieceDetails,
-                                                sessionManager: practiceSessionViewModel
-                                            ),
-                                            label: {
-                                                RecentPracticeSessionListItem(
-                                                    session: session.node,
-                                                    onDelete: { id in
-                                                        recentSessions.removeAll(where: { $0.node.id == id })
-                                                    }
-                                                )
-                                            }
+                                    ForEach(section.sessions, id: \.id) { session in
+                                        SessionListItemView(
+                                            session: session,
+                                            practiceSessionViewModel: practiceSessionViewModel
                                         )
                                     }
                                 }
                             }
                         }
                     }
+
                     if isLoading {
                         ProgressView("Loading recent sessions…")
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -111,7 +122,11 @@ struct RecentPracticeSessions: View {
                 .navigationTitle("Recent Sessions")
                 .autocorrectionDisabled()
                 .onAppear {
-                    loadRecentSessions()
+                    if let preview = previewSessions {
+                        practiceSessionViewModel.recentSessions = preview
+                    } else {
+                        loadRecentSessions()
+                    }
                 }
 
                 if isSearching {
@@ -151,27 +166,24 @@ struct RecentPracticeSessions: View {
     private func pieceShowDestination(for piece: PieceDetails) -> some View {
         PieceShow(
             piece: piece,
-            sessionManager: practiceSessionViewModel,
-            onDelete: {
-                Task { @MainActor in
-                    searchViewModel.userPieces.removeAll(where: { $0.id == piece.id })
-                    searchViewModel.searchTerm = ""
-                    isSearching = false
-                    await searchViewModel.searchPieces()
-                }
-            }
+            sessionManager: practiceSessionViewModel
         )
     }
 
     private func loadRecentSessions() {
+        isLoading = true
         Task {
             do {
-                isLoading = true
-                recentSessions = try await practiceSessionViewModel.getRecentUserPracticeSessions()
+                let _ = try await practiceSessionViewModel.getRecentUserPracticeSessions()
+                await MainActor.run {
+                    isLoading = false
+                }
             } catch {
                 print("Error fetching recent sessions: \(error)")
+                await MainActor.run {
+                    isLoading = false
+                }
             }
-            isLoading = false
         }
     }
 
@@ -188,16 +200,16 @@ struct RecentPracticeSessions: View {
 struct SessionDaySection: Identifiable, Hashable {
     let id: Date
     let date: Date
-    let sessions: [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge]
+    let sessions: [PracticeSessionDetails]
 }
 
-struct RecentPracticeSessions_Previews: PreviewProvider {
-    static var previews: some View {
-        RecentPracticeSessions(
-            practiceSessionViewModel: PracticeSessionViewModel(),
-            previewSessions: PracticeSessionDetails.allPreviews.map { $0.toRecentUserSessionEdge() }
-        )
-        .environmentObject(KeyboardResponder())
-        .environmentObject(UIState())
-    }
-}
+// struct RecentPracticeSessions_Previews: PreviewProvider {
+//    static var previews: some View {
+//        RecentPracticeSessions(
+//            practiceSessionViewModel: PracticeSessionViewModel(),
+//            previewSessions: PracticeSessionDetails.allPreviews
+//        )
+//        .environmentObject(KeyboardResponder())
+//        .environmentObject(UIState())
+//    }
+// }

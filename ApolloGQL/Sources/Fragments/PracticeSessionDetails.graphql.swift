@@ -5,7 +5,7 @@
 
 public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
   public static var fragmentDefinition: StaticString {
-    #"fragment PracticeSessionDetails on PracticeSessions { __typename id startTime endTime movement { __typename id name number } piece { __typename ...PieceDetails } }"#
+    #"fragment PracticeSessionDetails on PracticeSessions { __typename id startTime endTime durationSeconds movement { __typename id name number } piece { __typename ...PieceDetails } }"#
   }
 
   public let __data: DataDict
@@ -17,6 +17,7 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
     .field("id", ApolloGQL.BigInt.self),
     .field("startTime", ApolloGQL.Datetime.self),
     .field("endTime", ApolloGQL.Datetime?.self),
+    .field("durationSeconds", Int?.self),
     .field("movement", Movement?.self),
     .field("piece", Piece.self),
   ] }
@@ -24,6 +25,7 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
   public var id: ApolloGQL.BigInt { __data["id"] }
   public var startTime: ApolloGQL.Datetime { __data["startTime"] }
   public var endTime: ApolloGQL.Datetime? { __data["endTime"] }
+  public var durationSeconds: Int? { __data["durationSeconds"] }
   public var movement: Movement? { __data["movement"] }
   public var piece: Piece { __data["piece"] }
 
@@ -31,6 +33,7 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
     id: ApolloGQL.BigInt,
     startTime: ApolloGQL.Datetime,
     endTime: ApolloGQL.Datetime? = nil,
+    durationSeconds: Int? = nil,
     movement: Movement? = nil,
     piece: Piece
   ) {
@@ -40,6 +43,7 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
         "id": id,
         "startTime": startTime,
         "endTime": endTime,
+        "durationSeconds": durationSeconds,
         "movement": movement._fieldData,
         "piece": piece._fieldData,
       ],

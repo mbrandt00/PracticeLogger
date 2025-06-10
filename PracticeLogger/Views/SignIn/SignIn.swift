@@ -55,19 +55,19 @@ struct SignIn: View {
                 isShowingEmailSheet = true
             }
 
-#if DEBUG
-            Divider().padding(.top)
+            #if DEBUG
+                Divider().padding(.top)
 
-            Button("Dev Sign In") {
-                Task {
-                    do {
-                        try await viewModel.quickSignInDev()
-                        isSignedIn = true
+                Button("Dev Sign In") {
+                    Task {
+                        do {
+                            try await viewModel.quickSignInDev()
+                            isSignedIn = true
+                        }
                     }
                 }
-            }
-            .foregroundColor(.red)
-#endif
+                .foregroundColor(.red)
+            #endif
 
             Spacer()
         }

@@ -23,6 +23,7 @@
 		D12F5E2B2D6277BC001CB9B7 /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12F5E2A2D6277B9001CB9B7 /* BottomSheet.swift */; };
 		D131F16D2B8AE54E002261BC /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F16C2B8AE54E002261BC /* Color.swift */; };
 		D131F17B2B8B090D002261BC /* MetronomeShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F17A2B8B090D002261BC /* MetronomeShape.swift */; };
+		D13BD0412DF808F300538E4B /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D13BD0402DF808F300538E4B /* ApolloGQL */; };
 		D13D0EDA2BCC2FA1006B2683 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13D0ED92BCC2FA1006B2683 /* Int.swift */; };
 		D13D0EDC2BCC4B23006B2683 /* SetString.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13D0EDB2BCC4B23006B2683 /* SetString.swift */; };
 		D144A65B2DA7D4E8002A682A /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D144A65A2DA7D4E8002A682A /* ApolloGQL */; };
@@ -291,6 +292,7 @@
 				D10DBD6C2D87C75900A5F1E0 /* ApolloGQL in Frameworks */,
 				D18ADB152D872540007760E5 /* ApolloGQL in Frameworks */,
 				D18ADB142D872540007760E5 /* ApolloGQL in Frameworks */,
+				D13BD0412DF808F300538E4B /* ApolloGQL in Frameworks */,
 				D148E7702DF60B9A0012579E /* ApolloGQL in Frameworks */,
 				D1D74EA72DA0CDEA004B5238 /* ApolloGQL in Frameworks */,
 				D144A65D2DA7D512002A682A /* ApolloGQL in Frameworks */,
@@ -636,6 +638,7 @@
 				D1F3AA3F2DD974F600A0C1E7 /* KeychainAccess */,
 				D148E7692DF5EFED0012579E /* ApolloSQLite */,
 				D148E76F2DF60B9A0012579E /* ApolloGQL */,
+				D13BD0402DF808F300538E4B /* ApolloGQL */,
 			);
 			productName = PracticeLogger;
 			productReference = D19E733B2B898F9300BB3EC7 /* PracticeLogger.app */;
@@ -1245,6 +1248,10 @@
 			productName = ApolloTestSupport;
 		};
 		D138E6922CE0565C00FE2BA6 /* ApolloGQL */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ApolloGQL;
+		};
+		D13BD0402DF808F300538E4B /* ApolloGQL */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ApolloGQL;
 		};

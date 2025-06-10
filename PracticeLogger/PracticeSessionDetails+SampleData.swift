@@ -1,5 +1,5 @@
 //
-//  MockPracticeSessions.swift
+//  PracticeSessionDetails+SampleData.swift
 //  PracticeLogger
 //
 //  Created by Michael Brandt on 5/27/25.
@@ -125,6 +125,7 @@ extension PracticeSessionDetails {
 
         let gqlMovement = movement.map {
             RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.Node.Movement(
+                id: BigInt(1),
                 name: $0.name
             )
         }
@@ -135,10 +136,10 @@ extension PracticeSessionDetails {
         let gqlNode = RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.Node(
             id: id,
             startTime: startTime,
-            durationSeconds: duration,
-            piece: gqlPiece,
             endTime: endTime,
-            movement: gqlMovement
+            durationSeconds: duration,
+            movement: gqlMovement,
+            piece: gqlPiece
         )
 
         return RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge(node: gqlNode)
@@ -149,6 +150,6 @@ extension PracticeSessionDetails {
         previewChopin,
         previewBeethoven,
         previewChopinNoMovement,
-        previewBachFinalMovement
+        previewBachFinalMovement,
     ]
 }

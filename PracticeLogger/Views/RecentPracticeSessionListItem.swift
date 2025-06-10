@@ -8,8 +8,8 @@ import ApolloGQL
 import SwiftUI
 
 struct RecentPracticeSessionListItem: View {
-    let session: RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.Node
-    let onDelete: (String) -> Void
+    @ObservedObject var practiceSessionViewModel: PracticeSessionViewModel
+    let session: PracticeSessionDetails
     private var pieceDetails: PieceDetails {
         session.piece.fragments.pieceDetails
     }
@@ -100,9 +100,13 @@ struct RecentPracticeSessionListItem: View {
                             .update(["deleted": true])
                             .eq("id", value: session.id)
                             .execute()
+
                         await MainActor.run {
-                            onDelete(session.id)
+                            if let index = practiceSessionViewModel.recentSessions.firstIndex(where: { $0.id == session.id }) {
+                                practiceSessionViewModel.recentSessions.remove(at: index)
+                            }
                         }
+
                         print(result)
                     } catch let err {
                         print(err)
@@ -115,16 +119,16 @@ struct RecentPracticeSessionListItem: View {
     }
 }
 
-struct RecentPracticeSessionListItem_Previews: PreviewProvider {
-    static var previews: some View {
-        let previewSession = PracticeSessionDetails.previewBach.toRecentUserSessionEdge().node
-
-        List {
-            RecentPracticeSessionListItem(session: previewSession) { _ in
-                // No-op delete handler for preview
-            }
-        }
-        .listStyle(.insetGrouped)
-        .previewDisplayName("Bach Session Preview")
-    }
-}
+// struct RecentPracticeSessionListItem_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let previewSession = PracticeSessionDetails.previewBach.toRecentUserSessionEdge().node
+//
+//        List {
+//            RecentPracticeSessionListItem(session: previewSession) { _ in
+//                // No-op delete handler for preview
+//            }
+//        }
+//        .listStyle(.insetGrouped)
+//        .previewDisplayName("Bach Session Preview")
+//    }
+// }

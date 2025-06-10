@@ -5,17 +5,7 @@ query RecentUserSessions($userId: UUID!) {
   ) {
     edges {
       node {
-        id
-        startTime
-        durationSeconds
-        piece {
-          ...PieceDetails
-        }
-        endTime
-        movement {
-          name
-          number
-        }
+        ...PracticeSessionDetails
       }
     }
   }

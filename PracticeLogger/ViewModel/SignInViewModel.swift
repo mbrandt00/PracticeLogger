@@ -40,9 +40,9 @@ class SignInViewModel: ObservableObject {
     }
 
     #if DEBUG
-    func quickSignInDev() async throws {
-        try await logInWithEmail(email: "test@yahoo.com", password: "password")
-    }
+        func quickSignInDev() async throws {
+            try await logInWithEmail(email: "test@yahoo.com", password: "password")
+        }
     #endif
 }
 

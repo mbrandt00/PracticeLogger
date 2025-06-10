@@ -12,7 +12,9 @@ import Supabase
 
 class PracticeSessionViewModel: ObservableObject {
     @Published var activeSession: PracticeSessionDetails?
-    @Published private var recentSessions: [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge] = []
+    @Published var recentSessions: [PracticeSessionDetails] = []
+    @Published var isLoading = false
+
     private var liveActivity: Activity<LiveActivityAttributes>?
 
     func startSession(pieceId: Int, movementId: Int?) async throws {
@@ -39,15 +41,29 @@ class PracticeSessionViewModel: ObservableObject {
         }
     }
 
-    func getRecentUserPracticeSessions() async throws -> [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge] {
+    func getRecentUserPracticeSessions() async throws -> [PracticeSessionDetails] {
+        await MainActor.run {
+            isLoading = true
+        }
+
+        defer {
+            Task { @MainActor in
+                isLoading = false
+            }
+        }
+
         let userId = try await Database.client.auth.user().id.uuidString
 
-        return try await withCheckedThrowingContinuation { continuation in
+        return try await withCheckedThrowingContinuation { [weak self] continuation in
             Network.shared.apollo.fetch(query: RecentUserSessionsQuery(userId: userId)) { result in
                 switch result {
                 case let .success(graphQlResult):
-                    if let practiceSessions = graphQlResult.data?.practiceSessionsCollection?.edges {
-                        self.recentSessions = practiceSessions
+                    if let practiceSessions = graphQlResult.data?.practiceSessionsCollection?.edges.map({ edge in
+                        edge.node.fragments.practiceSessionDetails
+                    }) {
+                        Task { @MainActor in
+                            self?.recentSessions = practiceSessions
+                        }
                         continuation.resume(returning: practiceSessions)
                     } else {
                         continuation.resume(returning: [])

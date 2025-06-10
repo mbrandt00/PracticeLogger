@@ -55,7 +55,7 @@ class NetworkInterceptorProvider: InterceptorProvider {
             ResponseCodeInterceptor(),
             JSONResponseParsingInterceptor(),
             AutomaticPersistedQueryInterceptor(),
-            CacheWriteInterceptor(store: store)
+            CacheWriteInterceptor(store: store),
         ]
     }
 }
