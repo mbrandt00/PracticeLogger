@@ -1,6 +1,6 @@
 query RecentUserSessions($userId: UUID!) {
   practiceSessionsCollection(
-    filter: { userId: { eq: $userId } }
+    filter: { userId: { eq: $userId }, deleted: { eq: false } }
     orderBy: { endTime: DescNullsFirst }
   ) {
     edges {

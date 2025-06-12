@@ -7,7 +7,7 @@ public class RecentUserSessionsQuery: GraphQLQuery {
   public static let operationName: String = "RecentUserSessions"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query RecentUserSessions($userId: UUID!) { practiceSessionsCollection( filter: { userId: { eq: $userId } } orderBy: { endTime: DescNullsFirst } ) { __typename edges { __typename node { __typename ...PracticeSessionDetails } } } }"#,
+      #"query RecentUserSessions($userId: UUID!) { practiceSessionsCollection( filter: { userId: { eq: $userId }, deleted: { eq: false } } orderBy: { endTime: DescNullsFirst } ) { __typename edges { __typename node { __typename ...PracticeSessionDetails } } } }"#,
       fragments: [PieceDetails.self, PracticeSessionDetails.self]
     ))
 
@@ -26,7 +26,10 @@ public class RecentUserSessionsQuery: GraphQLQuery {
     public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Query }
     public static var __selections: [ApolloAPI.Selection] { [
       .field("practiceSessionsCollection", PracticeSessionsCollection?.self, arguments: [
-        "filter": ["userId": ["eq": .variable("userId")]],
+        "filter": [
+          "userId": ["eq": .variable("userId")],
+          "deleted": ["eq": false]
+        ],
         "orderBy": ["endTime": "DescNullsFirst"]
       ]),
     ] }
@@ -122,6 +125,7 @@ public class RecentUserSessionsQuery: GraphQLQuery {
           public var id: ApolloGQL.BigInt { __data["id"] }
           public var startTime: ApolloGQL.Datetime { __data["startTime"] }
           public var endTime: ApolloGQL.Datetime? { __data["endTime"] }
+          public var deleted: Bool? { __data["deleted"] }
           public var durationSeconds: Int? { __data["durationSeconds"] }
           public var movement: Movement? { __data["movement"] }
           public var piece: Piece { __data["piece"] }
@@ -137,6 +141,7 @@ public class RecentUserSessionsQuery: GraphQLQuery {
             id: ApolloGQL.BigInt,
             startTime: ApolloGQL.Datetime,
             endTime: ApolloGQL.Datetime? = nil,
+            deleted: Bool? = nil,
             durationSeconds: Int? = nil,
             movement: Movement? = nil,
             piece: Piece
@@ -147,6 +152,7 @@ public class RecentUserSessionsQuery: GraphQLQuery {
                 "id": id,
                 "startTime": startTime,
                 "endTime": endTime,
+                "deleted": deleted,
                 "durationSeconds": durationSeconds,
                 "movement": movement._fieldData,
                 "piece": piece._fieldData,

@@ -122,11 +122,7 @@ struct RecentPracticeSessions: View {
                 .navigationTitle("Recent Sessions")
                 .autocorrectionDisabled()
                 .onAppear {
-                    if let preview = previewSessions {
-                        practiceSessionViewModel.recentSessions = preview
-                    } else {
-                        loadRecentSessions()
-                    }
+                    loadRecentSessions()
                 }
 
                 if isSearching {

@@ -122,6 +122,7 @@ public class RecentlyDeletedSessionsQuery: GraphQLQuery {
           public var id: ApolloGQL.BigInt { __data["id"] }
           public var startTime: ApolloGQL.Datetime { __data["startTime"] }
           public var endTime: ApolloGQL.Datetime? { __data["endTime"] }
+          public var deleted: Bool? { __data["deleted"] }
           public var durationSeconds: Int? { __data["durationSeconds"] }
           public var movement: Movement? { __data["movement"] }
           public var piece: Piece { __data["piece"] }
@@ -137,6 +138,7 @@ public class RecentlyDeletedSessionsQuery: GraphQLQuery {
             id: ApolloGQL.BigInt,
             startTime: ApolloGQL.Datetime,
             endTime: ApolloGQL.Datetime? = nil,
+            deleted: Bool? = nil,
             durationSeconds: Int? = nil,
             movement: Movement? = nil,
             piece: Piece
@@ -147,6 +149,7 @@ public class RecentlyDeletedSessionsQuery: GraphQLQuery {
                 "id": id,
                 "startTime": startTime,
                 "endTime": endTime,
+                "deleted": deleted,
                 "durationSeconds": durationSeconds,
                 "movement": movement._fieldData,
                 "piece": piece._fieldData,

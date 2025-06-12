@@ -107,7 +107,7 @@ struct RecentPracticeSessionListItem: View {
                             }
                         }
 
-                        print(result)
+                        print("Deleted")
                     } catch let err {
                         print(err)
                     }
