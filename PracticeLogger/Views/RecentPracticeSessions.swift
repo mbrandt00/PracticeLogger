@@ -49,14 +49,32 @@ struct RecentPracticeSessions: View {
                 destination: PieceShow(
                     piece: session.piece.fragments.pieceDetails,
                     sessionManager: practiceSessionViewModel
-                ),
-                label: {
-                    RecentPracticeSessionListItem(
-                        practiceSessionViewModel: practiceSessionViewModel,
-                        session: session
-                    )
-                }
-            )
+                )
+            ) {
+                RecentPracticeSessionListItem(session: session)
+                    .swipeActions {
+                        Button(role: .destructive) {
+                            Task {
+                                do {
+                                    _ = try await Database.client
+                                        .from("practice_sessions")
+                                        .update(["deleted": true])
+                                        .eq("id", value: session.id)
+                                        .execute()
+
+                                    if let index = practiceSessionViewModel.recentSessions.firstIndex(where: { $0.id == session.id }) {
+                                        practiceSessionViewModel.recentSessions.remove(at: index)
+                                    }
+
+                                } catch let err {
+                                    print(err)
+                                }
+                            }
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+            }
         }
     }
 

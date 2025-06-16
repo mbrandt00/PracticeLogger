@@ -13,15 +13,52 @@ struct RecentlyDeleted: View {
 
     var body: some View {
         if deletedSessions.isEmpty {
-            Text("No deleted sessions.")
+            Text("No recently deleted sessions.")
+                .padding()
         } else {
-            List(deletedSessions, id: \.id) { session in
-                Text(session.piece.workName)
+            List {
+                Section(header:
+                    Text("Swipe left on a session to restore it. Deleted sessions are permanently removed after 30 days.")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                ) {
+                    ForEach(deletedSessions, id: \.id) { session in
+                        RecentPracticeSessionListItem(session: session)
+                            .swipeActions(allowsFullSwipe: true) {
+                                Button(role: .cancel) {
+                                    Task {
+                                        do {
+                                            _ = try await Database.client
+                                                .from("practice_sessions")
+                                                .update(["deleted": false])
+                                                .eq("id", value: session.id)
+                                                .execute()
+
+                                            if let index = deletedSessions.firstIndex(where: { $0.id == session.id }) {
+                                                await MainActor.run {
+                                                    withAnimation {
+                                                        deletedSessions.remove(at: index)
+                                                    }
+                                                }
+                                            }
+
+                                        } catch {
+                                            print(error)
+                                        }
+                                    }
+                                } label: {
+                                    Label("Undo delete", systemImage: "arrow.uturn.backward")
+                                }
+                            }
+                    }
+                }
             }
+            .listStyle(InsetGroupedListStyle())
+            .navigationTitle("Deleted sessions")
         }
     }
 }
 
-// #Preview {
-//    RecentlyDeleted()
-// }
+#Preview {
+    RecentlyDeleted(deletedSessions: .constant(PracticeSessionDetails.allPreviews))
+}

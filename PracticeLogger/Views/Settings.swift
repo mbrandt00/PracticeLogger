@@ -27,22 +27,26 @@ struct Settings: View {
                     NavigationLink("Submit feedback", destination: FeedbackView())
 
                     NavigationLink(destination: RecentlyDeleted(deletedSessions: $recentlyDeletedSessions)) {
-                        HStack {
-                            Label("Recently deleted", systemImage: "trash")
-                                .foregroundColor(deletedCount == 0 ? .gray : .primary)
+                        HStack(alignment: .center) {
+                            Text("Recently deleted")
 
                             Spacer()
 
                             if deletedCount > 0 {
-                                Text("\(deletedCount)")
+                                let badgeText = deletedCount > 99 ? "99+" : "\(deletedCount)"
+
+                                Text(badgeText)
                                     .font(.caption2)
                                     .foregroundColor(.white)
-                                    .padding(6)
-                                    .background(Circle().fill(Color.red))
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(
+                                        Capsule()
+                                            .fill(Color.red)
+                                    )
                                     .accessibilityLabel("\(deletedCount) deleted pieces")
                             }
                         }
-                        .padding(.vertical, 8)
                     }
                     .disabled(deletedCount == 0)
 
@@ -69,7 +73,7 @@ struct Settings: View {
                 let userId = try await Database.client.auth.user().id.uuidString
 
                 let result = try await withCheckedThrowingContinuation { continuation in
-                    Network.shared.apollo.fetch(query: RecentlyDeletedSessionsQuery(userId: userId)) { result in
+                    Network.shared.apollo.fetch(query: RecentlyDeletedSessionsQuery(userId: userId), cachePolicy: .fetchIgnoringCacheCompletely) { result in
                         switch result {
                         case let .success(graphQlResult):
                             if let sessions = graphQlResult.data?.practiceSessionsCollection?.edges {
@@ -90,4 +94,24 @@ struct Settings: View {
             }
         }
     }
+}
+
+struct SettingsPreviewWrapper: View {
+    @State private var isSignedIn = true
+    @State private var recentlyDeletedSessions = PracticeSessionDetails.allPreviews
+
+    var body: some View {
+        Settings(
+            isSignedIn: $isSignedIn,
+            viewModel: ProfileViewModel()
+        )
+        .environmentObject(PracticeSessionViewModel())
+        .onAppear {
+            recentlyDeletedSessions = PracticeSessionDetails.allPreviews
+        }
+    }
+}
+
+#Preview {
+    SettingsPreviewWrapper()
 }

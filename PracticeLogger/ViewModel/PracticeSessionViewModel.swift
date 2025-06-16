@@ -97,19 +97,21 @@ class PracticeSessionViewModel: ObservableObject {
     }
 
     @MainActor
-    func fetchCurrentActiveSession() async throws {
+    func fetchCurrentActiveSession() async throws -> PracticeSessionDetails? {
         let userId = try await Database.client.auth.user().id.uuidString
 
-        return try await withCheckedThrowingContinuation { continuation in
+        return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<PracticeSessionDetails?, Error>) in
             Network.shared.apollo.fetch(query: ActiveUserSessionQuery(userId: userId)) { result in
                 switch result {
                 case let .success(graphQlResult):
                     if let session = graphQlResult.data?.practiceSessionsCollection?.edges.first?.node.fragments.practiceSessionDetails {
                         self.activeSession = session
                         self.startLiveActivity(practiceSession: session, startTime: session.startTime)
+                        continuation.resume(returning: session)
                     } else {
                         self.clearAppGroupSessionDefaults()
                         self.activeSession = nil
+                        continuation.resume(returning: nil)
                     }
 
                 case let .failure(error):

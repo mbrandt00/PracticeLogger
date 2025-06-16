@@ -8,7 +8,6 @@ import ApolloGQL
 import SwiftUI
 
 struct RecentPracticeSessionListItem: View {
-    @ObservedObject var practiceSessionViewModel: PracticeSessionViewModel
     let session: PracticeSessionDetails
     private var pieceDetails: PieceDetails {
         session.piece.fragments.pieceDetails
@@ -92,30 +91,6 @@ struct RecentPracticeSessionListItem: View {
             }
         }
         .padding(.vertical, 4)
-        .swipeActions {
-            Button(role: .destructive) {
-                Task {
-                    do {
-                        let result = try await Database.client.from("practice_sessions")
-                            .update(["deleted": true])
-                            .eq("id", value: session.id)
-                            .execute()
-
-                        await MainActor.run {
-                            if let index = practiceSessionViewModel.recentSessions.firstIndex(where: { $0.id == session.id }) {
-                                practiceSessionViewModel.recentSessions.remove(at: index)
-                            }
-                        }
-
-                        print("Deleted")
-                    } catch let err {
-                        print(err)
-                    }
-                }
-            } label: {
-                Label("Delete", systemImage: "trash")
-            }
-        }
     }
 }
 
