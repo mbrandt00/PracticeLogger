@@ -91,7 +91,7 @@ public class CreatePracticeSessionMutation: GraphQLMutation {
         public var id: ApolloGQL.BigInt { __data["id"] }
         public var startTime: ApolloGQL.Datetime { __data["startTime"] }
         public var endTime: ApolloGQL.Datetime? { __data["endTime"] }
-        public var deleted: Bool? { __data["deleted"] }
+        public var deletedAt: ApolloGQL.Datetime? { __data["deletedAt"] }
         public var durationSeconds: Int? { __data["durationSeconds"] }
         public var movement: Movement? { __data["movement"] }
         public var piece: Piece { __data["piece"] }
@@ -107,7 +107,7 @@ public class CreatePracticeSessionMutation: GraphQLMutation {
           id: ApolloGQL.BigInt,
           startTime: ApolloGQL.Datetime,
           endTime: ApolloGQL.Datetime? = nil,
-          deleted: Bool? = nil,
+          deletedAt: ApolloGQL.Datetime? = nil,
           durationSeconds: Int? = nil,
           movement: Movement? = nil,
           piece: Piece
@@ -118,7 +118,7 @@ public class CreatePracticeSessionMutation: GraphQLMutation {
               "id": id,
               "startTime": startTime,
               "endTime": endTime,
-              "deleted": deleted,
+              "deletedAt": deletedAt,
               "durationSeconds": durationSeconds,
               "movement": movement._fieldData,
               "piece": piece._fieldData,

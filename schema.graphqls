@@ -1203,7 +1203,7 @@ type PracticeSessions implements Node {
   movementId: BigInt
   userId: UUID!
   durationSeconds: Int
-  deleted: Boolean
+  deletedAt: Datetime
   movement: Movement
   piece: Piece!
 }
@@ -1234,7 +1234,7 @@ input PracticeSessionsFilter {
   movementId: BigIntFilter
   userId: UUIDFilter
   durationSeconds: IntFilter
-  deleted: BooleanFilter
+  deletedAt: DatetimeFilter
   nodeId: IDFilter
 
   """
@@ -1257,7 +1257,7 @@ input PracticeSessionsInsertInput {
   pieceId: BigInt
   movementId: BigInt
   userId: UUID
-  deleted: Boolean
+  deletedAt: Datetime
 }
 
 type PracticeSessionsInsertResponse {
@@ -1276,7 +1276,7 @@ input PracticeSessionsOrderBy {
   movementId: OrderByDirection
   userId: OrderByDirection
   durationSeconds: OrderByDirection
-  deleted: OrderByDirection
+  deletedAt: OrderByDirection
 }
 
 input PracticeSessionsUpdateInput {
@@ -1285,7 +1285,7 @@ input PracticeSessionsUpdateInput {
   pieceId: BigInt
   movementId: BigInt
   userId: UUID
-  deleted: Boolean
+  deletedAt: Datetime
 }
 
 type PracticeSessionsUpdateResponse {

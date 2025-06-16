@@ -2,7 +2,7 @@ fragment PracticeSessionDetails on PracticeSessions {
   id
   startTime
   endTime
-  deleted
+  deletedAt
   durationSeconds
   movement {
     id

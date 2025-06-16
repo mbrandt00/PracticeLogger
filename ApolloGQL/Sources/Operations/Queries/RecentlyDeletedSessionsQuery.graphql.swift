@@ -7,7 +7,7 @@ public class RecentlyDeletedSessionsQuery: GraphQLQuery {
   public static let operationName: String = "RecentlyDeletedSessions"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query RecentlyDeletedSessions($userId: UUID!) { practiceSessionsCollection( filter: { userId: { eq: $userId }, deleted: { eq: true } } ) { __typename edges { __typename node { __typename ...PracticeSessionDetails } } } }"#,
+      #"query RecentlyDeletedSessions($userId: UUID!) { practiceSessionsCollection( filter: { userId: { eq: $userId }, deletedAt: { is: NOT_NULL } } orderBy: { deletedAt: DescNullsFirst } ) { __typename edges { __typename node { __typename ...PracticeSessionDetails } } } }"#,
       fragments: [PieceDetails.self, PracticeSessionDetails.self]
     ))
 
@@ -25,10 +25,13 @@ public class RecentlyDeletedSessionsQuery: GraphQLQuery {
 
     public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Query }
     public static var __selections: [ApolloAPI.Selection] { [
-      .field("practiceSessionsCollection", PracticeSessionsCollection?.self, arguments: ["filter": [
-        "userId": ["eq": .variable("userId")],
-        "deleted": ["eq": true]
-      ]]),
+      .field("practiceSessionsCollection", PracticeSessionsCollection?.self, arguments: [
+        "filter": [
+          "userId": ["eq": .variable("userId")],
+          "deletedAt": ["is": "NOT_NULL"]
+        ],
+        "orderBy": ["deletedAt": "DescNullsFirst"]
+      ]),
     ] }
 
     /// A pagable collection of type `PracticeSessions`
@@ -122,7 +125,7 @@ public class RecentlyDeletedSessionsQuery: GraphQLQuery {
           public var id: ApolloGQL.BigInt { __data["id"] }
           public var startTime: ApolloGQL.Datetime { __data["startTime"] }
           public var endTime: ApolloGQL.Datetime? { __data["endTime"] }
-          public var deleted: Bool? { __data["deleted"] }
+          public var deletedAt: ApolloGQL.Datetime? { __data["deletedAt"] }
           public var durationSeconds: Int? { __data["durationSeconds"] }
           public var movement: Movement? { __data["movement"] }
           public var piece: Piece { __data["piece"] }
@@ -138,7 +141,7 @@ public class RecentlyDeletedSessionsQuery: GraphQLQuery {
             id: ApolloGQL.BigInt,
             startTime: ApolloGQL.Datetime,
             endTime: ApolloGQL.Datetime? = nil,
-            deleted: Bool? = nil,
+            deletedAt: ApolloGQL.Datetime? = nil,
             durationSeconds: Int? = nil,
             movement: Movement? = nil,
             piece: Piece
@@ -149,7 +152,7 @@ public class RecentlyDeletedSessionsQuery: GraphQLQuery {
                 "id": id,
                 "startTime": startTime,
                 "endTime": endTime,
-                "deleted": deleted,
+                "deletedAt": deletedAt,
                 "durationSeconds": durationSeconds,
                 "movement": movement._fieldData,
                 "piece": piece._fieldData,

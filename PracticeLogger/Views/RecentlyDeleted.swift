@@ -6,6 +6,7 @@
 //
 
 import ApolloGQL
+import Foundation
 import SwiftUI
 
 struct RecentlyDeleted: View {
@@ -28,9 +29,13 @@ struct RecentlyDeleted: View {
                                 Button(role: .cancel) {
                                     Task {
                                         do {
+                                            let updateData: [String: String?] = [
+                                                "deleted_at": nil
+                                            ]
+
                                             _ = try await Database.client
                                                 .from("practice_sessions")
-                                                .update(["deleted": false])
+                                                .update(updateData)
                                                 .eq("id", value: session.id)
                                                 .execute()
 

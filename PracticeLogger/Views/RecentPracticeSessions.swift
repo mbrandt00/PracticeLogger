@@ -58,7 +58,7 @@ struct RecentPracticeSessions: View {
                                 do {
                                     _ = try await Database.client
                                         .from("practice_sessions")
-                                        .update(["deleted": true])
+                                        .update(["deleted_at": Date()])
                                         .eq("id", value: session.id)
                                         .execute()
 
