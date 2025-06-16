@@ -36,7 +36,7 @@ class PieceDbUpdater {
         }
 
         // 👇 Invalidate the cached Piece object
-        try? await Network.shared.apollo.store.withinReadWriteTransaction { transaction in
+        Network.shared.apollo.store.withinReadWriteTransaction { transaction in
             try transaction.removeObject(for: "Piece:\(pieceDetails.id)")
         }
 

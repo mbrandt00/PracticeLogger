@@ -40,7 +40,7 @@ struct RecentlyDeleted: View {
                                                 .execute()
 
                                             if let index = deletedSessions.firstIndex(where: { $0.id == session.id }) {
-                                                await MainActor.run {
+                                                _ = await MainActor.run {
                                                     withAnimation {
                                                         deletedSessions.remove(at: index)
                                                     }
