@@ -12,7 +12,9 @@ import Supabase
 
 class PracticeSessionViewModel: ObservableObject {
     @Published var activeSession: PracticeSessionDetails?
-    @Published private var recentSessions: [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge] = []
+    @Published var recentSessions: [PracticeSessionDetails] = []
+    @Published var isLoading = false
+
     private var liveActivity: Activity<LiveActivityAttributes>?
 
     func startSession(pieceId: Int, movementId: Int?) async throws {
@@ -39,24 +41,39 @@ class PracticeSessionViewModel: ObservableObject {
         }
     }
 
-    func getRecentUserPracticeSessions() async throws -> [RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge] {
-        let userId = try await Database.client.auth.user().id.uuidString
+    @MainActor
+    func getRecentUserPracticeSessions() async {
+        isLoading = true
+        defer { isLoading = false }
 
-        return try await withCheckedThrowingContinuation { continuation in
-            Network.shared.apollo.fetch(query: RecentUserSessionsQuery(userId: userId)) { result in
-                switch result {
-                case let .success(graphQlResult):
-                    if let practiceSessions = graphQlResult.data?.practiceSessionsCollection?.edges {
-                        self.recentSessions = practiceSessions
-                        continuation.resume(returning: practiceSessions)
-                    } else {
-                        continuation.resume(returning: [])
+        do {
+            let userId = try await Database.client.auth.user().id.uuidString
+
+            let sessions = try await withCheckedThrowingContinuation { continuation in
+                Network.shared.apollo.fetch(
+                    query: RecentUserSessionsQuery(userId: userId),
+                    cachePolicy: .fetchIgnoringCacheData
+                ) { result in
+                    switch result {
+                    case let .success(graphQlResult):
+                        if let data = graphQlResult.data,
+                           let edges = data.practiceSessionsCollection?.edges
+                        {
+                            let sessions = edges.compactMap { $0.node.fragments.practiceSessionDetails }
+                            continuation.resume(returning: sessions)
+                        } else {
+                            continuation.resume(returning: [])
+                        }
+
+                    case let .failure(error):
+                        continuation.resume(throwing: error)
                     }
-
-                case let .failure(error):
-                    continuation.resume(throwing: error)
                 }
             }
+
+            recentSessions = sessions
+        } catch {
+            print("❌ Error fetching recent sessions: \(error)")
         }
     }
 
@@ -69,6 +86,7 @@ class PracticeSessionViewModel: ObservableObject {
                 .eq("id", value: activeSession?.id)
                 .execute()
             activeSession = nil
+            await getRecentUserPracticeSessions()
         } catch {
             print("Error updating end_time: \(error)")
         }
@@ -78,16 +96,12 @@ class PracticeSessionViewModel: ObservableObject {
         }
     }
 
+    @MainActor
     func fetchCurrentActiveSession() async throws -> PracticeSessionDetails? {
         let userId = try await Database.client.auth.user().id.uuidString
 
-        return try await withCheckedThrowingContinuation { [weak self] continuation in
+        return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<PracticeSessionDetails?, Error>) in
             Network.shared.apollo.fetch(query: ActiveUserSessionQuery(userId: userId)) { result in
-                guard let self else {
-                    continuation.resume(returning: nil)
-                    return
-                }
-
                 switch result {
                 case let .success(graphQlResult):
                     if let session = graphQlResult.data?.practiceSessionsCollection?.edges.first?.node.fragments.practiceSessionDetails {
@@ -96,11 +110,11 @@ class PracticeSessionViewModel: ObservableObject {
                         continuation.resume(returning: session)
                     } else {
                         self.clearAppGroupSessionDefaults()
+                        self.activeSession = nil
                         continuation.resume(returning: nil)
                     }
 
                 case let .failure(error):
-                    print("GraphQL query failed: \(error)")
                     continuation.resume(throwing: error)
                 }
             }

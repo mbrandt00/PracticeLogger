@@ -127,7 +127,7 @@ struct BottomSheet: View {
                                     offsetY = 0
                                 }
 
-                                try? await Task.sleep(nanoseconds: 300000000)
+                                try? await Task.sleep(nanoseconds: 300_000_000)
 
                                 await sessionManager.stopSession()
                             }

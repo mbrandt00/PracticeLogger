@@ -3,11 +3,11 @@
 
 @_exported import ApolloAPI
 
-public class ActiveUserSessionQuery: GraphQLQuery {
-  public static let operationName: String = "ActiveUserSession"
+public class RecentlyDeletedSessionsQuery: GraphQLQuery {
+  public static let operationName: String = "RecentlyDeletedSessions"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query ActiveUserSession($userId: UUID!) { practiceSessionsCollection( filter: { userId: { eq: $userId }, endTime: { is: NULL } } first: 1 ) { __typename edges { __typename node { __typename ...PracticeSessionDetails } } } }"#,
+      #"query RecentlyDeletedSessions($userId: UUID!) { practiceSessionsCollection( filter: { userId: { eq: $userId }, deletedAt: { is: NOT_NULL } } orderBy: { deletedAt: DescNullsFirst } ) { __typename edges { __typename node { __typename ...PracticeSessionDetails } } } }"#,
       fragments: [PieceDetails.self, PracticeSessionDetails.self]
     ))
 
@@ -28,9 +28,9 @@ public class ActiveUserSessionQuery: GraphQLQuery {
       .field("practiceSessionsCollection", PracticeSessionsCollection?.self, arguments: [
         "filter": [
           "userId": ["eq": .variable("userId")],
-          "endTime": ["is": "NULL"]
+          "deletedAt": ["is": "NOT_NULL"]
         ],
-        "first": 1
+        "orderBy": ["deletedAt": "DescNullsFirst"]
       ]),
     ] }
 
@@ -46,7 +46,7 @@ public class ActiveUserSessionQuery: GraphQLQuery {
           "practiceSessionsCollection": practiceSessionsCollection._fieldData,
         ],
         fulfilledFragments: [
-          ObjectIdentifier(ActiveUserSessionQuery.Data.self)
+          ObjectIdentifier(RecentlyDeletedSessionsQuery.Data.self)
         ]
       ))
     }
@@ -75,7 +75,7 @@ public class ActiveUserSessionQuery: GraphQLQuery {
             "edges": edges._fieldData,
           ],
           fulfilledFragments: [
-            ObjectIdentifier(ActiveUserSessionQuery.Data.PracticeSessionsCollection.self)
+            ObjectIdentifier(RecentlyDeletedSessionsQuery.Data.PracticeSessionsCollection.self)
           ]
         ))
       }
@@ -104,7 +104,7 @@ public class ActiveUserSessionQuery: GraphQLQuery {
               "node": node._fieldData,
             ],
             fulfilledFragments: [
-              ObjectIdentifier(ActiveUserSessionQuery.Data.PracticeSessionsCollection.Edge.self)
+              ObjectIdentifier(RecentlyDeletedSessionsQuery.Data.PracticeSessionsCollection.Edge.self)
             ]
           ))
         }
@@ -158,7 +158,7 @@ public class ActiveUserSessionQuery: GraphQLQuery {
                 "piece": piece._fieldData,
               ],
               fulfilledFragments: [
-                ObjectIdentifier(ActiveUserSessionQuery.Data.PracticeSessionsCollection.Edge.Node.self),
+                ObjectIdentifier(RecentlyDeletedSessionsQuery.Data.PracticeSessionsCollection.Edge.Node.self),
                 ObjectIdentifier(PracticeSessionDetails.self)
               ]
             ))

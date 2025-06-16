@@ -8,8 +8,7 @@ import ApolloGQL
 import SwiftUI
 
 struct RecentPracticeSessionListItem: View {
-    let session: RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.Node
-    let onDelete: (String) -> Void
+    let session: PracticeSessionDetails
     private var pieceDetails: PieceDetails {
         session.piece.fragments.pieceDetails
     }
@@ -92,39 +91,19 @@ struct RecentPracticeSessionListItem: View {
             }
         }
         .padding(.vertical, 4)
-        .swipeActions {
-            Button(role: .destructive) {
-                Task {
-                    do {
-                        let result = try await Database.client.from("practice_sessions")
-                            .delete()
-                            .eq("id", value: session.id)
-                            .execute()
-                        await MainActor.run {
-                            onDelete(session.id)
-                        }
-                        print(result)
-                    } catch let err {
-                        print(err)
-                    }
-                }
-            } label: {
-                Label("Delete", systemImage: "trash")
-            }
-        }
     }
 }
 
-struct RecentPracticeSessionListItem_Previews: PreviewProvider {
-    static var previews: some View {
-        let previewSession = PracticeSessionDetails.previewBach.toRecentUserSessionEdge().node
-
-        List {
-            RecentPracticeSessionListItem(session: previewSession) { _ in
-                // No-op delete handler for preview
-            }
-        }
-        .listStyle(.insetGrouped)
-        .previewDisplayName("Bach Session Preview")
-    }
-}
+// struct RecentPracticeSessionListItem_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let previewSession = PracticeSessionDetails.previewBach.toRecentUserSessionEdge().node
+//
+//        List {
+//            RecentPracticeSessionListItem(session: previewSession) { _ in
+//                // No-op delete handler for preview
+//            }
+//        }
+//        .listStyle(.insetGrouped)
+//        .previewDisplayName("Bach Session Preview")
+//    }
+// }

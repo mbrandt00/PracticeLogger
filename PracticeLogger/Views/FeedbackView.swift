@@ -1,5 +1,5 @@
 //
-//  BugReportView.swift
+//  FeedbackView.swift
 //  PracticeLogger
 //
 //  Created by Michael Brandt on 5/24/25.

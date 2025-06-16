@@ -15,7 +15,7 @@ extension PieceDetails {
         let movementNodes = [
             PieceDetails.Movements.Edge.Node(
                 id: BigInt(4),
-                lastPracticed: Date().addingTimeInterval(-345600), // 4 days ago
+                lastPracticed: Date().addingTimeInterval(-345_600), // 4 days ago
                 totalPracticeTime: 2456,
                 name: "Prelude",
                 keySignature: GraphQLEnum(KeySignatureType.c),
@@ -37,7 +37,7 @@ extension PieceDetails {
             ),
             PieceDetails.Movements.Edge.Node(
                 id: BigInt(6),
-                lastPracticed: Date().addingTimeInterval(-172800), // 2 days ago
+                lastPracticed: Date().addingTimeInterval(-172_800), // 2 days ago
                 totalPracticeTime: 1340,
                 name: "Courante",
                 keySignature: GraphQLEnum(KeySignatureType.c),
@@ -61,7 +61,7 @@ extension PieceDetails {
 
         // Create the main piece
         return PieceDetails(
-            lastPracticed: Date().addingTimeInterval(-172800), // 2 days ago
+            lastPracticed: Date().addingTimeInterval(-172_800), // 2 days ago
             id: BigInt(23456),
             workName: "Cello Suite No. 1",
             catalogueType: GraphQLEnum(CatalogueType.bwv.rawValue),
@@ -92,7 +92,7 @@ extension PieceDetails {
         let movementNodes = [
             PieceDetails.Movements.Edge.Node(
                 id: BigInt(10),
-                lastPracticed: Date().addingTimeInterval(-518400), // 6 days ago
+                lastPracticed: Date().addingTimeInterval(-518_400), // 6 days ago
                 totalPracticeTime: 4890,
                 name: "Allegro",
                 keySignature: GraphQLEnum(KeySignatureType.bflat),
@@ -103,7 +103,7 @@ extension PieceDetails {
             ),
             PieceDetails.Movements.Edge.Node(
                 id: BigInt(11),
-                lastPracticed: Date().addingTimeInterval(-259200), // 3 days ago
+                lastPracticed: Date().addingTimeInterval(-259_200), // 3 days ago
                 totalPracticeTime: 2340,
                 name: "Scherzo: Assai vivace",
                 keySignature: GraphQLEnum(KeySignatureType.bflat),

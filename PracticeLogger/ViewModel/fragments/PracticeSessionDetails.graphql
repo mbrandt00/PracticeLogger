@@ -2,6 +2,8 @@ fragment PracticeSessionDetails on PracticeSessions {
   id
   startTime
   endTime
+  deletedAt
+  durationSeconds
   movement {
     id
     name

@@ -86,7 +86,7 @@ struct ContentView: View {
                         try? keychain.set(token, key: "supabaseAccessToken")
                         try? keychain.set(refreshToken, key: "supabaseRefreshToken")
 
-                        practiceSessionViewModel.activeSession = try await practiceSessionViewModel.fetchCurrentActiveSession()
+                        try await practiceSessionViewModel.fetchCurrentActiveSession()
                     } catch {
                         print("Something went wrong in on appear: \(error.localizedDescription)")
                     }
@@ -111,7 +111,7 @@ struct ContentView: View {
                             }
 
                             isSignedIn = true
-                            practiceSessionViewModel.activeSession = try await practiceSessionViewModel.fetchCurrentActiveSession()
+                            try await practiceSessionViewModel.fetchCurrentActiveSession()
                         } catch {
                             print("Error checking or refreshing session: \(error)")
                             isSignedIn = false

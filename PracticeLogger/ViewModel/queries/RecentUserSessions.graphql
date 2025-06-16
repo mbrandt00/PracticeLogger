@@ -1,21 +1,11 @@
 query RecentUserSessions($userId: UUID!) {
   practiceSessionsCollection(
-    filter: { userId: { eq: $userId } }
+    filter: { userId: { eq: $userId }, deletedAt: { is: NULL } }
     orderBy: { endTime: DescNullsFirst }
   ) {
     edges {
       node {
-        id
-        startTime
-        durationSeconds
-        piece {
-          ...PieceDetails
-        }
-        endTime
-        movement {
-          name
-          number
-        }
+        ...PracticeSessionDetails
       }
     }
   }

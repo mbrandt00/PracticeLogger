@@ -23,8 +23,8 @@ struct SearchView: View {
         previewNewPieces: [PieceDetails]? = nil
     ) {
         self.searchViewModel = searchViewModel
-        self._path = path
-        self._isLoading = State(initialValue: previewUserPieces == nil && previewNewPieces == nil)
+        _path = path
+        _isLoading = State(initialValue: previewUserPieces == nil && previewNewPieces == nil)
 
         // Preload pieces for preview
         if let userPieces = previewUserPieces {
