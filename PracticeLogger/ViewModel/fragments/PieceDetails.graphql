@@ -27,7 +27,9 @@ fragment PieceDetails on Piece {
   nickname
   composerId
   composer {
-    name
+    id
+    firstName
+    lastName
   }
   movements: movementCollection(orderBy: [{ number: AscNullsLast }]) {
     edges {

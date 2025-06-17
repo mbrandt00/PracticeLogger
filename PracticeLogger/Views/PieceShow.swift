@@ -28,8 +28,8 @@ struct PieceShow: View {
                             .font(.headline)
                             .foregroundColor(.secondary)
                     }
-                    if let composer = piece.composer?.name {
-                        Text(composer)
+                    if let composer = piece.composer {
+                        Text("\(composer.firstName) \(composer.lastName)")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }

@@ -24,6 +24,8 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
     case "CollectionsConnection": return ApolloGQL.Objects.CollectionsConnection
     case "CollectionsEdge": return ApolloGQL.Objects.CollectionsEdge
     case "Composers": return ApolloGQL.Objects.Composers
+    case "ComposersConnection": return ApolloGQL.Objects.ComposersConnection
+    case "ComposersEdge": return ApolloGQL.Objects.ComposersEdge
     case "Movement": return ApolloGQL.Objects.Movement
     case "MovementConnection": return ApolloGQL.Objects.MovementConnection
     case "MovementEdge": return ApolloGQL.Objects.MovementEdge

@@ -42,8 +42,8 @@ struct PracticeSessionView: View {
                         .font(.headline)
                         .lineLimit(2)
 
-                    if let composer = session.piece.composer?.name {
-                        Text(composer)
+                    if let composer = session.piece.composer {
+                        Text("\(composer.firstName) \(composer.lastName)")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }

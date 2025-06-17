@@ -16,6 +16,7 @@ struct PieceEdit: View {
     @State private var errorMessage = ""
     @State private var duplicatePiece: PieceDetails?
     @State private var newInstrument = ""
+    @State private var allComposers: [EditableComposer] = []
     @State private var newMovementName = ""
     @State private var isAddingMovement = false
     @State private var isEditingMovements = false
@@ -57,6 +58,23 @@ struct PieceEdit: View {
         .toast(isPresenting: $showToast) {
             AlertToast(type: .error(.red), title: errorMessage)
         }
+        .onAppear {
+            Task {
+                do {
+                    allComposers = try await viewModel.fetchComposers()
+
+                    if let selectedId = viewModel.editablePiece.composerId,
+                       !allComposers.contains(where: { $0.id == selectedId }),
+                       let composer = viewModel.editablePiece.composer
+                    {
+                        allComposers.append(composer)
+                    }
+
+                } catch {
+                    print("Error fetching composers: \(error)")
+                }
+            }
+        }
     }
 
     private var nameFields: some View {
@@ -95,22 +113,36 @@ struct PieceEdit: View {
         }
     }
 
-    public var composerField: some View {
-        HStack {
-            Text("Composer")
-            Spacer()
-            TextField("Composer", text: Binding(
-                get: { viewModel.editablePiece.composer?.name ?? "" },
-                set: { newValue in
-                    if viewModel.editablePiece.composer == nil {
-                        viewModel.editablePiece.composer = EditableComposer(name: newValue)
-                    } else {
-                        viewModel.editablePiece.composer?.name = newValue
-                    }
-                }
-            ))
-            .multilineTextAlignment(.trailing)
+    private var composerField: some View {
+        NavigationLink(destination: ComposerSelectionView(
+            selectedComposerId: $viewModel.editablePiece.composerId,
+            composers: allComposers,
+            onComposerSelected: { composer in
+                viewModel.editablePiece.composer = composer
+                viewModel.editablePiece.composerId = composer.id
+            },
+            onComposerCreated: { newComposer in
+                allComposers.append(newComposer)
+                viewModel.editablePiece.composer = newComposer
+                viewModel.editablePiece.composerId = newComposer.id
+            }
+        )) {
+            HStack {
+                Text("Composer")
+                Spacer()
+                Text(selectedComposerName)
+                    .foregroundColor(.gray)
+            }
         }
+    }
+
+    private var selectedComposerName: String {
+        if let id = viewModel.editablePiece.composerId,
+           let composer = allComposers.first(where: { $0.id == id })
+        {
+            return "\(composer.firstName) \(composer.lastName)"
+        }
+        return "None"
     }
 
     private var catalogueSection: some View {
@@ -268,6 +300,78 @@ struct PieceEdit_Previews: PreviewProvider {
             PieceEdit(
                 piece: PieceDetails.previewBach, isCreatingNewPiece: true
             )
+        }
+    }
+}
+
+struct ComposerSelectionView: View {
+    @Binding var selectedComposerId: String?
+    let composers: [EditableComposer]
+    var onComposerSelected: (EditableComposer) -> Void
+    var onComposerCreated: (EditableComposer) -> Void
+
+    @Environment(\.dismiss) private var dismiss
+    @State private var showingCreateSheet = false
+
+    var body: some View {
+        List {
+            Section(header: Text("Choose a Composer")) {
+                Button("None") {
+                    selectedComposerId = nil
+                    dismiss()
+                }
+
+                ForEach(composers, id: \.id) { composer in
+                    Button("\(composer.firstName) \(composer.lastName)") {
+                        selectedComposerId = composer.id
+                        onComposerSelected(composer)
+                        dismiss()
+                    }
+                }
+            }
+
+            Section {
+                Button("Create New Composer") {
+                    showingCreateSheet = true
+                }
+            }
+        }
+        .navigationTitle("Select Composer")
+        .sheet(isPresented: $showingCreateSheet) {
+            CreateComposerView { newComposer in
+                onComposerCreated(newComposer)
+                selectedComposerId = newComposer.id
+                dismiss()
+            }
+        }
+    }
+}
+
+struct CreateComposerView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var firstName = ""
+    @State private var lastName = ""
+
+    var onSave: (EditableComposer) -> Void
+
+    var body: some View {
+        NavigationView {
+            Form {
+                TextField("First Name", text: $firstName)
+                TextField("Last Name", text: $lastName)
+            }
+            .navigationTitle("New Composer")
+            .navigationBarItems(leading: Button("Cancel") {
+                dismiss()
+            }, trailing: Button("Save") {
+                let newComposer = EditableComposer(
+                    firstName: firstName,
+                    lastName: lastName,
+                    id: UUID().uuidString // generate a temporary ID for now
+                )
+                onSave(newComposer)
+                dismiss()
+            }.disabled(firstName.isEmpty || lastName.isEmpty))
         }
     }
 }

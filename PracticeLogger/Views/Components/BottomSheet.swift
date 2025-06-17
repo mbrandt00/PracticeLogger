@@ -108,8 +108,8 @@ struct BottomSheet: View {
                             .foregroundColor(.primary)
                             .matchedGeometryEffect(id: "movement", in: animation)
 
-                            if let composer = activeSession.piece.composer?.name {
-                                Text(composer)
+                            if let composer = activeSession.piece.composer {
+                                Text("\(composer.firstName) \(composer.lastName)")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                                     .matchedGeometryEffect(id: "composer", in: animation)
@@ -127,7 +127,7 @@ struct BottomSheet: View {
                                     offsetY = 0
                                 }
 
-                                try? await Task.sleep(nanoseconds: 300_000_000)
+                                try? await Task.sleep(nanoseconds: 300000000)
 
                                 await sessionManager.stopSession()
                             }
@@ -175,11 +175,11 @@ struct BottomSheet: View {
                                     }
                                     .matchedGeometryEffect(id: "movement", in: animation)
 
-                                    if let composer = activeSession.piece.composer?.name {
+                                    if let composer = activeSession.piece.composer {
                                         if activeSession.movement?.name != nil {
                                             Divider()
                                         }
-                                        Text(composer)
+                                        Text("\(composer.firstName) \(composer.lastName)")
                                             .matchedGeometryEffect(id: "composer", in: animation)
                                     }
                                 }

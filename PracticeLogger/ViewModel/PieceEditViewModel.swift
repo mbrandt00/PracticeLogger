@@ -30,6 +30,25 @@ class PieceEditViewModel: ObservableObject {
         return try await updater.save()
     }
 
+    func fetchComposers() async throws -> [EditableComposer] {
+        return try await withCheckedThrowingContinuation { continuation in
+            Network.shared.apollo.fetch(query: ComposersQuery(), cachePolicy: .fetchIgnoringCacheData) { result in
+                switch result {
+                case let .success(response):
+                    let composers: [EditableComposer] = response.data?.composersCollection?.edges.compactMap { edge in
+                        let composer = edge.node
+                        return EditableComposer(firstName: composer.firstName, lastName: composer.lastName, id: composer.id)
+                    } ?? []
+
+                    continuation.resume(returning: composers)
+
+                case let .failure(error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
     func updateMovement(at index: Int, newName: String) {
         // Update directly on the existing array
         editablePiece.movements[index].name = newName
@@ -105,7 +124,6 @@ class EditablePiece: ObservableObject {
         subPieceType = piece.subPieceType
         format = piece.format
         compositionYear = piece.compositionYear
-        composerId = piece.composerId
         wikipediaUrl = piece.wikipediaUrl
         imslpUrl = piece.imslpUrl
         lastPracticed = piece.lastPracticed
@@ -119,6 +137,7 @@ class EditablePiece: ObservableObject {
 
         if let composer = piece.composer {
             self.composer = EditableComposer(from: composer)
+            composerId = composer.id
         }
     }
 }
@@ -152,16 +171,31 @@ class EditableMovement: Identifiable, ObservableObject, Equatable {
     }
 }
 
-class EditableComposer {
-    var name: String
+class EditableComposer: Equatable, Hashable, Identifiable {
+    var firstName: String
+    var lastName: String
     var id: ApolloGQL.BigInt?
 
     init(from composer: PieceDetails.Composer) {
-        name = composer.name
+        firstName = composer.firstName
+        lastName = composer.lastName
+        id = composer.id
     }
 
-    init(name: String) {
-        self.name = name
+    init(firstName: String, lastName: String, id: ApolloGQL.BigInt? = nil) {
+        self.firstName = firstName
+        self.lastName = lastName
+        self.id = id
+    }
+
+    static func == (lhs: EditableComposer, rhs: EditableComposer) -> Bool {
+        lhs.id == rhs.id || (lhs.firstName == rhs.firstName && lhs.lastName == rhs.lastName)
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(firstName)
+        hasher.combine(lastName)
     }
 }
 

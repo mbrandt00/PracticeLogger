@@ -6,4 +6,21 @@
 //
 import ApolloGQL
 
-extension PieceDetails: @retroactive Identifiable {}
+extension PieceDetails: @retroactive Identifiable {
+    static var empty: PieceDetails {
+        PieceDetails(
+            id: "temp_id",
+            workName: "",
+            catalogueType: nil,
+            keySignature: nil,
+            format: nil,
+            instrumentation: [],
+            wikipediaUrl: nil,
+            compositionYear: nil,
+            catalogueNumber: nil,
+            nickname: nil,
+            composer: nil,
+            movements: PieceDetails.Movements(edges: [])
+        )
+    }
+}

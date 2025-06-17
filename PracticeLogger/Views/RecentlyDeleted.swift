@@ -52,7 +52,7 @@ struct RecentlyDeleted: View {
                                         }
                                     }
                                 } label: {
-                                    Label("Undo delete", systemImage: "arrow.uturn.backward")
+                                    Label("Undo delete", systemImage: "trash.slash.fill")
                                 }
                             }
                     }
