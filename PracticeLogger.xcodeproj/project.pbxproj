@@ -116,6 +116,7 @@
 		D1BCDDAE2DA193EF00D29B18 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D1BCDDAD2DA193EF00D29B18 /* ApolloGQL */; };
 		D1BCDDB02DA1940100D29B18 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D1BCDDAF2DA1940100D29B18 /* ApolloGQL */; };
 		D1BCDDB22DA1942800D29B18 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D1BCDDB12DA1942800D29B18 /* ApolloGQL */; };
+		D1BDE14D2E0208CE00A7671B /* ComposerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1BDE14C2E0208CE00A7671B /* ComposerSelectionView.swift */; };
 		D1BE01D22C67EE1E00529BAE /* NavigationContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1BE01D12C67EE1E00529BAE /* NavigationContext.swift */; };
 		D1BE1CA02DDD7A6E005160FE /* EndPracticeSessionIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D0F32C2DDAA3CC007D10C8 /* EndPracticeSessionIntent.swift */; };
 		D1C2BEB52BDCE22600E8E39F /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C2BEB42BDCE22600E8E39F /* Tag.swift */; };
@@ -213,6 +214,7 @@
 		D1AD15062DD4494400CB9172 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		D1AD151A2DD44ACF00CB9172 /* LiveActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityAttributes.swift; sourceTree = "<group>"; };
 		D1AD151D2DD4530F00CB9172 /* ActiveSessionExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ActiveSessionExtension.entitlements; sourceTree = "<group>"; };
+		D1BDE14C2E0208CE00A7671B /* ComposerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposerSelectionView.swift; sourceTree = "<group>"; };
 		D1BE01D12C67EE1E00529BAE /* NavigationContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationContext.swift; sourceTree = "<group>"; };
 		D1BE1C9C2DDD6C4F005160FE /* Dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Dev.xcconfig; sourceTree = "<group>"; };
 		D1C2BEB42BDCE22600E8E39F /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
@@ -380,6 +382,7 @@
 		D131F16A2B8AE168002261BC /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D1BDE14C2E0208CE00A7671B /* ComposerSelectionView.swift */,
 				D17705032DE253B00048879C /* FeedbackView.swift */,
 				D1848D582D9076B200C1FA51 /* CollectionListView.swift */,
 				D131F1742B8AFCC8002261BC /* Components */,
@@ -789,6 +792,7 @@
 				D19E733F2B898F9300BB3EC7 /* PracticeLoggerApp.swift in Sources */,
 				D1C2BEB92BDD61A800E8E39F /* SignInViewModel.swift in Sources */,
 				D16E3A922C61E1AC00DA96A7 /* SearchView.swift in Sources */,
+				D1BDE14D2E0208CE00A7671B /* ComposerSelectionView.swift in Sources */,
 				D185AC152BDF3B7E007F398D /* PieceEditViewModel.swift in Sources */,
 				D1E98BDA2C59EFF40065D27D /* CatalogueType.swift in Sources */,
 				D15C88312BF063B900AAC950 /* Error.swift in Sources */,

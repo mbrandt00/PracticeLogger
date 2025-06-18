@@ -84,7 +84,7 @@ struct SearchView: View {
                         .font(.title3)
                         .fontWeight(.semibold)
 
-                    Text("Try searching for a different piece or create a custom piece.")
+                    Text("Try searching for a different piece or create a new piece.")
                         .font(.body)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)

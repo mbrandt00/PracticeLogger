@@ -63,6 +63,7 @@ struct PieceEdit: View {
                 do {
                     allComposers = try await viewModel.fetchComposers()
 
+                    // TODO: rework logic
                     if let selectedId = viewModel.editablePiece.composerId,
                        !allComposers.contains(where: { $0.id == selectedId }),
                        let composer = viewModel.editablePiece.composer
@@ -300,78 +301,6 @@ struct PieceEdit_Previews: PreviewProvider {
             PieceEdit(
                 piece: PieceDetails.previewBach, isCreatingNewPiece: true
             )
-        }
-    }
-}
-
-struct ComposerSelectionView: View {
-    @Binding var selectedComposerId: String?
-    let composers: [EditableComposer]
-    var onComposerSelected: (EditableComposer) -> Void
-    var onComposerCreated: (EditableComposer) -> Void
-
-    @Environment(\.dismiss) private var dismiss
-    @State private var showingCreateSheet = false
-
-    var body: some View {
-        List {
-            Section(header: Text("Choose a Composer")) {
-                Button("None") {
-                    selectedComposerId = nil
-                    dismiss()
-                }
-
-                ForEach(composers, id: \.id) { composer in
-                    Button("\(composer.firstName) \(composer.lastName)") {
-                        selectedComposerId = composer.id
-                        onComposerSelected(composer)
-                        dismiss()
-                    }
-                }
-            }
-
-            Section {
-                Button("Create New Composer") {
-                    showingCreateSheet = true
-                }
-            }
-        }
-        .navigationTitle("Select Composer")
-        .sheet(isPresented: $showingCreateSheet) {
-            CreateComposerView { newComposer in
-                onComposerCreated(newComposer)
-                selectedComposerId = newComposer.id
-                dismiss()
-            }
-        }
-    }
-}
-
-struct CreateComposerView: View {
-    @Environment(\.dismiss) private var dismiss
-    @State private var firstName = ""
-    @State private var lastName = ""
-
-    var onSave: (EditableComposer) -> Void
-
-    var body: some View {
-        NavigationView {
-            Form {
-                TextField("First Name", text: $firstName)
-                TextField("Last Name", text: $lastName)
-            }
-            .navigationTitle("New Composer")
-            .navigationBarItems(leading: Button("Cancel") {
-                dismiss()
-            }, trailing: Button("Save") {
-                let newComposer = EditableComposer(
-                    firstName: firstName,
-                    lastName: lastName,
-                    id: UUID().uuidString // generate a temporary ID for now
-                )
-                onSave(newComposer)
-                dismiss()
-            }.disabled(firstName.isEmpty || lastName.isEmpty))
         }
     }
 }

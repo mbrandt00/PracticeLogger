@@ -32,7 +32,9 @@ class PieceEditViewModel: ObservableObject {
 
     func fetchComposers() async throws -> [EditableComposer] {
         return try await withCheckedThrowingContinuation { continuation in
-            Network.shared.apollo.fetch(query: ComposersQuery(), cachePolicy: .fetchIgnoringCacheData) { result in
+            let direction = GraphQLEnum(OrderByDirection.ascNullsFirst)
+            let orderBy: GraphQLNullable<[ComposersOrderBy]> = .some([ComposersOrderBy(lastName: .some(direction))])
+            Network.shared.apollo.fetch(query: ComposersQuery(orderBy: orderBy), cachePolicy: .fetchIgnoringCacheData) { result in
                 switch result {
                 case let .success(response):
                     let composers: [EditableComposer] = response.data?.composersCollection?.edges.compactMap { edge in
@@ -171,10 +173,11 @@ class EditableMovement: Identifiable, ObservableObject, Equatable {
     }
 }
 
-class EditableComposer: Equatable, Hashable, Identifiable {
+class EditableComposer: Equatable, Hashable, Identifiable, Codable {
     var firstName: String
     var lastName: String
     var id: ApolloGQL.BigInt?
+    var userId: ApolloGQL.UUID?
 
     init(from composer: PieceDetails.Composer) {
         firstName = composer.firstName
@@ -182,18 +185,31 @@ class EditableComposer: Equatable, Hashable, Identifiable {
         id = composer.id
     }
 
-    init(firstName: String, lastName: String, id: ApolloGQL.BigInt? = nil) {
+    init(firstName: String, lastName: String, id: String? = nil, userId: String? = nil) {
         self.firstName = firstName
         self.lastName = lastName
         self.id = id
+        self.userId = userId
     }
+
+    private enum CodingKeys: String, CodingKey {
+        case firstName = "first_name"
+        case lastName = "last_name"
+        case userId = "user_id"
+        case id
+    }
+
+    // MARK: - Equatable
 
     static func == (lhs: EditableComposer, rhs: EditableComposer) -> Bool {
         lhs.id == rhs.id || (lhs.firstName == rhs.firstName && lhs.lastName == rhs.lastName)
     }
 
+    // MARK: - Hashable
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
+        hasher.combine(userId)
         hasher.combine(firstName)
         hasher.combine(lastName)
     }
