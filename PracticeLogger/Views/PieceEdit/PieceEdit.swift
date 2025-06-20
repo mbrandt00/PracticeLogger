@@ -61,7 +61,7 @@ struct PieceEdit: View {
         .onAppear {
             Task {
                 do {
-                    allComposers = try await viewModel.fetchComposers()
+                    allComposers = try await viewModel.fetchComposers() ?? []
 
                     // TODO: rework logic
                     if let selectedId = viewModel.editablePiece.composerId,
@@ -115,24 +115,35 @@ struct PieceEdit: View {
     }
 
     private var composerField: some View {
-        NavigationLink(destination: ComposerSelectionView(
-            selectedComposerId: $viewModel.editablePiece.composerId,
-            composers: allComposers,
-            onComposerSelected: { composer in
-                viewModel.editablePiece.composer = composer
-                viewModel.editablePiece.composerId = composer.id
-            },
-            onComposerCreated: { newComposer in
-                allComposers.append(newComposer)
-                viewModel.editablePiece.composer = newComposer
-                viewModel.editablePiece.composerId = newComposer.id
-            }
-        )) {
-            HStack {
-                Text("Composer")
-                Spacer()
-                Text(selectedComposerName)
-                    .foregroundColor(.gray)
+        Group {
+            if viewModel.editablePiece.id == "customPiece" {
+                NavigationLink(destination: ComposerSelectionView(
+                    selectedComposerId: $viewModel.editablePiece.composerId,
+                    composers: allComposers,
+                    onComposerSelected: { composer in
+                        viewModel.editablePiece.composer = composer
+                        viewModel.editablePiece.composerId = composer.id
+                    },
+                    onComposerCreated: { newComposer in
+                        allComposers.append(newComposer)
+                        viewModel.editablePiece.composer = newComposer
+                        viewModel.editablePiece.composerId = newComposer.id
+                    }
+                )) {
+                    HStack {
+                        Text("Composer")
+                        Spacer()
+                        Text(selectedComposerName)
+                            .foregroundColor(.gray)
+                    }
+                }
+            } else {
+                HStack {
+                    Text("Composer")
+                    Spacer()
+                    Text(selectedComposerName)
+                        .foregroundColor(.gray)
+                }
             }
         }
     }

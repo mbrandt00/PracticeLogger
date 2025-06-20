@@ -5,6 +5,7 @@
 //  Created by Michael Brandt on 4/28/24.
 //
 
+import Apollo
 import ApolloAPI
 import ApolloGQL
 import Foundation
@@ -30,19 +31,41 @@ class PieceEditViewModel: ObservableObject {
         return try await updater.save()
     }
 
-    func fetchComposers() async throws -> [EditableComposer] {
+    func fetchComposers() async throws -> [EditableComposer]? {
+        guard let userId = Database.client.auth.currentUser?.id else {
+            return nil
+        }
+
         return try await withCheckedThrowingContinuation { continuation in
+            let filter: GraphQLNullable<ComposersFilter> = .some(
+                ComposersFilter(userId: .some(UUIDFilter(eq: .some(userId.uuidString))))
+            )
             let direction = GraphQLEnum(OrderByDirection.ascNullsFirst)
-            let orderBy: GraphQLNullable<[ComposersOrderBy]> = .some([ComposersOrderBy(lastName: .some(direction))])
-            Network.shared.apollo.fetch(query: ComposersQuery(orderBy: orderBy), cachePolicy: .fetchIgnoringCacheData) { result in
+            let orderBy: GraphQLNullable<[ComposersOrderBy]> = .some([
+                ComposersOrderBy(lastName: .some(direction))
+            ])
+
+            Network.shared.apollo.fetch(
+                query: ComposersQuery(composerFilter: filter, orderBy: orderBy),
+                cachePolicy: .fetchIgnoringCacheData
+            ) { result in
                 switch result {
                 case let .success(response):
-                    let composers: [EditableComposer] = response.data?.composersCollection?.edges.compactMap { edge in
-                        let composer = edge.node
-                        return EditableComposer(firstName: composer.firstName, lastName: composer.lastName, id: composer.id)
-                    } ?? []
-
-                    continuation.resume(returning: composers)
+                    if let data = response.data?.composersCollection {
+                        let composers = data.edges.compactMap { edge -> EditableComposer? in
+                            let composer = edge.node
+                            return EditableComposer(
+                                firstName: composer.firstName,
+                                lastName: composer.lastName,
+                                id: composer.id,
+                                nationality: composer.nationality,
+                                musicalEra: composer.musicalEra
+                            )
+                        }
+                        continuation.resume(returning: composers)
+                    } else {
+                        continuation.resume(returning: [])
+                    }
 
                 case let .failure(error):
                     continuation.resume(throwing: error)
@@ -176,18 +199,24 @@ class EditableMovement: Identifiable, ObservableObject, Equatable {
 class EditableComposer: Equatable, Hashable, Identifiable, Codable {
     var firstName: String
     var lastName: String
+    var nationality: String?
     var id: ApolloGQL.BigInt?
     var userId: ApolloGQL.UUID?
+    var musicalEra: String?
 
     init(from composer: PieceDetails.Composer) {
         firstName = composer.firstName
         lastName = composer.lastName
+        nationality = composer.nationality
+        musicalEra = composer.musicalEra
         id = composer.id
     }
 
-    init(firstName: String, lastName: String, id: String? = nil, userId: String? = nil) {
+    init(firstName: String, lastName: String, id: String? = nil, userId: String? = nil, nationality: String? = nil, musicalEra: String? = nil) {
         self.firstName = firstName
         self.lastName = lastName
+        self.nationality = nationality
+        self.musicalEra = musicalEra
         self.id = id
         self.userId = userId
     }
@@ -197,6 +226,8 @@ class EditableComposer: Equatable, Hashable, Identifiable, Codable {
         case lastName = "last_name"
         case userId = "user_id"
         case id
+        case nationality
+        case musicalEra = "musical_era"
     }
 
     // MARK: - Equatable
@@ -211,6 +242,8 @@ class EditableComposer: Equatable, Hashable, Identifiable, Codable {
         hasher.combine(id)
         hasher.combine(userId)
         hasher.combine(firstName)
+        hasher.combine(nationality)
+        hasher.combine(musicalEra)
         hasher.combine(lastName)
     }
 }

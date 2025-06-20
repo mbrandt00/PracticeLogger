@@ -9,7 +9,7 @@ import ApolloGQL
 extension PieceDetails: @retroactive Identifiable {
     static var empty: PieceDetails {
         PieceDetails(
-            id: "temp_id",
+            id: "customPiece", // drives editability on composer
             workName: "",
             catalogueType: nil,
             keySignature: nil,

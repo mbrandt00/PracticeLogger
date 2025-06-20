@@ -7,7 +7,7 @@ public class ComposersQuery: GraphQLQuery {
   public static let operationName: String = "ComposersQuery"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query ComposersQuery($composerFilter: ComposersFilter = {  }, $orderBy: [ComposersOrderBy!] = []) { composersCollection(filter: $composerFilter, orderBy: $orderBy) { __typename edges { __typename node { __typename id firstName lastName } } } }"#
+      #"query ComposersQuery($composerFilter: ComposersFilter = {  }, $orderBy: [ComposersOrderBy!] = []) { composersCollection(filter: $composerFilter, orderBy: $orderBy) { __typename edges { __typename node { __typename id firstName lastName musicalEra nationality } } } }"#
     ))
 
   public var composerFilter: GraphQLNullable<ComposersFilter>
@@ -128,16 +128,22 @@ public class ComposersQuery: GraphQLQuery {
             .field("id", ApolloGQL.BigInt.self),
             .field("firstName", String.self),
             .field("lastName", String.self),
+            .field("musicalEra", String?.self),
+            .field("nationality", String?.self),
           ] }
 
           public var id: ApolloGQL.BigInt { __data["id"] }
           public var firstName: String { __data["firstName"] }
           public var lastName: String { __data["lastName"] }
+          public var musicalEra: String? { __data["musicalEra"] }
+          public var nationality: String? { __data["nationality"] }
 
           public init(
             id: ApolloGQL.BigInt,
             firstName: String,
-            lastName: String
+            lastName: String,
+            musicalEra: String? = nil,
+            nationality: String? = nil
           ) {
             self.init(_dataDict: DataDict(
               data: [
@@ -145,6 +151,8 @@ public class ComposersQuery: GraphQLQuery {
                 "id": id,
                 "firstName": firstName,
                 "lastName": lastName,
+                "musicalEra": musicalEra,
+                "nationality": nationality,
               ],
               fulfilledFragments: [
                 ObjectIdentifier(ComposersQuery.Data.ComposersCollection.Edge.Node.self)

@@ -30,6 +30,8 @@ fragment PieceDetails on Piece {
     id
     firstName
     lastName
+    nationality
+    musicalEra
   }
   movements: movementCollection(orderBy: [{ number: AscNullsLast }]) {
     edges {
