@@ -52,7 +52,26 @@ struct SearchView: View {
         ZStack {
             List {
                 if !searchViewModel.userPieces.isEmpty {
-                    Section(header: Text("Pieces")) {
+                    Section(
+                        header:
+                        HStack {
+                            Text("Pieces")
+                                .font(.headline)
+
+                            Spacer()
+
+                            if searchViewModel.searchTerm.isEmpty {
+                                Button {
+                                    isShowingCustomPieceSheet = true
+                                } label: {
+                                    Label("Custom Piece", systemImage: "plus.square")
+                                        .font(.subheadline)
+                                }
+                                .accessibilityLabel("Create custom piece")
+                            }
+                        }
+                        .padding(.top, 8)
+                    ) {
                         ForEach(searchViewModel.userPieces, id: \.id) { piece in
                             userPieceRow(piece)
                         }
@@ -241,19 +260,6 @@ struct RepertoireRow: View {
             }
         }
         .padding(.vertical, 4)
-    }
-}
-
-struct NewItemBadge: View {
-    var body: some View {
-        HStack(spacing: 2) {
-            Image(systemName: "sparkles").font(.caption)
-            Text("New").font(.caption)
-        }
-        .padding(.horizontal, 4)
-        .padding(.vertical, 4)
-        .background(Color.blue.opacity(0.2))
-        .cornerRadius(8)
     }
 }
 
