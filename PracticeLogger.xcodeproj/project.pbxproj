@@ -149,6 +149,7 @@
 		D1F29CE92C6C52F000FC5E74 /* RecentPracticeSessions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F29CE82C6C52F000FC5E74 /* RecentPracticeSessions.swift */; };
 		D1F3AA402DD974F600A0C1E7 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = D1F3AA3F2DD974F600A0C1E7 /* KeychainAccess */; };
 		D1F3AA422DD9757B00A0C1E7 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = D1F3AA412DD9757B00A0C1E7 /* KeychainAccess */; };
+		D1FE264C2E0519F700ABCB73 /* NewItemBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FE264B2E0519F700ABCB73 /* NewItemBadge.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -238,6 +239,7 @@
 		D1F29CE82C6C52F000FC5E74 /* RecentPracticeSessions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentPracticeSessions.swift; sourceTree = "<group>"; };
 		D1F3AA392DD958F800A0C1E7 /* PracticeLoggerRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PracticeLoggerRelease.entitlements; sourceTree = "<group>"; };
 		D1F3AA3A2DD959CD00A0C1E7 /* ActiveSessionExtensionRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ActiveSessionExtensionRelease.entitlements; sourceTree = "<group>"; };
+		D1FE264B2E0519F700ABCB73 /* NewItemBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewItemBadge.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -373,6 +375,7 @@
 		D1277D592DECE77E00420C36 /* SignIn */ = {
 			isa = PBXGroup;
 			children = (
+				D1FE264B2E0519F700ABCB73 /* NewItemBadge.swift */,
 				D1277D5A2DECE78800420C36 /* EmailAuthForm.swift */,
 				D1C2BEB62BDD612F00E8E39F /* SignIn.swift */,
 			);
@@ -783,6 +786,7 @@
 				D12F5E282D616291001CB9B7 /* PieceDetails+SampleData.swift in Sources */,
 				D1E98BD72C59EFB20065D27D /* Format.swift in Sources */,
 				D13D0EDA2BCC2FA1006B2683 /* Int.swift in Sources */,
+				D1FE264C2E0519F700ABCB73 /* NewItemBadge.swift in Sources */,
 				D19E73412B898F9300BB3EC7 /* ContentView.swift in Sources */,
 				D1848D592D9076B800C1FA51 /* CollectionListView.swift in Sources */,
 				D1D46C622DE64FB1007335DE /* PracticeSessionDetails+SampleData.swift in Sources */,
