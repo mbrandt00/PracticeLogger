@@ -97,25 +97,26 @@ class PracticeSessionViewModel: ObservableObject {
     }
 
     @MainActor
-    func fetchCurrentActiveSession() async throws -> PracticeSessionDetails? {
+    func fetchCurrentActiveSession() async throws {
         let userId = try await Database.client.auth.user().id.uuidString
 
-        return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<PracticeSessionDetails?, Error>) in
-            Network.shared.apollo.fetch(query: ActiveUserSessionQuery(userId: userId)) { result in
-                switch result {
-                case let .success(graphQlResult):
-                    if let session = graphQlResult.data?.practiceSessionsCollection?.edges.first?.node.fragments.practiceSessionDetails {
-                        self.activeSession = session
-                        self.startLiveActivity(practiceSession: session, startTime: session.startTime)
-                        continuation.resume(returning: session)
-                    } else {
-                        self.clearAppGroupSessionDefaults()
-                        self.activeSession = nil
-                        continuation.resume(returning: nil)
-                    }
+        return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            Network.shared.apollo.fetch(query: ActiveUserSessionQuery(userId: userId), cachePolicy: .fetchIgnoringCacheData) { result in
+                Task { @MainActor in
+                    switch result {
+                    case let .success(graphQlResult):
+                        if let session = graphQlResult.data?.practiceSessionsCollection?.edges.first?.node.fragments.practiceSessionDetails {
+                            self.activeSession = session
+                            self.startLiveActivity(practiceSession: session, startTime: session.startTime)
+                        } else {
+                            self.clearAppGroupSessionDefaults()
+                            self.activeSession = nil
+                        }
+                        continuation.resume()
 
-                case let .failure(error):
-                    continuation.resume(throwing: error)
+                    case let .failure(error):
+                        continuation.resume(throwing: error)
+                    }
                 }
             }
         }

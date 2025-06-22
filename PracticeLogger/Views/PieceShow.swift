@@ -14,6 +14,7 @@ struct PieceShow: View {
     @ObservedObject var sessionManager: PracticeSessionViewModel
     @State private var editingMode = false
     @State private var showingDeleteConfirmation = false
+    @State private var editingComposer = false
     @State private var showingCollectionSheet = false
     @State private var selectedCollection: (id: String, name: String)?
     var onDelete: (() -> Void)?
@@ -28,10 +29,17 @@ struct PieceShow: View {
                             .font(.headline)
                             .foregroundColor(.secondary)
                     }
-                    if let composer = piece.composer?.name {
-                        Text(composer)
+                    if let composer = piece.composer {
+                        Text("\(composer.firstName) \(composer.lastName)")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
+                        if composer.userId != nil {
+                            Button(action: {
+                                self.editingComposer = true
+                            }) {
+                                Text("Edit")
+                            }
+                        }
                     }
 
                     if let catalogueDesc = piece.catalogueType, let catalogueNumber = piece.catalogueNumber {
@@ -188,6 +196,19 @@ struct PieceShow: View {
         })
         .sheet(isPresented: $editingMode) {
             EditPieceSheetView()
+        }
+        .sheet(isPresented: $editingComposer) {
+            ComposerEditSheet(mode: .edit(EditableComposer(from: piece.composer!)), onComplete: { (_: EditableComposer) in
+                Task {
+                    do {
+                        if let updatedPiece = try await refetchPiece() {
+                            piece = updatedPiece
+                        }
+                    } catch {
+                        print("Error refetching piece: \(error)")
+                    }
+                }
+            })
         }
         .sheet(isPresented: $showingCollectionSheet) {
             if let collectionId = piece.collectionId, let collectionName = piece.collection?.name {
@@ -348,6 +369,24 @@ struct PieceShow: View {
             return "\(hours)h \(minutes)m"
         } else {
             return "\(minutes)m"
+        }
+    }
+
+    private func refetchPiece() async throws -> PieceDetails? {
+        return try await withCheckedThrowingContinuation { continuation in
+            Network.shared.apollo.fetch(query: PiecesQuery(pieceFilter: PieceFilter(id: .some(BigIntFilter(eq: .some(piece.id)))))) { result in
+                switch result {
+                case let .success(graphQlResult):
+                    if let piece = graphQlResult.data?.pieceCollection?.edges.first {
+                        continuation.resume(returning: piece.node.fragments.pieceDetails)
+                    } else {
+                        continuation.resume(returning: nil)
+                    }
+
+                case let .failure(error):
+                    continuation.resume(throwing: error)
+                }
+            }
         }
     }
 }

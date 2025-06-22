@@ -5,6 +5,7 @@
 //  Created by Michael Brandt on 4/28/24.
 //
 
+import Apollo
 import ApolloAPI
 import ApolloGQL
 import Foundation
@@ -28,6 +29,59 @@ class PieceEditViewModel: ObservableObject {
         let updater = PieceDbUpdater(pieceId: editablePiece.id, piece: editablePiece)
 
         return try await updater.save()
+    }
+
+    func fetchComposers() async throws -> [EditableComposer]? {
+        guard let userId = Database.client.auth.currentUser?.id else {
+            return nil
+        }
+
+        return try await withCheckedThrowingContinuation { continuation in
+            let filter: GraphQLNullable<ComposersFilter> = .some(
+                ComposersFilter(
+                    or: .some([
+                        ComposersFilter(
+                            userId: .some(UUIDFilter(eq: .some(userId.uuidString)))
+                        ),
+                        ComposersFilter(
+                            userId: .some(UUIDFilter(is: .some(GraphQLEnum(.null))))
+                        ),
+                    ])
+                )
+            )
+            let direction = GraphQLEnum(OrderByDirection.ascNullsFirst)
+            let orderBy: GraphQLNullable<[ComposersOrderBy]> = .some([
+                ComposersOrderBy(lastName: .some(direction)),
+            ])
+
+            Network.shared.apollo.fetch(
+                query: ComposersQuery(composerFilter: filter, orderBy: orderBy),
+                cachePolicy: .fetchIgnoringCacheData
+            ) { result in
+                switch result {
+                case let .success(response):
+                    if let data = response.data?.composersCollection {
+                        let composers = data.edges.compactMap { edge -> EditableComposer? in
+                            let composer = edge.node
+                            return EditableComposer(
+                                firstName: composer.firstName,
+                                lastName: composer.lastName,
+                                id: composer.id,
+                                userId: composer.userId,
+                                nationality: composer.nationality,
+                                musicalEra: composer.musicalEra
+                            )
+                        }
+                        continuation.resume(returning: composers)
+                    } else {
+                        continuation.resume(returning: [])
+                    }
+
+                case let .failure(error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
     }
 
     func updateMovement(at index: Int, newName: String) {
@@ -105,7 +159,6 @@ class EditablePiece: ObservableObject {
         subPieceType = piece.subPieceType
         format = piece.format
         compositionYear = piece.compositionYear
-        composerId = piece.composerId
         wikipediaUrl = piece.wikipediaUrl
         imslpUrl = piece.imslpUrl
         lastPracticed = piece.lastPracticed
@@ -119,6 +172,7 @@ class EditablePiece: ObservableObject {
 
         if let composer = piece.composer {
             self.composer = EditableComposer(from: composer)
+            composerId = composer.id
         }
     }
 }
@@ -152,16 +206,73 @@ class EditableMovement: Identifiable, ObservableObject, Equatable {
     }
 }
 
-class EditableComposer {
-    var name: String
-    var id: ApolloGQL.BigInt?
+class EditableComposer: Equatable, Hashable, Identifiable, Codable {
+    var firstName: String
+    var lastName: String
+    var nationality: String?
+    var id: String?
+    var userId: String?
+    var musicalEra: String?
 
     init(from composer: PieceDetails.Composer) {
-        name = composer.name
+        firstName = composer.firstName
+        lastName = composer.lastName
+        nationality = composer.nationality
+        musicalEra = composer.musicalEra
+        userId = composer.userId
+        id = composer.id
     }
 
-    init(name: String) {
-        self.name = name
+    init(firstName: String, lastName: String, id: String? = nil, userId: String? = nil, nationality: String? = nil, musicalEra: String? = nil) {
+        self.firstName = firstName
+        self.lastName = lastName
+        self.nationality = nationality
+        self.musicalEra = musicalEra
+        self.id = id
+        self.userId = userId
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case firstName = "first_name"
+        case lastName = "last_name"
+        case userId = "user_id"
+        case id
+        case nationality
+        case musicalEra = "musical_era"
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(userId)
+        hasher.combine(firstName)
+        hasher.combine(nationality)
+        hasher.combine(musicalEra)
+        hasher.combine(lastName)
+    }
+
+    static func == (lhs: EditableComposer, rhs: EditableComposer) -> Bool {
+        return lhs.id == rhs.id &&
+            lhs.userId == rhs.userId &&
+            lhs.firstName == rhs.firstName &&
+            lhs.lastName == rhs.lastName &&
+            lhs.nationality == rhs.nationality &&
+            lhs.musicalEra == rhs.musicalEra
+    }
+
+    // MARK: - Custom Encoding
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(firstName, forKey: .firstName)
+        try container.encode(lastName, forKey: .lastName)
+        try container.encodeIfPresent(nationality, forKey: .nationality)
+        try container.encodeIfPresent(musicalEra, forKey: .musicalEra)
+        try container.encodeIfPresent(userId, forKey: .userId)
+
+        if let id = id, let intValue = Int(id) {
+            try container.encode(intValue, forKey: .id)
+        }
     }
 }
 

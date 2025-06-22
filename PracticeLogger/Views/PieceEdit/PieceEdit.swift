@@ -16,6 +16,7 @@ struct PieceEdit: View {
     @State private var errorMessage = ""
     @State private var duplicatePiece: PieceDetails?
     @State private var newInstrument = ""
+    @State private var allComposers: [EditableComposer] = []
     @State private var newMovementName = ""
     @State private var isAddingMovement = false
     @State private var isEditingMovements = false
@@ -57,6 +58,24 @@ struct PieceEdit: View {
         .toast(isPresenting: $showToast) {
             AlertToast(type: .error(.red), title: errorMessage)
         }
+        .onAppear {
+            Task {
+                do {
+                    allComposers = try await viewModel.fetchComposers() ?? []
+
+                    // TODO: rework logic
+                    if let selectedId = viewModel.editablePiece.composerId,
+                       !allComposers.contains(where: { $0.id == selectedId }),
+                       let composer = viewModel.editablePiece.composer
+                    {
+                        allComposers.append(composer)
+                    }
+
+                } catch {
+                    print("Error fetching composers: \(error)")
+                }
+            }
+        }
     }
 
     private var nameFields: some View {
@@ -95,22 +114,47 @@ struct PieceEdit: View {
         }
     }
 
-    public var composerField: some View {
-        HStack {
-            Text("Composer")
-            Spacer()
-            TextField("Composer", text: Binding(
-                get: { viewModel.editablePiece.composer?.name ?? "" },
-                set: { newValue in
-                    if viewModel.editablePiece.composer == nil {
-                        viewModel.editablePiece.composer = EditableComposer(name: newValue)
-                    } else {
-                        viewModel.editablePiece.composer?.name = newValue
+    private var composerField: some View {
+        Group {
+            if viewModel.editablePiece.id == "customPiece" {
+                NavigationLink(destination: ComposerSelectionView(
+                    selectedComposerId: $viewModel.editablePiece.composerId,
+                    composers: allComposers,
+                    onComposerSelected: { composer in
+                        viewModel.editablePiece.composer = composer
+                        viewModel.editablePiece.composerId = composer.id
+                    },
+                    onComposerCreated: { newComposer in
+                        allComposers.append(newComposer)
+                        viewModel.editablePiece.composer = newComposer
+                        viewModel.editablePiece.composerId = newComposer.id
+                    }
+                )) {
+                    HStack {
+                        Text("Composer")
+                        Spacer()
+                        Text(selectedComposerName)
+                            .foregroundColor(.gray)
                     }
                 }
-            ))
-            .multilineTextAlignment(.trailing)
+            } else {
+                HStack {
+                    Text("Composer")
+                    Spacer()
+                    Text(selectedComposerName)
+                        .foregroundColor(.gray)
+                }
+            }
         }
+    }
+
+    private var selectedComposerName: String {
+        if let id = viewModel.editablePiece.composerId,
+           let composer = allComposers.first(where: { $0.id == id })
+        {
+            return "\(composer.firstName) \(composer.lastName)"
+        }
+        return "None"
     }
 
     private var catalogueSection: some View {

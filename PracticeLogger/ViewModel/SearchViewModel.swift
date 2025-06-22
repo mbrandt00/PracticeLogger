@@ -6,7 +6,6 @@
 //
 
 import Apollo
-import ApolloAPI
 import ApolloGQL
 import Combine
 import Foundation
@@ -106,7 +105,11 @@ class SearchViewModel: ObservableObject {
         return try await withCheckedThrowingContinuation { continuation in
             let direction = GraphQLEnum(OrderByDirection.ascNullsLast)
             let orderBy: GraphQLNullable<[PieceOrderBy]> = .some([PieceOrderBy(catalogueNumber: .some(direction))])
-            Network.shared.apollo.fetch(query: SearchPiecesQuery(query: searchTerm, orderBy: orderBy)) { result in
+            let filter: GraphQLNullable<PieceFilter> = .some(
+                PieceFilter(imslpUrl: .some(StringFilter(is: .some(GraphQLEnum(.notNull))))) // seach should not return custom pieces from other users
+            )
+
+            Network.shared.apollo.fetch(query: SearchPiecesQuery(query: searchTerm, pieceFilter: filter, orderBy: orderBy)) { result in
                 switch result {
                 case let .success(graphQlResult):
                     if let data = graphQlResult.data?.searchPieces {

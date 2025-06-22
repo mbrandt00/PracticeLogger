@@ -32,8 +32,8 @@ struct RecentPracticeSessionListItem: View {
         VStack(alignment: .leading, spacing: 2) {
             // First line: Composer + catalog
             HStack {
-                if let composerName = session.piece.fragments.pieceDetails.composer?.name {
-                    Text(composerName)
+                if let composerName = session.piece.fragments.pieceDetails.composer {
+                    Text("\(composerName.firstName) \(composerName.lastName)")
                         .font(.footnote)
                         .foregroundColor(.secondary)
                 }

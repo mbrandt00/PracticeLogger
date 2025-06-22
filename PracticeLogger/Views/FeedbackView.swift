@@ -17,7 +17,6 @@ struct FeedbackView: View {
     @State private var showToast = false
     @State private var toastMessage = ""
     @State private var isSuccess = false
-    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         Form {
@@ -51,10 +50,6 @@ struct FeedbackView: View {
                             isSuccess = true
                             showToast = true
 
-                            // Delay dismiss to show toast
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                                dismiss()
-                            }
                         } else {
                             toastMessage = response.error ?? "Failed to submit report"
                             isSuccess = false

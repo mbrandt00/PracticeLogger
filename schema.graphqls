@@ -268,7 +268,11 @@ type Composers implements Node {
   """Globally Unique Record Identifier"""
   nodeId: ID!
   id: BigInt!
-  name: String!
+  firstName: String!
+  lastName: String!
+  nationality: String
+  musicalEra: String
+  userId: UUID
   pieceCollection(
     """Query the first `n` records in the collection"""
     first: Int
@@ -339,7 +343,11 @@ type ComposersEdge {
 
 input ComposersFilter {
   id: BigIntFilter
-  name: StringFilter
+  firstName: StringFilter
+  lastName: StringFilter
+  nationality: StringFilter
+  musicalEra: StringFilter
+  userId: UUIDFilter
   nodeId: IDFilter
 
   """
@@ -357,7 +365,11 @@ input ComposersFilter {
 }
 
 input ComposersInsertInput {
-  name: String
+  firstName: String
+  lastName: String
+  nationality: String
+  musicalEra: String
+  userId: UUID
 }
 
 type ComposersInsertResponse {
@@ -370,11 +382,19 @@ type ComposersInsertResponse {
 
 input ComposersOrderBy {
   id: OrderByDirection
-  name: OrderByDirection
+  firstName: OrderByDirection
+  lastName: OrderByDirection
+  nationality: OrderByDirection
+  musicalEra: OrderByDirection
+  userId: OrderByDirection
 }
 
 input ComposersUpdateInput {
-  name: String
+  firstName: String
+  lastName: String
+  nationality: String
+  musicalEra: String
+  userId: UUID
 }
 
 type ComposersUpdateResponse {
@@ -755,7 +775,6 @@ type Mutation {
     """
     atMost: Int! = 1
   ): PracticeSessionsDeleteResponse!
-  findOrCreateComposer(name: String!): Composers
   getPieceSearchableText(pieceId: BigInt!): String
 
   """Adds one or more `Collections` records to the collection"""

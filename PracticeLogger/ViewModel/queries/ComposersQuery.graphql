@@ -1,0 +1,17 @@
+query ComposersQuery(
+  $composerFilter: ComposersFilter = {}
+  $orderBy: [ComposersOrderBy!] = []
+) {
+  composersCollection(filter: $composerFilter, orderBy: $orderBy) {
+    edges {
+      node {
+        id
+        firstName
+        lastName
+        musicalEra
+        nationality
+        userId
+      }
+    }
+  }
+}

@@ -94,7 +94,7 @@ class SupabaseDatabase:
         failed_inserts = []
 
         composer_function_sql = """
-        SELECT * FROM public.find_or_create_composer(%s);
+        SELECT * FROM public.find_or_create_composer(%s, %s);
         """
 
         piece_insert_sql = """
@@ -141,7 +141,13 @@ class SupabaseDatabase:
 
         for row in df.iter_rows(named=True):
             try:
-                self.cur.execute(composer_function_sql, (row["composer_name"],))
+                try:
+                    last, first = map(str.strip, row["composer_name"].split(",", 1))
+                except ValueError:
+                    raise ValueError(
+                        f"Composer name not in expected 'Last, First' format: {row['composer_name']}"
+                    )
+                self.cur.execute(composer_function_sql, (first, last))
                 composer_record = self.cur.fetchone()
                 if composer_record is None:
                     raise ValueError(f"Could not find composer in supabase (id: {row})")

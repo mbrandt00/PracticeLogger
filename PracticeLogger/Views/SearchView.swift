@@ -12,7 +12,7 @@ struct SearchView: View {
     @ObservedObject var searchViewModel: SearchViewModel
     @EnvironmentObject var practiceSessionViewModel: PracticeSessionViewModel
     @Binding var path: NavigationPath
-
+    @State private var isShowingCustomPieceSheet = false
     @State private var isLoading: Bool
     private var preview: Bool = false
 
@@ -52,7 +52,26 @@ struct SearchView: View {
         ZStack {
             List {
                 if !searchViewModel.userPieces.isEmpty {
-                    Section(header: Text("Pieces")) {
+                    Section(
+                        header:
+                        HStack {
+                            Text("Pieces")
+                                .font(.headline)
+
+                            Spacer()
+
+                            if searchViewModel.searchTerm.isEmpty {
+                                Button {
+                                    isShowingCustomPieceSheet = true
+                                } label: {
+                                    Label("Custom Piece", systemImage: "plus.square")
+                                        .font(.subheadline)
+                                }
+                                .accessibilityLabel("Create custom piece")
+                            }
+                        }
+                        .padding(.top, 8)
+                    ) {
                         ForEach(searchViewModel.userPieces, id: \.id) { piece in
                             userPieceRow(piece)
                         }
@@ -84,11 +103,14 @@ struct SearchView: View {
                         .font(.title3)
                         .fontWeight(.semibold)
 
-                    Text("Try searching for a different piece, or check back later.")
+                    Text("Try searching for a different piece or create a new piece.")
                         .font(.body)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
+                    Button("Create custom piece", systemImage: "plus.square") {
+                        isShowingCustomPieceSheet = true
+                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding()
@@ -115,6 +137,15 @@ struct SearchView: View {
         .sheet(item: $searchViewModel.selectedPiece) { piece in
             NavigationStack {
                 PieceEdit(piece: piece, isCreatingNewPiece: true, onPieceCreated: handlePieceCreated)
+            }
+        }
+        .sheet(isPresented: $isShowingCustomPieceSheet) {
+            NavigationStack {
+                PieceEdit(
+                    piece: PieceDetails.empty,
+                    isCreatingNewPiece: true,
+                    onPieceCreated: handlePieceCreated
+                )
             }
         }
     }
@@ -144,7 +175,7 @@ struct SearchView: View {
                     }
 
                     if let composer = piece.composer {
-                        Text(composer.name)
+                        Text("\(composer.firstName) \(composer.lastName)")
                             .font(.subheadline)
                             .foregroundColor(.gray)
                     }
@@ -195,8 +226,8 @@ struct RepertoireRow: View {
                         .padding(.trailing, 4)
                 }
 
-                if let composer = piece.composer?.name {
-                    Text(composer)
+                if let composer = piece.composer {
+                    Text("\(composer.firstName ?? "") \(composer.lastName ?? "")")
                 }
 
                 if !formattedCatalogueInfo.isEmpty {
@@ -229,19 +260,6 @@ struct RepertoireRow: View {
             }
         }
         .padding(.vertical, 4)
-    }
-}
-
-struct NewItemBadge: View {
-    var body: some View {
-        HStack(spacing: 2) {
-            Image(systemName: "sparkles").font(.caption)
-            Text("New").font(.caption)
-        }
-        .padding(.horizontal, 4)
-        .padding(.vertical, 4)
-        .background(Color.blue.opacity(0.2))
-        .cornerRadius(8)
     }
 }
 

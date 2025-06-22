@@ -14,7 +14,6 @@ struct RecentPracticeSessions: View {
     @StateObject private var searchViewModel = SearchViewModel()
     @State private var isSearching = false
     @EnvironmentObject var keyboardResponder: KeyboardResponder
-    @State private var isLoading: Bool
     @EnvironmentObject var uiState: UIState
     @State private var path = NavigationPath()
     private let previewSessions: [PracticeSessionDetails]?
@@ -24,8 +23,11 @@ struct RecentPracticeSessions: View {
         previewSessions: [PracticeSessionDetails]? = nil
     ) {
         self.practiceSessionViewModel = practiceSessionViewModel
-        _isLoading = State(initialValue: previewSessions == nil)
         self.previewSessions = previewSessions
+    }
+
+    var isLoading: Bool {
+        practiceSessionViewModel.isLoading
     }
 
     var sessionSections: [SessionDaySection] {
@@ -185,18 +187,9 @@ struct RecentPracticeSessions: View {
     }
 
     private func loadRecentSessions() {
-        isLoading = true
         Task {
             do {
-                let _ = try await practiceSessionViewModel.getRecentUserPracticeSessions()
-                await MainActor.run {
-                    isLoading = false
-                }
-            } catch {
-                print("Error fetching recent sessions: \(error)")
-                await MainActor.run {
-                    isLoading = false
-                }
+                await practiceSessionViewModel.getRecentUserPracticeSessions()
             }
         }
     }

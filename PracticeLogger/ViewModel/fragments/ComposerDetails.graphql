@@ -1,0 +1,5 @@
+fragment ComposerDetails on Composers {
+  id
+  firstName
+  lastName
+}

@@ -5,7 +5,7 @@
 
 public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
   public static var fragmentDefinition: StaticString {
-    #"fragment PieceDetails on Piece { __typename lastPracticed totalPracticeTime id workName catalogueType keySignature format instrumentation wikipediaUrl imslpUrl compositionYear catalogueNumberSecondary catalogueTypeNumDesc compositionYearDesc compositionYearString pieceStyle totalPracticeTime subPieceType subPieceCount userId collectionId collection { __typename name } catalogueNumber nickname composerId composer { __typename name } movements: movementCollection(orderBy: [{ number: AscNullsLast }]) { __typename edges { __typename node { __typename id lastPracticed totalPracticeTime name totalPracticeTime keySignature nickname downloadUrl pieceId number } } } }"#
+    #"fragment PieceDetails on Piece { __typename lastPracticed totalPracticeTime id workName catalogueType keySignature format instrumentation wikipediaUrl imslpUrl compositionYear catalogueNumberSecondary catalogueTypeNumDesc compositionYearDesc compositionYearString pieceStyle totalPracticeTime subPieceType subPieceCount userId collectionId collection { __typename name } catalogueNumber nickname composerId composer { __typename id userId firstName lastName nationality musicalEra } movements: movementCollection(orderBy: [{ number: AscNullsLast }]) { __typename edges { __typename node { __typename id lastPracticed totalPracticeTime name totalPracticeTime keySignature nickname downloadUrl pieceId number } } } }"#
   }
 
   public let __data: DataDict
@@ -173,18 +173,38 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
     public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Composers }
     public static var __selections: [ApolloAPI.Selection] { [
       .field("__typename", String.self),
-      .field("name", String.self),
+      .field("id", ApolloGQL.BigInt.self),
+      .field("userId", ApolloGQL.UUID?.self),
+      .field("firstName", String.self),
+      .field("lastName", String.self),
+      .field("nationality", String?.self),
+      .field("musicalEra", String?.self),
     ] }
 
-    public var name: String { __data["name"] }
+    public var id: ApolloGQL.BigInt { __data["id"] }
+    public var userId: ApolloGQL.UUID? { __data["userId"] }
+    public var firstName: String { __data["firstName"] }
+    public var lastName: String { __data["lastName"] }
+    public var nationality: String? { __data["nationality"] }
+    public var musicalEra: String? { __data["musicalEra"] }
 
     public init(
-      name: String
+      id: ApolloGQL.BigInt,
+      userId: ApolloGQL.UUID? = nil,
+      firstName: String,
+      lastName: String,
+      nationality: String? = nil,
+      musicalEra: String? = nil
     ) {
       self.init(_dataDict: DataDict(
         data: [
           "__typename": ApolloGQL.Objects.Composers.typename,
-          "name": name,
+          "id": id,
+          "userId": userId,
+          "firstName": firstName,
+          "lastName": lastName,
+          "nationality": nationality,
+          "musicalEra": musicalEra,
         ],
         fulfilledFragments: [
           ObjectIdentifier(PieceDetails.Composer.self)

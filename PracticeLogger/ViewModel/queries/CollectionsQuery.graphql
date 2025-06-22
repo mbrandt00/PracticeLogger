@@ -10,7 +10,8 @@ query CollectionsQuery(
       node {
         name
         composer {
-          name
+          firstName
+          lastName
         }
         pieces(orderBy: $piecesOrderBy, first: 1000) {
           edges {
