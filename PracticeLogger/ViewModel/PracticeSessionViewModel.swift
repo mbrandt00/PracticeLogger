@@ -101,7 +101,7 @@ class PracticeSessionViewModel: ObservableObject {
         let userId = try await Database.client.auth.user().id.uuidString
 
         return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            Network.shared.apollo.fetch(query: ActiveUserSessionQuery(userId: userId)) { result in
+            Network.shared.apollo.fetch(query: ActiveUserSessionQuery(userId: userId), cachePolicy: .fetchIgnoringCacheData) { result in
                 Task { @MainActor in
                     switch result {
                     case let .success(graphQlResult):
