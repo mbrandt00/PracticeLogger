@@ -10,6 +10,7 @@ query ComposersQuery(
         lastName
         musicalEra
         nationality
+        userId
       }
     }
   }

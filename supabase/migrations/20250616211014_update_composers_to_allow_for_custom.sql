@@ -121,3 +121,9 @@ CREATE OR REPLACE FUNCTION public.get_piece_searchable_text(piece_id BIGINT) RET
     LEFT JOIN composers c ON c.id = p.composer_id
     WHERE p.id = piece_id;
 $$ LANGUAGE sql SECURITY DEFINER;
+
+CREATE POLICY "Users can update their own composers"
+ON public.composers
+FOR UPDATE
+USING (user_id = auth.uid())
+WITH CHECK (user_id = auth.uid());

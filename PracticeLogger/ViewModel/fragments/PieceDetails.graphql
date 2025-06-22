@@ -28,6 +28,7 @@ fragment PieceDetails on Piece {
   composerId
   composer {
     id
+    userId
     firstName
     lastName
     nationality

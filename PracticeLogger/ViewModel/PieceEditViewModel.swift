@@ -38,11 +38,20 @@ class PieceEditViewModel: ObservableObject {
 
         return try await withCheckedThrowingContinuation { continuation in
             let filter: GraphQLNullable<ComposersFilter> = .some(
-                ComposersFilter(userId: .some(UUIDFilter(eq: .some(userId.uuidString))))
+                ComposersFilter(
+                    or: .some([
+                        ComposersFilter(
+                            userId: .some(UUIDFilter(eq: .some(userId.uuidString)))
+                        ),
+                        ComposersFilter(
+                            userId: .some(UUIDFilter(is: .some(GraphQLEnum(.null))))
+                        ),
+                    ])
+                )
             )
             let direction = GraphQLEnum(OrderByDirection.ascNullsFirst)
             let orderBy: GraphQLNullable<[ComposersOrderBy]> = .some([
-                ComposersOrderBy(lastName: .some(direction))
+                ComposersOrderBy(lastName: .some(direction)),
             ])
 
             Network.shared.apollo.fetch(
@@ -58,6 +67,7 @@ class PieceEditViewModel: ObservableObject {
                                 firstName: composer.firstName,
                                 lastName: composer.lastName,
                                 id: composer.id,
+                                userId: composer.userId,
                                 nationality: composer.nationality,
                                 musicalEra: composer.musicalEra
                             )
@@ -200,8 +210,8 @@ class EditableComposer: Equatable, Hashable, Identifiable, Codable {
     var firstName: String
     var lastName: String
     var nationality: String?
-    var id: ApolloGQL.BigInt?
-    var userId: ApolloGQL.UUID?
+    var id: String?
+    var userId: String?
     var musicalEra: String?
 
     init(from composer: PieceDetails.Composer) {
@@ -209,6 +219,7 @@ class EditableComposer: Equatable, Hashable, Identifiable, Codable {
         lastName = composer.lastName
         nationality = composer.nationality
         musicalEra = composer.musicalEra
+        userId = composer.userId
         id = composer.id
     }
 
@@ -230,14 +241,6 @@ class EditableComposer: Equatable, Hashable, Identifiable, Codable {
         case musicalEra = "musical_era"
     }
 
-    // MARK: - Equatable
-
-    static func == (lhs: EditableComposer, rhs: EditableComposer) -> Bool {
-        lhs.id == rhs.id || (lhs.firstName == rhs.firstName && lhs.lastName == rhs.lastName)
-    }
-
-    // MARK: - Hashable
-
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
         hasher.combine(userId)
@@ -245,6 +248,31 @@ class EditableComposer: Equatable, Hashable, Identifiable, Codable {
         hasher.combine(nationality)
         hasher.combine(musicalEra)
         hasher.combine(lastName)
+    }
+
+    static func == (lhs: EditableComposer, rhs: EditableComposer) -> Bool {
+        return lhs.id == rhs.id &&
+            lhs.userId == rhs.userId &&
+            lhs.firstName == rhs.firstName &&
+            lhs.lastName == rhs.lastName &&
+            lhs.nationality == rhs.nationality &&
+            lhs.musicalEra == rhs.musicalEra
+    }
+
+    // MARK: - Custom Encoding
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(firstName, forKey: .firstName)
+        try container.encode(lastName, forKey: .lastName)
+        try container.encodeIfPresent(nationality, forKey: .nationality)
+        try container.encodeIfPresent(musicalEra, forKey: .musicalEra)
+        try container.encodeIfPresent(userId, forKey: .userId)
+
+        if let id = id, let intValue = Int(id) {
+            try container.encode(intValue, forKey: .id)
+        }
     }
 }
 
