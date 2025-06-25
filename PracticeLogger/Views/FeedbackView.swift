@@ -49,6 +49,8 @@ struct FeedbackView: View {
                             toastMessage = "Report submitted successfully!"
                             isSuccess = true
                             showToast = true
+                            title = ""
+                            description = ""
 
                         } else {
                             toastMessage = response.error ?? "Failed to submit report"
