@@ -17,6 +17,7 @@ fragment PieceDetails on Piece {
   pieceStyle
   totalPracticeTime
   subPieceType
+  searchableText
   subPieceCount
   userId
   collectionId

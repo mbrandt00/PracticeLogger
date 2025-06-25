@@ -5,7 +5,7 @@
 
 public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
   public static var fragmentDefinition: StaticString {
-    #"fragment PieceDetails on Piece { __typename lastPracticed totalPracticeTime id workName catalogueType keySignature format instrumentation wikipediaUrl imslpUrl compositionYear catalogueNumberSecondary catalogueTypeNumDesc compositionYearDesc compositionYearString pieceStyle totalPracticeTime subPieceType subPieceCount userId collectionId collection { __typename name } catalogueNumber nickname composerId composer { __typename id userId firstName lastName nationality musicalEra } movements: movementCollection(orderBy: [{ number: AscNullsLast }]) { __typename edges { __typename node { __typename id lastPracticed totalPracticeTime name totalPracticeTime keySignature nickname downloadUrl pieceId number } } } }"#
+    #"fragment PieceDetails on Piece { __typename lastPracticed totalPracticeTime id workName catalogueType keySignature format instrumentation wikipediaUrl imslpUrl compositionYear catalogueNumberSecondary catalogueTypeNumDesc compositionYearDesc compositionYearString pieceStyle totalPracticeTime subPieceType searchableText subPieceCount userId collectionId collection { __typename name } catalogueNumber nickname composerId composer { __typename id userId firstName lastName nationality musicalEra } movements: movementCollection(orderBy: [{ number: AscNullsLast }]) { __typename edges { __typename node { __typename id lastPracticed totalPracticeTime name totalPracticeTime keySignature nickname downloadUrl pieceId number } } } }"#
   }
 
   public let __data: DataDict
@@ -31,6 +31,7 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
     .field("compositionYearString", String?.self),
     .field("pieceStyle", String?.self),
     .field("subPieceType", String?.self),
+    .field("searchableText", String?.self),
     .field("subPieceCount", Int?.self),
     .field("userId", ApolloGQL.UUID?.self),
     .field("collectionId", ApolloGQL.BigInt?.self),
@@ -59,6 +60,7 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
   public var compositionYearString: String? { __data["compositionYearString"] }
   public var pieceStyle: String? { __data["pieceStyle"] }
   public var subPieceType: String? { __data["subPieceType"] }
+  public var searchableText: String? { __data["searchableText"] }
   public var subPieceCount: Int? { __data["subPieceCount"] }
   public var userId: ApolloGQL.UUID? { __data["userId"] }
   public var collectionId: ApolloGQL.BigInt? { __data["collectionId"] }
@@ -87,6 +89,7 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
     compositionYearString: String? = nil,
     pieceStyle: String? = nil,
     subPieceType: String? = nil,
+    searchableText: String? = nil,
     subPieceCount: Int? = nil,
     userId: ApolloGQL.UUID? = nil,
     collectionId: ApolloGQL.BigInt? = nil,
@@ -117,6 +120,7 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
         "compositionYearString": compositionYearString,
         "pieceStyle": pieceStyle,
         "subPieceType": subPieceType,
+        "searchableText": searchableText,
         "subPieceCount": subPieceCount,
         "userId": userId,
         "collectionId": collectionId,

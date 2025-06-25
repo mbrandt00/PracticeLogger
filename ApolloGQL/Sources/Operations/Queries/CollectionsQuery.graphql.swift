@@ -294,6 +294,7 @@ public class CollectionsQuery: GraphQLQuery {
                 public var compositionYearString: String? { __data["compositionYearString"] }
                 public var pieceStyle: String? { __data["pieceStyle"] }
                 public var subPieceType: String? { __data["subPieceType"] }
+                public var searchableText: String? { __data["searchableText"] }
                 public var subPieceCount: Int? { __data["subPieceCount"] }
                 public var collectionId: ApolloGQL.BigInt? { __data["collectionId"] }
                 public var collection: Collection? { __data["collection"] }
@@ -329,6 +330,7 @@ public class CollectionsQuery: GraphQLQuery {
                   compositionYearString: String? = nil,
                   pieceStyle: String? = nil,
                   subPieceType: String? = nil,
+                  searchableText: String? = nil,
                   subPieceCount: Int? = nil,
                   collectionId: ApolloGQL.BigInt? = nil,
                   collection: Collection? = nil,
@@ -359,6 +361,7 @@ public class CollectionsQuery: GraphQLQuery {
                       "compositionYearString": compositionYearString,
                       "pieceStyle": pieceStyle,
                       "subPieceType": subPieceType,
+                      "searchableText": searchableText,
                       "subPieceCount": subPieceCount,
                       "collectionId": collectionId,
                       "collection": collection._fieldData,

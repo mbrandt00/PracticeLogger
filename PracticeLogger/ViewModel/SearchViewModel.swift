@@ -14,16 +14,21 @@ class SearchViewModel: ObservableObject {
     @Published var searchTerm = ""
     @Published var userPieces: [PieceDetails] = []
     @Published var newPieces: [PieceDetails] = []
+    @Published var allUserPieces: [PieceDetails] = []
     @Published var selectedPiece: PieceDetails?
+    private var indexedUserPieces: [IndexedPiece] = []
 
     @MainActor
     func searchPieces() async {
         do {
             if !searchTerm.isEmpty {
-                userPieces = try await getUserPieces() ?? []
+                userPieces = await matchingUserPieces()
                 newPieces = try await searchNewPieces() ?? []
             } else {
-                userPieces = try await getRecentUserPieces(forceFetch: true) ?? []
+                let fresh = try await getRecentUserPieces() ?? []
+                allUserPieces = fresh
+                indexedUserPieces = fresh.map { IndexedPiece($0) }
+                userPieces = fresh
                 newPieces = []
             }
         } catch {
@@ -31,7 +36,23 @@ class SearchViewModel: ObservableObject {
         }
     }
 
-    func getRecentUserPieces(forceFetch: Bool = false) async throws -> [PieceDetails]? {
+    func matchingUserPieces() async -> [PieceDetails] {
+        let searchTerms = searchTerm.lowercased().split(separator: " ")
+
+        return await withCheckedContinuation { continuation in
+            DispatchQueue.global(qos: .userInitiated).async {
+                let matches = self.indexedUserPieces.filter { indexed in
+                    searchTerms.allSatisfy { term in
+                        indexed.normalizedWords.contains { $0.hasPrefix(term) }
+                    }
+                }.map { $0.piece }
+
+                continuation.resume(returning: matches)
+            }
+        }
+    }
+
+    func getRecentUserPieces() async throws -> [PieceDetails]? {
         guard let userId = Database.client.auth.currentUser?.id else {
             return nil
         }
@@ -41,11 +62,9 @@ class SearchViewModel: ObservableObject {
             let direction = GraphQLEnum(OrderByDirection.descNullsFirst)
             let orderBy: GraphQLNullable<[PieceOrderBy]> = .some([PieceOrderBy(lastPracticed: .some(direction))])
 
-            let fetchPolicy: CachePolicy = forceFetch ? .fetchIgnoringCacheData : .returnCacheDataElseFetch
-
             Network.shared.apollo.fetch(
                 query: PiecesQuery(pieceFilter: filter, orderBy: orderBy),
-                cachePolicy: fetchPolicy
+                cachePolicy: .fetchIgnoringCacheData
             ) { result in
                 switch result {
                 case let .success(graphQlResult):
@@ -100,7 +119,7 @@ class SearchViewModel: ObservableObject {
         guard (Database.client.auth.currentUser?.id) != nil else {
             return []
         }
-        let userPieceUrls = Set(userPieces.compactMap { $0.imslpUrl })
+        let userPieceUrls = Set(allUserPieces.compactMap { $0.imslpUrl })
 
         return try await withCheckedThrowingContinuation { continuation in
             let direction = GraphQLEnum(OrderByDirection.ascNullsLast)
@@ -131,5 +150,15 @@ class SearchViewModel: ObservableObject {
                 }
             }
         }
+    }
+}
+
+struct IndexedPiece {
+    let piece: PieceDetails
+    let normalizedWords: [Substring]
+
+    init(_ piece: PieceDetails) {
+        self.piece = piece
+        self.normalizedWords = piece.searchableText?.lowercased().split(separator: " ") ?? []
     }
 }
