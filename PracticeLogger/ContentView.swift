@@ -63,7 +63,7 @@ struct ContentView: View {
                             animation: animation,
                             isExpanded: $isExpanded,
                             offsetY: $offsetY,
-                            activeSession: activeSession
+                            practiceSessionViewModel: practiceSessionViewModel
                         )
                         .padding(.bottom, isExpanded ? 0 : geometry.safeAreaInsets.bottom + standardTabBarHeight)
                         .id(activeSession.id)

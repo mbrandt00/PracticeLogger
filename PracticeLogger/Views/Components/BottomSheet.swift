@@ -13,8 +13,7 @@ struct BottomSheet: View {
     @State private var elapsedTime: String = "00:00"
     @State var animateContent = false
     @Binding var offsetY: CGFloat
-    var activeSession: PracticeSessionDetails
-    @EnvironmentObject var sessionManager: PracticeSessionViewModel
+    @ObservedObject var practiceSessionViewModel: PracticeSessionViewModel
 
     var body: some View {
         GeometryReader { proxy in
@@ -54,7 +53,7 @@ struct BottomSheet: View {
                     }
 
                     // Main content
-                    if isExpanded {
+                    if let activeSession = practiceSessionViewModel.activeSession, isExpanded {
                         // Expanded content with circular timer as focus
                         Text(activeSession.piece.workName)
                             .font(.caption)
@@ -129,7 +128,7 @@ struct BottomSheet: View {
 
                                 try? await Task.sleep(nanoseconds: 300000000)
 
-                                await sessionManager.stopSession()
+                                await practiceSessionViewModel.stopSession()
                             }
                         } label: {
                             HStack {
@@ -149,7 +148,7 @@ struct BottomSheet: View {
                         .padding(.bottom, 20)
                         .offset(y: animateContent ? 0 : size.height)
 
-                    } else {
+                    } else if let activeSession = practiceSessionViewModel.activeSession {
                         // Collapsed content
                         HStack(spacing: 0) {
                             VStack(alignment: .leading, spacing: 0) {
@@ -191,7 +190,7 @@ struct BottomSheet: View {
                             .font(.system(size: 12, design: .serif))
 
                             Button {
-                                Task { await sessionManager.stopSession() }
+                                Task { await practiceSessionViewModel.stopSession() }
                             } label: {
                                 Image(systemName: "stop.fill")
                                     .font(.title2)
@@ -273,15 +272,17 @@ struct BottomSheet: View {
     // MARK: - Timer Logic
 
     private func updateElapsedTime() {
-        let elapsedTimeInterval = Date().timeIntervalSince(activeSession.startTime)
-        let hours = Int(elapsedTimeInterval) / 3600
-        let minutes = (Int(elapsedTimeInterval) % 3600) / 60
-        let seconds = Int(elapsedTimeInterval) % 60
+        if let activeSession = practiceSessionViewModel.activeSession {
+            let elapsedTimeInterval = Date().timeIntervalSince(activeSession.startTime)
+            let hours = Int(elapsedTimeInterval) / 3600
+            let minutes = (Int(elapsedTimeInterval) % 3600) / 60
+            let seconds = Int(elapsedTimeInterval) % 60
 
-        if hours > 0 {
-            elapsedTime = String(format: "%d:%02d:%02d", hours, minutes, seconds)
-        } else {
-            elapsedTime = String(format: "%02d:%02d", minutes, seconds)
+            if hours > 0 {
+                elapsedTime = String(format: "%d:%02d:%02d", hours, minutes, seconds)
+            } else {
+                elapsedTime = String(format: "%02d:%02d", minutes, seconds)
+            }
         }
     }
 }
@@ -298,8 +299,15 @@ struct BottomSheet_Previews: PreviewProvider {
         @State private var isExpanded = true
 
         var body: some View {
-            BottomSheet(animation: animation, isExpanded: $isExpanded, offsetY: .constant(0), activeSession: PracticeSessionDetails.previewChopin)
-                .environmentObject(PracticeSessionViewModel())
+            let viewModel = PracticeSessionViewModel()
+            viewModel.activeSession = PracticeSessionDetails.previewChopin
+
+            return BottomSheet(
+                animation: animation,
+                isExpanded: $isExpanded,
+                offsetY: .constant(0),
+                practiceSessionViewModel: viewModel
+            )
         }
     }
 }

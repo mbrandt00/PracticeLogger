@@ -153,7 +153,7 @@ class PracticeSessionViewModel: ObservableObject {
             )
         )
         return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            Network.shared.apollo.fetch(query: PracticeSessionsQuery(filter: filter), cachePolicy: .fetchIgnoringCacheData) { result in
+            Network.shared.apollo.fetch(query: PracticeSessionsQuery(filter: filter), cachePolicy: .fetchIgnoringCacheCompletely) { result in
                 Task { @MainActor in
                     switch result {
                     case let .success(graphQlResult):

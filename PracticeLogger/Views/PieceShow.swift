@@ -203,6 +203,7 @@ struct PieceShow: View {
                     do {
                         if let updatedPiece = try await refetchPiece() {
                             piece = updatedPiece
+                            try await sessionManager.fetchCurrentActiveSession()
                         }
                     } catch {
                         print("Error refetching piece: \(error)")

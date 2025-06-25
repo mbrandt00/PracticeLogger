@@ -63,7 +63,6 @@ struct PieceEdit: View {
                 do {
                     allComposers = try await viewModel.fetchComposers() ?? []
 
-                    // TODO: rework logic
                     if let selectedId = viewModel.editablePiece.composerId,
                        !allComposers.contains(where: { $0.id == selectedId }),
                        let composer = viewModel.editablePiece.composer
@@ -116,7 +115,7 @@ struct PieceEdit: View {
 
     private var composerField: some View {
         Group {
-            if viewModel.editablePiece.id == "customPiece" {
+            if viewModel.editablePiece.id == "customPiece" || viewModel.editablePiece.imslpUrl == nil {
                 NavigationLink(destination: ComposerSelectionView(
                     selectedComposerId: $viewModel.editablePiece.composerId,
                     composers: allComposers,

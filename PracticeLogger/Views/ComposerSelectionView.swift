@@ -241,7 +241,7 @@ struct EditComposerView: View {
     }
 }
 
-enum ComposerEditMode: Equatable {
+enum ComposerEditMode: Equatable, Identifiable {
     case create
     case edit(EditableComposer)
 
@@ -255,9 +255,7 @@ enum ComposerEditMode: Equatable {
             return false
         }
     }
-}
 
-extension ComposerEditMode: Identifiable {
     var id: String {
         switch self {
         case .create:
@@ -286,7 +284,7 @@ struct ComposerEditSheet: View {
 
             switch mode {
             case .create:
-                var composerToInsert = updatedComposer
+                let composerToInsert = updatedComposer
                 composerToInsert.id = nil
                 let response: ComposerInsertResponse = try await Database.client
                     .from("composers")
