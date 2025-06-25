@@ -9,6 +9,7 @@ import Apollo
 import ApolloGQL
 import Foundation
 import Supabase
+import SwiftUI
 
 class PracticeSessionViewModel: ObservableObject {
     @Published var activeSession: PracticeSessionDetails?
@@ -42,16 +43,55 @@ class PracticeSessionViewModel: ObservableObject {
     }
 
     @MainActor
+    func deleteSession(_ session: PracticeSessionDetails) async {
+        if session.deletedAt != nil { return }
+        var updateDict = ["deleted_at": Date()]
+        if session.endTime == nil {
+            updateDict["end_time"] = Date()
+        }
+        do {
+            _ = try await Database.client
+                .from("practice_sessions")
+                .update(updateDict)
+                .eq("id", value: session.id)
+                .execute()
+            withAnimation {
+                if let index = recentSessions.firstIndex(where: { $0.id == session.id }) {
+                    recentSessions.remove(at: index)
+                }
+                if activeSession?.id == session.id {
+                    stopLiveActivity()
+                    activeSession = nil
+                }
+            }
+        } catch {
+            print(error)
+        }
+    }
+
+    @MainActor
     func getRecentUserPracticeSessions() async {
         isLoading = true
         defer { isLoading = false }
 
         do {
             let userId = try await Database.client.auth.user().id.uuidString
-
+            let filter = GraphQLNullable.some(
+                PracticeSessionsFilter(
+                    and: .some([
+                        PracticeSessionsFilter(
+                            userId: .some(UUIDFilter(eq: .some(userId)))
+                        ),
+                        PracticeSessionsFilter(
+                            deletedAt: .some(DatetimeFilter(is: .some(GraphQLEnum(.null))))
+                        ),
+                    ])
+                )
+            )
             let sessions = try await withCheckedThrowingContinuation { continuation in
+
                 Network.shared.apollo.fetch(
-                    query: RecentUserSessionsQuery(userId: userId),
+                    query: PracticeSessionsQuery(filter: filter),
                     cachePolicy: .fetchIgnoringCacheData
                 ) { result in
                     switch result {
@@ -100,8 +140,20 @@ class PracticeSessionViewModel: ObservableObject {
     func fetchCurrentActiveSession() async throws {
         let userId = try await Database.client.auth.user().id.uuidString
 
+        let filter = GraphQLNullable.some(
+            PracticeSessionsFilter(
+                and: .some([
+                    PracticeSessionsFilter(
+                        userId: .some(UUIDFilter(eq: .some(userId)))
+                    ),
+                    PracticeSessionsFilter(
+                        endTime: .some(DatetimeFilter(is: .some(GraphQLEnum(.null))))
+                    ),
+                ])
+            )
+        )
         return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            Network.shared.apollo.fetch(query: ActiveUserSessionQuery(userId: userId), cachePolicy: .fetchIgnoringCacheData) { result in
+            Network.shared.apollo.fetch(query: PracticeSessionsQuery(filter: filter), cachePolicy: .fetchIgnoringCacheData) { result in
                 Task { @MainActor in
                     switch result {
                     case let .success(graphQlResult):

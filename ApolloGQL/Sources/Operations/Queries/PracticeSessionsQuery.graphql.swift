@@ -3,21 +3,31 @@
 
 @_exported import ApolloAPI
 
-public class RecentUserSessionsQuery: GraphQLQuery {
-  public static let operationName: String = "RecentUserSessions"
+public class PracticeSessionsQuery: GraphQLQuery {
+  public static let operationName: String = "PracticeSessionsQuery"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query RecentUserSessions($userId: UUID!) { practiceSessionsCollection( filter: { userId: { eq: $userId }, deletedAt: { is: NULL } } orderBy: { endTime: DescNullsFirst } ) { __typename edges { __typename node { __typename ...PracticeSessionDetails } } } }"#,
+      #"query PracticeSessionsQuery($filter: PracticeSessionsFilter = {  }, $orderBy: [PracticeSessionsOrderBy!] = [{ endTime: DescNullsFirst }]) { practiceSessionsCollection(filter: $filter, orderBy: $orderBy) { __typename edges { __typename node { __typename ...PracticeSessionDetails } } } }"#,
       fragments: [PieceDetails.self, PracticeSessionDetails.self]
     ))
 
-  public var userId: UUID
+  public var filter: GraphQLNullable<PracticeSessionsFilter>
+  public var orderBy: GraphQLNullable<[PracticeSessionsOrderBy]>
 
-  public init(userId: UUID) {
-    self.userId = userId
+  public init(
+    filter: GraphQLNullable<PracticeSessionsFilter> = .init(
+      PracticeSessionsFilter()
+    ),
+    orderBy: GraphQLNullable<[PracticeSessionsOrderBy]> = [PracticeSessionsOrderBy(endTime: .init(.descNullsFirst))]
+  ) {
+    self.filter = filter
+    self.orderBy = orderBy
   }
 
-  public var __variables: Variables? { ["userId": userId] }
+  public var __variables: Variables? { [
+    "filter": filter,
+    "orderBy": orderBy
+  ] }
 
   public struct Data: ApolloGQL.SelectionSet {
     public let __data: DataDict
@@ -26,11 +36,8 @@ public class RecentUserSessionsQuery: GraphQLQuery {
     public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Query }
     public static var __selections: [ApolloAPI.Selection] { [
       .field("practiceSessionsCollection", PracticeSessionsCollection?.self, arguments: [
-        "filter": [
-          "userId": ["eq": .variable("userId")],
-          "deletedAt": ["is": "NULL"]
-        ],
-        "orderBy": ["endTime": "DescNullsFirst"]
+        "filter": .variable("filter"),
+        "orderBy": .variable("orderBy")
       ]),
     ] }
 
@@ -46,7 +53,7 @@ public class RecentUserSessionsQuery: GraphQLQuery {
           "practiceSessionsCollection": practiceSessionsCollection._fieldData,
         ],
         fulfilledFragments: [
-          ObjectIdentifier(RecentUserSessionsQuery.Data.self)
+          ObjectIdentifier(PracticeSessionsQuery.Data.self)
         ]
       ))
     }
@@ -75,7 +82,7 @@ public class RecentUserSessionsQuery: GraphQLQuery {
             "edges": edges._fieldData,
           ],
           fulfilledFragments: [
-            ObjectIdentifier(RecentUserSessionsQuery.Data.PracticeSessionsCollection.self)
+            ObjectIdentifier(PracticeSessionsQuery.Data.PracticeSessionsCollection.self)
           ]
         ))
       }
@@ -104,7 +111,7 @@ public class RecentUserSessionsQuery: GraphQLQuery {
               "node": node._fieldData,
             ],
             fulfilledFragments: [
-              ObjectIdentifier(RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.self)
+              ObjectIdentifier(PracticeSessionsQuery.Data.PracticeSessionsCollection.Edge.self)
             ]
           ))
         }
@@ -158,7 +165,7 @@ public class RecentUserSessionsQuery: GraphQLQuery {
                 "piece": piece._fieldData,
               ],
               fulfilledFragments: [
-                ObjectIdentifier(RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.Node.self),
+                ObjectIdentifier(PracticeSessionsQuery.Data.PracticeSessionsCollection.Edge.Node.self),
                 ObjectIdentifier(PracticeSessionDetails.self)
               ]
             ))

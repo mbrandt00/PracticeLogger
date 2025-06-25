@@ -57,20 +57,7 @@ struct RecentPracticeSessions: View {
                     .swipeActions {
                         Button(role: .destructive) {
                             Task {
-                                do {
-                                    _ = try await Database.client
-                                        .from("practice_sessions")
-                                        .update(["deleted_at": Date()])
-                                        .eq("id", value: session.id)
-                                        .execute()
-
-                                    if let index = practiceSessionViewModel.recentSessions.firstIndex(where: { $0.id == session.id }) {
-                                        practiceSessionViewModel.recentSessions.remove(at: index)
-                                    }
-
-                                } catch let err {
-                                    print(err)
-                                }
+                                await practiceSessionViewModel.deleteSession(session)
                             }
                         } label: {
                             Label("Delete", systemImage: "trash")

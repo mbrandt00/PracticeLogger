@@ -66,7 +66,8 @@ struct ContentView: View {
                             activeSession: activeSession
                         )
                         .padding(.bottom, isExpanded ? 0 : geometry.safeAreaInsets.bottom + standardTabBarHeight)
-                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                        .id(activeSession.id)
+                        .animation(.easeInOut(duration: 0.25), value: practiceSessionViewModel.activeSession != nil)
                     }
                 }
                 .animation(.easeInOut(duration: 0.25), value: isExpanded)

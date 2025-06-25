@@ -93,8 +93,8 @@ extension PracticeSessionDetails {
         piece: .init(from: PieceDetails.previewBach)
     )
 
-    func toRecentUserSessionEdge() -> RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge {
-        let gqlPiece = RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.Node.Piece(
+    func toRecentUserSessionEdge() -> PracticeSessionsQuery.Data.PracticeSessionsCollection.Edge {
+        let gqlPiece = PracticeSessionsQuery.Data.PracticeSessionsCollection.Edge.Node.Piece(
             lastPracticed: piece.lastPracticed,
             totalPracticeTime: piece.totalPracticeTime,
             id: piece.id,
@@ -124,7 +124,7 @@ extension PracticeSessionDetails {
         )
 
         let gqlMovement = movement.map {
-            RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.Node.Movement(
+            PracticeSessionsQuery.Data.PracticeSessionsCollection.Edge.Node.Movement(
                 id: BigInt(1),
                 name: $0.name
             )
@@ -133,7 +133,7 @@ extension PracticeSessionDetails {
         let duration = 300
         let endTime = startTime.addingTimeInterval(TimeInterval(duration))
 
-        let gqlNode = RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge.Node(
+        let gqlNode = PracticeSessionsQuery.Data.PracticeSessionsCollection.Edge.Node(
             id: id,
             startTime: startTime,
             endTime: endTime,
@@ -142,7 +142,7 @@ extension PracticeSessionDetails {
             piece: gqlPiece
         )
 
-        return RecentUserSessionsQuery.Data.PracticeSessionsCollection.Edge(node: gqlNode)
+        return PracticeSessionsQuery.Data.PracticeSessionsCollection.Edge(node: gqlNode)
     }
 
     static let allPreviews = [

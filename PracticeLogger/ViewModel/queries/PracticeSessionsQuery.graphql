@@ -1,0 +1,12 @@
+query PracticeSessionsQuery(
+  $filter: PracticeSessionsFilter = {}
+  $orderBy: [PracticeSessionsOrderBy!] = [{ endTime: DescNullsFirst }]
+) {
+  practiceSessionsCollection(filter: $filter, orderBy: $orderBy) {
+    edges {
+      node {
+        ...PracticeSessionDetails
+      }
+    }
+  }
+}

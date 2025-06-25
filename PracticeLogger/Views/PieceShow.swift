@@ -36,9 +36,9 @@ struct PieceShow: View {
                         if composer.userId != nil {
                             Button(action: {
                                 self.editingComposer = true
-                            }) {
+                            }, label: {
                                 Text("Edit")
-                            }
+                            })
                         }
                     }
 
