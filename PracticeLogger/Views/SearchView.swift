@@ -212,7 +212,7 @@ struct RepertoireRow: View {
 
     private var totalTimeText: String {
         if let time = piece.totalPracticeTime, time > 0 {
-            return time.formattedTimeDuration
+            return Duration.seconds(time).shortFormatted
         }
         return ""
     }

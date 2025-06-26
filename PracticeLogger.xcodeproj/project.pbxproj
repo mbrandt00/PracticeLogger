@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D10017E42DDC3FBA0031DDF7 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13D0ED92BCC2FA1006B2683 /* Int.swift */; };
+		D105F55B2E0D0BE1005EA1F5 /* Duration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D105F55A2E0D0BDE005EA1F5 /* Duration.swift */; };
 		D10DBD6A2D87C72100A5F1E0 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D10DBD692D87C72100A5F1E0 /* ApolloGQL */; };
 		D10DBD6C2D87C75900A5F1E0 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D10DBD6B2D87C75900A5F1E0 /* ApolloGQL */; };
 		D111D6FF2DA1A32900E2ED66 /* Collections+SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D111D6FE2DA1A32400E2ED66 /* Collections+SampleData.swift */; };
@@ -177,6 +178,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D105F55A2E0D0BDE005EA1F5 /* Duration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Duration.swift; sourceTree = "<group>"; };
 		D111D6FE2DA1A32400E2ED66 /* Collections+SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collections+SampleData.swift"; sourceTree = "<group>"; };
 		D117BFAE2CA8B0840046A1E5 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		D11990642B9CC58D0031E8A0 /* MusicKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MusicKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/MusicKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -405,6 +407,7 @@
 		D131F16B2B8AE544002261BC /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				D105F55A2E0D0BDE005EA1F5 /* Duration.swift */,
 				D131F16C2B8AE54E002261BC /* Color.swift */,
 				D13D0ED92BCC2FA1006B2683 /* Int.swift */,
 				D1DF5B5E2BB882CD00FFED0F /* String.swift */,
@@ -811,6 +814,7 @@
 				D192831E2DF3FA9F00B6938F /* AnimatedQuarternotes.swift in Sources */,
 				D1BE1CA02DDD7A6E005160FE /* EndPracticeSessionIntent.swift in Sources */,
 				D1277D5B2DECE78800420C36 /* EmailAuthForm.swift in Sources */,
+				D105F55B2E0D0BE1005EA1F5 /* Duration.swift in Sources */,
 				D1BE01D22C67EE1E00529BAE /* NavigationContext.swift in Sources */,
 				D1C2BEB52BDCE22600E8E39F /* Tag.swift in Sources */,
 				D131F17B2B8B090D002261BC /* MetronomeShape.swift in Sources */,

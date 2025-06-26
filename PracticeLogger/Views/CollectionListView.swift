@@ -7,6 +7,7 @@
 
 import Apollo
 import ApolloGQL
+import Foundation
 import SwiftUI
 
 struct CollectionListView: View {
@@ -115,7 +116,7 @@ struct CollectionListView: View {
                 isCreatingNewPiece: true,
                 onPieceCreated: { newPiece in
                     Task {
-                        await loadCollectionData(forceRefresh: true)
+                        await loadCollectionData()
                     }
                     navigatePieceShow?(newPiece)
                 }
@@ -154,12 +155,11 @@ struct CollectionListView: View {
             if item.node.userId == nil {
                 Image(systemName: "plus.rectangle")
                     .foregroundColor(.gray)
-            } else if let totalPracticeTime = item.node.totalPracticeTime {
-                Text("\(totalPracticeTime.formattedTimeDuration) practiced")
+            } else if let totalPracticeTime = item.node.totalPracticeTime, totalPracticeTime > 0 {
+                let duration = Duration.seconds(totalPracticeTime)
+                Text("\(duration.shortFormatted) practiced")
                     .foregroundColor(.secondary)
                     .font(.footnote)
-            } else {
-                NewItemBadge()
             }
         }
         .padding(.vertical, 8)
@@ -168,15 +168,14 @@ struct CollectionListView: View {
         .buttonStyle(PlainButtonStyle())
     }
 
-    private func loadCollectionData(forceRefresh: Bool = false) async {
+    private func loadCollectionData() async {
         do {
             collectionInformation = try await withCheckedThrowingContinuation { continuation in
                 let filter = GraphQLNullable(CollectionsFilter(id: .some(BigIntFilter(eq: .some(collectionId)))))
-                let policy: CachePolicy = forceRefresh ? .fetchIgnoringCacheData : .returnCacheDataElseFetch
 
                 Network.shared.apollo.fetch(
                     query: CollectionsQuery(filter: filter),
-                    cachePolicy: policy
+                    cachePolicy: .fetchIgnoringCacheData
                 ) { result in
                     switch result {
                     case let .success(graphQLResult):

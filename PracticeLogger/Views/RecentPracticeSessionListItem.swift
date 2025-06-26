@@ -21,10 +21,6 @@ struct RecentPracticeSessionListItem: View {
         return ""
     }
 
-    private var durationText: String {
-        session.durationSeconds?.formattedTimeDuration ?? ""
-    }
-
     private var hasMovement: Bool {
         session.movement != nil && session.movement?.name != nil
     }
@@ -92,9 +88,11 @@ struct RecentPracticeSessionListItem: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
 
-                Text(durationText)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                if let durationSeconds = session.durationSeconds, durationSeconds > 0 {
+                    Text(Duration.seconds(durationSeconds).mediumFormatted)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
             }
         }
         .padding(.vertical, 4)
