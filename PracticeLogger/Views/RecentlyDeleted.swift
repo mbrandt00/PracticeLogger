@@ -24,7 +24,7 @@ struct RecentlyDeleted: View {
                         .foregroundColor(.secondary)
                 ) {
                     ForEach(deletedSessions, id: \.id) { session in
-                        RecentPracticeSessionListItem(session: session)
+                        RecentPracticeSessionListItem(session: session, showDate: true)
                             .swipeActions(allowsFullSwipe: true) {
                                 Button(role: .cancel) {
                                     Task {

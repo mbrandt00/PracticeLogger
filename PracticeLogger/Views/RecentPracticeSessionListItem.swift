@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RecentPracticeSessionListItem: View {
     let session: PracticeSessionDetails
+    var showDate: Bool = false
     private var pieceDetails: PieceDetails {
         session.piece.fragments.pieceDetails
     }
@@ -77,9 +78,15 @@ struct RecentPracticeSessionListItem: View {
                         .foregroundColor(.secondary)
                 }
 
-                Text(session.startTime.formatted(.dateTime.hour().minute()))
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                if showDate {
+                    Text(session.startTime.formatted(date: .numeric, time: .shortened))
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                } else {
+                    Text(session.startTime.formatted(.dateTime.hour().minute()))
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
 
                 Text("•")
                     .font(.caption)
