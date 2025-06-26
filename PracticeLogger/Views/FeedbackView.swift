@@ -10,6 +10,11 @@ import Supabase
 import SwiftUI
 
 struct FeedbackView: View {
+    private enum Field: Hashable {
+        case title
+        case description
+    }
+
     @State private var title = ""
     @State private var description = ""
     @State private var issueType = "Bug"
@@ -17,6 +22,7 @@ struct FeedbackView: View {
     @State private var showToast = false
     @State private var toastMessage = ""
     @State private var isSuccess = false
+    @FocusState private var focusedField: Field?
 
     var body: some View {
         Form {
@@ -27,9 +33,11 @@ struct FeedbackView: View {
             .pickerStyle(SegmentedPickerStyle())
 
             TextField("Title", text: $title)
+                .focused($focusedField, equals: .title)
 
             TextField("Description", text: $description, axis: .vertical)
                 .lineLimit(5, reservesSpace: true)
+                .focused($focusedField, equals: .description)
 
             Button("Submit") {
                 Task {
@@ -51,6 +59,7 @@ struct FeedbackView: View {
                             showToast = true
                             title = ""
                             description = ""
+                            focusedField = .title
 
                         } else {
                             toastMessage = response.error ?? "Failed to submit report"
