@@ -15,15 +15,15 @@ extension Duration {
 
         if days > 0 {
             if hours > 0 {
-                return "\(days)d\(hours)h"
+                return "\(days)d \(hours)h"
             } else if minutes > 0 {
-                return "\(days)d\(minutes)m"
+                return "\(days)d \(minutes)m"
             } else {
                 return "\(days)d"
             }
         } else if hours > 0 {
             if minutes > 0 {
-                return "\(hours)h\(minutes)m"
+                return "\(hours)h \(minutes)m"
             } else {
                 return "\(hours)h"
             }
