@@ -327,7 +327,7 @@ struct PieceShow: View {
                     .foregroundColor(.secondary)
             }
 
-            if let totalTime = movement.node.totalPracticeTime {
+            if let totalTime = movement.node.totalPracticeTime, totalTime > 0 {
                 HStack(spacing: 4) {
                     Image(systemName: "clock")
                     Text(formatDuration(seconds: totalTime))
