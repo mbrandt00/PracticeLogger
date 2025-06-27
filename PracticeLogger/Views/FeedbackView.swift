@@ -25,58 +25,71 @@ struct FeedbackView: View {
     @FocusState private var focusedField: Field?
 
     var body: some View {
-        Form {
-            Picker("Type", selection: $issueType) {
-                Text("Bug").tag("Bug")
-                Text("Feature").tag("Feature")
-            }
-            .pickerStyle(SegmentedPickerStyle())
+        ZStack {
+            Form {
+                Picker("Type", selection: $issueType) {
+                    Text("Bug").tag("Bug")
+                    Text("Feature").tag("Feature")
+                }
+                .pickerStyle(SegmentedPickerStyle())
 
-            TextField("Title", text: $title)
-                .focused($focusedField, equals: .title)
+                TextField("Title", text: $title)
+                    .focused($focusedField, equals: .title)
 
-            TextField("Description", text: $description, axis: .vertical)
-                .lineLimit(5, reservesSpace: true)
-                .focused($focusedField, equals: .description)
+                TextField("Description", text: $description, axis: .vertical)
+                    .lineLimit(5, reservesSpace: true)
+                    .focused($focusedField, equals: .description)
 
-            Button("Submit") {
-                Task {
-                    isSubmitting = true
-
-                    do {
-                        let response: BugReportResponse = try await Database.client.functions
-                            .invoke(
-                                "create-triage-ticket",
-                                options: FunctionInvokeOptions(
-                                    body: ["title": title, "description": description, "issueType": issueType]
+                Button("Submit") {
+                    Task {
+                        isSubmitting = true
+                        defer { isSubmitting = false }
+                        do {
+                            let response: BugReportResponse = try await Database.client.functions
+                                .invoke(
+                                    "create-triage-ticket",
+                                    options: FunctionInvokeOptions(
+                                        body: ["title": title, "description": description, "issueType": issueType]
+                                    )
                                 )
-                            )
 
-                        if response.success {
-                            print("Bug report created successfully: \(response.issue?.id ?? "Unknown ID")")
-                            toastMessage = "Report submitted successfully!"
-                            isSuccess = true
+                            if response.success {
+                                toastMessage = "Report submitted successfully!"
+                                isSuccess = true
+                                title = ""
+                                description = ""
+                                focusedField = .title
+                            } else {
+                                toastMessage = response.error ?? "Failed to submit report"
+                                isSuccess = false
+                            }
+
                             showToast = true
-                            title = ""
-                            description = ""
-                            focusedField = .title
-
-                        } else {
-                            toastMessage = response.error ?? "Failed to submit report"
+                        } catch {
+                            toastMessage = "Error: \(error.localizedDescription)"
                             isSuccess = false
                             showToast = true
                         }
-                    } catch {
-                        toastMessage = "Error: \(error.localizedDescription)"
-                        isSuccess = false
-                        showToast = true
                     }
-
-                    isSubmitting = false
                 }
+                .disabled(title.isEmpty || isSubmitting)
             }
-            .disabled(title.isEmpty || isSubmitting)
+            .disabled(isSubmitting) // prevent interaction during submission
+
+            if isSubmitting {
+                ZStack {
+                    Color.black.opacity(0.3)
+                        .ignoresSafeArea()
+
+                    ProgressView("Submitting...")
+                        .padding()
+                        .background(Color(UIColor.systemBackground))
+                        .cornerRadius(10)
+                }
+                .transition(.opacity)
+            }
         }
+        .animation(.easeInOut(duration: 0.25), value: isSubmitting)
         .background(Color(UIColor.systemBackground))
         .navigationTitle("Submit feedback")
         .toast(isPresenting: $showToast) {
