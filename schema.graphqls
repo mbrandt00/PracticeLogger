@@ -157,6 +157,8 @@ type Collections implements Node {
   name: String!
   url: String
   composerId: BigInt!
+  searchableText: String
+  searchable: Boolean!
   composer: Composers!
 
   """
@@ -211,6 +213,8 @@ input CollectionsFilter {
   name: StringFilter
   url: StringFilter
   composerId: BigIntFilter
+  searchableText: StringFilter
+  searchable: BooleanFilter
   nodeId: IDFilter
 
   """
@@ -232,6 +236,8 @@ input CollectionsInsertInput {
   name: String
   url: String
   composerId: BigInt
+  searchableText: String
+  searchable: Boolean
 }
 
 type CollectionsInsertResponse {
@@ -247,6 +253,8 @@ input CollectionsOrderBy {
   name: OrderByDirection
   url: OrderByDirection
   composerId: OrderByDirection
+  searchableText: OrderByDirection
+  searchable: OrderByDirection
 }
 
 input CollectionsUpdateInput {
@@ -254,6 +262,8 @@ input CollectionsUpdateInput {
   name: String
   url: String
   composerId: BigInt
+  searchableText: String
+  searchable: Boolean
 }
 
 type CollectionsUpdateResponse {
@@ -1452,6 +1462,32 @@ type Query {
     """Sort order to apply to the collection"""
     orderBy: [PracticeSessionsOrderBy!]
   ): PracticeSessionsConnection
+  searchCollections(
+    query: String!
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """
+    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
+    """
+    offset: Int
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: CollectionsFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [CollectionsOrderBy!]
+  ): CollectionsConnection
   searchPieces(
     query: String!
 

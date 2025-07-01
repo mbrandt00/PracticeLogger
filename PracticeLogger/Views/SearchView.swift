@@ -14,6 +14,7 @@ struct SearchView: View {
     @Binding var path: NavigationPath
     @State private var isShowingCustomPieceSheet = false
     @State private var isLoading: Bool
+    @State private var selectedCategory: SearchFilterBar.SearchFilter = .all
     private var preview: Bool = false
 
     init(
@@ -37,7 +38,7 @@ struct SearchView: View {
     }
 
     private var isEmpty: Bool {
-        searchViewModel.userPieces.isEmpty && searchViewModel.newPieces.isEmpty
+        searchViewModel.userPieces.isEmpty && searchViewModel.newPieces.isEmpty && searchViewModel.collections.isEmpty
     }
 
     private var shouldShowSpinner: Bool {
@@ -49,103 +50,137 @@ struct SearchView: View {
     }
 
     var body: some View {
-        ZStack {
-            List {
-                if !searchViewModel.userPieces.isEmpty {
-                    Section(
-                        header:
-                        HStack {
-                            Text("Pieces")
-                                .font(.headline)
+        VStack(spacing: 0) {
+            SearchFilterBar(selectedCategory: $selectedCategory, viewModel: searchViewModel)
 
-                            Spacer()
+            ZStack {
+                if shouldShowSpinner {
+                    ProgressView("Searching...")
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if shouldShowEmptyState {
+                    VStack(spacing: 16) {
+                        Image(systemName: "magnifyingglass")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 60, height: 60)
+                            .foregroundColor(.accentColor.opacity(0.6))
 
-                            if searchViewModel.searchTerm.isEmpty {
-                                Button {
-                                    isShowingCustomPieceSheet = true
-                                } label: {
-                                    Label("Custom Piece", systemImage: "plus.square")
-                                        .font(.subheadline)
+                        Text("No results found")
+                            .font(.title3)
+                            .fontWeight(.semibold)
+
+                        Text("Try searching for a different piece or create a new piece.")
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                        Button("Create custom piece", systemImage: "plus.square") {
+                            isShowingCustomPieceSheet = true
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding()
+                } else {
+                    List {
+                        switch selectedCategory {
+                        case .all:
+                            if !searchViewModel.userPieces.isEmpty {
+                                Section(
+                                    header:
+                                    HStack {
+                                        Text("Pieces")
+                                            .font(.headline)
+
+                                        Spacer()
+
+                                        if searchViewModel.searchTerm.isEmpty {
+                                            Button {
+                                                isShowingCustomPieceSheet = true
+                                            } label: {
+                                                Label("Custom Piece", systemImage: "plus.square")
+                                                    .font(.subheadline)
+                                            }
+                                            .accessibilityLabel("Create custom piece")
+                                        }
+                                    }
+                                    .padding(.top, 8)
+                                ) {
+                                    ForEach(searchViewModel.userPieces, id: \.id) { piece in
+                                        userPieceRow(piece)
+                                    }
                                 }
-                                .accessibilityLabel("Create custom piece")
+                            }
+
+                            if !searchViewModel.newPieces.isEmpty {
+                                Section(header: Text("New Pieces")) {
+                                    ForEach(searchViewModel.newPieces, id: \.id) { piece in
+                                        newPieceRow(piece)
+                                    }
+                                }
+                            }
+
+                        case .userPieces:
+                            Text("User pieces")
+
+                        case .newPieces:
+                            Text("new pieces")
+
+                        case .composers:
+                            Text("composers")
+
+                        case .collections:
+                            ForEach(searchViewModel.collections) { group in
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text(group.name)
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+
+                                    Text("\(group.pieces.count) pieces")
+                                        .font(.subheadline)
+                                        .foregroundColor(.white.opacity(0.8))
+                                }
+                                .padding()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .cornerRadius(12)
+                                .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
+                                .padding(.vertical, 4)
                             }
                         }
-                        .padding(.top, 8)
-                    ) {
-                        ForEach(searchViewModel.userPieces, id: \.id) { piece in
-                            userPieceRow(piece)
-                        }
-                    }
-                }
-
-                if !searchViewModel.newPieces.isEmpty {
-                    Section(header: Text("New Pieces")) {
-                        ForEach(searchViewModel.newPieces, id: \.id) { piece in
-                            newPieceRow(piece)
-                        }
                     }
                 }
             }
-            if shouldShowSpinner {
-                ProgressView("Searching...")
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
 
-            if shouldShowEmptyState {
-                VStack(spacing: 16) {
-                    Image(systemName: "magnifyingglass")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 60, height: 60)
-                        .foregroundColor(.accentColor.opacity(0.6))
-
-                    Text("No results found")
-                        .font(.title3)
-                        .fontWeight(.semibold)
-
-                    Text("Try searching for a different piece or create a new piece.")
-                        .font(.body)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                    Button("Create custom piece", systemImage: "plus.square") {
-                        isShowingCustomPieceSheet = true
-                    }
+            .onAppear {
+                Task {
+                    isLoading = true
+                    await searchViewModel.searchPieces()
+                    isLoading = false
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .padding()
             }
-        }
-        .onAppear {
-            Task {
-                isLoading = true
-                await searchViewModel.searchPieces()
-                isLoading = false
-            }
-        }
-        .onChange(of: searchViewModel.searchTerm) { _, _ in
-            // Only show loading if we don't already have results
-            if searchViewModel.userPieces.isEmpty && searchViewModel.newPieces.isEmpty {
-                isLoading = true
-            }
+            .onChange(of: searchViewModel.searchTerm) { _, _ in
+                // Only show loading if we don't already have results
+                if searchViewModel.userPieces.isEmpty && searchViewModel.newPieces.isEmpty {
+                    isLoading = true
+                }
 
-            Task {
-                await searchViewModel.searchPieces()
-                isLoading = false
+                Task {
+                    await searchViewModel.searchPieces()
+                    isLoading = false
+                }
             }
-        }
-        .sheet(item: $searchViewModel.selectedPiece) { piece in
-            NavigationStack {
-                PieceEdit(piece: piece, isCreatingNewPiece: true, onPieceCreated: handlePieceCreated)
+            .sheet(item: $searchViewModel.selectedPiece) { piece in
+                NavigationStack {
+                    PieceEdit(piece: piece, isCreatingNewPiece: true, onPieceCreated: handlePieceCreated)
+                }
             }
-        }
-        .sheet(isPresented: $isShowingCustomPieceSheet) {
-            NavigationStack {
-                PieceEdit(
-                    piece: PieceDetails.empty,
-                    isCreatingNewPiece: true,
-                    onPieceCreated: handlePieceCreated
-                )
+            .sheet(isPresented: $isShowingCustomPieceSheet) {
+                NavigationStack {
+                    PieceEdit(
+                        piece: PieceDetails.empty,
+                        isCreatingNewPiece: true,
+                        onPieceCreated: handlePieceCreated
+                    )
+                }
             }
         }
     }

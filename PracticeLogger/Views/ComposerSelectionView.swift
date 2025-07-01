@@ -186,7 +186,8 @@ struct EditComposerView: View {
     private var countryNames: [String] {
         let regions = Locale.Region.isoRegions
         let locale = Locale.current
-        return regions.compactMap { locale.localizedString(forRegionCode: $0.identifier) }.sorted()
+        let countries = regions.compactMap { locale.localizedString(forRegionCode: $0.identifier) }.sorted()
+        return countries
     }
 
     var body: some View {

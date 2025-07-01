@@ -84,11 +84,11 @@ struct RecentPracticeSessionListItem: View {
                         .foregroundColor(.secondary)
                 }
 
-                Text("•")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-
                 if let durationSeconds = session.durationSeconds, durationSeconds > 0 {
+                    Text("•")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
                     Text(Duration.seconds(durationSeconds).mediumFormatted)
                         .font(.caption)
                         .foregroundColor(.secondary)
@@ -99,16 +99,14 @@ struct RecentPracticeSessionListItem: View {
     }
 }
 
-// struct RecentPracticeSessionListItem_Previews: PreviewProvider {
-//    static var previews: some View {
-//        let previewSession = PracticeSessionDetails.previewBach.toRecentUserSessionEdge().node
-//
-//        List {
-//            RecentPracticeSessionListItem(session: previewSession) { _ in
-//                // No-op delete handler for preview
-//            }
-//        }
-//        .listStyle(.insetGrouped)
-//        .previewDisplayName("Bach Session Preview")
-//    }
-// }
+struct RecentPracticeSessionListItem_Previews: PreviewProvider {
+    static var previews: some View {
+        let previewSession = PracticeSessionDetails.previewBach
+
+        List {
+            RecentPracticeSessionListItem(session: previewSession)
+        }
+        .listStyle(.insetGrouped)
+        .previewDisplayName("Bach Session Preview")
+    }
+}

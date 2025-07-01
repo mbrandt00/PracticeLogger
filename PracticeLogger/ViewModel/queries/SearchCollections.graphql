@@ -1,0 +1,30 @@
+query SearchCollections(
+  $query: String!
+  $collectionsFilter: CollectionsFilter = {}
+  $collectionsOrderBy: [CollectionsOrderBy!] = []
+  $piecesOrderBy: [PieceOrderBy!] = [
+    { catalogueNumber: AscNullsLast, catalogueNumberSecondary: AscNullsLast }
+  ]
+) {
+  searchCollections(
+    query: $query
+    filter: $collectionsFilter
+    orderBy: $collectionsOrderBy
+  ) {
+    edges {
+      node {
+        pieces(orderBy: $piecesOrderBy) {
+          edges {
+            node {
+              ...PieceDetails
+            }
+          }
+        }
+        name
+        composer {
+          lastName
+        }
+      }
+    }
+  }
+}

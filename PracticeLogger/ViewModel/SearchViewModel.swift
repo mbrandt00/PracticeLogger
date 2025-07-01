@@ -16,7 +16,14 @@ class SearchViewModel: ObservableObject {
     @Published var newPieces: [PieceDetails] = []
     @Published var allUserPieces: [PieceDetails] = []
     @Published var selectedPiece: PieceDetails?
+    @Published var collections: [CollectionGroup] = []
     private var indexedUserPieces: [IndexedPiece] = []
+
+    struct CollectionGroup: Identifiable {
+        let id: String
+        let name: String
+        let pieces: [PieceDetails]
+    }
 
     @MainActor
     func searchPieces() async {
@@ -24,15 +31,61 @@ class SearchViewModel: ObservableObject {
             if !searchTerm.isEmpty {
                 userPieces = await matchingUserPieces()
                 newPieces = try await searchNewPieces() ?? []
+                collections = try await searchCollections() ?? []
+                print(collections)
             } else {
                 let fresh = try await getRecentUserPieces() ?? []
                 allUserPieces = fresh
                 indexedUserPieces = fresh.map { IndexedPiece($0) }
                 userPieces = fresh
+                collections = []
                 newPieces = []
             }
         } catch {
             print("Error fetching pieces: \(error)")
+        }
+    }
+
+    func searchCollections() async throws -> [CollectionGroup]? {
+        try await withCheckedThrowingContinuation { continuation in
+            Network.shared.apollo.fetch(
+                query: SearchCollectionsQuery(query: searchTerm),
+                cachePolicy: .returnCacheDataElseFetch
+            ) { result in
+                switch result {
+                case let .success(graphQlResult):
+                    if let data = graphQlResult.data?.searchCollections {
+                        let groups = data.edges.map { edge in
+                            let collectionName = edge.node.name
+                            let pieceEdges = edge.node.pieces?.edges ?? []
+                            let pieceDetails = pieceEdges.map { $0.node.fragments.pieceDetails }
+                            return CollectionGroup(id: collectionName, name: collectionName, pieces: pieceDetails)
+                        }
+                        continuation.resume(returning: groups)
+                    } else {
+                        continuation.resume(returning: nil)
+                    }
+
+                case let .failure(error):
+                    print("Error fetching recent pieces: \(error)")
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    func count(for filter: SearchFilterBar.SearchFilter) -> Int {
+        switch filter {
+        case .all:
+            return userPieces.count + newPieces.count + collections.flatMap(\.pieces).count
+        case .newPieces:
+            return newPieces.count
+        case .userPieces:
+            return userPieces.count
+        case .composers:
+            return 0
+        case .collections:
+            return collections.count
         }
     }
 

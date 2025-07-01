@@ -40,7 +40,10 @@
 		D15C882F2BF05E5000AAC950 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = D15C882E2BF05E5000AAC950 /* AlertToast */; };
 		D15C88312BF063B900AAC950 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15C88302BF063B900AAC950 /* Error.swift */; };
 		D166222F2DAB188B004F28AC /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D166222E2DAB188B004F28AC /* ApolloGQL */; };
+		D16851122E109EBC00C35A51 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D16851112E109EBC00C35A51 /* ApolloGQL */; };
 		D16E3A922C61E1AC00DA96A7 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D16E3A912C61E1AC00DA96A7 /* SearchView.swift */; };
+		D17482DE2E1375A200F062C0 /* FilterButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17482DD2E1375A200F062C0 /* FilterButtonView.swift */; };
+		D17482E02E138ECD00F062C0 /* SearchFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17482DF2E138ECD00F062C0 /* SearchFilterBar.swift */; };
 		D17705042DE253B00048879C /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17705032DE253B00048879C /* FeedbackView.swift */; };
 		D177FDA92C55855C00830F0D /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = D177FDA82C55855C00830F0D /* View.swift */; };
 		D1840DD02C48902F001ED849 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1840DCF2C48902F001ED849 /* Logger.swift */; };
@@ -197,6 +200,8 @@
 		D148E76C2DF603D10012579E /* RecentlyDeleted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentlyDeleted.swift; sourceTree = "<group>"; };
 		D15C88302BF063B900AAC950 /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		D16E3A912C61E1AC00DA96A7 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		D17482DD2E1375A200F062C0 /* FilterButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButtonView.swift; sourceTree = "<group>"; };
+		D17482DF2E138ECD00F062C0 /* SearchFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFilterBar.swift; sourceTree = "<group>"; };
 		D17705032DE253B00048879C /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
 		D177FDA82C55855C00830F0D /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		D1840DCF2C48902F001ED849 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -312,6 +317,7 @@
 				D18ADB112D872540007760E5 /* ApolloGQL in Frameworks */,
 				D148F5FE2DA18E8600EA70CB /* ApolloGQL in Frameworks */,
 				D1F3AA402DD974F600A0C1E7 /* KeychainAccess in Frameworks */,
+				D16851122E109EBC00C35A51 /* ApolloGQL in Frameworks */,
 				D18ADB102D872540007760E5 /* ApolloGQL in Frameworks */,
 				D18ADB0F2D872540007760E5 /* ApolloGQL in Frameworks */,
 				D18ADB0E2D872540007760E5 /* ApolloGQL in Frameworks */,
@@ -396,6 +402,7 @@
 				D197387D2C153F7100EBF53F /* PieceShow.swift */,
 				D1C2BEC32BDD7A9100E8E39F /* Settings.swift */,
 				D16E3A912C61E1AC00DA96A7 /* SearchView.swift */,
+				D17482DF2E138ECD00F062C0 /* SearchFilterBar.swift */,
 				D1F29CE82C6C52F000FC5E74 /* RecentPracticeSessions.swift */,
 				D146F87A2DC7CE6E00C4B7BD /* RecentPracticeSessionListItem.swift */,
 				D1A056102CB1A9E30024DC2A /* PracticeSessionView.swift */,
@@ -422,6 +429,7 @@
 		D131F1742B8AFCC8002261BC /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				D17482DD2E1375A200F062C0 /* FilterButtonView.swift */,
 				D12F5E2A2D6277B9001CB9B7 /* BottomSheet.swift */,
 				D1C2BEB42BDCE22600E8E39F /* Tag.swift */,
 				D131F17A2B8B090D002261BC /* MetronomeShape.swift */,
@@ -654,6 +662,7 @@
 				D13BD0402DF808F300538E4B /* ApolloGQL */,
 				D1D6C9C52DFAF95400B8BDC7 /* ApolloGQL */,
 				D12416F42DFFD32800F08E0C /* ApolloGQL */,
+				D16851112E109EBC00C35A51 /* ApolloGQL */,
 			);
 			productName = PracticeLogger;
 			productReference = D19E733B2B898F9300BB3EC7 /* PracticeLogger.app */;
@@ -788,6 +797,7 @@
 				D12F5E2B2D6277BC001CB9B7 /* BottomSheet.swift in Sources */,
 				D12F5E282D616291001CB9B7 /* PieceDetails+SampleData.swift in Sources */,
 				D1E98BD72C59EFB20065D27D /* Format.swift in Sources */,
+				D17482E02E138ECD00F062C0 /* SearchFilterBar.swift in Sources */,
 				D13D0EDA2BCC2FA1006B2683 /* Int.swift in Sources */,
 				D1FE264C2E0519F700ABCB73 /* NewItemBadge.swift in Sources */,
 				D19E73412B898F9300BB3EC7 /* ContentView.swift in Sources */,
@@ -819,6 +829,7 @@
 				D1C2BEB52BDCE22600E8E39F /* Tag.swift in Sources */,
 				D131F17B2B8B090D002261BC /* MetronomeShape.swift in Sources */,
 				D146F87B2DC7CE6E00C4B7BD /* RecentPracticeSessionListItem.swift in Sources */,
+				D17482DE2E1375A200F062C0 /* FilterButtonView.swift in Sources */,
 				D1C2BEC42BDD7A9100E8E39F /* Settings.swift in Sources */,
 				D131F16D2B8AE54E002261BC /* Color.swift in Sources */,
 				D1F29CE92C6C52F000FC5E74 /* RecentPracticeSessions.swift in Sources */,
@@ -1352,6 +1363,10 @@
 			productName = AlertToast;
 		};
 		D166222E2DAB188B004F28AC /* ApolloGQL */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ApolloGQL;
+		};
+		D16851112E109EBC00C35A51 /* ApolloGQL */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ApolloGQL;
 		};
