@@ -14,7 +14,6 @@ struct SearchView: View {
     @Binding var path: NavigationPath
     @State private var isShowingCustomPieceSheet = false
     @State private var isLoading: Bool
-    @State private var selectedCategory: SearchFilterBar.SearchFilter = .all
     private var preview: Bool = false
 
     init(
@@ -41,23 +40,13 @@ struct SearchView: View {
         searchViewModel.userPieces.isEmpty && searchViewModel.newPieces.isEmpty && searchViewModel.collections.isEmpty
     }
 
-    private var shouldShowSpinner: Bool {
-        isLoading && isEmpty
-    }
-
-    private var shouldShowEmptyState: Bool {
-        !isLoading && isEmpty
-    }
-
     var body: some View {
         VStack(spacing: 0) {
-            SearchFilterBar(selectedCategory: $selectedCategory, viewModel: searchViewModel)
-
-            ZStack {
-                if shouldShowSpinner {
+            VStack {
+                if isLoading && isEmpty {
                     ProgressView("Searching...")
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else if shouldShowEmptyState {
+                } else if !isLoading && isEmpty {
                     VStack(spacing: 16) {
                         Image(systemName: "magnifyingglass")
                             .resizable()
@@ -82,7 +71,7 @@ struct SearchView: View {
                     .padding()
                 } else {
                     List {
-                        switch selectedCategory {
+                        switch searchViewModel.searchFilter {
                         case .all:
                             if !searchViewModel.userPieces.isEmpty {
                                 Section(

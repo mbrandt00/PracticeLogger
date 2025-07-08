@@ -11,11 +11,22 @@ import Combine
 import Foundation
 
 class SearchViewModel: ObservableObject {
+    enum SearchFilter: String, CaseIterable, Identifiable {
+        case all = "All" // eventual meilisearch multi index search
+        case userPieces = "Library"
+        case newPieces = "New pieces"
+        case composers = "Composers"
+        case collections = "Collections"
+
+        var id: Self { self }
+    }
+
     @Published var searchTerm = ""
     @Published var userPieces: [PieceDetails] = []
     @Published var newPieces: [PieceDetails] = []
     @Published var allUserPieces: [PieceDetails] = []
     @Published var selectedPiece: PieceDetails?
+    @Published var searchFilter: SearchFilter = .all
     @Published var collections: [CollectionGroup] = []
     private var indexedUserPieces: [IndexedPiece] = []
 
@@ -74,7 +85,7 @@ class SearchViewModel: ObservableObject {
         }
     }
 
-    func count(for filter: SearchFilterBar.SearchFilter) -> Int {
+    func count(for filter: SearchFilter) -> Int {
         switch filter {
         case .all:
             return userPieces.count + newPieces.count + collections.flatMap(\.pieces).count

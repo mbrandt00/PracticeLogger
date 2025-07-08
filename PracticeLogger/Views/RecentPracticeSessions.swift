@@ -16,6 +16,7 @@ struct RecentPracticeSessions: View {
     @EnvironmentObject var keyboardResponder: KeyboardResponder
     @EnvironmentObject var uiState: UIState
     @State private var path = NavigationPath()
+
     private let previewSessions: [PracticeSessionDetails]?
 
     init(
@@ -134,6 +135,7 @@ struct RecentPracticeSessions: View {
 
                 if isSearching {
                     VStack {
+                        SearchFilterBar(viewModel: searchViewModel)
                         SearchView(searchViewModel: searchViewModel, path: $path)
                             .environmentObject(practiceSessionViewModel)
                             .background(Color.white)
@@ -141,6 +143,7 @@ struct RecentPracticeSessions: View {
                     .padding(.vertical, 2)
                 }
             }
+
             .onChange(of: isSearching) { _, newValue in
                 uiState.isScreenBusy = newValue
             }

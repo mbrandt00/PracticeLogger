@@ -8,30 +8,19 @@
 import SwiftUI
 
 struct SearchFilterBar: View {
-    enum SearchFilter: String, CaseIterable, Identifiable {
-        case all = "All" // eventual meilisearch multi index search
-        case userPieces = "Library"
-        case newPieces = "New pieces"
-        case composers = "Composers"
-        case collections = "Collections"
-
-        var id: Self { self }
-    }
-
-    @Binding var selectedCategory: SearchFilter
     @ObservedObject var viewModel: SearchViewModel
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
-                ForEach(SearchFilter.allCases) { filter in
+                ForEach(SearchViewModel.SearchFilter.allCases) { filter in
                     let categoryCount = viewModel.count(for: filter)
                     FilterButtonView(
                         text: "\(filter.rawValue) (\(categoryCount))",
-                        isSelected: selectedCategory == filter
+                        isSelected: viewModel.searchFilter == filter
                     ) {
                         withAnimation {
-                            selectedCategory = filter
+                            viewModel.searchFilter = filter
                         }
                     }
                 }
@@ -45,10 +34,8 @@ struct SearchFilterBar: View {
 
 struct SearchFilterBar_Previews: PreviewProvider {
     struct Container: View {
-        @State private var selected: SearchFilterBar.SearchFilter = .all
-
         var body: some View {
-            SearchFilterBar(selectedCategory: $selected, viewModel: SearchViewModel())
+            SearchFilterBar(viewModel: SearchViewModel())
                 .previewLayout(.sizeThatFits)
         }
     }
