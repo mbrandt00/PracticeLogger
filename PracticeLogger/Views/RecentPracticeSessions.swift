@@ -138,9 +138,11 @@ struct RecentPracticeSessions: View {
                         SearchFilterBar(viewModel: searchViewModel)
                         SearchView(searchViewModel: searchViewModel, path: $path)
                             .environmentObject(practiceSessionViewModel)
-                            .background(Color.white)
+                            .background(Color(UIColor.systemBackground))
                     }
                     .padding(.vertical, 2)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .animation(.easeInOut(duration: 0.3), value: isSearching)
                 }
             }
 
