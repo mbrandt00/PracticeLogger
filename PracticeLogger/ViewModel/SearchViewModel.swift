@@ -33,6 +33,7 @@ class SearchViewModel: ObservableObject {
     struct CollectionGroup: Identifiable {
         let id: String
         let name: String
+        let composer: SearchCollectionsQuery.Data.SearchCollections.Edge.Node.Composer?
         let pieces: [PieceDetails]
     }
 
@@ -70,7 +71,8 @@ class SearchViewModel: ObservableObject {
                             let collectionName = edge.node.name
                             let pieceEdges = edge.node.pieces?.edges ?? []
                             let pieceDetails = pieceEdges.map { $0.node.fragments.pieceDetails }
-                            return CollectionGroup(id: collectionName, name: collectionName, pieces: pieceDetails)
+                            let composer = edge.node.composer
+                            return CollectionGroup(id: collectionName, name: collectionName, composer: composer, pieces: pieceDetails)
                         }
                         continuation.resume(returning: groups)
                     } else {

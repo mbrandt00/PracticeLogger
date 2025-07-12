@@ -85,21 +85,10 @@ struct SearchView: View {
                                 }
                             }
                             if !searchViewModel.collections.isEmpty {
-                                ForEach(searchViewModel.collections) { group in
-                                    VStack(alignment: .leading, spacing: 8) {
-                                        Text(group.name)
-                                            .font(.headline)
-                                            .foregroundColor(.white)
-
-                                        Text("\(group.pieces.count) pieces")
-                                            .font(.subheadline)
-                                            .foregroundColor(.white.opacity(0.8))
+                                Section(header: Text("Collections")) {
+                                    ForEach(searchViewModel.collections) { group in
+                                        CollectionRow(group: group)
                                     }
-                                    .padding()
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .cornerRadius(12)
-                                    .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
-                                    .padding(.vertical, 4)
                                 }
                             }
                             if isEmpty {
@@ -178,21 +167,10 @@ struct SearchView: View {
                             Text("composers")
 
                         case .collections:
-                            ForEach(searchViewModel.collections) { group in
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text(group.name)
-                                        .font(.headline)
-                                        .foregroundColor(.white)
-
-                                    Text("\(group.pieces.count) pieces")
-                                        .font(.subheadline)
-                                        .foregroundColor(.white.opacity(0.8))
+                            Section(header: Text("Collections")) {
+                                ForEach(searchViewModel.collections) { group in
+                                    CollectionRow(group: group)
                                 }
-                                .padding()
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .cornerRadius(12)
-                                .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
-                                .padding(.vertical, 4)
                             }
                         }
                     }
@@ -280,6 +258,50 @@ struct SearchView: View {
             searchViewModel.newPieces.removeAll()
             searchViewModel.searchTerm = ""
         }
+    }
+}
+
+struct CollectionRow: View {
+    let group: SearchViewModel.CollectionGroup
+
+    private var previewPiece: PieceDetails? {
+        group.pieces.first
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            // Line 1: Composer name
+            if let composer = group.composer {
+                Text("\(composer.firstName) \(composer.lastName)")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+            }
+
+            // Line 2: Collection name (title)
+            Text(group.name)
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .foregroundColor(.primary)
+                .lineLimit(1)
+
+            // Line 3: Metadata – piece count and maybe catalogue
+            HStack(spacing: 8) {
+                Text("\(group.pieces.count) piece\(group.pieces.count == 1 ? "" : "s")")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+
+                if let piece = previewPiece,
+                   let type = piece.catalogueType?.displayName,
+                   let number = piece.catalogueNumber
+                {
+                    Text("•")
+                    Text("\(type) \(number)")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+        .padding(.vertical, 6)
     }
 }
 

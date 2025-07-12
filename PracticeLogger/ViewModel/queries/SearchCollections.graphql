@@ -23,6 +23,7 @@ query SearchCollections(
         name
         composer {
           lastName
+          firstName
         }
       }
     }

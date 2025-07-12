@@ -7,7 +7,7 @@ public class SearchCollectionsQuery: GraphQLQuery {
   public static let operationName: String = "SearchCollections"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query SearchCollections($query: String!, $collectionsFilter: CollectionsFilter = {  }, $collectionsOrderBy: [CollectionsOrderBy!] = [], $piecesOrderBy: [PieceOrderBy!] = [{ catalogueNumber: AscNullsLast, catalogueNumberSecondary: AscNullsLast }]) { searchCollections( query: $query filter: $collectionsFilter orderBy: $collectionsOrderBy ) { __typename edges { __typename node { __typename pieces(orderBy: $piecesOrderBy) { __typename edges { __typename node { __typename ...PieceDetails } } } name composer { __typename lastName } } } } }"#,
+      #"query SearchCollections($query: String!, $collectionsFilter: CollectionsFilter = {  }, $collectionsOrderBy: [CollectionsOrderBy!] = [], $piecesOrderBy: [PieceOrderBy!] = [{ catalogueNumber: AscNullsLast, catalogueNumberSecondary: AscNullsLast }]) { searchCollections( query: $query filter: $collectionsFilter orderBy: $collectionsOrderBy ) { __typename edges { __typename node { __typename pieces(orderBy: $piecesOrderBy) { __typename edges { __typename node { __typename ...PieceDetails } } } name composer { __typename lastName firstName } } } } }"#,
       fragments: [PieceDetails.self]
     ))
 
@@ -358,17 +358,21 @@ public class SearchCollectionsQuery: GraphQLQuery {
             public static var __selections: [ApolloAPI.Selection] { [
               .field("__typename", String.self),
               .field("lastName", String.self),
+              .field("firstName", String.self),
             ] }
 
             public var lastName: String { __data["lastName"] }
+            public var firstName: String { __data["firstName"] }
 
             public init(
-              lastName: String
+              lastName: String,
+              firstName: String
             ) {
               self.init(_dataDict: DataDict(
                 data: [
                   "__typename": ApolloGQL.Objects.Composers.typename,
                   "lastName": lastName,
+                  "firstName": firstName,
                 ],
                 fulfilledFragments: [
                   ObjectIdentifier(SearchCollectionsQuery.Data.SearchCollections.Edge.Node.Composer.self)
