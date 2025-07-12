@@ -14,9 +14,9 @@ struct SearchFilterBar: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
                 ForEach(SearchViewModel.SearchFilter.allCases) { filter in
-                    let categoryCount = viewModel.count(for: filter)
                     FilterButtonView(
-                        text: viewModel.searchTerm.isEmpty ? filter.rawValue : "\(filter.rawValue) (\(categoryCount))",
+                        text: filter.rawValue,
+                        categoryCount: viewModel.searchTerm.isEmpty ? nil : viewModel.count(for: filter),
                         isSelected: viewModel.searchFilter == filter
                     ) {
                         withAnimation {

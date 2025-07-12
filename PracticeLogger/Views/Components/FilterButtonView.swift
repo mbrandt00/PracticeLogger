@@ -11,28 +11,31 @@ struct FilterButtonView: View {
     @Environment(\.colorScheme) var colorScheme
 
     var buttonTextColor: Color {
-        if colorScheme == .dark {
-            return .black
-        } else {
-            return .white
-        }
+        colorScheme == .dark ? .black : .white
     }
 
     var text: String
+    var categoryCount: Int?
     var isSelected: Bool
     var action: () -> Void
 
     var body: some View {
-        Button {
-            action()
-        } label: {
-            Text(text)
-                .padding(.horizontal)
-                .padding(.vertical, 6)
-                .background(isSelected ? Color.primary : .gray.opacity(0.2))
-                .foregroundColor(isSelected ? buttonTextColor : .primary)
-                .cornerRadius(30)
-                .overlay(RoundedRectangle(cornerRadius: 30).strokeBorder(.primary, lineWidth: 1))
+        Button(action: action) {
+            HStack(spacing: 6) {
+                Text(text)
+
+                if let count = categoryCount {
+                    Text("\(count)")
+                        .font(.caption2)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                }
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 6)
+            .background(isSelected ? Color.primary : .gray.opacity(0.2))
+            .foregroundColor(isSelected ? buttonTextColor : .primary)
+            .cornerRadius(30)
         }
         .buttonStyle(.plain)
     }
@@ -40,6 +43,6 @@ struct FilterButtonView: View {
 
 struct FilterButtonView_Previews: PreviewProvider {
     static var previews: some View {
-        FilterButtonView(text: "All", isSelected: true, action: {})
+        FilterButtonView(text: "All", categoryCount: 5, isSelected: true, action: {})
     }
 }

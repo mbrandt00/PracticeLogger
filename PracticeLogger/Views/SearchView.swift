@@ -46,29 +46,6 @@ struct SearchView: View {
                 if isLoading && isEmpty {
                     ProgressView("Searching...")
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else if !isLoading && isEmpty {
-                    VStack(spacing: 16) {
-                        Image(systemName: "magnifyingglass")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 60, height: 60)
-                            .foregroundColor(.accentColor.opacity(0.6))
-
-                        Text("No results found")
-                            .font(.title3)
-                            .fontWeight(.semibold)
-
-                        Text("Try searching for a different piece or create a new piece.")
-                            .font(.body)
-                            .foregroundColor(.secondary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal)
-                        Button("Create custom piece", systemImage: "plus.square") {
-                            isShowingCustomPieceSheet = true
-                        }
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .padding()
                 } else {
                     List {
                         switch searchViewModel.searchFilter {
@@ -107,12 +84,95 @@ struct SearchView: View {
                                     }
                                 }
                             }
+                            if !searchViewModel.collections.isEmpty {
+                                ForEach(searchViewModel.collections) { group in
+                                    VStack(alignment: .leading, spacing: 8) {
+                                        Text(group.name)
+                                            .font(.headline)
+                                            .foregroundColor(.white)
+
+                                        Text("\(group.pieces.count) pieces")
+                                            .font(.subheadline)
+                                            .foregroundColor(.white.opacity(0.8))
+                                    }
+                                    .padding()
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .cornerRadius(12)
+                                    .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
+                                    .padding(.vertical, 4)
+                                }
+                            }
+                            if isEmpty {
+                                VStack(spacing: 16) {
+                                    Image(systemName: "magnifyingglass")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 60, height: 60)
+                                        .foregroundColor(.accentColor.opacity(0.6))
+
+                                    Text("No results found")
+                                        .font(.title3)
+                                        .fontWeight(.semibold)
+
+                                    Text("Try searching for a different piece or create a new piece.")
+                                        .font(.body)
+                                        .foregroundColor(.secondary)
+                                        .multilineTextAlignment(.center)
+                                        .padding(.horizontal)
+                                    Button("Create custom piece", systemImage: "plus.square") {
+                                        isShowingCustomPieceSheet = true
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .padding()
+                            }
 
                         case .userPieces:
-                            Text("User pieces")
+                            if !searchViewModel.userPieces.isEmpty {
+                                Section(
+                                    header:
+                                    HStack {
+                                        Text("Pieces")
+                                            .font(.headline)
 
-                        case .newPieces:
-                            Text("new pieces")
+                                        Spacer()
+
+                                        Button {
+                                            isShowingCustomPieceSheet = true
+                                        } label: {
+                                            Label("Custom Piece", systemImage: "plus.square")
+                                                .font(.subheadline)
+                                        }
+                                        .accessibilityLabel("Create custom piece")
+                                    }
+                                    .padding(.top, 8)
+                                ) {
+                                    ForEach(searchViewModel.userPieces, id: \.id) { piece in
+                                        userPieceRow(piece)
+                                    }
+                                }
+                            } else {
+                                EmptyStateView {
+                                    Text("No pieces found. Try the discover tab or add a custom piece below!")
+                                        .font(.body)
+                                        .foregroundColor(.secondary)
+                                        .multilineTextAlignment(.center)
+                                        .padding(.horizontal)
+
+                                    Button("Create custom piece", systemImage: "plus.square") {
+                                        isShowingCustomPieceSheet = true
+                                    }
+                                }
+                            }
+
+                        case .discover:
+                            if !searchViewModel.newPieces.isEmpty {
+                                Section(header: Text("New Pieces")) {
+                                    ForEach(searchViewModel.newPieces, id: \.id) { piece in
+                                        newPieceRow(piece)
+                                    }
+                                }
+                            }
 
                         case .composers:
                             Text("composers")
@@ -220,6 +280,32 @@ struct SearchView: View {
             searchViewModel.newPieces.removeAll()
             searchViewModel.searchTerm = ""
         }
+    }
+}
+
+struct EmptyStateView<Content: View>: View {
+    @ViewBuilder let content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "magnifyingglass")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 60, height: 60)
+                .foregroundColor(.accentColor.opacity(0.6))
+
+            Text("No results found")
+                .font(.title3)
+                .fontWeight(.semibold)
+
+            content
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding()
     }
 }
 

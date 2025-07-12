@@ -14,7 +14,7 @@ class SearchViewModel: ObservableObject {
     enum SearchFilter: String, CaseIterable, Identifiable {
         case all = "All" // eventual meilisearch multi index search
         case userPieces = "Library"
-        case newPieces = "New pieces"
+        case discover = "Discover"
         case composers = "Composers"
         case collections = "Collections"
 
@@ -89,7 +89,7 @@ class SearchViewModel: ObservableObject {
         switch filter {
         case .all:
             return userPieces.count + newPieces.count + collections.flatMap(\.pieces).count
-        case .newPieces:
+        case .discover:
             return newPieces.count
         case .userPieces:
             return userPieces.count
