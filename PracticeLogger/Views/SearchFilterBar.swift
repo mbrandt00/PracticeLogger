@@ -16,7 +16,7 @@ struct SearchFilterBar: View {
                 ForEach(SearchViewModel.SearchFilter.allCases) { filter in
                     let categoryCount = viewModel.count(for: filter)
                     FilterButtonView(
-                        text: "\(filter.rawValue) (\(categoryCount))",
+                        text: viewModel.searchTerm.isEmpty ? filter.rawValue : "\(filter.rawValue) (\(categoryCount))",
                         isSelected: viewModel.searchFilter == filter
                     ) {
                         withAnimation {

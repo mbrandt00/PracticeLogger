@@ -16,6 +16,7 @@ struct RecentPracticeSessions: View {
     @EnvironmentObject var keyboardResponder: KeyboardResponder
     @EnvironmentObject var uiState: UIState
     @State private var path = NavigationPath()
+    @State private var showSearchUI = false
 
     private let previewSessions: [PracticeSessionDetails]?
 
@@ -133,7 +134,7 @@ struct RecentPracticeSessions: View {
                     loadRecentSessions()
                 }
 
-                if isSearching {
+                if showSearchUI {
                     VStack {
                         SearchFilterBar(viewModel: searchViewModel)
                         SearchView(searchViewModel: searchViewModel, path: $path)
@@ -141,13 +142,24 @@ struct RecentPracticeSessions: View {
                             .background(Color(UIColor.systemBackground))
                     }
                     .padding(.vertical, 2)
-                    .transition(.move(edge: .top).combined(with: .opacity))
-                    .animation(.easeInOut(duration: 0.3), value: isSearching)
+                    .animation(.easeInOut(duration: 0.3), value: showSearchUI)
                 }
             }
 
             .onChange(of: isSearching) { _, newValue in
-                uiState.isScreenBusy = newValue
+                if newValue {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        withAnimation {
+                            showSearchUI = true
+                        }
+                    }
+                } else {
+                    withAnimation {
+                        showSearchUI = false
+                    }
+                }
+
+                uiState.isScreenBusy = newValue // hides bottom sheet
             }
             .onDisappear {
                 if isSearching { // Only reset if we were searching when disappearing
