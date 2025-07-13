@@ -9,7 +9,7 @@ import ApolloGQL
 import SwiftUI
 
 struct ComposerView: View {
-    var composer: SearchComposersQuery.Data.SearchComposers.Edge.Node
+    var composer: SearchViewModel.ComposerType // change to something universal....
     var fullName: String {
         "\(composer.firstName) \(composer.lastName)"
     }
@@ -19,6 +19,6 @@ struct ComposerView: View {
     }
 }
 
-#Preview {
-    ComposerView(composer: SearchComposersQuery.Data.SearchComposers.Edge.Node(id: BigInt(1), lastName: "Beethoven", firstName: "Ludwig van", nationality: "German"))
-}
+// #Preview {
+//    ComposerView(composer: SearchViewModel.ComposerType(firstName: "Ludwig van", lastName: "Beethoven", nationality: "German", id: 1))
+// }

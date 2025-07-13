@@ -227,7 +227,7 @@ struct SearchView: View {
         }
     }
 
-    private func composerRow(_ composer: SearchComposersQuery.Data.SearchComposers.Edge.Node) -> some View {
+    private func composerRow(_ composer: SearchViewModel.ComposerType) -> some View {
         NavigationLink(value: PieceNavigationContext.composer(composer)) {
             ComposerRow(composer: composer)
         }
@@ -346,7 +346,7 @@ struct EmptyStateView<Content: View>: View {
 }
 
 struct ComposerRow: View {
-    var composer: SearchComposersQuery.Data.SearchComposers.Edge.Node
+    var composer: SearchViewModel.ComposerType
 
     var fullName: String {
         let first = composer.firstName
@@ -444,7 +444,7 @@ enum PieceNavigationContext: Hashable, Equatable {
     case userPiece(PieceDetails)
     case newPiece(PieceDetails)
     case collection(SearchViewModel.CollectionGroup)
-    case composer(SearchComposersQuery.Data.SearchComposers.Edge.Node)
+    case composer(SearchViewModel.ComposerType)
 }
 
 struct RepertoireRow_Previews: PreviewProvider {

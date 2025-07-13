@@ -21,6 +21,21 @@ class SearchViewModel: ObservableObject {
         var id: Self { self }
     }
 
+    struct ComposerType: Identifiable, Equatable, Hashable {
+        let firstName: String
+        let lastName: String
+        let nationality: String?
+        let id: String
+
+        static func == (lhs: ComposerType, rhs: ComposerType) -> Bool {
+            lhs.id == rhs.id
+        }
+
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
+    }
+
     @Published var searchTerm = ""
     @Published var userPieces: [PieceDetails] = []
     @Published var newPieces: [PieceDetails] = []
@@ -28,7 +43,7 @@ class SearchViewModel: ObservableObject {
     @Published var selectedPiece: PieceDetails?
     @Published var searchFilter: SearchFilter = .all
     @Published var collections: [CollectionGroup] = []
-    @Published var composers: [SearchComposersQuery.Data.SearchComposers.Edge.Node] = []
+    @Published var composers: [ComposerType] = []
     private var indexedUserPieces: [IndexedPiece] = []
 
     struct CollectionGroup: Identifiable, Equatable, Hashable {
@@ -60,6 +75,7 @@ class SearchViewModel: ObservableObject {
                 allUserPieces = fresh
                 indexedUserPieces = fresh.map { IndexedPiece($0) }
                 userPieces = fresh
+                composers = try await fetchAllComposers() ?? []
                 collections = []
                 newPieces = []
             }
@@ -97,7 +113,46 @@ class SearchViewModel: ObservableObject {
         }
     }
 
-    func searchComposers() async throws -> [SearchComposersQuery.Data.SearchComposers.Edge.Node]? {
+    func fetchAllComposers() async throws -> [ComposerType] {
+        guard let userId = Database.client.auth.currentUser?.id else {
+            return []
+        }
+        return try await withCheckedThrowingContinuation { continuation in
+            let orderBy: GraphQLNullable<[ComposersOrderBy]> = [ComposersOrderBy(lastName: .some(GraphQLEnum(OrderByDirection.ascNullsFirst)))]
+
+            let filter: GraphQLNullable<ComposersFilter> = .some(
+                ComposersFilter(
+                    or: .some([
+                        ComposersFilter(
+                            userId: .some(UUIDFilter(eq: .some(userId.uuidString)))
+                        ),
+                        ComposersFilter(
+                            userId: .some(UUIDFilter(is: .some(GraphQLEnum(.null))))
+                        ),
+                    ])
+                )
+            )
+            Network.shared.apollo.fetch(
+                query: ComposersQuery(composerFilter: filter, orderBy: orderBy),
+                cachePolicy: .fetchIgnoringCacheData
+            ) { result in
+                switch result {
+                case let .success(graphQLResult):
+                    if let edges = graphQLResult.data?.composersCollection?.edges {
+                        let nodes = edges.compactMap { ComposerType(firstName: $0.node.firstName, lastName: $0.node.lastName, nationality: $0.node.nationality, id: $0.node.id) }
+                        continuation.resume(returning: nodes)
+                    } else {
+                        continuation.resume(returning: [])
+                    }
+
+                case let .failure(error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    func searchComposers() async throws -> [ComposerType]? {
         try await withCheckedThrowingContinuation { continuation in
             Network.shared.apollo.fetch(
                 query: SearchComposersQuery(query: searchTerm),
@@ -106,7 +161,7 @@ class SearchViewModel: ObservableObject {
                 switch result {
                 case let .success(graphQLResult):
                     if let edges = graphQLResult.data?.searchComposers?.edges {
-                        let nodes = edges.compactMap { $0.node }
+                        let nodes = edges.compactMap { ComposerType(firstName: $0.node.firstName, lastName: $0.node.lastName, nationality: $0.node.nationality, id: $0.node.id) }
                         continuation.resume(returning: nodes)
                     } else {
                         continuation.resume(returning: nil)
