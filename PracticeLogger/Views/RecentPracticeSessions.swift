@@ -16,6 +16,7 @@ struct RecentPracticeSessions: View {
     @EnvironmentObject var keyboardResponder: KeyboardResponder
     @EnvironmentObject var uiState: UIState
     @State private var path = NavigationPath()
+
     @State private var showSearchUI = false
 
     private let previewSessions: [PracticeSessionDetails]?
@@ -173,6 +174,9 @@ struct RecentPracticeSessions: View {
 
                 case .newPiece:
                     EmptyView()
+
+                case .composer:
+                    EmptyView()
                 }
             }
         }
@@ -204,6 +208,8 @@ struct RecentPracticeSessions: View {
             return AnyView(PieceEdit(piece: piece, isCreatingNewPiece: true))
         case let .userPiece(piece):
             return AnyView(PieceShow(piece: piece, sessionManager: practiceSessionViewModel))
+        case let .composer(composer):
+            return AnyView(EmptyView())
         }
     }
 }

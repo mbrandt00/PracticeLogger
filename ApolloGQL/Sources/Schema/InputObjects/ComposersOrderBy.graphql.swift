@@ -16,7 +16,9 @@ public struct ComposersOrderBy: InputObject {
     lastName: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
     nationality: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
     musicalEra: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
-    userId: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil
+    userId: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
+    searchableText: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil,
+    searchable: GraphQLNullable<GraphQLEnum<OrderByDirection>> = nil
   ) {
     __data = InputDict([
       "id": id,
@@ -24,7 +26,9 @@ public struct ComposersOrderBy: InputObject {
       "lastName": lastName,
       "nationality": nationality,
       "musicalEra": musicalEra,
-      "userId": userId
+      "userId": userId,
+      "searchableText": searchableText,
+      "searchable": searchable
     ])
   }
 
@@ -56,5 +60,15 @@ public struct ComposersOrderBy: InputObject {
   public var userId: GraphQLNullable<GraphQLEnum<OrderByDirection>> {
     get { __data["userId"] }
     set { __data["userId"] = newValue }
+  }
+
+  public var searchableText: GraphQLNullable<GraphQLEnum<OrderByDirection>> {
+    get { __data["searchableText"] }
+    set { __data["searchableText"] = newValue }
+  }
+
+  public var searchable: GraphQLNullable<GraphQLEnum<OrderByDirection>> {
+    get { __data["searchable"] }
+    set { __data["searchable"] = newValue }
   }
 }

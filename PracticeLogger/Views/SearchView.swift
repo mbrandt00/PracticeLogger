@@ -164,7 +164,13 @@ struct SearchView: View {
                             }
 
                         case .composers:
-                            Text("composers")
+                            if !searchViewModel.composers.isEmpty {
+                                Section(header: Text("Composers")) {
+                                    ForEach(searchViewModel.composers, id: \.id) { composer in
+                                        composerRow(composer)
+                                    }
+                                }
+                            }
 
                         case .collections:
                             Section(header: Text("Collections")) {
@@ -218,6 +224,12 @@ struct SearchView: View {
                 piece: piece,
                 isActive: practiceSessionViewModel.activeSession?.piece.id == piece.id
             )
+        }
+    }
+
+    private func composerRow(_ composer: SearchComposersQuery.Data.SearchComposers.Edge.Node) -> some View {
+        NavigationLink(value: PieceNavigationContext.composer(composer)) {
+            ComposerRow(composer: composer)
         }
     }
 
@@ -331,6 +343,37 @@ struct EmptyStateView<Content: View>: View {
     }
 }
 
+struct ComposerRow: View {
+    var composer: SearchComposersQuery.Data.SearchComposers.Edge.Node
+
+    var fullName: String {
+        let first = composer.firstName
+        let last = composer.lastName
+        return [first, last].joined(separator: " ").trimmingCharacters(in: .whitespaces)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            // Line 1: Full name
+            Text(fullName)
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .foregroundColor(.primary)
+                .lineLimit(1)
+
+            // Line 2: Nationality and lifespan
+            HStack(spacing: 4) {
+                if let nationality = composer.nationality {
+                    Text(nationality)
+                }
+            }
+            .font(.footnote)
+            .foregroundColor(.secondary)
+        }
+        .padding(.vertical, 4)
+    }
+}
+
 struct RepertoireRow: View {
     var piece: PieceDetails
     var isActive: Bool = false
@@ -398,6 +441,7 @@ struct RepertoireRow: View {
 enum PieceNavigationContext: Hashable {
     case userPiece(PieceDetails)
     case newPiece(PieceDetails)
+    case composer(SearchComposersQuery.Data.SearchComposers.Edge.Node)
 }
 
 struct RepertoireRow_Previews: PreviewProvider {

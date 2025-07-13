@@ -169,7 +169,7 @@ struct EditComposerView: View {
             _nationality = State(initialValue: nil)
             _musicalEra = State(initialValue: nil)
 
-        case .edit(let composer):
+        case let .edit(composer):
             _firstName = State(initialValue: composer.firstName)
             _lastName = State(initialValue: composer.lastName)
             _nationality = State(initialValue: composer.nationality)
@@ -219,7 +219,7 @@ struct EditComposerView: View {
                     var existingId: String?
                     var existingUserId: String?
 
-                    if case .edit(let composer) = mode {
+                    if case let .edit(composer) = mode {
                         existingId = composer.id
                         existingUserId = composer.userId
                     }
@@ -250,7 +250,7 @@ enum ComposerEditMode: Equatable, Identifiable {
         switch (lhs, rhs) {
         case (.create, .create):
             return true
-        case (.edit(let lhsComposer), .edit(let rhsComposer)):
+        case let (.edit(lhsComposer), .edit(rhsComposer)):
             return lhsComposer.id == rhsComposer.id
         default:
             return false
@@ -261,7 +261,7 @@ enum ComposerEditMode: Equatable, Identifiable {
         switch self {
         case .create:
             return "create"
-        case .edit(let composer):
+        case let .edit(composer):
             return composer.id ?? UUID().uuidString
         }
     }

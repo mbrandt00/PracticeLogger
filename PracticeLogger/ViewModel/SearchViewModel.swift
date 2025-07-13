@@ -28,6 +28,7 @@ class SearchViewModel: ObservableObject {
     @Published var selectedPiece: PieceDetails?
     @Published var searchFilter: SearchFilter = .all
     @Published var collections: [CollectionGroup] = []
+    @Published var composers: [SearchComposersQuery.Data.SearchComposers.Edge.Node] = []
     private var indexedUserPieces: [IndexedPiece] = []
 
     struct CollectionGroup: Identifiable {
@@ -44,6 +45,7 @@ class SearchViewModel: ObservableObject {
                 userPieces = await matchingUserPieces()
                 newPieces = try await searchNewPieces() ?? []
                 collections = try await searchCollections() ?? []
+                composers = try await searchComposers() ?? []
                 print(collections)
             } else {
                 let fresh = try await getRecentUserPieces() ?? []
@@ -87,6 +89,28 @@ class SearchViewModel: ObservableObject {
         }
     }
 
+    func searchComposers() async throws -> [SearchComposersQuery.Data.SearchComposers.Edge.Node]? {
+        try await withCheckedThrowingContinuation { continuation in
+            Network.shared.apollo.fetch(
+                query: SearchComposersQuery(query: searchTerm),
+                cachePolicy: .returnCacheDataElseFetch
+            ) { result in
+                switch result {
+                case let .success(graphQLResult):
+                    if let edges = graphQLResult.data?.searchComposers?.edges {
+                        let nodes = edges.compactMap { $0.node }
+                        continuation.resume(returning: nodes)
+                    } else {
+                        continuation.resume(returning: nil)
+                    }
+
+                case let .failure(error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
     func count(for filter: SearchFilter) -> Int {
         switch filter {
         case .all:
@@ -96,7 +120,7 @@ class SearchViewModel: ObservableObject {
         case .userPieces:
             return userPieces.count
         case .composers:
-            return 0
+            return composers.count
         case .collections:
             return collections.count
         }
@@ -225,6 +249,6 @@ struct IndexedPiece {
 
     init(_ piece: PieceDetails) {
         self.piece = piece
-        self.normalizedWords = piece.searchableText?.lowercased().split(separator: " ") ?? []
+        normalizedWords = piece.searchableText?.lowercased().split(separator: " ") ?? []
     }
 }

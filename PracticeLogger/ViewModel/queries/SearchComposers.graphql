@@ -1,0 +1,20 @@
+query SearchComposers(
+  $query: String!
+  $composersFilter: ComposersFilter = {}
+  $composersOrderBy: [ComposersOrderBy!] = []
+) {
+  searchComposers(
+    query: $query
+    filter: $composersFilter
+    orderBy: $composersOrderBy
+  ) {
+    edges {
+      node {
+        id
+        lastName
+        firstName
+        nationality
+      }
+    }
+  }
+}
