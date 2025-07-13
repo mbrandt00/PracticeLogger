@@ -37,115 +37,183 @@ struct SearchView: View {
     }
 
     private var isEmpty: Bool {
-        searchViewModel.userPieces.isEmpty && searchViewModel.newPieces.isEmpty
-    }
-
-    private var shouldShowSpinner: Bool {
-        isLoading && isEmpty
-    }
-
-    private var shouldShowEmptyState: Bool {
-        !isLoading && isEmpty
+        searchViewModel.userPieces.isEmpty && searchViewModel.newPieces.isEmpty && searchViewModel.collections.isEmpty
     }
 
     var body: some View {
-        ZStack {
-            List {
-                if !searchViewModel.userPieces.isEmpty {
-                    Section(
-                        header:
-                        HStack {
-                            Text("Pieces")
-                                .font(.headline)
+        VStack(spacing: 0) {
+            VStack {
+                if isLoading && isEmpty {
+                    ProgressView("Searching...")
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    List {
+                        switch searchViewModel.searchFilter {
+                        case .all:
+                            if !searchViewModel.userPieces.isEmpty {
+                                Section(
+                                    header:
+                                    HStack {
+                                        Text("Pieces")
+                                            .font(.headline)
 
-                            Spacer()
+                                        Spacer()
 
-                            if searchViewModel.searchTerm.isEmpty {
-                                Button {
-                                    isShowingCustomPieceSheet = true
-                                } label: {
-                                    Label("Custom Piece", systemImage: "plus.square")
-                                        .font(.subheadline)
+                                        if searchViewModel.searchTerm.isEmpty {
+                                            Button {
+                                                isShowingCustomPieceSheet = true
+                                            } label: {
+                                                Label("Custom Piece", systemImage: "plus.square")
+                                                    .font(.subheadline)
+                                            }
+                                            .accessibilityLabel("Create custom piece")
+                                        }
+                                    }
+                                    .padding(.top, 8)
+                                ) {
+                                    ForEach(searchViewModel.userPieces, id: \.id) { piece in
+                                        userPieceRow(piece)
+                                    }
                                 }
-                                .accessibilityLabel("Create custom piece")
+                            }
+
+                            if !searchViewModel.newPieces.isEmpty {
+                                Section(header: Text("New Pieces")) {
+                                    ForEach(searchViewModel.newPieces, id: \.id) { piece in
+                                        newPieceRow(piece)
+                                    }
+                                }
+                            }
+                            if !searchViewModel.collections.isEmpty {
+                                Section(header: Text("Collections")) {
+                                    ForEach(searchViewModel.collections) { group in
+                                        CollectionRow(group: group)
+                                    }
+                                }
+                            }
+                            if isEmpty {
+                                VStack(spacing: 16) {
+                                    Image(systemName: "magnifyingglass")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 60, height: 60)
+                                        .foregroundColor(.accentColor.opacity(0.6))
+
+                                    Text("No results found")
+                                        .font(.title3)
+                                        .fontWeight(.semibold)
+
+                                    Text("Try searching for a different piece or create a new piece.")
+                                        .font(.body)
+                                        .foregroundColor(.secondary)
+                                        .multilineTextAlignment(.center)
+                                        .padding(.horizontal)
+                                    Button("Create custom piece", systemImage: "plus.square") {
+                                        isShowingCustomPieceSheet = true
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .padding()
+                            }
+
+                        case .userPieces:
+                            if !searchViewModel.userPieces.isEmpty {
+                                Section(
+                                    header:
+                                    HStack {
+                                        Text("Pieces")
+                                            .font(.headline)
+
+                                        Spacer()
+
+                                        Button {
+                                            isShowingCustomPieceSheet = true
+                                        } label: {
+                                            Label("Custom Piece", systemImage: "plus.square")
+                                                .font(.subheadline)
+                                        }
+                                        .accessibilityLabel("Create custom piece")
+                                    }
+                                    .padding(.top, 8)
+                                ) {
+                                    ForEach(searchViewModel.userPieces, id: \.id) { piece in
+                                        userPieceRow(piece)
+                                    }
+                                }
+                            } else {
+                                EmptyStateView {
+                                    Text("No pieces found. Try the discover tab or add a custom piece below!")
+                                        .font(.body)
+                                        .foregroundColor(.secondary)
+                                        .multilineTextAlignment(.center)
+                                        .padding(.horizontal)
+
+                                    Button("Create custom piece", systemImage: "plus.square") {
+                                        isShowingCustomPieceSheet = true
+                                    }
+                                }
+                            }
+
+                        case .discover:
+                            if !searchViewModel.newPieces.isEmpty {
+                                Section(header: Text("New Pieces")) {
+                                    ForEach(searchViewModel.newPieces, id: \.id) { piece in
+                                        newPieceRow(piece)
+                                    }
+                                }
+                            }
+
+                        case .composers:
+                            if !searchViewModel.composers.isEmpty {
+                                Section(header: Text("Composers")) {
+                                    ForEach(searchViewModel.composers, id: \.id) { composer in
+                                        composerRow(composer)
+                                    }
+                                }
+                            }
+
+                        case .collections:
+                            Section(header: Text("Collections")) {
+                                ForEach(searchViewModel.collections) { group in
+                                    CollectionRow(group: group)
+                                }
                             }
                         }
-                        .padding(.top, 8)
-                    ) {
-                        ForEach(searchViewModel.userPieces, id: \.id) { piece in
-                            userPieceRow(piece)
-                        }
-                    }
-                }
-
-                if !searchViewModel.newPieces.isEmpty {
-                    Section(header: Text("New Pieces")) {
-                        ForEach(searchViewModel.newPieces, id: \.id) { piece in
-                            newPieceRow(piece)
-                        }
                     }
                 }
             }
-            if shouldShowSpinner {
-                ProgressView("Searching...")
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
 
-            if shouldShowEmptyState {
-                VStack(spacing: 16) {
-                    Image(systemName: "magnifyingglass")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 60, height: 60)
-                        .foregroundColor(.accentColor.opacity(0.6))
-
-                    Text("No results found")
-                        .font(.title3)
-                        .fontWeight(.semibold)
-
-                    Text("Try searching for a different piece or create a new piece.")
-                        .font(.body)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                    Button("Create custom piece", systemImage: "plus.square") {
-                        isShowingCustomPieceSheet = true
-                    }
+            .onAppear {
+                Task {
+                    isLoading = true
+                    await searchViewModel.searchPieces()
+                    isLoading = false
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .padding()
             }
-        }
-        .onAppear {
-            Task {
-                isLoading = true
-                await searchViewModel.searchPieces()
-                isLoading = false
-            }
-        }
-        .onChange(of: searchViewModel.searchTerm) { _, _ in
-            // Only show loading if we don't already have results
-            if searchViewModel.userPieces.isEmpty && searchViewModel.newPieces.isEmpty {
-                isLoading = true
-            }
+            .onChange(of: searchViewModel.searchTerm) { _, _ in
+                // Only show loading if we don't already have results
+                if searchViewModel.userPieces.isEmpty && searchViewModel.newPieces.isEmpty {
+                    isLoading = true
+                }
 
-            Task {
-                await searchViewModel.searchPieces()
-                isLoading = false
+                Task {
+                    await searchViewModel.searchPieces()
+                    isLoading = false
+                }
             }
-        }
-        .sheet(item: $searchViewModel.selectedPiece) { piece in
-            NavigationStack {
-                PieceEdit(piece: piece, isCreatingNewPiece: true, onPieceCreated: handlePieceCreated)
+            .sheet(item: $searchViewModel.selectedPiece) { piece in
+                NavigationStack {
+                    PieceEdit(piece: piece, isCreatingNewPiece: true, onPieceCreated: handlePieceCreated)
+                }
             }
-        }
-        .sheet(isPresented: $isShowingCustomPieceSheet) {
-            NavigationStack {
-                PieceEdit(
-                    piece: PieceDetails.empty,
-                    isCreatingNewPiece: true,
-                    onPieceCreated: handlePieceCreated
-                )
+            .sheet(isPresented: $isShowingCustomPieceSheet) {
+                NavigationStack {
+                    PieceEdit(
+                        piece: PieceDetails.empty,
+                        isCreatingNewPiece: true,
+                        onPieceCreated: handlePieceCreated
+                    )
+                }
             }
         }
     }
@@ -156,6 +224,12 @@ struct SearchView: View {
                 piece: piece,
                 isActive: practiceSessionViewModel.activeSession?.piece.id == piece.id
             )
+        }
+    }
+
+    private func composerRow(_ composer: SearchComposersQuery.Data.SearchComposers.Edge.Node) -> some View {
+        NavigationLink(value: PieceNavigationContext.composer(composer)) {
+            ComposerRow(composer: composer)
         }
     }
 
@@ -199,6 +273,109 @@ struct SearchView: View {
     }
 }
 
+struct CollectionRow: View {
+    let group: SearchViewModel.CollectionGroup
+
+    private var previewPiece: PieceDetails? {
+        group.pieces.first
+    }
+
+    var body: some View {
+        NavigationLink(value: PieceNavigationContext.collection(group)) {
+            VStack(alignment: .leading, spacing: 4) {
+                // Line 1: Composer name
+                if let composer = group.composer {
+                    Text("\(composer.firstName) \(composer.lastName)")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                }
+
+                // Line 2: Collection name (title)
+                Text(group.name)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
+
+                // Line 3: Metadata – piece count and maybe catalogue
+                HStack(spacing: 8) {
+                    Text("\(group.pieces.count) piece\(group.pieces.count == 1 ? "" : "s")")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+
+                    if let piece = previewPiece,
+                       let type = piece.catalogueType?.displayName,
+                       let number = piece.catalogueNumber
+                    {
+                        Text("•")
+                        Text("\(type) \(number)")
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+            .padding(.vertical, 6)
+        }
+    }
+}
+
+struct EmptyStateView<Content: View>: View {
+    @ViewBuilder let content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "magnifyingglass")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 60, height: 60)
+                .foregroundColor(.accentColor.opacity(0.6))
+
+            Text("No results found")
+                .font(.title3)
+                .fontWeight(.semibold)
+
+            content
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding()
+    }
+}
+
+struct ComposerRow: View {
+    var composer: SearchComposersQuery.Data.SearchComposers.Edge.Node
+
+    var fullName: String {
+        let first = composer.firstName
+        let last = composer.lastName
+        return [first, last].joined(separator: " ").trimmingCharacters(in: .whitespaces)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            // Line 1: Full name
+            Text(fullName)
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .foregroundColor(.primary)
+                .lineLimit(1)
+
+            // Line 2: Nationality and lifespan
+            HStack(spacing: 4) {
+                if let nationality = composer.nationality {
+                    Text(nationality)
+                }
+            }
+            .font(.footnote)
+            .foregroundColor(.secondary)
+        }
+        .padding(.vertical, 4)
+    }
+}
+
 struct RepertoireRow: View {
     var piece: PieceDetails
     var isActive: Bool = false
@@ -227,7 +404,7 @@ struct RepertoireRow: View {
                 }
 
                 if let composer = piece.composer {
-                    Text("\(composer.firstName ?? "") \(composer.lastName ?? "")")
+                    Text("\(composer.firstName) \(composer.lastName)")
                 }
 
                 if !formattedCatalogueInfo.isEmpty {
@@ -263,9 +440,11 @@ struct RepertoireRow: View {
     }
 }
 
-enum PieceNavigationContext: Hashable {
+enum PieceNavigationContext: Hashable, Equatable {
     case userPiece(PieceDetails)
     case newPiece(PieceDetails)
+    case collection(SearchViewModel.CollectionGroup)
+    case composer(SearchComposersQuery.Data.SearchComposers.Edge.Node)
 }
 
 struct RepertoireRow_Previews: PreviewProvider {

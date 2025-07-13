@@ -17,6 +17,8 @@ public struct ComposersFilter: InputObject {
     nationality: GraphQLNullable<StringFilter> = nil,
     musicalEra: GraphQLNullable<StringFilter> = nil,
     userId: GraphQLNullable<UUIDFilter> = nil,
+    searchableText: GraphQLNullable<StringFilter> = nil,
+    searchable: GraphQLNullable<BooleanFilter> = nil,
     nodeId: GraphQLNullable<IDFilter> = nil,
     and: GraphQLNullable<[ComposersFilter]> = nil,
     or: GraphQLNullable<[ComposersFilter]> = nil,
@@ -29,6 +31,8 @@ public struct ComposersFilter: InputObject {
       "nationality": nationality,
       "musicalEra": musicalEra,
       "userId": userId,
+      "searchableText": searchableText,
+      "searchable": searchable,
       "nodeId": nodeId,
       "and": and,
       "or": or,
@@ -64,6 +68,16 @@ public struct ComposersFilter: InputObject {
   public var userId: GraphQLNullable<UUIDFilter> {
     get { __data["userId"] }
     set { __data["userId"] = newValue }
+  }
+
+  public var searchableText: GraphQLNullable<StringFilter> {
+    get { __data["searchableText"] }
+    set { __data["searchableText"] = newValue }
+  }
+
+  public var searchable: GraphQLNullable<BooleanFilter> {
+    get { __data["searchable"] }
+    set { __data["searchable"] = newValue }
   }
 
   public var nodeId: GraphQLNullable<IDFilter> {

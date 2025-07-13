@@ -16,6 +16,9 @@ struct RecentPracticeSessions: View {
     @EnvironmentObject var keyboardResponder: KeyboardResponder
     @EnvironmentObject var uiState: UIState
     @State private var path = NavigationPath()
+
+    @State private var showSearchUI = false
+
     private let previewSessions: [PracticeSessionDetails]?
 
     init(
@@ -132,17 +135,32 @@ struct RecentPracticeSessions: View {
                     loadRecentSessions()
                 }
 
-                if isSearching {
+                if showSearchUI {
                     VStack {
+                        SearchFilterBar(viewModel: searchViewModel)
                         SearchView(searchViewModel: searchViewModel, path: $path)
                             .environmentObject(practiceSessionViewModel)
-                            .background(Color.white)
+                            .background(Color(UIColor.systemBackground))
                     }
                     .padding(.vertical, 2)
+                    .animation(.easeInOut(duration: 0.3), value: showSearchUI)
                 }
             }
+
             .onChange(of: isSearching) { _, newValue in
-                uiState.isScreenBusy = newValue
+                if newValue {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        withAnimation {
+                            showSearchUI = true
+                        }
+                    }
+                } else {
+                    withAnimation {
+                        showSearchUI = false
+                    }
+                }
+
+                uiState.isScreenBusy = newValue // hides bottom sheet
             }
             .onDisappear {
                 if isSearching { // Only reset if we were searching when disappearing
@@ -154,7 +172,13 @@ struct RecentPracticeSessions: View {
                 case let .userPiece(piece):
                     pieceShowDestination(for: piece)
 
-                case .newPiece:
+                case let .composer(composer):
+                    ComposerView(composer: composer)
+
+                case let .collection(collection):
+                    CollectionView(collection: collection)
+
+                default:
                     EmptyView()
                 }
             }
@@ -187,6 +211,10 @@ struct RecentPracticeSessions: View {
             return AnyView(PieceEdit(piece: piece, isCreatingNewPiece: true))
         case let .userPiece(piece):
             return AnyView(PieceShow(piece: piece, sessionManager: practiceSessionViewModel))
+        case let .composer(composer):
+            return AnyView(EmptyView())
+        case .collection:
+            return AnyView(EmptyView())
         }
     }
 }

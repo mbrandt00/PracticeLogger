@@ -11,12 +11,40 @@ import Combine
 import Foundation
 
 class SearchViewModel: ObservableObject {
+    enum SearchFilter: String, CaseIterable, Identifiable {
+        case all = "All" // eventual meilisearch multi index search
+        case userPieces = "Library"
+        case discover = "Discover"
+        case composers = "Composers"
+        case collections = "Collections"
+
+        var id: Self { self }
+    }
+
     @Published var searchTerm = ""
     @Published var userPieces: [PieceDetails] = []
     @Published var newPieces: [PieceDetails] = []
     @Published var allUserPieces: [PieceDetails] = []
     @Published var selectedPiece: PieceDetails?
+    @Published var searchFilter: SearchFilter = .all
+    @Published var collections: [CollectionGroup] = []
+    @Published var composers: [SearchComposersQuery.Data.SearchComposers.Edge.Node] = []
     private var indexedUserPieces: [IndexedPiece] = []
+
+    struct CollectionGroup: Identifiable, Equatable, Hashable {
+        let id: String
+        let name: String
+        let composer: SearchCollectionsQuery.Data.SearchCollections.Edge.Node.Composer?
+        let pieces: [PieceDetails]
+
+        static func == (lhs: CollectionGroup, rhs: CollectionGroup) -> Bool {
+            lhs.id == rhs.id
+        }
+
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
+    }
 
     @MainActor
     func searchPieces() async {
@@ -24,15 +52,85 @@ class SearchViewModel: ObservableObject {
             if !searchTerm.isEmpty {
                 userPieces = await matchingUserPieces()
                 newPieces = try await searchNewPieces() ?? []
+                collections = try await searchCollections() ?? []
+                composers = try await searchComposers() ?? []
+                print(collections)
             } else {
                 let fresh = try await getRecentUserPieces() ?? []
                 allUserPieces = fresh
                 indexedUserPieces = fresh.map { IndexedPiece($0) }
                 userPieces = fresh
+                collections = []
                 newPieces = []
             }
         } catch {
             print("Error fetching pieces: \(error)")
+        }
+    }
+
+    func searchCollections() async throws -> [CollectionGroup]? {
+        try await withCheckedThrowingContinuation { continuation in
+            Network.shared.apollo.fetch(
+                query: SearchCollectionsQuery(query: searchTerm),
+                cachePolicy: .returnCacheDataElseFetch
+            ) { result in
+                switch result {
+                case let .success(graphQlResult):
+                    if let data = graphQlResult.data?.searchCollections {
+                        let groups = data.edges.map { edge in
+                            let collectionName = edge.node.name
+                            let pieceEdges = edge.node.pieces?.edges ?? []
+                            let pieceDetails = pieceEdges.map { $0.node.fragments.pieceDetails }
+                            let composer = edge.node.composer
+                            return CollectionGroup(id: collectionName, name: collectionName, composer: composer, pieces: pieceDetails)
+                        }
+                        continuation.resume(returning: groups)
+                    } else {
+                        continuation.resume(returning: nil)
+                    }
+
+                case let .failure(error):
+                    print("Error fetching recent pieces: \(error)")
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    func searchComposers() async throws -> [SearchComposersQuery.Data.SearchComposers.Edge.Node]? {
+        try await withCheckedThrowingContinuation { continuation in
+            Network.shared.apollo.fetch(
+                query: SearchComposersQuery(query: searchTerm),
+                cachePolicy: .returnCacheDataElseFetch
+            ) { result in
+                switch result {
+                case let .success(graphQLResult):
+                    if let edges = graphQLResult.data?.searchComposers?.edges {
+                        let nodes = edges.compactMap { $0.node }
+                        continuation.resume(returning: nodes)
+                    } else {
+                        continuation.resume(returning: nil)
+                    }
+
+                case let .failure(error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    func count(for filter: SearchFilter) -> Int {
+        switch filter {
+        case .all:
+            return userPieces.count + newPieces.count + collections.count
+        case .discover:
+            return newPieces.count
+        case .userPieces:
+            return userPieces.count
+        case .composers:
+            return composers.count
+        case .collections:
+            return collections.count
         }
     }
 
@@ -159,6 +257,6 @@ struct IndexedPiece {
 
     init(_ piece: PieceDetails) {
         self.piece = piece
-        self.normalizedWords = piece.searchableText?.lowercased().split(separator: " ") ?? []
+        normalizedWords = piece.searchableText?.lowercased().split(separator: " ") ?? []
     }
 }
