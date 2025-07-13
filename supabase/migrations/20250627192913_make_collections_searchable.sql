@@ -37,3 +37,6 @@ RETURNS SETOF collections AS $$
     ORDER BY similarity(c.searchable_text, unaccent(query)) DESC
     LIMIT 25;
 $$ LANGUAGE sql STABLE SECURITY DEFINER;
+-- trigger for all existing collections
+update collections 
+set id = id;
