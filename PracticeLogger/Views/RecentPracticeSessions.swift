@@ -172,10 +172,13 @@ struct RecentPracticeSessions: View {
                 case let .userPiece(piece):
                     pieceShowDestination(for: piece)
 
-                case .newPiece:
-                    EmptyView()
+                case let .composer(composer):
+                    ComposerView(composer: composer)
 
-                case .composer:
+                case let .collection(collection):
+                    CollectionView(collection: collection)
+
+                default:
                     EmptyView()
                 }
             }
@@ -209,6 +212,8 @@ struct RecentPracticeSessions: View {
         case let .userPiece(piece):
             return AnyView(PieceShow(piece: piece, sessionManager: practiceSessionViewModel))
         case let .composer(composer):
+            return AnyView(EmptyView())
+        case .collection:
             return AnyView(EmptyView())
         }
     }

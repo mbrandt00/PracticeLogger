@@ -31,11 +31,19 @@ class SearchViewModel: ObservableObject {
     @Published var composers: [SearchComposersQuery.Data.SearchComposers.Edge.Node] = []
     private var indexedUserPieces: [IndexedPiece] = []
 
-    struct CollectionGroup: Identifiable {
+    struct CollectionGroup: Identifiable, Equatable, Hashable {
         let id: String
         let name: String
         let composer: SearchCollectionsQuery.Data.SearchCollections.Edge.Node.Composer?
         let pieces: [PieceDetails]
+
+        static func == (lhs: CollectionGroup, rhs: CollectionGroup) -> Bool {
+            lhs.id == rhs.id
+        }
+
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
     }
 
     @MainActor
@@ -114,7 +122,7 @@ class SearchViewModel: ObservableObject {
     func count(for filter: SearchFilter) -> Int {
         switch filter {
         case .all:
-            return userPieces.count + newPieces.count + collections.flatMap(\.pieces).count
+            return userPieces.count + newPieces.count + collections.count
         case .discover:
             return newPieces.count
         case .userPieces:

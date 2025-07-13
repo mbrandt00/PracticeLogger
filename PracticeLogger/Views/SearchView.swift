@@ -281,39 +281,41 @@ struct CollectionRow: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            // Line 1: Composer name
-            if let composer = group.composer {
-                Text("\(composer.firstName) \(composer.lastName)")
-                    .font(.footnote)
-                    .foregroundColor(.secondary)
-            }
-
-            // Line 2: Collection name (title)
-            Text(group.name)
-                .font(.subheadline)
-                .fontWeight(.medium)
-                .foregroundColor(.primary)
-                .lineLimit(1)
-
-            // Line 3: Metadata – piece count and maybe catalogue
-            HStack(spacing: 8) {
-                Text("\(group.pieces.count) piece\(group.pieces.count == 1 ? "" : "s")")
-                    .font(.footnote)
-                    .foregroundColor(.secondary)
-
-                if let piece = previewPiece,
-                   let type = piece.catalogueType?.displayName,
-                   let number = piece.catalogueNumber
-                {
-                    Text("•")
-                    Text("\(type) \(number)")
+        NavigationLink(value: PieceNavigationContext.collection(group)) {
+            VStack(alignment: .leading, spacing: 4) {
+                // Line 1: Composer name
+                if let composer = group.composer {
+                    Text("\(composer.firstName) \(composer.lastName)")
                         .font(.footnote)
                         .foregroundColor(.secondary)
                 }
+
+                // Line 2: Collection name (title)
+                Text(group.name)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
+
+                // Line 3: Metadata – piece count and maybe catalogue
+                HStack(spacing: 8) {
+                    Text("\(group.pieces.count) piece\(group.pieces.count == 1 ? "" : "s")")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+
+                    if let piece = previewPiece,
+                       let type = piece.catalogueType?.displayName,
+                       let number = piece.catalogueNumber
+                    {
+                        Text("•")
+                        Text("\(type) \(number)")
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                    }
+                }
             }
+            .padding(.vertical, 6)
         }
-        .padding(.vertical, 6)
     }
 }
 
@@ -402,7 +404,7 @@ struct RepertoireRow: View {
                 }
 
                 if let composer = piece.composer {
-                    Text("\(composer.firstName ?? "") \(composer.lastName ?? "")")
+                    Text("\(composer.firstName) \(composer.lastName)")
                 }
 
                 if !formattedCatalogueInfo.isEmpty {
@@ -438,9 +440,10 @@ struct RepertoireRow: View {
     }
 }
 
-enum PieceNavigationContext: Hashable {
+enum PieceNavigationContext: Hashable, Equatable {
     case userPiece(PieceDetails)
     case newPiece(PieceDetails)
+    case collection(SearchViewModel.CollectionGroup)
     case composer(SearchComposersQuery.Data.SearchComposers.Edge.Node)
 }
 

@@ -11,6 +11,8 @@
 		D105F55B2E0D0BE1005EA1F5 /* Duration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D105F55A2E0D0BDE005EA1F5 /* Duration.swift */; };
 		D10DBD6A2D87C72100A5F1E0 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D10DBD692D87C72100A5F1E0 /* ApolloGQL */; };
 		D10DBD6C2D87C75900A5F1E0 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D10DBD6B2D87C75900A5F1E0 /* ApolloGQL */; };
+		D11045AE2E23C92200ADDF40 /* ComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11045AD2E23C92200ADDF40 /* ComposerView.swift */; };
+		D11045B02E23CD9900ADDF40 /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11045AF2E23CD9900ADDF40 /* CollectionView.swift */; };
 		D111D6FF2DA1A32900E2ED66 /* Collections+SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D111D6FE2DA1A32400E2ED66 /* Collections+SampleData.swift */; };
 		D117BFAF2CA8B0880046A1E5 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = D117BFAE2CA8B0840046A1E5 /* Network.swift */; };
 		D11D792C2C6C5B9D0073BA21 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11D792B2C6C5B9D0073BA21 /* Array.swift */; };
@@ -182,6 +184,8 @@
 
 /* Begin PBXFileReference section */
 		D105F55A2E0D0BDE005EA1F5 /* Duration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Duration.swift; sourceTree = "<group>"; };
+		D11045AD2E23C92200ADDF40 /* ComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposerView.swift; sourceTree = "<group>"; };
+		D11045AF2E23CD9900ADDF40 /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
 		D111D6FE2DA1A32400E2ED66 /* Collections+SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collections+SampleData.swift"; sourceTree = "<group>"; };
 		D117BFAE2CA8B0840046A1E5 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		D11990642B9CC58D0031E8A0 /* MusicKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MusicKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/MusicKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -396,6 +400,8 @@
 				D1BDE14C2E0208CE00A7671B /* ComposerSelectionView.swift */,
 				D17705032DE253B00048879C /* FeedbackView.swift */,
 				D1848D582D9076B200C1FA51 /* CollectionListView.swift */,
+				D11045AD2E23C92200ADDF40 /* ComposerView.swift */,
+				D11045AF2E23CD9900ADDF40 /* CollectionView.swift */,
 				D131F1742B8AFCC8002261BC /* Components */,
 				D158536F2D0FB8450053B0F5 /* PieceEdit */,
 				D1277D592DECE77E00420C36 /* SignIn */,
@@ -807,10 +813,12 @@
 				D19738802C1540B600EBF53F /* PracticeSessionViewModel.swift in Sources */,
 				D11D792C2C6C5B9D0073BA21 /* Array.swift in Sources */,
 				D19E733F2B898F9300BB3EC7 /* PracticeLoggerApp.swift in Sources */,
+				D11045AE2E23C92200ADDF40 /* ComposerView.swift in Sources */,
 				D1C2BEB92BDD61A800E8E39F /* SignInViewModel.swift in Sources */,
 				D16E3A922C61E1AC00DA96A7 /* SearchView.swift in Sources */,
 				D1BDE14D2E0208CE00A7671B /* ComposerSelectionView.swift in Sources */,
 				D185AC152BDF3B7E007F398D /* PieceEditViewModel.swift in Sources */,
+				D11045B02E23CD9900ADDF40 /* CollectionView.swift in Sources */,
 				D1E98BDA2C59EFF40065D27D /* CatalogueType.swift in Sources */,
 				D15C88312BF063B900AAC950 /* Error.swift in Sources */,
 				D1D3CEFB2DA2D089006502AE /* UIState.swift in Sources */,
