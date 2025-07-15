@@ -21,11 +21,28 @@ class SearchViewModel: ObservableObject {
         var id: Self { self }
     }
 
+    var availableFilters: [SearchFilter] {
+        if searchTerm.isEmpty {
+            return SearchFilter.allCases.filter { $0 != .discover }
+        } else {
+            return SearchFilter.allCases
+        }
+    }
+
     struct ComposerType: Identifiable, Equatable, Hashable {
         let firstName: String
         let lastName: String
         let nationality: String?
-        let id: String
+        let id: String?
+
+        static func from(_ composer: EditableComposer) -> ComposerType {
+            .init(
+                firstName: composer.firstName,
+                lastName: composer.lastName,
+                nationality: composer.nationality,
+                id: composer.id
+            )
+        }
 
         static func == (lhs: ComposerType, rhs: ComposerType) -> Bool {
             lhs.id == rhs.id
@@ -75,7 +92,7 @@ class SearchViewModel: ObservableObject {
                 allUserPieces = fresh
                 indexedUserPieces = fresh.map { IndexedPiece($0) }
                 userPieces = fresh
-                composers = try await fetchAllComposers() ?? []
+                composers = try await fetchAllComposers()
                 collections = []
                 newPieces = []
             }
@@ -312,6 +329,6 @@ struct IndexedPiece {
 
     init(_ piece: PieceDetails) {
         self.piece = piece
-        normalizedWords = piece.searchableText?.lowercased().split(separator: " ") ?? []
+        self.normalizedWords = piece.searchableText?.lowercased().split(separator: " ") ?? []
     }
 }

@@ -13,6 +13,7 @@ struct SearchView: View {
     @EnvironmentObject var practiceSessionViewModel: PracticeSessionViewModel
     @Binding var path: NavigationPath
     @State private var isShowingCustomPieceSheet = false
+    @State private var isShowingComposerCreateSheet = false
     @State private var isLoading: Bool
     private var preview: Bool = false
 
@@ -92,28 +93,14 @@ struct SearchView: View {
                                 }
                             }
                             if isEmpty {
-                                VStack(spacing: 16) {
-                                    Image(systemName: "magnifyingglass")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 60, height: 60)
-                                        .foregroundColor(.accentColor.opacity(0.6))
-
-                                    Text("No results found")
-                                        .font(.title3)
-                                        .fontWeight(.semibold)
-
-                                    Text("Try searching for a different piece or create a new piece.")
-                                        .font(.body)
-                                        .foregroundColor(.secondary)
-                                        .multilineTextAlignment(.center)
-                                        .padding(.horizontal)
-                                    Button("Create custom piece", systemImage: "plus.square") {
-                                        isShowingCustomPieceSheet = true
-                                    }
+                                emptyStateView(
+                                    title: "No results found",
+                                    subtitle: "Try searching for a different piece or create one below.",
+                                    buttonTitle: "Create collection piece",
+                                    buttonSystemImage: "plus.square"
+                                ) {
+                                    isShowingCustomPieceSheet = true
                                 }
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                .padding()
                             }
 
                         case .userPieces:
@@ -140,17 +127,14 @@ struct SearchView: View {
                                         userPieceRow(piece)
                                     }
                                 }
-                            } else {
-                                EmptyStateView {
-                                    Text("No pieces found. Try the discover tab or add a custom piece below!")
-                                        .font(.body)
-                                        .foregroundColor(.secondary)
-                                        .multilineTextAlignment(.center)
-                                        .padding(.horizontal)
-
-                                    Button("Create custom piece", systemImage: "plus.square") {
-                                        isShowingCustomPieceSheet = true
-                                    }
+                            } else if searchViewModel.userPieces.isEmpty && !searchViewModel.searchTerm.isEmpty {
+                                emptyStateView(
+                                    title: "No results found",
+                                    subtitle: "Try searching for a different piece or create a new piece.",
+                                    buttonTitle: "Create custom piece",
+                                    buttonSystemImage: "plus.square"
+                                ) {
+                                    isShowingCustomPieceSheet = true
                                 }
                             }
 
@@ -161,20 +145,57 @@ struct SearchView: View {
                                         newPieceRow(piece)
                                     }
                                 }
+                            } else {
+                                emptyStateView(
+                                    title: "No results found",
+                                    subtitle: "Try searching for a different piece or create a new piece.",
+                                    buttonTitle: "Create custom piece",
+                                    buttonSystemImage: "plus.square"
+                                ) {
+                                    isShowingCustomPieceSheet = true
+                                }
                             }
 
                         case .composers:
                             if !searchViewModel.composers.isEmpty {
-                                Section(header: Text("Composers")) {
+                                Section(
+                                    header:
+                                    HStack {
+                                        Text("Composers")
+                                            .font(.headline)
+
+                                        Spacer()
+
+                                        Button {
+                                            isShowingComposerCreateSheet = true
+                                        } label: {
+                                            Label("Custom Composer", systemImage: "plus.square")
+                                                .font(.subheadline)
+                                        }
+                                        .accessibilityLabel("Create custom piece")
+                                    }
+                                    .padding(.top, 8)
+                                ) {
                                     ForEach(searchViewModel.composers, id: \.id) { composer in
                                         composerRow(composer)
+                                    }
+                                }
+                            } else {
+                                VStack(spacing: 16) {
+                                    emptyStateView(
+                                        title: "No results found",
+                                        subtitle: "Try searching for a different composer or create one.",
+                                        buttonTitle: "Create custom composer",
+                                        buttonSystemImage: "plus.square"
+                                    ) {
+                                        isShowingComposerCreateSheet = true
                                     }
                                 }
                             }
 
                         case .collections:
                             Section(header: Text("Collections")) {
-                                ForEach(searchViewModel.collections) { group in
+                                ForEach(searchViewModel.collections, id: \.id) { group in
                                     CollectionRow(group: group)
                                 }
                             }
@@ -213,6 +234,14 @@ struct SearchView: View {
                         isCreatingNewPiece: true,
                         onPieceCreated: handlePieceCreated
                     )
+                }
+            }
+            .sheet(isPresented: $isShowingComposerCreateSheet) {
+                ComposerEditSheet(mode: .create) { composer in
+                    let composerType = SearchViewModel.ComposerType.from(composer)
+                    path.append(PieceNavigationContext.composer(composerType))
+                    isShowingComposerCreateSheet = false
+                    searchViewModel.composers.insert(composerType, at: 0)
                 }
             }
         }
@@ -271,6 +300,38 @@ struct SearchView: View {
             searchViewModel.searchTerm = ""
         }
     }
+
+    @ViewBuilder
+    private func emptyStateView(
+        systemImage: String = "magnifyingglass",
+        title: String,
+        subtitle: String,
+        buttonTitle: String,
+        buttonSystemImage: String,
+        buttonAction: @escaping () -> Void
+    ) -> some View {
+        VStack(spacing: 16) {
+            Image(systemName: systemImage)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 60, height: 60)
+                .foregroundColor(.accentColor.opacity(0.6))
+
+            Text(title)
+                .font(.title3)
+                .fontWeight(.semibold)
+
+            Text(subtitle)
+                .font(.body)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+
+            Button(buttonTitle, systemImage: buttonSystemImage, action: buttonAction)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding()
+    }
 }
 
 struct CollectionRow: View {
@@ -316,32 +377,6 @@ struct CollectionRow: View {
             }
             .padding(.vertical, 6)
         }
-    }
-}
-
-struct EmptyStateView<Content: View>: View {
-    @ViewBuilder let content: Content
-
-    init(@ViewBuilder content: () -> Content) {
-        self.content = content()
-    }
-
-    var body: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "magnifyingglass")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 60, height: 60)
-                .foregroundColor(.accentColor.opacity(0.6))
-
-            Text("No results found")
-                .font(.title3)
-                .fontWeight(.semibold)
-
-            content
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding()
     }
 }
 
