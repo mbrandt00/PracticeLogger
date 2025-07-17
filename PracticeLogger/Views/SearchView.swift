@@ -14,6 +14,7 @@ struct SearchView: View {
     @Binding var path: NavigationPath
     @State private var isShowingCustomPieceSheet = false
     @State private var isShowingComposerCreateSheet = false
+    @State private var isShowingCreateCollection = false
     @State private var isLoading: Bool
     private var preview: Bool = false
 
@@ -194,9 +195,39 @@ struct SearchView: View {
                             }
 
                         case .collections:
-                            Section(header: Text("Collections")) {
-                                ForEach(searchViewModel.collections, id: \.id) { group in
-                                    CollectionRow(group: group)
+                            if !searchViewModel.collections.isEmpty {
+                                Section(
+                                    header:
+                                    HStack {
+                                        Text("Collections")
+                                            .font(.headline)
+
+                                        Spacer()
+
+                                        Button {
+                                            isShowingCreateCollection = true
+                                        } label: {
+                                            Label("Create collection", systemImage: "plus.square")
+                                                .font(.subheadline)
+                                        }
+                                        .accessibilityLabel("Create custom piece")
+                                    }
+                                    .padding(.top, 8)
+                                ) {
+                                    ForEach(searchViewModel.collections, id: \.id) { group in
+                                        CollectionRow(group: group)
+                                    }
+                                }
+                            } else {
+                                VStack(spacing: 16) {
+                                    emptyStateView(
+                                        title: "No results found",
+                                        subtitle: "Try searching for a different collection or create one.",
+                                        buttonTitle: "Create collection",
+                                        buttonSystemImage: "plus.square"
+                                    ) {
+                                        isShowingCreateCollection = true
+                                    }
                                 }
                             }
                         }
@@ -234,6 +265,11 @@ struct SearchView: View {
                         isCreatingNewPiece: true,
                         onPieceCreated: handlePieceCreated
                     )
+                }
+            }
+            .sheet(isPresented: $isShowingCreateCollection) {
+                NavigationStack {
+                    CreateCollection()
                 }
             }
             .sheet(isPresented: $isShowingComposerCreateSheet) {

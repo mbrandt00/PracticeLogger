@@ -25,6 +25,8 @@
 		D12F1F382CFD749200235C16 /* Apollo in Frameworks */ = {isa = PBXBuildFile; productRef = D12F1F372CFD749200235C16 /* Apollo */; };
 		D12F5E282D616291001CB9B7 /* PieceDetails+SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12F5E272D61628C001CB9B7 /* PieceDetails+SampleData.swift */; };
 		D12F5E2B2D6277BC001CB9B7 /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12F5E2A2D6277B9001CB9B7 /* BottomSheet.swift */; };
+		D12FAC422E26BDB8009744B7 /* CreateCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12FAC412E26BDB8009744B7 /* CreateCollection.swift */; };
+		D12FAC442E26C426009744B7 /* CollectionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12FAC432E26C417009744B7 /* CollectionsViewModel.swift */; };
 		D131F16D2B8AE54E002261BC /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F16C2B8AE54E002261BC /* Color.swift */; };
 		D131F17B2B8B090D002261BC /* MetronomeShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131F17A2B8B090D002261BC /* MetronomeShape.swift */; };
 		D13BD0412DF808F300538E4B /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D13BD0402DF808F300538E4B /* ApolloGQL */; };
@@ -195,6 +197,8 @@
 		D12E1BAF2C37B64500A4DC28 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		D12F5E272D61628C001CB9B7 /* PieceDetails+SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PieceDetails+SampleData.swift"; sourceTree = "<group>"; };
 		D12F5E2A2D6277B9001CB9B7 /* BottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheet.swift; sourceTree = "<group>"; };
+		D12FAC412E26BDB8009744B7 /* CreateCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCollection.swift; sourceTree = "<group>"; };
+		D12FAC432E26C417009744B7 /* CollectionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionsViewModel.swift; sourceTree = "<group>"; };
 		D131F16C2B8AE54E002261BC /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		D131F17A2B8B090D002261BC /* MetronomeShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetronomeShape.swift; sourceTree = "<group>"; };
 		D13D0ED92BCC2FA1006B2683 /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
@@ -413,6 +417,7 @@
 				D146F87A2DC7CE6E00C4B7BD /* RecentPracticeSessionListItem.swift */,
 				D1A056102CB1A9E30024DC2A /* PracticeSessionView.swift */,
 				D148E76C2DF603D10012579E /* RecentlyDeleted.swift */,
+				D12FAC412E26BDB8009744B7 /* CreateCollection.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -446,6 +451,7 @@
 		D188F6642B96CED4005E0FA2 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				D12FAC432E26C417009744B7 /* CollectionsViewModel.swift */,
 				D1C2BEB82BDD61A800E8E39F /* SignInViewModel.swift */,
 				D1D6548D2BDDB9BE008D4868 /* ProfileViewModel.swift */,
 				D185AC142BDF3B7E007F398D /* PieceEditViewModel.swift */,
@@ -788,6 +794,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D12FAC422E26BDB8009744B7 /* CreateCollection.swift in Sources */,
 				D12E1BB02C37B64500A4DC28 /* DateFormatter.swift in Sources */,
 				D1ED6C442C4CB0BF00300FE9 /* KeyboardResponder.swift in Sources */,
 				D1254D532D4E9F2900095600 /* PieceDbUpdater.swift in Sources */,
@@ -831,6 +838,7 @@
 				D1840DD02C48902F001ED849 /* Logger.swift in Sources */,
 				D192831E2DF3FA9F00B6938F /* AnimatedQuarternotes.swift in Sources */,
 				D1BE1CA02DDD7A6E005160FE /* EndPracticeSessionIntent.swift in Sources */,
+				D12FAC442E26C426009744B7 /* CollectionsViewModel.swift in Sources */,
 				D1277D5B2DECE78800420C36 /* EmailAuthForm.swift in Sources */,
 				D105F55B2E0D0BE1005EA1F5 /* Duration.swift in Sources */,
 				D1BE01D22C67EE1E00529BAE /* NavigationContext.swift in Sources */,
