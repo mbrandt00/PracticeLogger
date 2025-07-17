@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS collection_pieces (
     piece_id BIGINT NOT NULL,
     collection_id BIGINT NOT NULL,
     FOREIGN KEY (piece_id) REFERENCES pieces(id),
-    FOREIGN KEY (collection_ID) REFERENCES collections(id)
+    FOREIGN KEY (collection_id) REFERENCES collections(id)
 );
 -- Enable RLS
 ALTER TABLE collection_pieces ENABLE ROW LEVEL SECURITY;
@@ -53,4 +53,21 @@ UPDATE collection_pieces cp
 SET position = ranked.row_num
 FROM ranked
 WHERE cp.id = ranked.id;
+
+DROP FUNCTION IF EXISTS public.pieces(collection public.collections);
+-- Relationship: collection_pieces → pieces
+COMMENT ON CONSTRAINT collection_pieces_piece_id_fkey
+  ON collection_pieces
+  IS E'@graphql({"foreign_name": "piece", "local_name": "collectionPieces"})';
+
+-- Relationship: collection_pieces → collections
+COMMENT ON CONSTRAINT collection_pieces_collection_id_fkey
+  ON collection_pieces
+  IS E'@graphql({"foreign_name": "collection", "local_name": "collectionPieces"})';
+
+-- Table metadata
+COMMENT ON TABLE collection_pieces IS
+E'@graphql({"description": "Join table linking pieces to collections with optional position ordering", "totalCount": {"enabled": true}})';
+
+
 
