@@ -124,7 +124,6 @@ class EditablePiece: ObservableObject {
     @Published var catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>?
     @Published var catalogueNumber: Int?
     @Published var nickname: String?
-    @Published var collectionId: ApolloGQL.BigInt?
     @Published var keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>?
     @Published var subPieceType: String?
     @Published var format: GraphQLEnum<PieceFormat>?
@@ -153,7 +152,6 @@ class EditablePiece: ObservableObject {
         catalogueType = piece.catalogueType
         catalogueNumber = piece.catalogueNumber
         nickname = piece.nickname
-        collectionId = piece.collectionId
         keySignature = piece.keySignature
         instrumentation = piece.instrumentation
         subPieceType = piece.subPieceType
@@ -292,8 +290,7 @@ extension EditablePiece {
             wikipediaUrl: wikipediaUrl.map { .some($0) } ?? .null,
             instrumentation: instrumentation.map { .some($0) } ?? .null,
             subPieceType: subPieceType.map { .some($0) } ?? .null,
-            imslpUrl: imslpUrl.map { .some($0) } ?? .null,
-            collectionId: collectionId.map { .some($0) } ?? .null
+            imslpUrl: imslpUrl.map { .some($0) } ?? .null
         )
     }
 

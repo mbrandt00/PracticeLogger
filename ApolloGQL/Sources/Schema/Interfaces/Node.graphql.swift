@@ -8,6 +8,7 @@ public extension Interfaces {
     name: "Node",
     keyFields: nil,
     implementingObjects: [
+      "CollectionPieces",
       "Collections",
       "Composers",
       "Movement",

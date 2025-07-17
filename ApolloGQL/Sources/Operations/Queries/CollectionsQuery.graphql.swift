@@ -296,8 +296,6 @@ public class CollectionsQuery: GraphQLQuery {
                 public var subPieceType: String? { __data["subPieceType"] }
                 public var searchableText: String? { __data["searchableText"] }
                 public var subPieceCount: Int? { __data["subPieceCount"] }
-                public var collectionId: ApolloGQL.BigInt? { __data["collectionId"] }
-                public var collection: Collection? { __data["collection"] }
                 public var nickname: String? { __data["nickname"] }
                 public var composerId: ApolloGQL.BigInt? { __data["composerId"] }
                 public var composer: Composer? { __data["composer"] }
@@ -332,8 +330,6 @@ public class CollectionsQuery: GraphQLQuery {
                   subPieceType: String? = nil,
                   searchableText: String? = nil,
                   subPieceCount: Int? = nil,
-                  collectionId: ApolloGQL.BigInt? = nil,
-                  collection: Collection? = nil,
                   nickname: String? = nil,
                   composerId: ApolloGQL.BigInt? = nil,
                   composer: Composer? = nil,
@@ -363,8 +359,6 @@ public class CollectionsQuery: GraphQLQuery {
                       "subPieceType": subPieceType,
                       "searchableText": searchableText,
                       "subPieceCount": subPieceCount,
-                      "collectionId": collectionId,
-                      "collection": collection._fieldData,
                       "nickname": nickname,
                       "composerId": composerId,
                       "composer": composer._fieldData,
@@ -376,8 +370,6 @@ public class CollectionsQuery: GraphQLQuery {
                     ]
                   ))
                 }
-
-                public typealias Collection = PieceDetails.Collection
 
                 public typealias Composer = PieceDetails.Composer
 

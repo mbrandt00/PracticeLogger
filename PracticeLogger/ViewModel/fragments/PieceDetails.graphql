@@ -20,10 +20,6 @@ fragment PieceDetails on Piece {
   searchableText
   subPieceCount
   userId
-  collectionId
-  collection {
-    name
-  }
   catalogueNumber
   nickname
   composerId
