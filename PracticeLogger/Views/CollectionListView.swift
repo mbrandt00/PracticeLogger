@@ -29,6 +29,32 @@ struct CollectionListView: View {
         navigatePieceShow = onPieceChanged
     }
 
+    private var sortedPieces: [CollectionsQuery.Data.CollectionsCollection.Edge.Node.Pieces.Edge] {
+        guard let edges = collection?.pieces?.edges else { return [] }
+
+        return edges.sorted { edge1, edge2 in
+            let piece1 = edge1.node.fragments.pieceDetails
+            let piece2 = edge2.node.fragments.pieceDetails
+
+            // Handle nil catalogue numbers - put them at the end
+            switch (piece1.catalogueNumber, piece2.catalogueNumber) {
+            case (nil, nil):
+                // If both are nil, use catalogueNumberSecondary as tiebreaker
+                return (piece1.catalogueNumberSecondary ?? Int.max) < (piece2.catalogueNumberSecondary ?? Int.max)
+            case (nil, _):
+                return false // piece1 goes after piece2
+            case (_, nil):
+                return true // piece1 goes before piece2
+            case let (num1?, num2?):
+                if num1 == num2 {
+                    // If catalogue numbers are equal, use catalogueNumberSecondary as tiebreaker
+                    return (piece1.catalogueNumberSecondary ?? Int.max) < (piece2.catalogueNumberSecondary ?? Int.max)
+                }
+                return num1 < num2
+            }
+        }
+    }
+
     var body: some View {
         VStack {
             if isLoading {
@@ -37,14 +63,14 @@ struct CollectionListView: View {
                     .padding()
                 Text("Loading collection...")
                     .foregroundColor(.secondary)
-            } else if collection == nil || collection?.collectionPieces == nil {
+            } else if collection == nil || collection?.pieces?.edges == nil {
                 Text("No pieces found in this collection")
                     .foregroundColor(.secondary)
             } else {
                 List {
-                    ForEach(collection?.collectionPieces?.edges ?? [], id: \.node.id) { edge in
+                    ForEach(sortedPieces, id: \.node.id) { edge in
                         Button(action: {
-                            let piece = edge.node.piece.fragments.pieceDetails
+                            let piece = edge.node.fragments.pieceDetails
                             if piece.userId == nil {
                                 selectedPieceForEditing = piece
                             } else {
@@ -52,7 +78,7 @@ struct CollectionListView: View {
                                 navigatePieceShow?(piece)
                             }
                         }, label: {
-                            pieceRow(for: edge.node.piece.fragments.pieceDetails)
+                            pieceRow(for: edge.node.fragments.pieceDetails)
                         })
                         .buttonStyle(PlainButtonStyle())
                     }
@@ -90,7 +116,6 @@ struct CollectionListView: View {
                     .font(.headline)
                     .foregroundColor(.primary)
 
-                Text("Collection id: \(collectionId), pieceId: \(item.id)")
                 let catalogueType = item.catalogueType
                 let catalogueNumber = item.catalogueNumber
 

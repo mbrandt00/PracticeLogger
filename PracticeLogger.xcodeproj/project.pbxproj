@@ -153,6 +153,7 @@
 		D1E6B7562E297866006CFDD9 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D1E6B7552E297866006CFDD9 /* ApolloGQL */; };
 		D1E6B7592E298C47006CFDD9 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D1E6B7582E298C47006CFDD9 /* ApolloGQL */; };
 		D1E6B75C2E299641006CFDD9 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D1E6B75B2E299641006CFDD9 /* ApolloGQL */; };
+		D1E6B75F2E29A07F006CFDD9 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D1E6B75E2E29A07F006CFDD9 /* ApolloGQL */; };
 		D1E98BCD2C59D0F80065D27D /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E98BCC2C59D0F80065D27D /* SearchViewModel.swift */; };
 		D1E98BD32C59EF750065D27D /* KeySignatureType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E98BD22C59EF750065D27D /* KeySignatureType.swift */; };
 		D1E98BD72C59EFB20065D27D /* Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E98BD62C59EFB20065D27D /* Format.swift */; };
@@ -297,6 +298,7 @@
 				D148E76A2DF5EFED0012579E /* ApolloSQLite in Frameworks */,
 				D18ADB242D872540007760E5 /* ApolloGQL in Frameworks */,
 				D18ADB232D872540007760E5 /* ApolloGQL in Frameworks */,
+				D1E6B75F2E29A07F006CFDD9 /* ApolloGQL in Frameworks */,
 				D18ADB222D872540007760E5 /* ApolloGQL in Frameworks */,
 				D18ADB212D872540007760E5 /* ApolloGQL in Frameworks */,
 				D18ADB202D872540007760E5 /* ApolloGQL in Frameworks */,
@@ -687,6 +689,7 @@
 				D1E6B7552E297866006CFDD9 /* ApolloGQL */,
 				D1E6B7582E298C47006CFDD9 /* ApolloGQL */,
 				D1E6B75B2E299641006CFDD9 /* ApolloGQL */,
+				D1E6B75E2E29A07F006CFDD9 /* ApolloGQL */,
 			);
 			productName = PracticeLogger;
 			productReference = D19E733B2B898F9300BB3EC7 /* PracticeLogger.app */;
@@ -748,7 +751,7 @@
 				D15C882D2BF05E5000AAC950 /* XCRemoteSwiftPackageReference "AlertToast" */,
 				D12F1F362CFD749200235C16 /* XCRemoteSwiftPackageReference "apollo-ios" */,
 				D1F3AA3E2DD974F600A0C1E7 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
-				D1E6B75A2E299641006CFDD9 /* XCLocalSwiftPackageReference "ApolloGQL" */,
+				D1E6B75D2E29A07F006CFDD9 /* XCLocalSwiftPackageReference "ApolloGQL" */,
 			);
 			productRefGroup = D19E733C2B898F9300BB3EC7 /* Products */;
 			projectDirPath = "";
@@ -1187,7 +1190,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		D1E6B75A2E299641006CFDD9 /* XCLocalSwiftPackageReference "ApolloGQL" */ = {
+		D1E6B75D2E29A07F006CFDD9 /* XCLocalSwiftPackageReference "ApolloGQL" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ApolloGQL;
 		};
@@ -1581,6 +1584,10 @@
 			productName = ApolloGQL;
 		};
 		D1E6B75B2E299641006CFDD9 /* ApolloGQL */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ApolloGQL;
+		};
+		D1E6B75E2E29A07F006CFDD9 /* ApolloGQL */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ApolloGQL;
 		};

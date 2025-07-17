@@ -1,7 +1,7 @@
 query CollectionsQuery(
   $filter: CollectionsFilter = {}
   $orderBy: [CollectionsOrderBy!] = []
-  $piecesOrderBy: [CollectionPiecesOrderBy!] = []
+  $piecesOrderBy: [PieceOrderBy!] = []
 ) {
   collectionsCollection(filter: $filter, orderBy: $orderBy) {
     edges {
@@ -13,19 +13,16 @@ query CollectionsQuery(
           firstName
           lastName
         }
-        collectionPieces(orderBy: $piecesOrderBy, first: 1000) {
+        pieces(orderBy: $piecesOrderBy, first: 1000) {
           edges {
             node {
+              ...PieceDetails
               id
-              piece {
-                ...PieceDetails
-                id
-                workName
-                catalogueNumber
-                catalogueNumberSecondary
-                totalPracticeTime
-                userId
-              }
+              workName
+              catalogueNumber
+              catalogueNumberSecondary
+              totalPracticeTime
+              userId
             }
           }
         }

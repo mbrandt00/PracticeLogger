@@ -7,20 +7,20 @@ public class CollectionsQuery: GraphQLQuery {
   public static let operationName: String = "CollectionsQuery"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query CollectionsQuery($filter: CollectionsFilter = {  }, $orderBy: [CollectionsOrderBy!] = [], $piecesOrderBy: [CollectionPiecesOrderBy!] = []) { collectionsCollection(filter: $filter, orderBy: $orderBy) { __typename edges { __typename node { __typename id name userId composer { __typename firstName lastName } collectionPieces(orderBy: $piecesOrderBy, first: 1000) { __typename edges { __typename node { __typename id piece { __typename ...PieceDetails id workName catalogueNumber catalogueNumberSecondary totalPracticeTime userId } } } } } } } }"#,
+      #"query CollectionsQuery($filter: CollectionsFilter = {  }, $orderBy: [CollectionsOrderBy!] = [], $piecesOrderBy: [PieceOrderBy!] = []) { collectionsCollection(filter: $filter, orderBy: $orderBy) { __typename edges { __typename node { __typename id name userId composer { __typename firstName lastName } pieces(orderBy: $piecesOrderBy, first: 1000) { __typename edges { __typename node { __typename ...PieceDetails id workName catalogueNumber catalogueNumberSecondary totalPracticeTime userId } } } } } } }"#,
       fragments: [PieceDetails.self]
     ))
 
   public var filter: GraphQLNullable<CollectionsFilter>
   public var orderBy: GraphQLNullable<[CollectionsOrderBy]>
-  public var piecesOrderBy: GraphQLNullable<[CollectionPiecesOrderBy]>
+  public var piecesOrderBy: GraphQLNullable<[PieceOrderBy]>
 
   public init(
     filter: GraphQLNullable<CollectionsFilter> = .init(
       CollectionsFilter()
     ),
     orderBy: GraphQLNullable<[CollectionsOrderBy]> = [],
-    piecesOrderBy: GraphQLNullable<[CollectionPiecesOrderBy]> = []
+    piecesOrderBy: GraphQLNullable<[PieceOrderBy]> = []
   ) {
     self.filter = filter
     self.orderBy = orderBy
@@ -134,7 +134,7 @@ public class CollectionsQuery: GraphQLQuery {
             .field("name", String.self),
             .field("userId", ApolloGQL.UUID?.self),
             .field("composer", Composer?.self),
-            .field("collectionPieces", CollectionPieces?.self, arguments: [
+            .field("pieces", Pieces?.self, arguments: [
               "orderBy": .variable("piecesOrderBy"),
               "first": 1000
             ]),
@@ -144,14 +144,15 @@ public class CollectionsQuery: GraphQLQuery {
           public var name: String { __data["name"] }
           public var userId: ApolloGQL.UUID? { __data["userId"] }
           public var composer: Composer? { __data["composer"] }
-          public var collectionPieces: CollectionPieces? { __data["collectionPieces"] }
+          /// Returns pieces belonging to this collection, prioritizing user-customized pieces over default pieces with the same IMSLP URL
+          public var pieces: Pieces? { __data["pieces"] }
 
           public init(
             id: ApolloGQL.BigInt,
             name: String,
             userId: ApolloGQL.UUID? = nil,
             composer: Composer? = nil,
-            collectionPieces: CollectionPieces? = nil
+            pieces: Pieces? = nil
           ) {
             self.init(_dataDict: DataDict(
               data: [
@@ -160,7 +161,7 @@ public class CollectionsQuery: GraphQLQuery {
                 "name": name,
                 "userId": userId,
                 "composer": composer._fieldData,
-                "collectionPieces": collectionPieces._fieldData,
+                "pieces": pieces._fieldData,
               ],
               fulfilledFragments: [
                 ObjectIdentifier(CollectionsQuery.Data.CollectionsCollection.Edge.Node.self)
@@ -202,14 +203,14 @@ public class CollectionsQuery: GraphQLQuery {
             }
           }
 
-          /// CollectionsCollection.Edge.Node.CollectionPieces
+          /// CollectionsCollection.Edge.Node.Pieces
           ///
-          /// Parent Type: `CollectionPiecesConnection`
-          public struct CollectionPieces: ApolloGQL.SelectionSet {
+          /// Parent Type: `PieceConnection`
+          public struct Pieces: ApolloGQL.SelectionSet {
             public let __data: DataDict
             public init(_dataDict: DataDict) { __data = _dataDict }
 
-            public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.CollectionPiecesConnection }
+            public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.PieceConnection }
             public static var __selections: [ApolloAPI.Selection] { [
               .field("__typename", String.self),
               .field("edges", [Edge].self),
@@ -222,23 +223,23 @@ public class CollectionsQuery: GraphQLQuery {
             ) {
               self.init(_dataDict: DataDict(
                 data: [
-                  "__typename": ApolloGQL.Objects.CollectionPiecesConnection.typename,
+                  "__typename": ApolloGQL.Objects.PieceConnection.typename,
                   "edges": edges._fieldData,
                 ],
                 fulfilledFragments: [
-                  ObjectIdentifier(CollectionsQuery.Data.CollectionsCollection.Edge.Node.CollectionPieces.self)
+                  ObjectIdentifier(CollectionsQuery.Data.CollectionsCollection.Edge.Node.Pieces.self)
                 ]
               ))
             }
 
-            /// CollectionsCollection.Edge.Node.CollectionPieces.Edge
+            /// CollectionsCollection.Edge.Node.Pieces.Edge
             ///
-            /// Parent Type: `CollectionPiecesEdge`
+            /// Parent Type: `PieceEdge`
             public struct Edge: ApolloGQL.SelectionSet {
               public let __data: DataDict
               public init(_dataDict: DataDict) { __data = _dataDict }
 
-              public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.CollectionPiecesEdge }
+              public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.PieceEdge }
               public static var __selections: [ApolloAPI.Selection] { [
                 .field("__typename", String.self),
                 .field("node", Node.self),
@@ -251,172 +252,138 @@ public class CollectionsQuery: GraphQLQuery {
               ) {
                 self.init(_dataDict: DataDict(
                   data: [
-                    "__typename": ApolloGQL.Objects.CollectionPiecesEdge.typename,
+                    "__typename": ApolloGQL.Objects.PieceEdge.typename,
                     "node": node._fieldData,
                   ],
                   fulfilledFragments: [
-                    ObjectIdentifier(CollectionsQuery.Data.CollectionsCollection.Edge.Node.CollectionPieces.Edge.self)
+                    ObjectIdentifier(CollectionsQuery.Data.CollectionsCollection.Edge.Node.Pieces.Edge.self)
                   ]
                 ))
               }
 
-              /// CollectionsCollection.Edge.Node.CollectionPieces.Edge.Node
+              /// CollectionsCollection.Edge.Node.Pieces.Edge.Node
               ///
-              /// Parent Type: `CollectionPieces`
+              /// Parent Type: `Piece`
               public struct Node: ApolloGQL.SelectionSet {
                 public let __data: DataDict
                 public init(_dataDict: DataDict) { __data = _dataDict }
 
-                public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.CollectionPieces }
+                public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Piece }
                 public static var __selections: [ApolloAPI.Selection] { [
                   .field("__typename", String.self),
                   .field("id", ApolloGQL.BigInt.self),
-                  .field("piece", Piece.self),
+                  .field("workName", String.self),
+                  .field("catalogueNumber", Int?.self),
+                  .field("catalogueNumberSecondary", Int?.self),
+                  .field("totalPracticeTime", Int?.self),
+                  .field("userId", ApolloGQL.UUID?.self),
+                  .fragment(PieceDetails.self),
                 ] }
 
                 public var id: ApolloGQL.BigInt { __data["id"] }
-                public var piece: Piece { __data["piece"] }
+                public var workName: String { __data["workName"] }
+                public var catalogueNumber: Int? { __data["catalogueNumber"] }
+                public var catalogueNumberSecondary: Int? { __data["catalogueNumberSecondary"] }
+                public var totalPracticeTime: Int? { __data["totalPracticeTime"] }
+                public var userId: ApolloGQL.UUID? { __data["userId"] }
+                public var lastPracticed: ApolloGQL.Datetime? { __data["lastPracticed"] }
+                public var catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? { __data["catalogueType"] }
+                public var keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? { __data["keySignature"] }
+                public var format: GraphQLEnum<ApolloGQL.PieceFormat>? { __data["format"] }
+                public var instrumentation: [String?]? { __data["instrumentation"] }
+                public var wikipediaUrl: String? { __data["wikipediaUrl"] }
+                public var imslpUrl: String? { __data["imslpUrl"] }
+                public var compositionYear: Int? { __data["compositionYear"] }
+                public var catalogueTypeNumDesc: String? { __data["catalogueTypeNumDesc"] }
+                public var compositionYearDesc: String? { __data["compositionYearDesc"] }
+                public var compositionYearString: String? { __data["compositionYearString"] }
+                public var pieceStyle: String? { __data["pieceStyle"] }
+                public var subPieceType: String? { __data["subPieceType"] }
+                public var searchableText: String? { __data["searchableText"] }
+                public var subPieceCount: Int? { __data["subPieceCount"] }
+                public var nickname: String? { __data["nickname"] }
+                public var composerId: ApolloGQL.BigInt? { __data["composerId"] }
+                public var collections: Collections? { __data["collections"] }
+                public var composer: Composer? { __data["composer"] }
+                public var movements: Movements? { __data["movements"] }
+
+                public struct Fragments: FragmentContainer {
+                  public let __data: DataDict
+                  public init(_dataDict: DataDict) { __data = _dataDict }
+
+                  public var pieceDetails: PieceDetails { _toFragment() }
+                }
 
                 public init(
                   id: ApolloGQL.BigInt,
-                  piece: Piece
+                  workName: String,
+                  catalogueNumber: Int? = nil,
+                  catalogueNumberSecondary: Int? = nil,
+                  totalPracticeTime: Int? = nil,
+                  userId: ApolloGQL.UUID? = nil,
+                  lastPracticed: ApolloGQL.Datetime? = nil,
+                  catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? = nil,
+                  keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? = nil,
+                  format: GraphQLEnum<ApolloGQL.PieceFormat>? = nil,
+                  instrumentation: [String?]? = nil,
+                  wikipediaUrl: String? = nil,
+                  imslpUrl: String? = nil,
+                  compositionYear: Int? = nil,
+                  catalogueTypeNumDesc: String? = nil,
+                  compositionYearDesc: String? = nil,
+                  compositionYearString: String? = nil,
+                  pieceStyle: String? = nil,
+                  subPieceType: String? = nil,
+                  searchableText: String? = nil,
+                  subPieceCount: Int? = nil,
+                  nickname: String? = nil,
+                  composerId: ApolloGQL.BigInt? = nil,
+                  collections: Collections? = nil,
+                  composer: Composer? = nil,
+                  movements: Movements? = nil
                 ) {
                   self.init(_dataDict: DataDict(
                     data: [
-                      "__typename": ApolloGQL.Objects.CollectionPieces.typename,
+                      "__typename": ApolloGQL.Objects.Piece.typename,
                       "id": id,
-                      "piece": piece._fieldData,
+                      "workName": workName,
+                      "catalogueNumber": catalogueNumber,
+                      "catalogueNumberSecondary": catalogueNumberSecondary,
+                      "totalPracticeTime": totalPracticeTime,
+                      "userId": userId,
+                      "lastPracticed": lastPracticed,
+                      "catalogueType": catalogueType,
+                      "keySignature": keySignature,
+                      "format": format,
+                      "instrumentation": instrumentation,
+                      "wikipediaUrl": wikipediaUrl,
+                      "imslpUrl": imslpUrl,
+                      "compositionYear": compositionYear,
+                      "catalogueTypeNumDesc": catalogueTypeNumDesc,
+                      "compositionYearDesc": compositionYearDesc,
+                      "compositionYearString": compositionYearString,
+                      "pieceStyle": pieceStyle,
+                      "subPieceType": subPieceType,
+                      "searchableText": searchableText,
+                      "subPieceCount": subPieceCount,
+                      "nickname": nickname,
+                      "composerId": composerId,
+                      "collections": collections._fieldData,
+                      "composer": composer._fieldData,
+                      "movements": movements._fieldData,
                     ],
                     fulfilledFragments: [
-                      ObjectIdentifier(CollectionsQuery.Data.CollectionsCollection.Edge.Node.CollectionPieces.Edge.Node.self)
+                      ObjectIdentifier(CollectionsQuery.Data.CollectionsCollection.Edge.Node.Pieces.Edge.Node.self),
+                      ObjectIdentifier(PieceDetails.self)
                     ]
                   ))
                 }
 
-                /// CollectionsCollection.Edge.Node.CollectionPieces.Edge.Node.Piece
-                ///
-                /// Parent Type: `Piece`
-                public struct Piece: ApolloGQL.SelectionSet {
-                  public let __data: DataDict
-                  public init(_dataDict: DataDict) { __data = _dataDict }
+                public typealias Collections = PieceDetails.Collections
 
-                  public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Piece }
-                  public static var __selections: [ApolloAPI.Selection] { [
-                    .field("__typename", String.self),
-                    .field("id", ApolloGQL.BigInt.self),
-                    .field("workName", String.self),
-                    .field("catalogueNumber", Int?.self),
-                    .field("catalogueNumberSecondary", Int?.self),
-                    .field("totalPracticeTime", Int?.self),
-                    .field("userId", ApolloGQL.UUID?.self),
-                    .fragment(PieceDetails.self),
-                  ] }
+                public typealias Composer = PieceDetails.Composer
 
-                  public var id: ApolloGQL.BigInt { __data["id"] }
-                  public var workName: String { __data["workName"] }
-                  public var catalogueNumber: Int? { __data["catalogueNumber"] }
-                  public var catalogueNumberSecondary: Int? { __data["catalogueNumberSecondary"] }
-                  public var totalPracticeTime: Int? { __data["totalPracticeTime"] }
-                  public var userId: ApolloGQL.UUID? { __data["userId"] }
-                  public var lastPracticed: ApolloGQL.Datetime? { __data["lastPracticed"] }
-                  public var catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? { __data["catalogueType"] }
-                  public var keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? { __data["keySignature"] }
-                  public var format: GraphQLEnum<ApolloGQL.PieceFormat>? { __data["format"] }
-                  public var instrumentation: [String?]? { __data["instrumentation"] }
-                  public var wikipediaUrl: String? { __data["wikipediaUrl"] }
-                  public var imslpUrl: String? { __data["imslpUrl"] }
-                  public var compositionYear: Int? { __data["compositionYear"] }
-                  public var catalogueTypeNumDesc: String? { __data["catalogueTypeNumDesc"] }
-                  public var compositionYearDesc: String? { __data["compositionYearDesc"] }
-                  public var compositionYearString: String? { __data["compositionYearString"] }
-                  public var pieceStyle: String? { __data["pieceStyle"] }
-                  public var subPieceType: String? { __data["subPieceType"] }
-                  public var searchableText: String? { __data["searchableText"] }
-                  public var subPieceCount: Int? { __data["subPieceCount"] }
-                  public var nickname: String? { __data["nickname"] }
-                  public var composerId: ApolloGQL.BigInt? { __data["composerId"] }
-                  public var collections: Collections? { __data["collections"] }
-                  public var composer: Composer? { __data["composer"] }
-                  public var movements: Movements? { __data["movements"] }
-
-                  public struct Fragments: FragmentContainer {
-                    public let __data: DataDict
-                    public init(_dataDict: DataDict) { __data = _dataDict }
-
-                    public var pieceDetails: PieceDetails { _toFragment() }
-                  }
-
-                  public init(
-                    id: ApolloGQL.BigInt,
-                    workName: String,
-                    catalogueNumber: Int? = nil,
-                    catalogueNumberSecondary: Int? = nil,
-                    totalPracticeTime: Int? = nil,
-                    userId: ApolloGQL.UUID? = nil,
-                    lastPracticed: ApolloGQL.Datetime? = nil,
-                    catalogueType: GraphQLEnum<ApolloGQL.CatalogueType>? = nil,
-                    keySignature: GraphQLEnum<ApolloGQL.KeySignatureType>? = nil,
-                    format: GraphQLEnum<ApolloGQL.PieceFormat>? = nil,
-                    instrumentation: [String?]? = nil,
-                    wikipediaUrl: String? = nil,
-                    imslpUrl: String? = nil,
-                    compositionYear: Int? = nil,
-                    catalogueTypeNumDesc: String? = nil,
-                    compositionYearDesc: String? = nil,
-                    compositionYearString: String? = nil,
-                    pieceStyle: String? = nil,
-                    subPieceType: String? = nil,
-                    searchableText: String? = nil,
-                    subPieceCount: Int? = nil,
-                    nickname: String? = nil,
-                    composerId: ApolloGQL.BigInt? = nil,
-                    collections: Collections? = nil,
-                    composer: Composer? = nil,
-                    movements: Movements? = nil
-                  ) {
-                    self.init(_dataDict: DataDict(
-                      data: [
-                        "__typename": ApolloGQL.Objects.Piece.typename,
-                        "id": id,
-                        "workName": workName,
-                        "catalogueNumber": catalogueNumber,
-                        "catalogueNumberSecondary": catalogueNumberSecondary,
-                        "totalPracticeTime": totalPracticeTime,
-                        "userId": userId,
-                        "lastPracticed": lastPracticed,
-                        "catalogueType": catalogueType,
-                        "keySignature": keySignature,
-                        "format": format,
-                        "instrumentation": instrumentation,
-                        "wikipediaUrl": wikipediaUrl,
-                        "imslpUrl": imslpUrl,
-                        "compositionYear": compositionYear,
-                        "catalogueTypeNumDesc": catalogueTypeNumDesc,
-                        "compositionYearDesc": compositionYearDesc,
-                        "compositionYearString": compositionYearString,
-                        "pieceStyle": pieceStyle,
-                        "subPieceType": subPieceType,
-                        "searchableText": searchableText,
-                        "subPieceCount": subPieceCount,
-                        "nickname": nickname,
-                        "composerId": composerId,
-                        "collections": collections._fieldData,
-                        "composer": composer._fieldData,
-                        "movements": movements._fieldData,
-                      ],
-                      fulfilledFragments: [
-                        ObjectIdentifier(CollectionsQuery.Data.CollectionsCollection.Edge.Node.CollectionPieces.Edge.Node.Piece.self),
-                        ObjectIdentifier(PieceDetails.self)
-                      ]
-                    ))
-                  }
-
-                  public typealias Collections = PieceDetails.Collections
-
-                  public typealias Composer = PieceDetails.Composer
-
-                  public typealias Movements = PieceDetails.Movements
-                }
+                public typealias Movements = PieceDetails.Movements
               }
             }
           }

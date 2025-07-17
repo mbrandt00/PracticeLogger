@@ -56,8 +56,40 @@ SET position = ranked.row_num
 FROM ranked
 WHERE cp.id = ranked.id;
 
+ALTER TABLE collections
+ALTER COLUMN composer_id DROP NOT NULL;
 
-DROP FUNCTION IF EXISTS public.pieces(collection public.collections);
+
+CREATE OR REPLACE FUNCTION pieces("collection" public.collections)
+RETURNS SETOF public.pieces
+LANGUAGE SQL
+STABLE
+AS $$
+    SELECT DISTINCT ON (COALESCE(user_piece.imslp_url, default_piece.imslp_url))
+        COALESCE(user_piece, default_piece) AS piece
+    FROM 
+        public.collection_pieces cp
+    JOIN 
+        public.pieces default_piece ON cp.piece_id = default_piece.id
+    LEFT JOIN 
+        public.pieces user_piece 
+        ON user_piece.imslp_url = default_piece.imslp_url
+        AND user_piece.user_id = auth.uid()
+        AND user_piece.user_id IS NOT NULL  -- Ensure we're looking at user pieces
+    WHERE 
+        cp.collection_id = "collection".id
+    ORDER BY 
+        COALESCE(user_piece.imslp_url, default_piece.imslp_url), 
+        user_piece.id DESC NULLS LAST,
+        cp.position;
+$$;
+COMMENT ON FUNCTION pieces("collection" public.collections) IS
+  E'@graphql({
+    "name": "pieces",
+    "description": "Returns pieces belonging to this collection, prioritizing user-customized pieces over default pieces with the same IMSLP URL",
+    "totalCount": {"enabled": true}
+  })';
+
 -- Relationship: collection_pieces → pieces
 COMMENT ON CONSTRAINT collection_pieces_piece_id_fkey
   ON collection_pieces

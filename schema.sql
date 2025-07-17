@@ -247,8 +247,7 @@ CREATE TABLE public.pieces (
     imslp_url text,
     imslp_piece_id bigint,
     total_practice_time integer,
-    last_practiced timestamp with time zone,
-    collection_id bigint
+    last_practiced timestamp with time zone
 );
 
 
@@ -457,6 +456,20 @@ $$;
 
 
 --
+-- Name: refresh_all_searchable_text(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.refresh_all_searchable_text() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    UPDATE pieces 
+    SET searchable_text = get_piece_searchable_text(id);
+END;
+$$;
+
+
+--
 -- Name: collections_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -476,57 +489,11 @@ CREATE TABLE public.collections (
     id bigint DEFAULT nextval('public.collections_id_seq'::regclass) NOT NULL,
     name text NOT NULL,
     url text,
-    composer_id bigint NOT NULL,
+    composer_id bigint,
     searchable_text text,
-    searchable boolean DEFAULT false NOT NULL
+    searchable boolean DEFAULT false NOT NULL,
+    user_id uuid
 );
-
-
---
--- Name: pieces(public.collections); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.pieces(collection public.collections) RETURNS SETOF public.pieces
-    LANGUAGE sql STABLE
-    AS $$
-    SELECT DISTINCT ON (COALESCE(user_piece.imslp_url, default_piece.imslp_url))
-        COALESCE(user_piece, default_piece) AS piece
-    FROM 
-        public.pieces default_piece
-    LEFT JOIN 
-        public.pieces user_piece 
-        ON user_piece.imslp_url = default_piece.imslp_url
-        AND user_piece.collection_id = default_piece.collection_id
-        AND user_piece.user_id = auth.uid()
-    WHERE 
-        default_piece.collection_id = "collection".id
-    ORDER BY COALESCE(user_piece.imslp_url, default_piece.imslp_url), user_piece.id DESC NULLS LAST;
-$$;
-
-
---
--- Name: FUNCTION pieces(collection public.collections); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.pieces(collection public.collections) IS '@graphql({
-    "name": "pieces",
-    "description": "Returns pieces belonging to this collection, prioritizing user-customized pieces over default pieces with the same IMSLP URL",
-    "totalCount": {"enabled": true}
-  })';
-
-
---
--- Name: refresh_all_searchable_text(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.refresh_all_searchable_text() RETURNS void
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-    UPDATE pieces 
-    SET searchable_text = get_piece_searchable_text(id);
-END;
-$$;
 
 
 --
@@ -792,6 +759,44 @@ $$;
 
 
 --
+-- Name: collection_pieces; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.collection_pieces (
+    id bigint NOT NULL,
+    piece_id bigint NOT NULL,
+    collection_id bigint NOT NULL,
+    "position" integer
+);
+
+
+--
+-- Name: TABLE collection_pieces; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.collection_pieces IS '@graphql({"description": "Join table linking pieces to collections with optional position ordering", "totalCount": {"enabled": true}})';
+
+
+--
+-- Name: collection_pieces_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.collection_pieces_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: collection_pieces_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.collection_pieces_id_seq OWNED BY public.collection_pieces.id;
+
+
+--
 -- Name: composers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -915,6 +920,13 @@ ALTER SEQUENCE public.practice_sessions_id_seq OWNED BY public.practice_sessions
 
 
 --
+-- Name: collection_pieces id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.collection_pieces ALTER COLUMN id SET DEFAULT nextval('public.collection_pieces_id_seq'::regclass);
+
+
+--
 -- Name: composers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -940,6 +952,14 @@ ALTER TABLE ONLY public.pieces ALTER COLUMN id SET DEFAULT nextval('public.piece
 --
 
 ALTER TABLE ONLY public.practice_sessions ALTER COLUMN id SET DEFAULT nextval('public.practice_sessions_id_seq'::regclass);
+
+
+--
+-- Name: collection_pieces collection_pieces_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.collection_pieces
+    ADD CONSTRAINT collection_pieces_pkey PRIMARY KEY (id);
 
 
 --
@@ -987,13 +1007,6 @@ ALTER TABLE ONLY public.practice_sessions
 --
 
 CREATE INDEX idx_collections_composer_id ON public.collections USING btree (composer_id);
-
-
---
--- Name: idx_fk_collection; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_fk_collection ON public.pieces USING btree (collection_id);
 
 
 --
@@ -1067,6 +1080,13 @@ CREATE INDEX practice_sessions_user_id_idx ON public.practice_sessions USING btr
 
 
 --
+-- Name: unique_piece_collection; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_piece_collection ON public.collection_pieces USING btree (piece_id, collection_id);
+
+
+--
 -- Name: collections before_insert_or_update_on_collections_set_searchable_text; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -1123,6 +1143,36 @@ CREATE TRIGGER practice_sessions_stats_trigger AFTER INSERT OR DELETE OR UPDATE 
 
 
 --
+-- Name: collection_pieces collection_pieces_collection_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.collection_pieces
+    ADD CONSTRAINT collection_pieces_collection_id_fkey FOREIGN KEY (collection_id) REFERENCES public.collections(id);
+
+
+--
+-- Name: CONSTRAINT collection_pieces_collection_id_fkey ON collection_pieces; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT collection_pieces_collection_id_fkey ON public.collection_pieces IS '@graphql({"foreign_name": "collection", "local_name": "collectionPieces"})';
+
+
+--
+-- Name: collection_pieces collection_pieces_piece_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.collection_pieces
+    ADD CONSTRAINT collection_pieces_piece_id_fkey FOREIGN KEY (piece_id) REFERENCES public.pieces(id);
+
+
+--
+-- Name: CONSTRAINT collection_pieces_piece_id_fkey ON collection_pieces; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT collection_pieces_piece_id_fkey ON public.collection_pieces IS '@graphql({"foreign_name": "piece", "local_name": "collectionPieces"})';
+
+
+--
 -- Name: collections collections_composer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1131,26 +1181,19 @@ ALTER TABLE ONLY public.collections
 
 
 --
+-- Name: collections collections_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.collections
+    ADD CONSTRAINT collections_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id);
+
+
+--
 -- Name: composers composers_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.composers
     ADD CONSTRAINT composers_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
-
-
---
--- Name: pieces fk_collection; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pieces
-    ADD CONSTRAINT fk_collection FOREIGN KEY (collection_id) REFERENCES public.collections(id);
-
-
---
--- Name: CONSTRAINT fk_collection ON pieces; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON CONSTRAINT fk_collection ON public.pieces IS '@graphql({"foreign_name": "collection", "local_name": "pieces"})';
 
 
 --
@@ -1237,6 +1280,13 @@ CREATE POLICY auth_delete_practice_sessions ON public.practice_sessions FOR DELE
 
 
 --
+-- Name: collection_pieces auth_insert_collection_pieces; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY auth_insert_collection_pieces ON public.collection_pieces FOR INSERT TO authenticated WITH CHECK (true);
+
+
+--
 -- Name: composers auth_insert_composers; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -1262,6 +1312,13 @@ CREATE POLICY auth_insert_pieces ON public.pieces FOR INSERT TO authenticated WI
 --
 
 CREATE POLICY auth_insert_practice_sessions ON public.practice_sessions FOR INSERT TO authenticated WITH CHECK (true);
+
+
+--
+-- Name: collection_pieces auth_read_collection_pieces; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY auth_read_collection_pieces ON public.collection_pieces FOR SELECT TO authenticated USING (true);
 
 
 --
@@ -1300,11 +1357,24 @@ CREATE POLICY auth_read_practice_sessions ON public.practice_sessions FOR SELECT
 
 
 --
+-- Name: collection_pieces auth_update_collection_pieces; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY auth_update_collection_pieces ON public.collection_pieces FOR UPDATE TO authenticated WITH CHECK (true);
+
+
+--
 -- Name: practice_sessions auth_update_practice_sessions; Type: POLICY; Schema: public; Owner: -
 --
 
 CREATE POLICY auth_update_practice_sessions ON public.practice_sessions FOR UPDATE TO authenticated USING ((user_id = auth.uid()));
 
+
+--
+-- Name: collection_pieces; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.collection_pieces ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: collections; Type: ROW SECURITY; Schema: public; Owner: -
