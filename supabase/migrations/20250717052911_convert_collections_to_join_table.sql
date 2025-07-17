@@ -37,7 +37,9 @@ CREATE UNIQUE INDEX unique_piece_collection ON collection_pieces (piece_id, coll
 
 -- add order and backfill
 ALTER TABLE collection_pieces
-ADD COLUMN position INTEGER;
+ADD COLUMN position INTEGER NOT NULL;
+
+CREATE UNIQUE INDEX unique_collection_position ON collection_pieces (collection_id, position);
 
 WITH ranked AS (
   SELECT
@@ -54,6 +56,7 @@ SET position = ranked.row_num
 FROM ranked
 WHERE cp.id = ranked.id;
 
+
 DROP FUNCTION IF EXISTS public.pieces(collection public.collections);
 -- Relationship: collection_pieces → pieces
 COMMENT ON CONSTRAINT collection_pieces_piece_id_fkey
@@ -68,6 +71,4 @@ COMMENT ON CONSTRAINT collection_pieces_collection_id_fkey
 -- Table metadata
 COMMENT ON TABLE collection_pieces IS
 E'@graphql({"description": "Join table linking pieces to collections with optional position ordering", "totalCount": {"enabled": true}})';
-
-
 
