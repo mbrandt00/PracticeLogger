@@ -2,9 +2,7 @@ query SearchCollections(
   $query: String!
   $collectionsFilter: CollectionsFilter = {}
   $collectionsOrderBy: [CollectionsOrderBy!] = []
-  $piecesOrderBy: [PieceOrderBy!] = [
-    { catalogueNumber: AscNullsLast, catalogueNumberSecondary: AscNullsLast }
-  ]
+  $piecesOrderBy: [CollectionPiecesOrderBy!] = []
 ) {
   searchCollections(
     query: $query
@@ -13,10 +11,12 @@ query SearchCollections(
   ) {
     edges {
       node {
-        pieces(orderBy: $piecesOrderBy) {
+        pieces: collectionPieces(orderBy: $piecesOrderBy) {
           edges {
             node {
-              ...PieceDetails
+              piece {
+                ...PieceDetails
+              }
             }
           }
         }

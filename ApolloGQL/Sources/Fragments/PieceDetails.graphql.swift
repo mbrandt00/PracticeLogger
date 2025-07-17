@@ -5,7 +5,7 @@
 
 public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
   public static var fragmentDefinition: StaticString {
-    #"fragment PieceDetails on Piece { __typename lastPracticed totalPracticeTime id workName catalogueType keySignature format instrumentation wikipediaUrl imslpUrl compositionYear catalogueNumberSecondary catalogueTypeNumDesc compositionYearDesc compositionYearString pieceStyle totalPracticeTime subPieceType searchableText subPieceCount userId catalogueNumber nickname composerId composer { __typename id userId firstName lastName nationality musicalEra } movements: movementCollection(orderBy: [{ number: AscNullsLast }]) { __typename edges { __typename node { __typename id lastPracticed totalPracticeTime name totalPracticeTime keySignature nickname downloadUrl pieceId number } } } }"#
+    #"fragment PieceDetails on Piece { __typename lastPracticed totalPracticeTime id workName catalogueType keySignature format instrumentation wikipediaUrl imslpUrl compositionYear catalogueNumberSecondary catalogueTypeNumDesc compositionYearDesc compositionYearString pieceStyle totalPracticeTime subPieceType searchableText subPieceCount userId catalogueNumber nickname composerId collections: collectionPieces { __typename edges { __typename node { __typename id collection { __typename id name } } } } composer { __typename id userId firstName lastName nationality musicalEra } movements: movementCollection(orderBy: [{ number: AscNullsLast }]) { __typename edges { __typename node { __typename id lastPracticed totalPracticeTime name totalPracticeTime keySignature nickname downloadUrl pieceId number } } } }"#
   }
 
   public let __data: DataDict
@@ -37,6 +37,7 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
     .field("catalogueNumber", Int?.self),
     .field("nickname", String?.self),
     .field("composerId", ApolloGQL.BigInt?.self),
+    .field("collectionPieces", alias: "collections", Collections?.self),
     .field("composer", Composer?.self),
     .field("movementCollection", alias: "movements", Movements?.self, arguments: ["orderBy": [["number": "AscNullsLast"]]]),
   ] }
@@ -64,6 +65,7 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
   public var catalogueNumber: Int? { __data["catalogueNumber"] }
   public var nickname: String? { __data["nickname"] }
   public var composerId: ApolloGQL.BigInt? { __data["composerId"] }
+  public var collections: Collections? { __data["collections"] }
   public var composer: Composer? { __data["composer"] }
   public var movements: Movements? { __data["movements"] }
 
@@ -91,6 +93,7 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
     catalogueNumber: Int? = nil,
     nickname: String? = nil,
     composerId: ApolloGQL.BigInt? = nil,
+    collections: Collections? = nil,
     composer: Composer? = nil,
     movements: Movements? = nil
   ) {
@@ -120,6 +123,7 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
         "catalogueNumber": catalogueNumber,
         "nickname": nickname,
         "composerId": composerId,
+        "collections": collections._fieldData,
         "composer": composer._fieldData,
         "movements": movements._fieldData,
       ],
@@ -127,6 +131,134 @@ public struct PieceDetails: ApolloGQL.SelectionSet, Fragment {
         ObjectIdentifier(PieceDetails.self)
       ]
     ))
+  }
+
+  /// Collections
+  ///
+  /// Parent Type: `CollectionPiecesConnection`
+  public struct Collections: ApolloGQL.SelectionSet {
+    public let __data: DataDict
+    public init(_dataDict: DataDict) { __data = _dataDict }
+
+    public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.CollectionPiecesConnection }
+    public static var __selections: [ApolloAPI.Selection] { [
+      .field("__typename", String.self),
+      .field("edges", [Edge].self),
+    ] }
+
+    public var edges: [Edge] { __data["edges"] }
+
+    public init(
+      edges: [Edge]
+    ) {
+      self.init(_dataDict: DataDict(
+        data: [
+          "__typename": ApolloGQL.Objects.CollectionPiecesConnection.typename,
+          "edges": edges._fieldData,
+        ],
+        fulfilledFragments: [
+          ObjectIdentifier(PieceDetails.Collections.self)
+        ]
+      ))
+    }
+
+    /// Collections.Edge
+    ///
+    /// Parent Type: `CollectionPiecesEdge`
+    public struct Edge: ApolloGQL.SelectionSet {
+      public let __data: DataDict
+      public init(_dataDict: DataDict) { __data = _dataDict }
+
+      public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.CollectionPiecesEdge }
+      public static var __selections: [ApolloAPI.Selection] { [
+        .field("__typename", String.self),
+        .field("node", Node.self),
+      ] }
+
+      public var node: Node { __data["node"] }
+
+      public init(
+        node: Node
+      ) {
+        self.init(_dataDict: DataDict(
+          data: [
+            "__typename": ApolloGQL.Objects.CollectionPiecesEdge.typename,
+            "node": node._fieldData,
+          ],
+          fulfilledFragments: [
+            ObjectIdentifier(PieceDetails.Collections.Edge.self)
+          ]
+        ))
+      }
+
+      /// Collections.Edge.Node
+      ///
+      /// Parent Type: `CollectionPieces`
+      public struct Node: ApolloGQL.SelectionSet {
+        public let __data: DataDict
+        public init(_dataDict: DataDict) { __data = _dataDict }
+
+        public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.CollectionPieces }
+        public static var __selections: [ApolloAPI.Selection] { [
+          .field("__typename", String.self),
+          .field("id", ApolloGQL.BigInt.self),
+          .field("collection", Collection.self),
+        ] }
+
+        public var id: ApolloGQL.BigInt { __data["id"] }
+        public var collection: Collection { __data["collection"] }
+
+        public init(
+          id: ApolloGQL.BigInt,
+          collection: Collection
+        ) {
+          self.init(_dataDict: DataDict(
+            data: [
+              "__typename": ApolloGQL.Objects.CollectionPieces.typename,
+              "id": id,
+              "collection": collection._fieldData,
+            ],
+            fulfilledFragments: [
+              ObjectIdentifier(PieceDetails.Collections.Edge.Node.self)
+            ]
+          ))
+        }
+
+        /// Collections.Edge.Node.Collection
+        ///
+        /// Parent Type: `Collections`
+        public struct Collection: ApolloGQL.SelectionSet {
+          public let __data: DataDict
+          public init(_dataDict: DataDict) { __data = _dataDict }
+
+          public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Collections }
+          public static var __selections: [ApolloAPI.Selection] { [
+            .field("__typename", String.self),
+            .field("id", ApolloGQL.BigInt.self),
+            .field("name", String.self),
+          ] }
+
+          public var id: ApolloGQL.BigInt { __data["id"] }
+          public var name: String { __data["name"] }
+
+          public init(
+            id: ApolloGQL.BigInt,
+            name: String
+          ) {
+            self.init(_dataDict: DataDict(
+              data: [
+                "__typename": ApolloGQL.Objects.Collections.typename,
+                "id": id,
+                "name": name,
+              ],
+              fulfilledFragments: [
+                ObjectIdentifier(PieceDetails.Collections.Edge.Node.Collection.self)
+              ]
+            ))
+          }
+        }
+      }
+    }
   }
 
   /// Composer

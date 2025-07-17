@@ -21,6 +21,8 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
   public static func objectType(forTypename typename: String) -> ApolloAPI.Object? {
     switch typename {
     case "CollectionPieces": return ApolloGQL.Objects.CollectionPieces
+    case "CollectionPiecesConnection": return ApolloGQL.Objects.CollectionPiecesConnection
+    case "CollectionPiecesEdge": return ApolloGQL.Objects.CollectionPiecesEdge
     case "Collections": return ApolloGQL.Objects.Collections
     case "CollectionsConnection": return ApolloGQL.Objects.CollectionsConnection
     case "CollectionsEdge": return ApolloGQL.Objects.CollectionsEdge

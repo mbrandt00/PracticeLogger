@@ -111,6 +111,7 @@ public class InsertNewPieceMutation: GraphQLMutation {
         public var catalogueNumber: Int? { __data["catalogueNumber"] }
         public var nickname: String? { __data["nickname"] }
         public var composerId: ApolloGQL.BigInt? { __data["composerId"] }
+        public var collections: Collections? { __data["collections"] }
         public var composer: Composer? { __data["composer"] }
         public var movements: Movements? { __data["movements"] }
 
@@ -145,6 +146,7 @@ public class InsertNewPieceMutation: GraphQLMutation {
           catalogueNumber: Int? = nil,
           nickname: String? = nil,
           composerId: ApolloGQL.BigInt? = nil,
+          collections: Collections? = nil,
           composer: Composer? = nil,
           movements: Movements? = nil
         ) {
@@ -174,6 +176,7 @@ public class InsertNewPieceMutation: GraphQLMutation {
               "catalogueNumber": catalogueNumber,
               "nickname": nickname,
               "composerId": composerId,
+              "collections": collections._fieldData,
               "composer": composer._fieldData,
               "movements": movements._fieldData,
             ],
@@ -183,6 +186,8 @@ public class InsertNewPieceMutation: GraphQLMutation {
             ]
           ))
         }
+
+        public typealias Collections = PieceDetails.Collections
 
         public typealias Composer = PieceDetails.Composer
 

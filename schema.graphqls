@@ -150,6 +150,9 @@ input CatalogueTypeFilter {
   neq: CatalogueType
 }
 
+"""
+Join table linking pieces to collections with optional position ordering
+"""
 type CollectionPieces implements Node {
   """Globally Unique Record Identifier"""
   nodeId: ID!
@@ -164,6 +167,9 @@ type CollectionPieces implements Node {
 type CollectionPiecesConnection {
   edges: [CollectionPiecesEdge!]!
   pageInfo: PageInfo!
+
+  """The total number of records matching the `filter` criteria"""
+  totalCount: Int!
 }
 
 type CollectionPiecesDeleteResponse {
@@ -241,12 +247,12 @@ type Collections implements Node {
   id: BigInt!
   name: String!
   url: String
-  composerId: BigInt!
+  composerId: BigInt
   searchableText: String
   searchable: Boolean!
   userId: UUID
-  composer: Composers!
-  collectionPiecesCollection(
+  composer: Composers
+  collectionPieces(
     """Query the first `n` records in the collection"""
     first: Int
 
@@ -270,34 +276,6 @@ type Collections implements Node {
     """Sort order to apply to the collection"""
     orderBy: [CollectionPiecesOrderBy!]
   ): CollectionPiecesConnection
-
-  """
-  Returns pieces belonging to this collection, prioritizing user-customized pieces over default pieces with the same IMSLP URL
-  """
-  pieces(
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """
-    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
-    """
-    offset: Int
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: PieceFilter
-
-    """Sort order to apply to the collection"""
-    orderBy: [PieceOrderBy!]
-  ): PieceConnection
 }
 
 type CollectionsConnection {
@@ -1154,7 +1132,7 @@ type Piece implements Node {
     """Sort order to apply to the collection"""
     orderBy: [PracticeSessionsOrderBy!]
   ): PracticeSessionsConnection
-  collectionPiecesCollection(
+  collectionPieces(
     """Query the first `n` records in the collection"""
     first: Int
 

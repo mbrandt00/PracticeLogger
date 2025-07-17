@@ -131,6 +131,7 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
     public var catalogueNumber: Int? { __data["catalogueNumber"] }
     public var nickname: String? { __data["nickname"] }
     public var composerId: ApolloGQL.BigInt? { __data["composerId"] }
+    public var collections: Collections? { __data["collections"] }
     public var composer: Composer? { __data["composer"] }
     public var movements: Movements? { __data["movements"] }
 
@@ -165,6 +166,7 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
       catalogueNumber: Int? = nil,
       nickname: String? = nil,
       composerId: ApolloGQL.BigInt? = nil,
+      collections: Collections? = nil,
       composer: Composer? = nil,
       movements: Movements? = nil
     ) {
@@ -194,6 +196,7 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
           "catalogueNumber": catalogueNumber,
           "nickname": nickname,
           "composerId": composerId,
+          "collections": collections._fieldData,
           "composer": composer._fieldData,
           "movements": movements._fieldData,
         ],
@@ -203,6 +206,8 @@ public struct PracticeSessionDetails: ApolloGQL.SelectionSet, Fragment {
         ]
       ))
     }
+
+    public typealias Collections = PieceDetails.Collections
 
     public typealias Composer = PieceDetails.Composer
 

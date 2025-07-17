@@ -52,20 +52,22 @@ struct PieceShow: View {
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                     }
-                    if let collection = piece.collection, let collectionId = piece.collectionId {
+                    if let collections = piece.collections, !collections.edges.isEmpty {
                         VStack(alignment: .leading, spacing: 4) {
-                            Button {
-                                selectedCollection = (id: collectionId, name: collection.name)
-                                showingCollectionSheet = true
-                            } label: {
-                                HStack {
-                                    Text("\(collection.name) collection")
-                                        .font(.body)
-                                        .foregroundColor(.accentColor)
+                            ForEach(collections.edges, id: \.node.id) { c in
+                                Button {
+                                    selectedCollection = (id: c.node.collection.id, name: c.node.collection.name)
+                                    showingCollectionSheet = true
+                                } label: {
+                                    HStack {
+                                        Text("\(c.node.collection.name) collection")
+                                            .font(.body)
+                                            .foregroundColor(.accentColor)
 
-                                    Image(systemName: "chevron.right")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
+                                        Image(systemName: "chevron.right")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
                                 }
                             }
                         }
@@ -212,22 +214,21 @@ struct PieceShow: View {
             })
         }
         .sheet(isPresented: $showingCollectionSheet) {
-            if let collectionId = piece.collectionId, let collectionName = piece.collection?.name {
+            if let selectedCollection {
                 NavigationStack {
                     CollectionListView(
-                        collectionId: collectionId,
-                        collectionName: collectionName,
+                        collectionId: selectedCollection.id,
+                        collectionName: selectedCollection.name,
                         onPieceChanged: { newPiece in
                             piece = newPiece
                             showingCollectionSheet = false
                         }
                     )
-                }
-
-                .toolbar {
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button("Done") {
-                            showingCollectionSheet = false
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Done") {
+                                showingCollectionSheet = false
+                            }
                         }
                     }
                 }

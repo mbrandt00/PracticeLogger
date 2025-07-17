@@ -10,65 +10,24 @@ import ApolloGQL
 import Foundation
 import SwiftUI
 
+/// List view for one collection that shows all pieces
 struct CollectionListView: View {
-    @State var collectionId: ApolloGQL.BigInt
+    @State var collectionId: String
     @State private var isLoading: Bool
-    @State private var collectionInformation: [CollectionsQuery.Data.CollectionsCollection.Edge]
     @State private var collectionName: String
     @State private var hasAppeared = false
     @State private var selectedPieceForEditing: PieceDetails?
     @State private var selectedPieceForShow: PieceDetails?
+    @State private var collection: CollectionsQuery.Data.CollectionsCollection.Edge.Node?
+
     var navigatePieceShow: ((PieceDetails) -> Void)?
-    var allPieceEdges: [CollectionsQuery.Data.CollectionsCollection.Edge.Node.Pieces.Edge] {
-        var result: [CollectionsQuery.Data.CollectionsCollection.Edge.Node.Pieces.Edge] = []
 
-        for edge in collectionInformation {
-            if let edges = edge.node.pieces?.edges {
-                result.append(contentsOf: edges)
-            }
-        }
-
-        return result.sorted {
-            let lhsPrimary = $0.node.catalogueNumber
-            let rhsPrimary = $1.node.catalogueNumber
-
-            if let lhs = lhsPrimary, let rhs = rhsPrimary, lhs != rhs {
-                return lhs < rhs
-            } else if lhsPrimary == nil && rhsPrimary != nil {
-                return false // nil goes last
-            } else if lhsPrimary != nil && rhsPrimary == nil {
-                return true
-            }
-
-            let lhsSecondary = $0.node.catalogueNumberSecondary
-            let rhsSecondary = $1.node.catalogueNumberSecondary
-
-            if let lhs = lhsSecondary, let rhs = rhsSecondary, lhs != rhs {
-                return lhs < rhs
-            } else if lhsSecondary == nil && rhsSecondary != nil {
-                return false
-            } else if lhsSecondary != nil && rhsSecondary == nil {
-                return true
-            }
-
-            return false
-        }
-    }
-
-    init(collectionId: ApolloGQL.BigInt, collectionName: String, onPieceChanged: ((PieceDetails) -> Void)? = nil) {
+    init(collectionId: String, collectionName: String, onPieceChanged: ((PieceDetails) -> Void)? = nil) {
         self.collectionId = collectionId
         self.collectionName = collectionName
         _isLoading = State(initialValue: true)
         navigatePieceShow = onPieceChanged
-        _collectionInformation = State(initialValue: [])
     }
-
-    // Preview initializer
-//    init(preview: [CollectionsQuery.Data.CollectionsCollection.Edge]) {
-//        self.collectionId = BigInt(0) // Dummy ID for preview
-//        self._isLoading = State(initialValue: false)
-//        self._collectionInformation = State(initialValue: preview)
-//    }
 
     var body: some View {
         VStack {
@@ -78,34 +37,26 @@ struct CollectionListView: View {
                     .padding()
                 Text("Loading collection...")
                     .foregroundColor(.secondary)
-            } else if collectionInformation.isEmpty {
+            } else if collection == nil || collection?.collectionPieces == nil {
                 Text("No pieces found in this collection")
                     .foregroundColor(.secondary)
-            } else if let edges = collectionInformation.first?.node.pieces?.edges {
-                if edges.isEmpty {
-                    Text("No pieces found in this collection")
-                        .foregroundColor(.secondary)
-                } else {
-                    List {
-                        ForEach(allPieceEdges, id: \.node.id) { item in
-                            Button(action: {
-                                let userId = item.node.userId
-                                let tappedPiece = item.node.fragments.pieceDetails
-                                if userId == nil {
-                                    selectedPieceForEditing = tappedPiece
-                                } else {
-                                    selectedPieceForShow = tappedPiece
-                                    navigatePieceShow?(tappedPiece)
-                                }
-                            }, label: {
-                                pieceRow(for: item)
-                            })
-                        }
+            } else {
+                List {
+                    ForEach(collection?.collectionPieces?.edges ?? [], id: \.node.id) { edge in
+                        Button(action: {
+                            let piece = edge.node.piece.fragments.pieceDetails
+                            if piece.userId == nil {
+                                selectedPieceForEditing = piece
+                            } else {
+                                selectedPieceForShow = piece
+                                navigatePieceShow?(piece)
+                            }
+                        }, label: {
+                            pieceRow(for: edge.node.piece.fragments.pieceDetails)
+                        })
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
-            } else {
-                Text("No pieces found in this collection")
-                    .foregroundColor(.secondary)
             }
         }
         .navigationTitle(collectionName)
@@ -122,7 +73,6 @@ struct CollectionListView: View {
                 }
             )
         }
-
         .onAppear {
             guard !hasAppeared else { return }
             hasAppeared = true
@@ -133,15 +83,16 @@ struct CollectionListView: View {
     }
 
     @ViewBuilder
-    private func pieceRow(for item: CollectionsQuery.Data.CollectionsCollection.Edge.Node.Pieces.Edge) -> some View {
+    private func pieceRow(for item: PieceDetails) -> some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text(item.node.workName)
+                Text(item.workName)
                     .font(.headline)
                     .foregroundColor(.primary)
 
-                let catalogueType = item.node.catalogueType
-                let catalogueNumber = item.node.catalogueNumber
+                Text("Collection id: \(collectionId), pieceId: \(item.id)")
+                let catalogueType = item.catalogueType
+                let catalogueNumber = item.catalogueNumber
 
                 if let catalogueType, let catalogueNumber {
                     Text("\(catalogueType.displayName) \(catalogueNumber)")
@@ -152,10 +103,10 @@ struct CollectionListView: View {
 
             Spacer()
 
-            if item.node.userId == nil {
+            if item.userId == nil {
                 Image(systemName: "plus.rectangle")
                     .foregroundColor(.gray)
-            } else if let totalPracticeTime = item.node.totalPracticeTime, totalPracticeTime > 0 {
+            } else if let totalPracticeTime = item.totalPracticeTime, totalPracticeTime > 0 {
                 let duration = Duration.seconds(totalPracticeTime)
                 Text("\(duration.shortFormatted) practiced")
                     .foregroundColor(.secondary)
@@ -165,12 +116,11 @@ struct CollectionListView: View {
         .padding(.vertical, 8)
         .frame(maxWidth: .infinity, alignment: .leading)
         .contentShape(Rectangle())
-        .buttonStyle(PlainButtonStyle())
     }
 
     private func loadCollectionData() async {
         do {
-            collectionInformation = try await withCheckedThrowingContinuation { continuation in
+            let fetchedEdges: [CollectionsQuery.Data.CollectionsCollection.Edge] = try await withCheckedThrowingContinuation { continuation in
                 let filter = GraphQLNullable(CollectionsFilter(id: .some(BigIntFilter(eq: .some(collectionId)))))
 
                 Network.shared.apollo.fetch(
@@ -179,8 +129,8 @@ struct CollectionListView: View {
                 ) { result in
                     switch result {
                     case let .success(graphQLResult):
-                        if let collection = graphQLResult.data?.collectionsCollection?.edges {
-                            continuation.resume(returning: collection)
+                        if let edges = graphQLResult.data?.collectionsCollection?.edges {
+                            continuation.resume(returning: edges)
                         } else {
                             continuation.resume(returning: [])
                         }
@@ -191,15 +141,11 @@ struct CollectionListView: View {
                 }
             }
 
+            // Set the collection data
+            collection = fetchedEdges.first?.node
             isLoading = false
         } catch {
             isLoading = false
         }
     }
 }
-
-// #Preview {
-//    NavigationView {
-//        CollectionListView.previewWithRachmaninoff
-//    }
-// }

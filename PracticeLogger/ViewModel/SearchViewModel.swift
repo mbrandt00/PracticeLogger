@@ -113,7 +113,7 @@ class SearchViewModel: ObservableObject {
                         let groups = data.edges.map { edge in
                             let collectionName = edge.node.name
                             let pieceEdges = edge.node.pieces?.edges ?? []
-                            let pieceDetails = pieceEdges.map { $0.node.fragments.pieceDetails }
+                            let pieceDetails = pieceEdges.map { $0.node.piece.fragments.pieceDetails }
                             let composer = edge.node.composer
                             return CollectionGroup(id: collectionName, name: collectionName, composer: composer, pieces: pieceDetails)
                         }
