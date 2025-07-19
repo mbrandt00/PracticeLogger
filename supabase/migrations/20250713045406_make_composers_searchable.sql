@@ -5,7 +5,7 @@ ADD COLUMN searchable BOOLEAN NOT NULL DEFAULT false;
 CREATE OR REPLACE FUNCTION update_composers_searchable_text()
 RETURNS TRIGGER AS $$
 BEGIN
-  NEW.searchable_text := CONCAT(NEW.first_name, ' ', NEW.last_name, ' ', NEW.nationality);
+  NEW.searchable_text := unaccent(CONCAT(NEW.first_name, ' ', NEW.last_name, ' ', NEW.nationality));
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;

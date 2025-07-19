@@ -13,7 +13,7 @@ struct SearchFilterBar: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
-                ForEach(SearchViewModel.SearchFilter.allCases) { filter in
+                ForEach(viewModel.availableFilters) { filter in
                     FilterButtonView(
                         text: filter.rawValue,
                         categoryCount: viewModel.searchTerm.isEmpty ? nil : viewModel.count(for: filter),

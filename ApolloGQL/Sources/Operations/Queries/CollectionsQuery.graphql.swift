@@ -7,7 +7,7 @@ public class CollectionsQuery: GraphQLQuery {
   public static let operationName: String = "CollectionsQuery"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query CollectionsQuery($filter: CollectionsFilter = {  }, $orderBy: [CollectionsOrderBy!] = [], $piecesOrderBy: [PieceOrderBy!] = [{ catalogueNumber: AscNullsLast, catalogueNumberSecondary: AscNullsLast }]) { collectionsCollection(filter: $filter, orderBy: $orderBy) { __typename edges { __typename node { __typename name composer { __typename firstName lastName } pieces(orderBy: $piecesOrderBy, first: 1000) { __typename edges { __typename node { __typename ...PieceDetails id workName catalogueNumber catalogueNumberSecondary totalPracticeTime userId } } } } } } }"#,
+      #"query CollectionsQuery($filter: CollectionsFilter = {  }, $orderBy: [CollectionsOrderBy!] = [], $piecesOrderBy: [PieceOrderBy!] = []) { collectionsCollection(filter: $filter, orderBy: $orderBy) { __typename edges { __typename node { __typename id name userId composer { __typename firstName lastName } pieces(orderBy: $piecesOrderBy, first: 1000) { __typename edges { __typename node { __typename ...PieceDetails id workName catalogueNumber catalogueNumberSecondary totalPracticeTime userId } } } } } } }"#,
       fragments: [PieceDetails.self]
     ))
 
@@ -20,10 +20,7 @@ public class CollectionsQuery: GraphQLQuery {
       CollectionsFilter()
     ),
     orderBy: GraphQLNullable<[CollectionsOrderBy]> = [],
-    piecesOrderBy: GraphQLNullable<[PieceOrderBy]> = [PieceOrderBy(
-      catalogueNumber: .init(.ascNullsLast),
-      catalogueNumberSecondary: .init(.ascNullsLast)
-    )]
+    piecesOrderBy: GraphQLNullable<[PieceOrderBy]> = []
   ) {
     self.filter = filter
     self.orderBy = orderBy
@@ -133,28 +130,36 @@ public class CollectionsQuery: GraphQLQuery {
           public static var __parentType: any ApolloAPI.ParentType { ApolloGQL.Objects.Collections }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
+            .field("id", ApolloGQL.BigInt.self),
             .field("name", String.self),
-            .field("composer", Composer.self),
+            .field("userId", ApolloGQL.UUID?.self),
+            .field("composer", Composer?.self),
             .field("pieces", Pieces?.self, arguments: [
               "orderBy": .variable("piecesOrderBy"),
               "first": 1000
             ]),
           ] }
 
+          public var id: ApolloGQL.BigInt { __data["id"] }
           public var name: String { __data["name"] }
-          public var composer: Composer { __data["composer"] }
+          public var userId: ApolloGQL.UUID? { __data["userId"] }
+          public var composer: Composer? { __data["composer"] }
           /// Returns pieces belonging to this collection, prioritizing user-customized pieces over default pieces with the same IMSLP URL
           public var pieces: Pieces? { __data["pieces"] }
 
           public init(
+            id: ApolloGQL.BigInt,
             name: String,
-            composer: Composer,
+            userId: ApolloGQL.UUID? = nil,
+            composer: Composer? = nil,
             pieces: Pieces? = nil
           ) {
             self.init(_dataDict: DataDict(
               data: [
                 "__typename": ApolloGQL.Objects.Collections.typename,
+                "id": id,
                 "name": name,
+                "userId": userId,
                 "composer": composer._fieldData,
                 "pieces": pieces._fieldData,
               ],
@@ -296,10 +301,10 @@ public class CollectionsQuery: GraphQLQuery {
                 public var subPieceType: String? { __data["subPieceType"] }
                 public var searchableText: String? { __data["searchableText"] }
                 public var subPieceCount: Int? { __data["subPieceCount"] }
-                public var collectionId: ApolloGQL.BigInt? { __data["collectionId"] }
-                public var collection: Collection? { __data["collection"] }
                 public var nickname: String? { __data["nickname"] }
                 public var composerId: ApolloGQL.BigInt? { __data["composerId"] }
+                /// All collections this piece belongs to, based on shared IMSLP URL
+                public var collections: Collections? { __data["collections"] }
                 public var composer: Composer? { __data["composer"] }
                 public var movements: Movements? { __data["movements"] }
 
@@ -332,10 +337,9 @@ public class CollectionsQuery: GraphQLQuery {
                   subPieceType: String? = nil,
                   searchableText: String? = nil,
                   subPieceCount: Int? = nil,
-                  collectionId: ApolloGQL.BigInt? = nil,
-                  collection: Collection? = nil,
                   nickname: String? = nil,
                   composerId: ApolloGQL.BigInt? = nil,
+                  collections: Collections? = nil,
                   composer: Composer? = nil,
                   movements: Movements? = nil
                 ) {
@@ -363,10 +367,9 @@ public class CollectionsQuery: GraphQLQuery {
                       "subPieceType": subPieceType,
                       "searchableText": searchableText,
                       "subPieceCount": subPieceCount,
-                      "collectionId": collectionId,
-                      "collection": collection._fieldData,
                       "nickname": nickname,
                       "composerId": composerId,
+                      "collections": collections._fieldData,
                       "composer": composer._fieldData,
                       "movements": movements._fieldData,
                     ],
@@ -377,7 +380,7 @@ public class CollectionsQuery: GraphQLQuery {
                   ))
                 }
 
-                public typealias Collection = PieceDetails.Collection
+                public typealias Collections = PieceDetails.Collections
 
                 public typealias Composer = PieceDetails.Composer
 

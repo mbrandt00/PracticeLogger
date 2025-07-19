@@ -20,13 +20,17 @@ fragment PieceDetails on Piece {
   searchableText
   subPieceCount
   userId
-  collectionId
-  collection {
-    name
-  }
   catalogueNumber
   nickname
   composerId
+  collections {
+    edges {
+      node {
+        id
+        name
+      }
+    }
+  }
   composer {
     id
     userId
