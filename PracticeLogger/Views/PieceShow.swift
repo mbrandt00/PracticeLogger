@@ -56,11 +56,11 @@ struct PieceShow: View {
                         VStack(alignment: .leading, spacing: 4) {
                             ForEach(collections.edges, id: \.node.id) { c in
                                 Button {
-                                    selectedCollection = (id: c.node.collection.id, name: c.node.collection.name)
+                                    selectedCollection = (id: c.node.id, name: c.node.name)
                                     showingCollectionSheet = true
                                 } label: {
                                     HStack {
-                                        Text("\(c.node.collection.name) collection")
+                                        Text("\(c.node.name) collection")
                                             .font(.body)
                                             .foregroundColor(.accentColor)
 

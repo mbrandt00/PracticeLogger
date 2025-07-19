@@ -256,8 +256,13 @@ CREATE TABLE public.pieces (
 --
 
 COMMENT ON TABLE public.pieces IS '@graphql({
-    "primary_key_columns": ["id"],
-    "name": "Piece"
+  "foreign_keys": [
+    {
+      "referencing_table": "collection_pieces",
+      "referencing_column": "piece_id",
+      "field_name": "collectionPieces"
+    }
+  ]
 })';
 
 
@@ -456,20 +461,6 @@ $$;
 
 
 --
--- Name: refresh_all_searchable_text(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.refresh_all_searchable_text() RETURNS void
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-    UPDATE pieces 
-    SET searchable_text = get_piece_searchable_text(id);
-END;
-$$;
-
-
---
 -- Name: collections_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -494,6 +485,88 @@ CREATE TABLE public.collections (
     searchable boolean DEFAULT false NOT NULL,
     user_id uuid
 );
+
+
+--
+-- Name: pieces(public.collections); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.pieces(collection public.collections) RETURNS SETOF public.pieces
+    LANGUAGE sql STABLE
+    AS $$
+    WITH ordered_pieces AS (
+        SELECT DISTINCT ON (COALESCE(user_piece.imslp_url, default_piece.imslp_url))
+            COALESCE(user_piece, default_piece) AS piece,
+            cp.position
+        FROM 
+            public.collection_pieces cp
+        JOIN 
+            public.pieces default_piece ON cp.piece_id = default_piece.id
+        LEFT JOIN 
+            public.pieces user_piece 
+            ON user_piece.imslp_url = default_piece.imslp_url
+            AND user_piece.user_id = auth.uid()
+            AND user_piece.user_id IS NOT NULL  -- Ensure we're looking at user pieces
+        WHERE 
+            cp.collection_id = "collection".id
+        ORDER BY 
+            COALESCE(user_piece.imslp_url, default_piece.imslp_url), 
+            user_piece.id DESC NULLS LAST
+    )
+    SELECT piece FROM ordered_pieces ORDER BY position;
+$$;
+
+
+--
+-- Name: FUNCTION pieces(collection public.collections); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.pieces(collection public.collections) IS '@graphql({
+    "name": "pieces",
+    "description": "Returns pieces belonging to this collection, prioritizing user-customized pieces over default pieces with the same IMSLP URL",
+    "totalCount": {"enabled": true}
+  })';
+
+
+--
+-- Name: pieces(public.collections, uuid); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.pieces(collection public.collections, user_id uuid) RETURNS SETOF public.pieces
+    LANGUAGE sql STABLE
+    AS $_$
+    SELECT DISTINCT ON (COALESCE(user_piece.imslp_url, default_piece.imslp_url))
+        COALESCE(user_piece, default_piece) AS piece
+    FROM 
+        public.collection_pieces cp
+    JOIN 
+        public.pieces default_piece ON cp.piece_id = default_piece.id
+    LEFT JOIN 
+        public.pieces user_piece 
+        ON user_piece.imslp_url = default_piece.imslp_url
+        AND user_piece.user_id = $2
+        AND user_piece.user_id IS NOT NULL
+    WHERE 
+        cp.collection_id = "collection".id
+    ORDER BY 
+        COALESCE(user_piece.imslp_url, default_piece.imslp_url), 
+        user_piece.id DESC NULLS LAST,
+        cp.position;
+$_$;
+
+
+--
+-- Name: refresh_all_searchable_text(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.refresh_all_searchable_text() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    UPDATE pieces 
+    SET searchable_text = get_piece_searchable_text(id);
+END;
+$$;
 
 
 --

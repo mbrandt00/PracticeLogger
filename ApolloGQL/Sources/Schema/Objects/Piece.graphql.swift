@@ -4,6 +4,7 @@
 import ApolloAPI
 
 public extension Objects {
+  /// Represents a musical piece
   static let Piece = ApolloAPI.Object(
     typename: "Piece",
     implementedInterfaces: [Interfaces.Node.self],

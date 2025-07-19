@@ -1082,6 +1082,7 @@ type PageInfo {
   startCursor: String
 }
 
+"""Represents a musical piece"""
 type Piece implements Node {
   """Globally Unique Record Identifier"""
   nodeId: ID!
@@ -1184,6 +1185,32 @@ type Piece implements Node {
     """Sort order to apply to the collection"""
     orderBy: [CollectionPiecesOrderBy!]
   ): CollectionPiecesConnection
+
+  """All collections this piece belongs to, based on shared IMSLP URL"""
+  collections(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """
+    Skip n values from the after cursor. Alternative to cursor pagination. Backward pagination not supported.
+    """
+    offset: Int
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: CollectionsFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [CollectionsOrderBy!]
+  ): CollectionsConnection
 }
 
 type PieceConnection {

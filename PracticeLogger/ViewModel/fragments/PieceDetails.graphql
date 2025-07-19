@@ -23,14 +23,11 @@ fragment PieceDetails on Piece {
   catalogueNumber
   nickname
   composerId
-  collections: collectionPieces {
+  collections {
     edges {
       node {
         id
-        collection {
-          id
-          name
-        }
+        name
       }
     }
   }
