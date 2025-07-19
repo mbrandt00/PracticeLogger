@@ -1,42 +1,62 @@
-//
-//  CreateCollection.swift
-//  PracticeLogger
-//
-//  Created by Michael Brandt on 7/15/25.
-//
-
 import ApolloGQL
 import SwiftUI
 
 struct CreateCollection: View {
-    @StateObject var viewModel = CollectionsViewModel()
+    @StateObject var viewModel: CollectionsViewModel
     @State private var isLoading = false
     @State private var selectedIDs = Set<String>()
+
     var body: some View {
-        VStack(spacing: 0) {
-            // 🔍 Fixed Search bar
+        VStack(alignment: .leading, spacing: 16) {
+            TextField("Collection name", text: $viewModel.collectionName)
+                .autocorrectionDisabled()
+                .textFieldStyle(.roundedBorder)
+
             TextField("Search your pieces...", text: $viewModel.searchTerm)
                 .autocorrectionDisabled()
                 .textFieldStyle(.roundedBorder)
-                .padding()
-                .background(Color(.systemBackground)) // Keep background consistent
                 .onChange(of: viewModel.searchTerm, initial: false) {
-                    Task {
-                        await performSearch()
-                    }
+                    Task { await performSearch() }
                 }
 
-            // 📃 Scrollable Results
-            if isLoading {
-                ProgressView()
-                    .padding()
-                Spacer()
+            Group {
+                if isLoading {
+                    ProgressView("Searching...")
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding()
+                } else {
+                    pieceList
+                }
+            }
+            .frame(maxHeight: 300)
+
+            Spacer()
+
+            saveButton
+        }
+        .padding()
+        .navigationTitle("New Collection")
+        .onAppear {
+            Task { await performSearch() }
+        }
+    }
+
+    // MARK: - Views
+
+    private var pieceList: some View {
+        let pieces = filteredAndSelectedPieces()
+
+        return Group {
+            if pieces.isEmpty {
+                Text("No results")
+                    .foregroundStyle(.secondary)
+                    .padding(.top, 8)
             } else {
-                List {
-                    if let pieces = viewModel.selectedPieces, !pieces.isEmpty {
+                ScrollView {
+                    LazyVStack(spacing: 12) {
                         ForEach(pieces, id: \.id) { piece in
                             HStack {
-                                VStack(alignment: .leading) {
+                                VStack(alignment: .leading, spacing: 4) {
                                     Text(piece.workName)
                                         .font(.headline)
                                     if let composer = piece.composer {
@@ -51,44 +71,43 @@ struct CreateCollection: View {
                                         .foregroundStyle(.blue)
                                 }
                             }
+                            .padding()
+                            .background(Color(.secondarySystemBackground))
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 toggleSelection(for: piece.id)
                             }
                         }
-                    } else {
-                        Text("No results")
-                            .foregroundStyle(.secondary)
                     }
+                    .padding(.top, 8)
                 }
-                .listStyle(.plain)
-            }
-
-            // ✅ Save Button at Bottom
-            Button("Save Selected") {
-                saveSelectedPieces()
-            }
-            .padding()
-            .disabled(selectedIDs.isEmpty)
-        }
-        .navigationTitle("New Collection")
-        .onAppear {
-            Task {
-                await performSearch()
             }
         }
     }
 
-    // MARK: - Actions
+    private var saveButton: some View {
+        Button(action: saveSelectedPieces) {
+            Text("Save Selected")
+                .frame(maxWidth: .infinity)
+        }
+        .padding()
+        .background(selectedIDs.isEmpty ? Color.gray.opacity(0.3) : Color.accentColor)
+        .foregroundColor(.white)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .disabled(selectedIDs.isEmpty)
+    }
+
+    // MARK: - Logic
 
     private func performSearch() async {
         isLoading = true
+        defer { isLoading = false }
         do {
             try await viewModel.searchUserPieces()
         } catch {
             print("Search failed: \(error)")
         }
-        isLoading = false
     }
 
     private func toggleSelection(for id: String) {
@@ -102,5 +121,27 @@ struct CreateCollection: View {
     private func saveSelectedPieces() {
         guard let all = viewModel.selectedPieces else { return }
         viewModel.selectedPieces = all.filter { selectedIDs.contains($0.id) }
+    }
+
+    // ✅ Show search matches + persist selected
+    private func filteredAndSelectedPieces() -> [PieceDetails] {
+        guard let all = viewModel.selectedPieces else { return [] }
+
+        let searchMatches = all.filter {
+            viewModel.searchTerm.isEmpty ||
+                $0.workName.localizedCaseInsensitiveContains(viewModel.searchTerm)
+        }
+
+        let selected = all.filter { selectedIDs.contains($0.id) }
+
+        // Merge and deduplicate
+        return Array(Set(searchMatches + selected))
+            .sorted(by: { $0.workName < $1.workName })
+    }
+}
+
+#Preview {
+    NavigationStack {
+        CreateCollection(viewModel: CollectionsViewModel())
     }
 }

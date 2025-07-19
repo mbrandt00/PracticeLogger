@@ -12,6 +12,7 @@ class CollectionsViewModel: ObservableObject {
     @Published var selectedPieces: [PieceDetails]?
     @Published var searchResults: [IndexedPiece]?
     @Published var searchTerm = ""
+    @Published var collectionName = ""
 
     func searchUserPieces() async throws {
         guard let userId = Database.client.auth.currentUser?.id else {

@@ -269,7 +269,7 @@ struct SearchView: View {
             }
             .sheet(isPresented: $isShowingCreateCollection) {
                 NavigationStack {
-                    CreateCollection()
+                    CreateCollection(viewModel: CollectionsViewModel())
                 }
             }
             .sheet(isPresented: $isShowingComposerCreateSheet) {
