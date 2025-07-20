@@ -1,14 +1,14 @@
 query CollectionsQuery(
   $filter: CollectionsFilter = {}
   $orderBy: [CollectionsOrderBy!] = []
-  $piecesOrderBy: [PieceOrderBy!] = [
-    { catalogueNumber: AscNullsLast, catalogueNumberSecondary: AscNullsLast }
-  ]
+  $piecesOrderBy: [PieceOrderBy!] = []
 ) {
   collectionsCollection(filter: $filter, orderBy: $orderBy) {
     edges {
       node {
+        id
         name
+        userId
         composer {
           firstName
           lastName

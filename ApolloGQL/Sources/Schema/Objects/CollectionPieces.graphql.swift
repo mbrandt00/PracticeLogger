@@ -4,9 +4,9 @@
 import ApolloAPI
 
 public extension Objects {
-  /// Represents a musical piece
-  static let Piece = ApolloAPI.Object(
-    typename: "Piece",
+  /// Join table linking pieces to collections with optional position ordering
+  static let CollectionPieces = ApolloAPI.Object(
+    typename: "CollectionPieces",
     implementedInterfaces: [Interfaces.Node.self],
     keyFields: nil
   )

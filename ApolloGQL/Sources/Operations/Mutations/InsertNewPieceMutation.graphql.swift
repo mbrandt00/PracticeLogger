@@ -108,11 +108,11 @@ public class InsertNewPieceMutation: GraphQLMutation {
         public var searchableText: String? { __data["searchableText"] }
         public var subPieceCount: Int? { __data["subPieceCount"] }
         public var userId: ApolloGQL.UUID? { __data["userId"] }
-        public var collectionId: ApolloGQL.BigInt? { __data["collectionId"] }
-        public var collection: Collection? { __data["collection"] }
         public var catalogueNumber: Int? { __data["catalogueNumber"] }
         public var nickname: String? { __data["nickname"] }
         public var composerId: ApolloGQL.BigInt? { __data["composerId"] }
+        /// All collections this piece belongs to, based on shared IMSLP URL
+        public var collections: Collections? { __data["collections"] }
         public var composer: Composer? { __data["composer"] }
         public var movements: Movements? { __data["movements"] }
 
@@ -144,11 +144,10 @@ public class InsertNewPieceMutation: GraphQLMutation {
           searchableText: String? = nil,
           subPieceCount: Int? = nil,
           userId: ApolloGQL.UUID? = nil,
-          collectionId: ApolloGQL.BigInt? = nil,
-          collection: Collection? = nil,
           catalogueNumber: Int? = nil,
           nickname: String? = nil,
           composerId: ApolloGQL.BigInt? = nil,
+          collections: Collections? = nil,
           composer: Composer? = nil,
           movements: Movements? = nil
         ) {
@@ -175,11 +174,10 @@ public class InsertNewPieceMutation: GraphQLMutation {
               "searchableText": searchableText,
               "subPieceCount": subPieceCount,
               "userId": userId,
-              "collectionId": collectionId,
-              "collection": collection._fieldData,
               "catalogueNumber": catalogueNumber,
               "nickname": nickname,
               "composerId": composerId,
+              "collections": collections._fieldData,
               "composer": composer._fieldData,
               "movements": movements._fieldData,
             ],
@@ -190,7 +188,7 @@ public class InsertNewPieceMutation: GraphQLMutation {
           ))
         }
 
-        public typealias Collection = PieceDetails.Collection
+        public typealias Collections = PieceDetails.Collections
 
         public typealias Composer = PieceDetails.Composer
 

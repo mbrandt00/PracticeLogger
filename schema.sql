@@ -1,5 +1,9 @@
+--
+-- PostgreSQL database dump
+--
 
-
+-- Dumped from database version 15.1 (Ubuntu 15.1-1.pgdg20.04+1)
+-- Dumped by pg_dump version 16.9 (Homebrew)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -12,85 +16,29 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
 
-CREATE EXTENSION IF NOT EXISTS "pgsodium";
+CREATE SCHEMA public;
 
 
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: -
+--
 
-
-
-
-COMMENT ON SCHEMA "public" IS '@graphql({
+COMMENT ON SCHEMA public IS '@graphql({
     "inflect_names": true,
-    "name": "public"
+    "name": "public",
+    "max_rows": 1000
 })';
 
 
+--
+-- Name: catalogue_type; Type: TYPE; Schema: public; Owner: -
+--
 
-CREATE EXTENSION IF NOT EXISTS "moddatetime" WITH SCHEMA "public";
-
-
-
-
-
-
-CREATE EXTENSION IF NOT EXISTS "pg_graphql" WITH SCHEMA "graphql";
-
-
-
-
-
-
-CREATE EXTENSION IF NOT EXISTS "pg_stat_statements" WITH SCHEMA "extensions";
-
-
-
-
-
-
-CREATE EXTENSION IF NOT EXISTS "pg_trgm" WITH SCHEMA "public";
-
-
-
-
-
-
-CREATE EXTENSION IF NOT EXISTS "pgcrypto" WITH SCHEMA "extensions";
-
-
-
-
-
-
-CREATE EXTENSION IF NOT EXISTS "pgjwt" WITH SCHEMA "extensions";
-
-
-
-
-
-
-CREATE EXTENSION IF NOT EXISTS "supabase_vault" WITH SCHEMA "vault";
-
-
-
-
-
-
-CREATE EXTENSION IF NOT EXISTS "unaccent" WITH SCHEMA "public";
-
-
-
-
-
-
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
-
-
-
-
-
-
-CREATE TYPE "public"."catalogue_type" AS ENUM (
+CREATE TYPE public.catalogue_type AS ENUM (
     'op',
     'k',
     'twv',
@@ -126,10 +74,11 @@ CREATE TYPE "public"."catalogue_type" AS ENUM (
 );
 
 
-ALTER TYPE "public"."catalogue_type" OWNER TO "postgres";
+--
+-- Name: key_signature_type; Type: TYPE; Schema: public; Owner: -
+--
 
-
-CREATE TYPE "public"."key_signature_type" AS ENUM (
+CREATE TYPE public.key_signature_type AS ENUM (
     'c',
     'csharp',
     'cflat',
@@ -175,10 +124,11 @@ CREATE TYPE "public"."key_signature_type" AS ENUM (
 );
 
 
-ALTER TYPE "public"."key_signature_type" OWNER TO "postgres";
+--
+-- Name: piece_format; Type: TYPE; Schema: public; Owner: -
+--
 
-
-CREATE TYPE "public"."piece_format" AS ENUM (
+CREATE TYPE public.piece_format AS ENUM (
     'bagatelle',
     'ballade',
     'canon',
@@ -222,11 +172,12 @@ CREATE TYPE "public"."piece_format" AS ENUM (
 );
 
 
-ALTER TYPE "public"."piece_format" OWNER TO "postgres";
+--
+-- Name: before_insert_practice_session(); Type: FUNCTION; Schema: public; Owner: -
+--
 
-
-CREATE OR REPLACE FUNCTION "public"."before_insert_practice_session"() RETURNS "trigger"
-    LANGUAGE "plpgsql" SECURITY DEFINER
+CREATE FUNCTION public.before_insert_practice_session() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
     AS $$
 BEGIN
     -- Check if there is an existing row with end_time IS NULL for the same user_id
@@ -243,11 +194,12 @@ END;
 $$;
 
 
-ALTER FUNCTION "public"."before_insert_practice_session"() OWNER TO "postgres";
+--
+-- Name: before_update_practice_session(); Type: FUNCTION; Schema: public; Owner: -
+--
 
-
-CREATE OR REPLACE FUNCTION "public"."before_update_practice_session"() RETURNS "trigger"
-    LANGUAGE "plpgsql" SECURITY DEFINER
+CREATE FUNCTION public.before_update_practice_session() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
     AS $$
 BEGIN
     -- Ensure that there is at most one row with end_time IS NULL per user
@@ -261,56 +213,65 @@ END;
 $$;
 
 
-ALTER FUNCTION "public"."before_update_practice_session"() OWNER TO "postgres";
-
 SET default_tablespace = '';
 
-SET default_table_access_method = "heap";
+SET default_table_access_method = heap;
 
+--
+-- Name: pieces; Type: TABLE; Schema: public; Owner: -
+--
 
-CREATE TABLE IF NOT EXISTS "public"."pieces" (
-    "id" bigint NOT NULL,
-    "work_name" character varying(255) NOT NULL,
-    "composer_id" bigint,
-    "nickname" "text",
-    "user_id" "uuid" DEFAULT "auth"."uid"(),
-    "format" "public"."piece_format",
-    "key_signature" "public"."key_signature_type",
-    "catalogue_type" "public"."catalogue_type",
-    "catalogue_number" integer,
-    "updated_at" timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    "created_at" timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    "searchable_text" "text",
-    "catalogue_type_num_desc" "text",
-    "catalogue_number_secondary" integer,
-    "composition_year" integer,
-    "composition_year_desc" "text",
-    "piece_style" "text",
-    "wikipedia_url" "text",
-    "instrumentation" "text"[],
-    "composition_year_string" "text",
-    "sub_piece_type" "text",
-    "sub_piece_count" integer,
-    "imslp_url" "text",
-    "imslp_piece_id" bigint,
-    "total_practice_time" integer,
-    "last_practiced" timestamp with time zone,
-    "collection_id" bigint
+CREATE TABLE public.pieces (
+    id bigint NOT NULL,
+    work_name character varying(255) NOT NULL,
+    composer_id bigint,
+    nickname text,
+    user_id uuid DEFAULT auth.uid(),
+    format public.piece_format,
+    key_signature public.key_signature_type,
+    catalogue_type public.catalogue_type,
+    catalogue_number integer,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    searchable_text text,
+    catalogue_type_num_desc text,
+    catalogue_number_secondary integer,
+    composition_year integer,
+    composition_year_desc text,
+    piece_style text,
+    wikipedia_url text,
+    instrumentation text[],
+    composition_year_string text,
+    sub_piece_type text,
+    sub_piece_count integer,
+    imslp_url text,
+    imslp_piece_id bigint,
+    total_practice_time integer,
+    last_practiced timestamp with time zone
 );
 
 
-ALTER TABLE "public"."pieces" OWNER TO "postgres";
+--
+-- Name: TABLE pieces; Type: COMMENT; Schema: public; Owner: -
+--
 
-
-COMMENT ON TABLE "public"."pieces" IS '@graphql({
-    "primary_key_columns": ["id"],
-    "name": "Piece"
+COMMENT ON TABLE public.pieces IS '@graphql({
+  "foreign_keys": [
+    {
+      "referencing_table": "collection_pieces",
+      "referencing_column": "piece_id",
+      "field_name": "collectionPieces"
+    }
+  ]
 })';
 
 
+--
+-- Name: find_duplicate_piece(integer, public.catalogue_type, uuid, text); Type: FUNCTION; Schema: public; Owner: -
+--
 
-CREATE OR REPLACE FUNCTION "public"."find_duplicate_piece"("catalogue_number" integer, "catalogue_type" "public"."catalogue_type", "user_id" "uuid", "composer_name" "text") RETURNS "public"."pieces"
-    LANGUAGE "plpgsql"
+CREATE FUNCTION public.find_duplicate_piece(catalogue_number integer, catalogue_type public.catalogue_type, user_id uuid, composer_name text) RETURNS public.pieces
+    LANGUAGE plpgsql
     AS $_$
 DECLARE
     matching_piece pieces;
@@ -334,20 +295,28 @@ END;
 $_$;
 
 
-ALTER FUNCTION "public"."find_duplicate_piece"("catalogue_number" integer, "catalogue_type" "public"."catalogue_type", "user_id" "uuid", "composer_name" "text") OWNER TO "postgres";
+--
+-- Name: composers; Type: TABLE; Schema: public; Owner: -
+--
 
-
-CREATE TABLE IF NOT EXISTS "public"."composers" (
-    "id" bigint NOT NULL,
-    "name" character varying(255) NOT NULL
+CREATE TABLE public.composers (
+    id bigint NOT NULL,
+    first_name text NOT NULL,
+    last_name text NOT NULL,
+    nationality text,
+    musical_era text,
+    user_id uuid,
+    searchable_text text,
+    searchable boolean DEFAULT false NOT NULL
 );
 
 
-ALTER TABLE "public"."composers" OWNER TO "postgres";
+--
+-- Name: find_or_create_composer(text); Type: FUNCTION; Schema: public; Owner: -
+--
 
-
-CREATE OR REPLACE FUNCTION "public"."find_or_create_composer"("name" "text") RETURNS "public"."composers"
-    LANGUAGE "plpgsql" SECURITY DEFINER
+CREATE FUNCTION public.find_or_create_composer(name text) RETURNS public.composers
+    LANGUAGE plpgsql SECURITY DEFINER
     AS $$
 DECLARE
     composer_record composers;
@@ -369,16 +338,46 @@ END;
 $$;
 
 
-ALTER FUNCTION "public"."find_or_create_composer"("name" "text") OWNER TO "postgres";
+--
+-- Name: find_or_create_composer(text, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.find_or_create_composer(first_name text, last_name text) RETURNS public.composers
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+DECLARE
+    composer_record composers;
+BEGIN
+    -- Try to find a composer by first and last name
+    SELECT * INTO composer_record
+    FROM composers
+    WHERE composers.first_name = find_or_create_composer.first_name
+      AND composers.last_name = find_or_create_composer.last_name;
+
+    -- If not found, insert a new composer
+    IF NOT FOUND THEN
+        INSERT INTO composers (first_name, last_name)
+        VALUES (find_or_create_composer.first_name, find_or_create_composer.last_name)
+        RETURNING * INTO composer_record;
+    END IF;
+
+    -- Return the composer record
+    RETURN composer_record;
+END;
+$$;
 
 
-CREATE OR REPLACE FUNCTION "public"."get_piece_searchable_text"("piece_id" bigint) RETURNS "text"
-    LANGUAGE "sql" SECURITY DEFINER
+--
+-- Name: get_piece_searchable_text(bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.get_piece_searchable_text(piece_id bigint) RETURNS text
+    LANGUAGE sql SECURITY DEFINER
     AS $_$
     SELECT 
         CONCAT_WS(' ',
-            unaccent(REPLACE(COALESCE(p.work_name, ''), '''', '')),
-            unaccent(REPLACE(COALESCE(p.nickname, ''), '''', '')),
+            unaccent(COALESCE(p.work_name, '')),
+            unaccent(COALESCE(p.nickname, '')),
             COALESCE(p.catalogue_number::text, ''),
             CASE COALESCE(p.key_signature::text, '')
                 WHEN 'csharp' THEN 'C sharp'
@@ -425,11 +424,14 @@ CREATE OR REPLACE FUNCTION "public"."get_piece_searchable_text"("piece_id" bigin
                 WHEN 'b' THEN 'B'
                 ELSE ''
             END,
-            unaccent(REPLACE(COALESCE(c.name, ''), '''', '')),
+            CONCAT_WS(' ',
+                unaccent(COALESCE(c.first_name, '')),
+                unaccent(COALESCE(c.last_name, ''))
+            ),
             (SELECT COALESCE(string_agg(
                 CONCAT_WS(' ', 
-                    unaccent(REPLACE(COALESCE(name, ''), '''', '')), 
-                    unaccent(REPLACE(COALESCE(nickname, ''), '''', ''))
+                    unaccent(COALESCE(name, '')), 
+                    unaccent(COALESCE(nickname, ''))
                 ), ' '), '')
              FROM movements 
              WHERE piece_id = $1)
@@ -440,11 +442,12 @@ CREATE OR REPLACE FUNCTION "public"."get_piece_searchable_text"("piece_id" bigin
 $_$;
 
 
-ALTER FUNCTION "public"."get_piece_searchable_text"("piece_id" bigint) OWNER TO "postgres";
+--
+-- Name: parse_piece_format(text); Type: FUNCTION; Schema: public; Owner: -
+--
 
-
-CREATE OR REPLACE FUNCTION "public"."parse_piece_format"("work_name" "text") RETURNS "public"."piece_format"
-    LANGUAGE "plpgsql"
+CREATE FUNCTION public.parse_piece_format(work_name text) RETURNS public.piece_format
+    LANGUAGE plpgsql
     AS $$
 DECLARE piece_format_value piece_format;
 piece_formats piece_format [];
@@ -457,10 +460,11 @@ END;
 $$;
 
 
-ALTER FUNCTION "public"."parse_piece_format"("work_name" "text") OWNER TO "postgres";
+--
+-- Name: collections_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
 
-
-CREATE SEQUENCE IF NOT EXISTS "public"."collections_id_seq"
+CREATE SEQUENCE public.collections_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -468,51 +472,153 @@ CREATE SEQUENCE IF NOT EXISTS "public"."collections_id_seq"
     CACHE 1;
 
 
-ALTER TABLE "public"."collections_id_seq" OWNER TO "postgres";
+--
+-- Name: collections; Type: TABLE; Schema: public; Owner: -
+--
 
-
-CREATE TABLE IF NOT EXISTS "public"."collections" (
-    "id" bigint DEFAULT "nextval"('"public"."collections_id_seq"'::"regclass") NOT NULL,
-    "name" "text" NOT NULL,
-    "url" "text",
-    "composer_id" bigint NOT NULL
+CREATE TABLE public.collections (
+    id bigint DEFAULT nextval('public.collections_id_seq'::regclass) NOT NULL,
+    name text NOT NULL,
+    url text,
+    composer_id bigint,
+    searchable_text text,
+    searchable boolean DEFAULT false NOT NULL,
+    user_id uuid
 );
 
 
-ALTER TABLE "public"."collections" OWNER TO "postgres";
+--
+-- Name: pieces(public.collections); Type: FUNCTION; Schema: public; Owner: -
+--
 
-
-CREATE OR REPLACE FUNCTION "public"."pieces"("collection" "public"."collections") RETURNS SETOF "public"."pieces"
-    LANGUAGE "sql" STABLE
+CREATE FUNCTION public.pieces(collection public.collections) RETURNS SETOF public.pieces
+    LANGUAGE sql STABLE
     AS $$
-    SELECT DISTINCT ON (COALESCE(user_piece.imslp_url, default_piece.imslp_url))
-        COALESCE(user_piece, default_piece) AS piece
-    FROM 
-        public.pieces default_piece
-    LEFT JOIN 
-        public.pieces user_piece 
-        ON user_piece.imslp_url = default_piece.imslp_url
-        AND user_piece.collection_id = default_piece.collection_id
-        AND user_piece.user_id = auth.uid()
-    WHERE 
-        default_piece.collection_id = "collection".id
-    ORDER BY COALESCE(user_piece.imslp_url, default_piece.imslp_url), user_piece.id DESC NULLS LAST;
+    WITH ordered_pieces AS (
+        SELECT DISTINCT ON (COALESCE(user_piece.imslp_url, default_piece.imslp_url))
+            COALESCE(user_piece, default_piece) AS piece,
+            cp.position
+        FROM 
+            public.collection_pieces cp
+        JOIN 
+            public.pieces default_piece ON cp.piece_id = default_piece.id
+        LEFT JOIN 
+            public.pieces user_piece 
+            ON user_piece.imslp_url = default_piece.imslp_url
+            AND user_piece.user_id = auth.uid()
+            AND user_piece.user_id IS NOT NULL  -- Ensure we're looking at user pieces
+        WHERE 
+            cp.collection_id = "collection".id
+        ORDER BY 
+            COALESCE(user_piece.imslp_url, default_piece.imslp_url), 
+            user_piece.id DESC NULLS LAST
+    )
+    SELECT piece FROM ordered_pieces ORDER BY position;
 $$;
 
 
-ALTER FUNCTION "public"."pieces"("collection" "public"."collections") OWNER TO "postgres";
+--
+-- Name: FUNCTION pieces(collection public.collections); Type: COMMENT; Schema: public; Owner: -
+--
 
-
-COMMENT ON FUNCTION "public"."pieces"("collection" "public"."collections") IS '@graphql({
+COMMENT ON FUNCTION public.pieces(collection public.collections) IS '@graphql({
     "name": "pieces",
     "description": "Returns pieces belonging to this collection, prioritizing user-customized pieces over default pieces with the same IMSLP URL",
     "totalCount": {"enabled": true}
   })';
 
 
+--
+-- Name: pieces(public.collections, uuid); Type: FUNCTION; Schema: public; Owner: -
+--
 
-CREATE OR REPLACE FUNCTION "public"."search_pieces"("query" "text") RETURNS SETOF "public"."pieces"
-    LANGUAGE "sql" STABLE SECURITY DEFINER
+CREATE FUNCTION public.pieces(collection public.collections, user_id uuid) RETURNS SETOF public.pieces
+    LANGUAGE sql STABLE
+    AS $_$
+    SELECT DISTINCT ON (COALESCE(user_piece.imslp_url, default_piece.imslp_url))
+        COALESCE(user_piece, default_piece) AS piece
+    FROM 
+        public.collection_pieces cp
+    JOIN 
+        public.pieces default_piece ON cp.piece_id = default_piece.id
+    LEFT JOIN 
+        public.pieces user_piece 
+        ON user_piece.imslp_url = default_piece.imslp_url
+        AND user_piece.user_id = $2
+        AND user_piece.user_id IS NOT NULL
+    WHERE 
+        cp.collection_id = "collection".id
+    ORDER BY 
+        COALESCE(user_piece.imslp_url, default_piece.imslp_url), 
+        user_piece.id DESC NULLS LAST,
+        cp.position;
+$_$;
+
+
+--
+-- Name: refresh_all_searchable_text(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.refresh_all_searchable_text() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    UPDATE pieces 
+    SET searchable_text = get_piece_searchable_text(id);
+END;
+$$;
+
+
+--
+-- Name: search_collections(text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.search_collections(query text) RETURNS SETOF public.collections
+    LANGUAGE sql STABLE SECURITY DEFINER
+    AS $$
+    WITH terms AS (
+        SELECT unnest(string_to_array(lower(unaccent(query)), ' ')) AS term
+    )
+    SELECT c.*
+    FROM collections c
+    WHERE c.searchable_text IS NOT NULL AND searchable = true
+      AND NOT EXISTS (
+          SELECT 1 FROM terms
+          WHERE lower(c.searchable_text) NOT LIKE '%' || term || '%'
+      )
+    ORDER BY similarity(c.searchable_text, unaccent(query)) DESC
+    LIMIT 25;
+$$;
+
+
+--
+-- Name: search_composers(text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.search_composers(query text) RETURNS SETOF public.composers
+    LANGUAGE sql STABLE SECURITY DEFINER
+    AS $$
+    WITH terms AS (
+        SELECT unnest(string_to_array(lower(unaccent(query)), ' ')) AS term
+    )
+    SELECT c.*
+    FROM composers c
+    WHERE c.searchable_text IS NOT NULL
+      AND NOT EXISTS (
+          SELECT 1 FROM terms
+          WHERE lower(c.searchable_text) NOT LIKE '%' || term || '%'
+      )
+    ORDER BY similarity(c.searchable_text, unaccent(query)) DESC
+    LIMIT 25;
+$$;
+
+
+--
+-- Name: search_pieces(text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.search_pieces(query text) RETURNS SETOF public.pieces
+    LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
     WITH terms AS (
         SELECT unnest(string_to_array(lower(unaccent(query)), ' ')) as term
@@ -529,11 +635,12 @@ CREATE OR REPLACE FUNCTION "public"."search_pieces"("query" "text") RETURNS SETO
 $$;
 
 
-ALTER FUNCTION "public"."search_pieces"("query" "text") OWNER TO "postgres";
+--
+-- Name: search_user_pieces(text); Type: FUNCTION; Schema: public; Owner: -
+--
 
-
-CREATE OR REPLACE FUNCTION "public"."search_user_pieces"("query" "text") RETURNS SETOF "public"."pieces"
-    LANGUAGE "sql" STABLE SECURITY DEFINER
+CREATE FUNCTION public.search_user_pieces(query text) RETURNS SETOF public.pieces
+    LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
     WITH terms AS (
         SELECT unnest(string_to_array(lower(unaccent(REPLACE(query, '''', ''))), ' ')) as term
@@ -551,11 +658,47 @@ CREATE OR REPLACE FUNCTION "public"."search_user_pieces"("query" "text") RETURNS
 $$;
 
 
-ALTER FUNCTION "public"."search_user_pieces"("query" "text") OWNER TO "postgres";
+--
+-- Name: update_collections_searchable_text(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.update_collections_searchable_text() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    composer_name TEXT;
+BEGIN
+  SELECT CONCAT(first_name, ' ', last_name) INTO composer_name
+  FROM composers
+  WHERE id = NEW.composer_id;
+
+  NEW.searchable_text := CONCAT(NEW.name, ' ', COALESCE(composer_name, ''));
+
+  RETURN NEW;
+END;
+$$;
 
 
-CREATE OR REPLACE FUNCTION "public"."update_movement_piece_searchable_text"() RETURNS "trigger"
-    LANGUAGE "plpgsql" SECURITY DEFINER
+--
+-- Name: update_composers_searchable_text(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.update_composers_searchable_text() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  NEW.searchable_text := unaccent(CONCAT(NEW.first_name, ' ', NEW.last_name, ' ', NEW.nationality));
+  RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: update_movement_piece_searchable_text(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.update_movement_piece_searchable_text() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
     AS $$
 DECLARE
     current_text TEXT;
@@ -591,11 +734,12 @@ END;
 $$;
 
 
-ALTER FUNCTION "public"."update_movement_piece_searchable_text"() OWNER TO "postgres";
+--
+-- Name: update_piece_searchable_text(); Type: FUNCTION; Schema: public; Owner: -
+--
 
-
-CREATE OR REPLACE FUNCTION "public"."update_piece_searchable_text"() RETURNS "trigger"
-    LANGUAGE "plpgsql" SECURITY DEFINER
+CREATE FUNCTION public.update_piece_searchable_text() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
     AS $$
 DECLARE
     new_text TEXT;
@@ -615,20 +759,20 @@ END;
 $$;
 
 
-ALTER FUNCTION "public"."update_piece_searchable_text"() OWNER TO "postgres";
+--
+-- Name: update_practice_stats(); Type: FUNCTION; Schema: public; Owner: -
+--
 
-
-CREATE OR REPLACE FUNCTION "public"."update_practice_stats"() RETURNS "trigger"
-    LANGUAGE "plpgsql"
+CREATE FUNCTION public.update_practice_stats() RETURNS trigger
+    LANGUAGE plpgsql
     AS $$
 BEGIN
-    -- Update pieces stats
     UPDATE public.pieces
     SET 
         total_practice_time = (
             SELECT COALESCE(SUM(duration_seconds), 0) 
             FROM public.practice_sessions 
-            WHERE piece_id = pieces.id
+            WHERE piece_id = pieces.id AND deleted_at IS NULL
         ),
         last_practiced = (
             SELECT GREATEST(
@@ -638,7 +782,7 @@ BEGIN
                         MAX(start_time)
                     ) 
                     FROM public.practice_sessions 
-                    WHERE piece_id = pieces.id
+                    WHERE piece_id = pieces.id AND deleted_at IS NULL
                 ), NULL),
                 COALESCE((
                     SELECT GREATEST(
@@ -646,7 +790,9 @@ BEGIN
                         MAX(start_time)
                     ) 
                     FROM public.practice_sessions 
-                    WHERE movement_id IN (SELECT id FROM public.movements WHERE piece_id = pieces.id)
+                    WHERE movement_id IN (
+                        SELECT id FROM public.movements WHERE piece_id = pieces.id
+                    ) AND deleted_at IS NULL
                 ), NULL)
             )
         )
@@ -663,7 +809,7 @@ BEGIN
         total_practice_time = (
             SELECT COALESCE(SUM(duration_seconds), 0) 
             FROM public.practice_sessions 
-            WHERE movement_id = movements.id
+            WHERE movement_id = movements.id AND deleted_at IS NULL
         ),
         last_practiced = (
             SELECT GREATEST(
@@ -671,7 +817,7 @@ BEGIN
                 MAX(start_time)
             )
             FROM public.practice_sessions 
-            WHERE movement_id = movements.id
+            WHERE movement_id = movements.id AND deleted_at IS NULL
         )
     WHERE id IN (
         CASE 
@@ -679,16 +825,36 @@ BEGIN
             ELSE NEW.movement_id 
         END
     );
-    
+
     RETURN NULL;
 END;
 $$;
 
 
-ALTER FUNCTION "public"."update_practice_stats"() OWNER TO "postgres";
+--
+-- Name: collection_pieces; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.collection_pieces (
+    id bigint NOT NULL,
+    piece_id bigint NOT NULL,
+    collection_id bigint NOT NULL,
+    "position" integer
+);
 
 
-CREATE SEQUENCE IF NOT EXISTS "public"."composers_id_seq"
+--
+-- Name: TABLE collection_pieces; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.collection_pieces IS '@graphql({"description": "Join table linking pieces to collections with optional position ordering", "totalCount": {"enabled": true}})';
+
+
+--
+-- Name: collection_pieces_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.collection_pieces_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -696,37 +862,64 @@ CREATE SEQUENCE IF NOT EXISTS "public"."composers_id_seq"
     CACHE 1;
 
 
-ALTER TABLE "public"."composers_id_seq" OWNER TO "postgres";
+--
+-- Name: collection_pieces_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.collection_pieces_id_seq OWNED BY public.collection_pieces.id;
 
 
-ALTER SEQUENCE "public"."composers_id_seq" OWNED BY "public"."composers"."id";
+--
+-- Name: composers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.composers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
+--
+-- Name: composers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
 
-CREATE TABLE IF NOT EXISTS "public"."movements" (
-    "id" bigint NOT NULL,
-    "piece_id" bigint NOT NULL,
-    "name" character varying(255),
-    "number" integer,
-    "key_signature" "public"."key_signature_type",
-    "nickname" "text",
-    "download_url" "text",
-    "total_practice_time" integer,
-    "last_practiced" timestamp with time zone
+ALTER SEQUENCE public.composers_id_seq OWNED BY public.composers.id;
+
+
+--
+-- Name: movements; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.movements (
+    id bigint NOT NULL,
+    piece_id bigint NOT NULL,
+    name character varying(255),
+    number integer,
+    key_signature public.key_signature_type,
+    nickname text,
+    download_url text,
+    total_practice_time integer,
+    last_practiced timestamp with time zone
 );
 
 
-ALTER TABLE "public"."movements" OWNER TO "postgres";
+--
+-- Name: TABLE movements; Type: COMMENT; Schema: public; Owner: -
+--
 
-
-COMMENT ON TABLE "public"."movements" IS '@graphql({
+COMMENT ON TABLE public.movements IS '@graphql({
     "primary_key_columns": ["id"],
     "name": "Movement"
 })';
 
 
+--
+-- Name: movements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
 
-CREATE SEQUENCE IF NOT EXISTS "public"."movements_id_seq"
+CREATE SEQUENCE public.movements_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -734,14 +927,18 @@ CREATE SEQUENCE IF NOT EXISTS "public"."movements_id_seq"
     CACHE 1;
 
 
-ALTER TABLE "public"."movements_id_seq" OWNER TO "postgres";
+--
+-- Name: movements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.movements_id_seq OWNED BY public.movements.id;
 
 
-ALTER SEQUENCE "public"."movements_id_seq" OWNED BY "public"."movements"."id";
+--
+-- Name: pieces_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
 
-
-
-CREATE SEQUENCE IF NOT EXISTS "public"."pieces_id_seq"
+CREATE SEQUENCE public.pieces_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -749,32 +946,38 @@ CREATE SEQUENCE IF NOT EXISTS "public"."pieces_id_seq"
     CACHE 1;
 
 
-ALTER TABLE "public"."pieces_id_seq" OWNER TO "postgres";
+--
+-- Name: pieces_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.pieces_id_seq OWNED BY public.pieces.id;
 
 
-ALTER SEQUENCE "public"."pieces_id_seq" OWNED BY "public"."pieces"."id";
+--
+-- Name: practice_sessions; Type: TABLE; Schema: public; Owner: -
+--
 
-
-
-CREATE TABLE IF NOT EXISTS "public"."practice_sessions" (
-    "id" bigint NOT NULL,
-    "start_time" timestamp without time zone NOT NULL,
-    "end_time" timestamp without time zone,
-    "piece_id" bigint NOT NULL,
-    "movement_id" bigint,
-    "user_id" "uuid" DEFAULT "auth"."uid"() NOT NULL,
-    "duration_seconds" integer GENERATED ALWAYS AS (
+CREATE TABLE public.practice_sessions (
+    id bigint NOT NULL,
+    start_time timestamp without time zone NOT NULL,
+    end_time timestamp without time zone,
+    piece_id bigint NOT NULL,
+    movement_id bigint,
+    user_id uuid DEFAULT auth.uid() NOT NULL,
+    duration_seconds integer GENERATED ALWAYS AS (
 CASE
-    WHEN ("end_time" IS NOT NULL) THEN (EXTRACT(epoch FROM ("end_time" - "start_time")))::integer
+    WHEN (end_time IS NOT NULL) THEN (EXTRACT(epoch FROM (end_time - start_time)))::integer
     ELSE NULL::integer
-END) STORED
+END) STORED,
+    deleted_at timestamp without time zone
 );
 
 
-ALTER TABLE "public"."practice_sessions" OWNER TO "postgres";
+--
+-- Name: practice_sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
 
-
-CREATE SEQUENCE IF NOT EXISTS "public"."practice_sessions_id_seq"
+CREATE SEQUENCE public.practice_sessions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -782,841 +985,501 @@ CREATE SEQUENCE IF NOT EXISTS "public"."practice_sessions_id_seq"
     CACHE 1;
 
 
-ALTER TABLE "public"."practice_sessions_id_seq" OWNER TO "postgres";
+--
+-- Name: practice_sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
 
+ALTER SEQUENCE public.practice_sessions_id_seq OWNED BY public.practice_sessions.id;
 
-ALTER SEQUENCE "public"."practice_sessions_id_seq" OWNED BY "public"."practice_sessions"."id";
 
+--
+-- Name: collection_pieces id; Type: DEFAULT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.collection_pieces ALTER COLUMN id SET DEFAULT nextval('public.collection_pieces_id_seq'::regclass);
 
-ALTER TABLE ONLY "public"."composers" ALTER COLUMN "id" SET DEFAULT "nextval"('"public"."composers_id_seq"'::"regclass");
 
+--
+-- Name: composers id; Type: DEFAULT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.composers ALTER COLUMN id SET DEFAULT nextval('public.composers_id_seq'::regclass);
 
-ALTER TABLE ONLY "public"."movements" ALTER COLUMN "id" SET DEFAULT "nextval"('"public"."movements_id_seq"'::"regclass");
 
+--
+-- Name: movements id; Type: DEFAULT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.movements ALTER COLUMN id SET DEFAULT nextval('public.movements_id_seq'::regclass);
 
-ALTER TABLE ONLY "public"."pieces" ALTER COLUMN "id" SET DEFAULT "nextval"('"public"."pieces_id_seq"'::"regclass");
 
+--
+-- Name: pieces id; Type: DEFAULT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.pieces ALTER COLUMN id SET DEFAULT nextval('public.pieces_id_seq'::regclass);
 
-ALTER TABLE ONLY "public"."practice_sessions" ALTER COLUMN "id" SET DEFAULT "nextval"('"public"."practice_sessions_id_seq"'::"regclass");
 
+--
+-- Name: practice_sessions id; Type: DEFAULT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.practice_sessions ALTER COLUMN id SET DEFAULT nextval('public.practice_sessions_id_seq'::regclass);
 
-ALTER TABLE ONLY "public"."collections"
-    ADD CONSTRAINT "collections_pkey" PRIMARY KEY ("id");
 
+--
+-- Name: collection_pieces collection_pieces_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.collection_pieces
+    ADD CONSTRAINT collection_pieces_pkey PRIMARY KEY (id);
 
-ALTER TABLE ONLY "public"."composers"
-    ADD CONSTRAINT "composers_pkey" PRIMARY KEY ("id");
 
+--
+-- Name: collections collections_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.collections
+    ADD CONSTRAINT collections_pkey PRIMARY KEY (id);
 
-ALTER TABLE ONLY "public"."movements"
-    ADD CONSTRAINT "movements_pkey" PRIMARY KEY ("id");
 
+--
+-- Name: composers composers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.composers
+    ADD CONSTRAINT composers_pkey PRIMARY KEY (id);
 
-ALTER TABLE ONLY "public"."pieces"
-    ADD CONSTRAINT "pieces_pkey" PRIMARY KEY ("id");
 
+--
+-- Name: movements movements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.movements
+    ADD CONSTRAINT movements_pkey PRIMARY KEY (id);
 
-ALTER TABLE ONLY "public"."practice_sessions"
-    ADD CONSTRAINT "practice_sessions_pkey" PRIMARY KEY ("id");
 
+--
+-- Name: pieces pieces_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.pieces
+    ADD CONSTRAINT pieces_pkey PRIMARY KEY (id);
 
-CREATE INDEX "idx_pieces_searchable_text_trgm" ON "public"."pieces" USING "gin" ("searchable_text" "public"."gin_trgm_ops");
 
+--
+-- Name: practice_sessions practice_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.practice_sessions
+    ADD CONSTRAINT practice_sessions_pkey PRIMARY KEY (id);
 
-CREATE OR REPLACE TRIGGER "before_insert_practice_session_trigger" BEFORE INSERT ON "public"."practice_sessions" FOR EACH ROW EXECUTE FUNCTION "public"."before_insert_practice_session"();
 
+--
+-- Name: idx_collections_composer_id; Type: INDEX; Schema: public; Owner: -
+--
 
+CREATE INDEX idx_collections_composer_id ON public.collections USING btree (composer_id);
 
-CREATE OR REPLACE TRIGGER "before_update_practice_session_trigger" BEFORE UPDATE ON "public"."practice_sessions" FOR EACH ROW EXECUTE FUNCTION "public"."before_update_practice_session"();
 
+--
+-- Name: index_collections_on_name_and_composer_id; Type: INDEX; Schema: public; Owner: -
+--
 
+CREATE UNIQUE INDEX index_collections_on_name_and_composer_id ON public.collections USING btree (name, composer_id);
 
-CREATE OR REPLACE TRIGGER "handle_updated_at" BEFORE UPDATE ON "public"."pieces" FOR EACH ROW EXECUTE FUNCTION "public"."moddatetime"('updated_at');
 
+--
+-- Name: index_pieces_on_collection_id; Type: INDEX; Schema: public; Owner: -
+--
 
+CREATE UNIQUE INDEX index_pieces_on_collection_id ON public.pieces USING btree (imslp_url, user_id);
 
-CREATE OR REPLACE TRIGGER "movement_update_piece_searchable_text" AFTER INSERT OR DELETE OR UPDATE ON "public"."movements" FOR EACH ROW EXECUTE FUNCTION "public"."update_movement_piece_searchable_text"();
 
+--
+-- Name: index_pieces_on_imslp_url_and_user_id; Type: INDEX; Schema: public; Owner: -
+--
 
+CREATE UNIQUE INDEX index_pieces_on_imslp_url_and_user_id ON public.pieces USING btree (imslp_url, user_id);
 
-CREATE OR REPLACE TRIGGER "piece_searchable_text_update" AFTER INSERT OR UPDATE ON "public"."pieces" FOR EACH ROW EXECUTE FUNCTION "public"."update_piece_searchable_text"();
 
+--
+-- Name: index_practice_sessions_on_deleted_at; Type: INDEX; Schema: public; Owner: -
+--
 
+CREATE INDEX index_practice_sessions_on_deleted_at ON public.practice_sessions USING btree (deleted_at);
 
-CREATE OR REPLACE TRIGGER "practice_sessions_stats_trigger" AFTER INSERT OR DELETE OR UPDATE ON "public"."practice_sessions" FOR EACH ROW EXECUTE FUNCTION "public"."update_practice_stats"();
 
+--
+-- Name: movements_piece_id_idx; Type: INDEX; Schema: public; Owner: -
+--
 
+CREATE INDEX movements_piece_id_idx ON public.movements USING btree (piece_id);
 
-ALTER TABLE ONLY "public"."collections"
-    ADD CONSTRAINT "collections_composer_id_fkey" FOREIGN KEY ("composer_id") REFERENCES "public"."composers"("id");
 
+--
+-- Name: pieces_composer_id_idx; Type: INDEX; Schema: public; Owner: -
+--
 
+CREATE INDEX pieces_composer_id_idx ON public.pieces USING btree (composer_id);
 
-ALTER TABLE ONLY "public"."pieces"
-    ADD CONSTRAINT "fk_collection" FOREIGN KEY ("collection_id") REFERENCES "public"."collections"("id");
 
+--
+-- Name: pieces_user_id_idx; Type: INDEX; Schema: public; Owner: -
+--
 
+CREATE INDEX pieces_user_id_idx ON public.pieces USING btree (user_id);
 
-COMMENT ON CONSTRAINT "fk_collection" ON "public"."pieces" IS '@graphql({"foreign_name": "collection", "local_name": "pieces"})';
 
+--
+-- Name: practice_sessions_movement_id_idx; Type: INDEX; Schema: public; Owner: -
+--
 
+CREATE INDEX practice_sessions_movement_id_idx ON public.practice_sessions USING btree (movement_id);
 
-ALTER TABLE ONLY "public"."movements"
-    ADD CONSTRAINT "movements_piece_id_fkey" FOREIGN KEY ("piece_id") REFERENCES "public"."pieces"("id");
 
+--
+-- Name: practice_sessions_piece_id_idx; Type: INDEX; Schema: public; Owner: -
+--
 
+CREATE INDEX practice_sessions_piece_id_idx ON public.practice_sessions USING btree (piece_id);
 
-ALTER TABLE ONLY "public"."pieces"
-    ADD CONSTRAINT "pieces_composer_id_fkey" FOREIGN KEY ("composer_id") REFERENCES "public"."composers"("id");
 
+--
+-- Name: practice_sessions_user_id_idx; Type: INDEX; Schema: public; Owner: -
+--
 
+CREATE INDEX practice_sessions_user_id_idx ON public.practice_sessions USING btree (user_id);
 
-ALTER TABLE ONLY "public"."pieces"
-    ADD CONSTRAINT "pieces_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id");
 
+--
+-- Name: unique_piece_collection; Type: INDEX; Schema: public; Owner: -
+--
 
+CREATE UNIQUE INDEX unique_piece_collection ON public.collection_pieces USING btree (piece_id, collection_id);
 
-ALTER TABLE ONLY "public"."practice_sessions"
-    ADD CONSTRAINT "practice_sessions_movement_id_fkey" FOREIGN KEY ("movement_id") REFERENCES "public"."movements"("id");
 
+--
+-- Name: collections before_insert_or_update_on_collections_set_searchable_text; Type: TRIGGER; Schema: public; Owner: -
+--
 
+CREATE TRIGGER before_insert_or_update_on_collections_set_searchable_text BEFORE INSERT OR UPDATE ON public.collections FOR EACH ROW EXECUTE FUNCTION public.update_collections_searchable_text();
 
-ALTER TABLE ONLY "public"."practice_sessions"
-    ADD CONSTRAINT "practice_sessions_piece_id_fkey" FOREIGN KEY ("piece_id") REFERENCES "public"."pieces"("id");
 
+--
+-- Name: composers before_insert_or_update_on_composers_set_searchable_text; Type: TRIGGER; Schema: public; Owner: -
+--
 
+CREATE TRIGGER before_insert_or_update_on_composers_set_searchable_text BEFORE INSERT OR UPDATE ON public.composers FOR EACH ROW EXECUTE FUNCTION public.update_composers_searchable_text();
 
-ALTER TABLE ONLY "public"."practice_sessions"
-    ADD CONSTRAINT "practice_sessions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id");
 
+--
+-- Name: practice_sessions before_insert_practice_session_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
 
+CREATE TRIGGER before_insert_practice_session_trigger BEFORE INSERT ON public.practice_sessions FOR EACH ROW EXECUTE FUNCTION public.before_insert_practice_session();
 
-CREATE POLICY "Allow updates from trigger" ON "public"."movements" FOR UPDATE TO "authenticated" USING (true) WITH CHECK (true);
 
+--
+-- Name: practice_sessions before_update_practice_session_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
 
+CREATE TRIGGER before_update_practice_session_trigger BEFORE UPDATE ON public.practice_sessions FOR EACH ROW EXECUTE FUNCTION public.before_update_practice_session();
 
-CREATE POLICY "Allow updates from trigger" ON "public"."pieces" FOR UPDATE TO "authenticated" USING (true) WITH CHECK (true);
 
+--
+-- Name: pieces handle_updated_at; Type: TRIGGER; Schema: public; Owner: -
+--
 
+CREATE TRIGGER handle_updated_at BEFORE UPDATE ON public.pieces FOR EACH ROW EXECUTE FUNCTION public.moddatetime('updated_at');
 
-CREATE POLICY "auth_delete_practice_sessions" ON "public"."practice_sessions" FOR DELETE TO "authenticated" USING (("user_id" = "auth"."uid"()));
 
+--
+-- Name: movements movement_update_piece_searchable_text; Type: TRIGGER; Schema: public; Owner: -
+--
 
+CREATE TRIGGER movement_update_piece_searchable_text AFTER INSERT OR DELETE OR UPDATE ON public.movements FOR EACH ROW EXECUTE FUNCTION public.update_movement_piece_searchable_text();
 
-CREATE POLICY "auth_insert_composers" ON "public"."composers" FOR INSERT TO "authenticated" WITH CHECK (true);
 
+--
+-- Name: pieces piece_searchable_text_update; Type: TRIGGER; Schema: public; Owner: -
+--
 
+CREATE TRIGGER piece_searchable_text_update AFTER INSERT OR UPDATE ON public.pieces FOR EACH ROW EXECUTE FUNCTION public.update_piece_searchable_text();
 
-CREATE POLICY "auth_insert_movements" ON "public"."movements" FOR INSERT TO "authenticated" WITH CHECK (true);
 
+--
+-- Name: practice_sessions practice_sessions_stats_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
 
+CREATE TRIGGER practice_sessions_stats_trigger AFTER INSERT OR DELETE OR UPDATE ON public.practice_sessions FOR EACH ROW EXECUTE FUNCTION public.update_practice_stats();
 
-CREATE POLICY "auth_insert_pieces" ON "public"."pieces" FOR INSERT TO "authenticated" WITH CHECK (true);
 
+--
+-- Name: collection_pieces collection_pieces_collection_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.collection_pieces
+    ADD CONSTRAINT collection_pieces_collection_id_fkey FOREIGN KEY (collection_id) REFERENCES public.collections(id);
 
-CREATE POLICY "auth_insert_practice_sessions" ON "public"."practice_sessions" FOR INSERT TO "authenticated" WITH CHECK (true);
 
+--
+-- Name: CONSTRAINT collection_pieces_collection_id_fkey ON collection_pieces; Type: COMMENT; Schema: public; Owner: -
+--
 
+COMMENT ON CONSTRAINT collection_pieces_collection_id_fkey ON public.collection_pieces IS '@graphql({"foreign_name": "collection", "local_name": "collectionPieces"})';
 
-CREATE POLICY "auth_read_collections" ON "public"."collections" FOR SELECT TO "authenticated" USING (true);
 
+--
+-- Name: collection_pieces collection_pieces_piece_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.collection_pieces
+    ADD CONSTRAINT collection_pieces_piece_id_fkey FOREIGN KEY (piece_id) REFERENCES public.pieces(id);
 
-CREATE POLICY "auth_read_collections" ON "public"."practice_sessions" FOR SELECT TO "authenticated" USING (true);
 
+--
+-- Name: CONSTRAINT collection_pieces_piece_id_fkey ON collection_pieces; Type: COMMENT; Schema: public; Owner: -
+--
 
+COMMENT ON CONSTRAINT collection_pieces_piece_id_fkey ON public.collection_pieces IS '@graphql({"foreign_name": "piece", "local_name": "collectionPieces"})';
 
-CREATE POLICY "auth_read_composers" ON "public"."composers" FOR SELECT TO "authenticated" USING (true);
 
+--
+-- Name: collections collections_composer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.collections
+    ADD CONSTRAINT collections_composer_id_fkey FOREIGN KEY (composer_id) REFERENCES public.composers(id);
 
-CREATE POLICY "auth_read_movements" ON "public"."movements" FOR SELECT TO "authenticated" USING (true);
 
+--
+-- Name: collections collections_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.collections
+    ADD CONSTRAINT collections_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id);
 
-CREATE POLICY "auth_read_pieces" ON "public"."pieces" FOR SELECT TO "authenticated" USING (true);
 
+--
+-- Name: composers composers_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.composers
+    ADD CONSTRAINT composers_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 
-CREATE POLICY "auth_read_practice_sessions" ON "public"."practice_sessions" FOR SELECT TO "authenticated" USING (true);
 
+--
+-- Name: movements movements_piece_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.movements
+    ADD CONSTRAINT movements_piece_id_fkey FOREIGN KEY (piece_id) REFERENCES public.pieces(id) ON DELETE CASCADE;
 
-CREATE POLICY "auth_update_practice_sessions" ON "public"."practice_sessions" FOR UPDATE TO "authenticated" USING (("user_id" = "auth"."uid"()));
 
+--
+-- Name: pieces pieces_composer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.pieces
+    ADD CONSTRAINT pieces_composer_id_fkey FOREIGN KEY (composer_id) REFERENCES public.composers(id);
 
-ALTER TABLE "public"."collections" ENABLE ROW LEVEL SECURITY;
 
+--
+-- Name: pieces pieces_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
 
-ALTER TABLE "public"."composers" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ONLY public.pieces
+    ADD CONSTRAINT pieces_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id);
 
 
-ALTER TABLE "public"."movements" ENABLE ROW LEVEL SECURITY;
+--
+-- Name: practice_sessions practice_sessions_movement_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.practice_sessions
+    ADD CONSTRAINT practice_sessions_movement_id_fkey FOREIGN KEY (movement_id) REFERENCES public.movements(id);
 
-ALTER TABLE "public"."pieces" ENABLE ROW LEVEL SECURITY;
 
+--
+-- Name: practice_sessions practice_sessions_piece_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
 
-ALTER TABLE "public"."practice_sessions" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ONLY public.practice_sessions
+    ADD CONSTRAINT practice_sessions_piece_id_fkey FOREIGN KEY (piece_id) REFERENCES public.pieces(id) ON DELETE CASCADE;
 
 
+--
+-- Name: practice_sessions practice_sessions_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.practice_sessions
+    ADD CONSTRAINT practice_sessions_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id);
 
-ALTER PUBLICATION "supabase_realtime" OWNER TO "postgres";
 
+--
+-- Name: movements Allow updates from trigger; Type: POLICY; Schema: public; Owner: -
+--
 
-ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."practice_sessions";
+CREATE POLICY "Allow updates from trigger" ON public.movements FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
 
 
+--
+-- Name: pieces Allow updates from trigger; Type: POLICY; Schema: public; Owner: -
+--
 
-GRANT USAGE ON SCHEMA "public" TO "postgres";
-GRANT USAGE ON SCHEMA "public" TO "anon";
-GRANT USAGE ON SCHEMA "public" TO "authenticated";
-GRANT USAGE ON SCHEMA "public" TO "service_role";
+CREATE POLICY "Allow updates from trigger" ON public.pieces FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
 
 
+--
+-- Name: composers Users can update their own composers; Type: POLICY; Schema: public; Owner: -
+--
 
-GRANT ALL ON FUNCTION "public"."gtrgm_in"("cstring") TO "postgres";
-GRANT ALL ON FUNCTION "public"."gtrgm_in"("cstring") TO "anon";
-GRANT ALL ON FUNCTION "public"."gtrgm_in"("cstring") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."gtrgm_in"("cstring") TO "service_role";
+CREATE POLICY "Users can update their own composers" ON public.composers FOR UPDATE USING ((user_id = auth.uid())) WITH CHECK ((user_id = auth.uid()));
 
 
+--
+-- Name: pieces auth_delete_pieces; Type: POLICY; Schema: public; Owner: -
+--
 
-GRANT ALL ON FUNCTION "public"."gtrgm_out"("public"."gtrgm") TO "postgres";
-GRANT ALL ON FUNCTION "public"."gtrgm_out"("public"."gtrgm") TO "anon";
-GRANT ALL ON FUNCTION "public"."gtrgm_out"("public"."gtrgm") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."gtrgm_out"("public"."gtrgm") TO "service_role";
+CREATE POLICY auth_delete_pieces ON public.pieces FOR DELETE TO authenticated USING ((user_id = auth.uid()));
 
 
+--
+-- Name: practice_sessions auth_delete_practice_sessions; Type: POLICY; Schema: public; Owner: -
+--
 
+CREATE POLICY auth_delete_practice_sessions ON public.practice_sessions FOR DELETE TO authenticated USING ((user_id = auth.uid()));
 
 
+--
+-- Name: collection_pieces auth_insert_collection_pieces; Type: POLICY; Schema: public; Owner: -
+--
 
+CREATE POLICY auth_insert_collection_pieces ON public.collection_pieces FOR INSERT TO authenticated WITH CHECK (true);
 
 
+--
+-- Name: composers auth_insert_composers; Type: POLICY; Schema: public; Owner: -
+--
 
+CREATE POLICY auth_insert_composers ON public.composers FOR INSERT TO authenticated WITH CHECK (true);
 
 
+--
+-- Name: movements auth_insert_movements; Type: POLICY; Schema: public; Owner: -
+--
 
+CREATE POLICY auth_insert_movements ON public.movements FOR INSERT TO authenticated WITH CHECK (true);
 
 
+--
+-- Name: pieces auth_insert_pieces; Type: POLICY; Schema: public; Owner: -
+--
 
+CREATE POLICY auth_insert_pieces ON public.pieces FOR INSERT TO authenticated WITH CHECK (true);
 
 
+--
+-- Name: practice_sessions auth_insert_practice_sessions; Type: POLICY; Schema: public; Owner: -
+--
 
+CREATE POLICY auth_insert_practice_sessions ON public.practice_sessions FOR INSERT TO authenticated WITH CHECK (true);
 
 
+--
+-- Name: collection_pieces auth_read_collection_pieces; Type: POLICY; Schema: public; Owner: -
+--
 
+CREATE POLICY auth_read_collection_pieces ON public.collection_pieces FOR SELECT TO authenticated USING (true);
 
 
+--
+-- Name: collections auth_read_collections; Type: POLICY; Schema: public; Owner: -
+--
 
+CREATE POLICY auth_read_collections ON public.collections FOR SELECT TO authenticated USING (true);
 
 
+--
+-- Name: composers auth_read_composers; Type: POLICY; Schema: public; Owner: -
+--
 
+CREATE POLICY auth_read_composers ON public.composers FOR SELECT TO authenticated USING (true);
 
 
+--
+-- Name: movements auth_read_movements; Type: POLICY; Schema: public; Owner: -
+--
 
+CREATE POLICY auth_read_movements ON public.movements FOR SELECT TO authenticated USING (true);
 
 
+--
+-- Name: pieces auth_read_pieces; Type: POLICY; Schema: public; Owner: -
+--
 
+CREATE POLICY auth_read_pieces ON public.pieces FOR SELECT TO authenticated USING (true);
 
 
+--
+-- Name: practice_sessions auth_read_practice_sessions; Type: POLICY; Schema: public; Owner: -
+--
 
+CREATE POLICY auth_read_practice_sessions ON public.practice_sessions FOR SELECT TO authenticated USING (true);
 
 
+--
+-- Name: collection_pieces auth_update_collection_pieces; Type: POLICY; Schema: public; Owner: -
+--
 
+CREATE POLICY auth_update_collection_pieces ON public.collection_pieces FOR UPDATE TO authenticated WITH CHECK (true);
 
 
+--
+-- Name: practice_sessions auth_update_practice_sessions; Type: POLICY; Schema: public; Owner: -
+--
 
+CREATE POLICY auth_update_practice_sessions ON public.practice_sessions FOR UPDATE TO authenticated USING ((user_id = auth.uid()));
 
 
+--
+-- Name: collection_pieces; Type: ROW SECURITY; Schema: public; Owner: -
+--
 
+ALTER TABLE public.collection_pieces ENABLE ROW LEVEL SECURITY;
 
+--
+-- Name: collections; Type: ROW SECURITY; Schema: public; Owner: -
+--
 
+ALTER TABLE public.collections ENABLE ROW LEVEL SECURITY;
 
+--
+-- Name: composers; Type: ROW SECURITY; Schema: public; Owner: -
+--
 
+ALTER TABLE public.composers ENABLE ROW LEVEL SECURITY;
 
+--
+-- Name: movements; Type: ROW SECURITY; Schema: public; Owner: -
+--
 
+ALTER TABLE public.movements ENABLE ROW LEVEL SECURITY;
 
+--
+-- Name: pieces; Type: ROW SECURITY; Schema: public; Owner: -
+--
 
+ALTER TABLE public.pieces ENABLE ROW LEVEL SECURITY;
 
+--
+-- Name: practice_sessions; Type: ROW SECURITY; Schema: public; Owner: -
+--
 
+ALTER TABLE public.practice_sessions ENABLE ROW LEVEL SECURITY;
 
+--
+-- PostgreSQL database dump complete
+--
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-GRANT ALL ON FUNCTION "public"."before_insert_practice_session"() TO "anon";
-GRANT ALL ON FUNCTION "public"."before_insert_practice_session"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."before_insert_practice_session"() TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."before_update_practice_session"() TO "anon";
-GRANT ALL ON FUNCTION "public"."before_update_practice_session"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."before_update_practice_session"() TO "service_role";
-
-
-
-GRANT ALL ON TABLE "public"."pieces" TO "anon";
-GRANT ALL ON TABLE "public"."pieces" TO "authenticated";
-GRANT ALL ON TABLE "public"."pieces" TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."find_duplicate_piece"("catalogue_number" integer, "catalogue_type" "public"."catalogue_type", "user_id" "uuid", "composer_name" "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."find_duplicate_piece"("catalogue_number" integer, "catalogue_type" "public"."catalogue_type", "user_id" "uuid", "composer_name" "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."find_duplicate_piece"("catalogue_number" integer, "catalogue_type" "public"."catalogue_type", "user_id" "uuid", "composer_name" "text") TO "service_role";
-
-
-
-GRANT ALL ON TABLE "public"."composers" TO "anon";
-GRANT ALL ON TABLE "public"."composers" TO "authenticated";
-GRANT ALL ON TABLE "public"."composers" TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."find_or_create_composer"("name" "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."find_or_create_composer"("name" "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."find_or_create_composer"("name" "text") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."get_piece_searchable_text"("piece_id" bigint) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_piece_searchable_text"("piece_id" bigint) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_piece_searchable_text"("piece_id" bigint) TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."gin_extract_query_trgm"("text", "internal", smallint, "internal", "internal", "internal", "internal") TO "postgres";
-GRANT ALL ON FUNCTION "public"."gin_extract_query_trgm"("text", "internal", smallint, "internal", "internal", "internal", "internal") TO "anon";
-GRANT ALL ON FUNCTION "public"."gin_extract_query_trgm"("text", "internal", smallint, "internal", "internal", "internal", "internal") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."gin_extract_query_trgm"("text", "internal", smallint, "internal", "internal", "internal", "internal") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."gin_extract_value_trgm"("text", "internal") TO "postgres";
-GRANT ALL ON FUNCTION "public"."gin_extract_value_trgm"("text", "internal") TO "anon";
-GRANT ALL ON FUNCTION "public"."gin_extract_value_trgm"("text", "internal") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."gin_extract_value_trgm"("text", "internal") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."gin_trgm_consistent"("internal", smallint, "text", integer, "internal", "internal", "internal", "internal") TO "postgres";
-GRANT ALL ON FUNCTION "public"."gin_trgm_consistent"("internal", smallint, "text", integer, "internal", "internal", "internal", "internal") TO "anon";
-GRANT ALL ON FUNCTION "public"."gin_trgm_consistent"("internal", smallint, "text", integer, "internal", "internal", "internal", "internal") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."gin_trgm_consistent"("internal", smallint, "text", integer, "internal", "internal", "internal", "internal") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."gin_trgm_triconsistent"("internal", smallint, "text", integer, "internal", "internal", "internal") TO "postgres";
-GRANT ALL ON FUNCTION "public"."gin_trgm_triconsistent"("internal", smallint, "text", integer, "internal", "internal", "internal") TO "anon";
-GRANT ALL ON FUNCTION "public"."gin_trgm_triconsistent"("internal", smallint, "text", integer, "internal", "internal", "internal") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."gin_trgm_triconsistent"("internal", smallint, "text", integer, "internal", "internal", "internal") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."gtrgm_compress"("internal") TO "postgres";
-GRANT ALL ON FUNCTION "public"."gtrgm_compress"("internal") TO "anon";
-GRANT ALL ON FUNCTION "public"."gtrgm_compress"("internal") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."gtrgm_compress"("internal") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."gtrgm_consistent"("internal", "text", smallint, "oid", "internal") TO "postgres";
-GRANT ALL ON FUNCTION "public"."gtrgm_consistent"("internal", "text", smallint, "oid", "internal") TO "anon";
-GRANT ALL ON FUNCTION "public"."gtrgm_consistent"("internal", "text", smallint, "oid", "internal") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."gtrgm_consistent"("internal", "text", smallint, "oid", "internal") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."gtrgm_decompress"("internal") TO "postgres";
-GRANT ALL ON FUNCTION "public"."gtrgm_decompress"("internal") TO "anon";
-GRANT ALL ON FUNCTION "public"."gtrgm_decompress"("internal") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."gtrgm_decompress"("internal") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."gtrgm_distance"("internal", "text", smallint, "oid", "internal") TO "postgres";
-GRANT ALL ON FUNCTION "public"."gtrgm_distance"("internal", "text", smallint, "oid", "internal") TO "anon";
-GRANT ALL ON FUNCTION "public"."gtrgm_distance"("internal", "text", smallint, "oid", "internal") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."gtrgm_distance"("internal", "text", smallint, "oid", "internal") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."gtrgm_options"("internal") TO "postgres";
-GRANT ALL ON FUNCTION "public"."gtrgm_options"("internal") TO "anon";
-GRANT ALL ON FUNCTION "public"."gtrgm_options"("internal") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."gtrgm_options"("internal") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."gtrgm_penalty"("internal", "internal", "internal") TO "postgres";
-GRANT ALL ON FUNCTION "public"."gtrgm_penalty"("internal", "internal", "internal") TO "anon";
-GRANT ALL ON FUNCTION "public"."gtrgm_penalty"("internal", "internal", "internal") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."gtrgm_penalty"("internal", "internal", "internal") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."gtrgm_picksplit"("internal", "internal") TO "postgres";
-GRANT ALL ON FUNCTION "public"."gtrgm_picksplit"("internal", "internal") TO "anon";
-GRANT ALL ON FUNCTION "public"."gtrgm_picksplit"("internal", "internal") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."gtrgm_picksplit"("internal", "internal") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."gtrgm_same"("public"."gtrgm", "public"."gtrgm", "internal") TO "postgres";
-GRANT ALL ON FUNCTION "public"."gtrgm_same"("public"."gtrgm", "public"."gtrgm", "internal") TO "anon";
-GRANT ALL ON FUNCTION "public"."gtrgm_same"("public"."gtrgm", "public"."gtrgm", "internal") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."gtrgm_same"("public"."gtrgm", "public"."gtrgm", "internal") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."gtrgm_union"("internal", "internal") TO "postgres";
-GRANT ALL ON FUNCTION "public"."gtrgm_union"("internal", "internal") TO "anon";
-GRANT ALL ON FUNCTION "public"."gtrgm_union"("internal", "internal") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."gtrgm_union"("internal", "internal") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."moddatetime"() TO "postgres";
-GRANT ALL ON FUNCTION "public"."moddatetime"() TO "anon";
-GRANT ALL ON FUNCTION "public"."moddatetime"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."moddatetime"() TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."parse_piece_format"("work_name" "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."parse_piece_format"("work_name" "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."parse_piece_format"("work_name" "text") TO "service_role";
-
-
-
-GRANT ALL ON SEQUENCE "public"."collections_id_seq" TO "anon";
-GRANT ALL ON SEQUENCE "public"."collections_id_seq" TO "authenticated";
-GRANT ALL ON SEQUENCE "public"."collections_id_seq" TO "service_role";
-
-
-
-GRANT ALL ON TABLE "public"."collections" TO "anon";
-GRANT ALL ON TABLE "public"."collections" TO "authenticated";
-GRANT ALL ON TABLE "public"."collections" TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."pieces"("collection" "public"."collections") TO "anon";
-GRANT ALL ON FUNCTION "public"."pieces"("collection" "public"."collections") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."pieces"("collection" "public"."collections") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."search_pieces"("query" "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."search_pieces"("query" "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."search_pieces"("query" "text") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."search_user_pieces"("query" "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."search_user_pieces"("query" "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."search_user_pieces"("query" "text") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."set_limit"(real) TO "postgres";
-GRANT ALL ON FUNCTION "public"."set_limit"(real) TO "anon";
-GRANT ALL ON FUNCTION "public"."set_limit"(real) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."set_limit"(real) TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."show_limit"() TO "postgres";
-GRANT ALL ON FUNCTION "public"."show_limit"() TO "anon";
-GRANT ALL ON FUNCTION "public"."show_limit"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."show_limit"() TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."show_trgm"("text") TO "postgres";
-GRANT ALL ON FUNCTION "public"."show_trgm"("text") TO "anon";
-GRANT ALL ON FUNCTION "public"."show_trgm"("text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."show_trgm"("text") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."similarity"("text", "text") TO "postgres";
-GRANT ALL ON FUNCTION "public"."similarity"("text", "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."similarity"("text", "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."similarity"("text", "text") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."similarity_dist"("text", "text") TO "postgres";
-GRANT ALL ON FUNCTION "public"."similarity_dist"("text", "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."similarity_dist"("text", "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."similarity_dist"("text", "text") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."similarity_op"("text", "text") TO "postgres";
-GRANT ALL ON FUNCTION "public"."similarity_op"("text", "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."similarity_op"("text", "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."similarity_op"("text", "text") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."strict_word_similarity"("text", "text") TO "postgres";
-GRANT ALL ON FUNCTION "public"."strict_word_similarity"("text", "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."strict_word_similarity"("text", "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."strict_word_similarity"("text", "text") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."strict_word_similarity_commutator_op"("text", "text") TO "postgres";
-GRANT ALL ON FUNCTION "public"."strict_word_similarity_commutator_op"("text", "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."strict_word_similarity_commutator_op"("text", "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."strict_word_similarity_commutator_op"("text", "text") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."strict_word_similarity_dist_commutator_op"("text", "text") TO "postgres";
-GRANT ALL ON FUNCTION "public"."strict_word_similarity_dist_commutator_op"("text", "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."strict_word_similarity_dist_commutator_op"("text", "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."strict_word_similarity_dist_commutator_op"("text", "text") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."strict_word_similarity_dist_op"("text", "text") TO "postgres";
-GRANT ALL ON FUNCTION "public"."strict_word_similarity_dist_op"("text", "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."strict_word_similarity_dist_op"("text", "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."strict_word_similarity_dist_op"("text", "text") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."strict_word_similarity_op"("text", "text") TO "postgres";
-GRANT ALL ON FUNCTION "public"."strict_word_similarity_op"("text", "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."strict_word_similarity_op"("text", "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."strict_word_similarity_op"("text", "text") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."unaccent"("text") TO "postgres";
-GRANT ALL ON FUNCTION "public"."unaccent"("text") TO "anon";
-GRANT ALL ON FUNCTION "public"."unaccent"("text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."unaccent"("text") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."unaccent"("regdictionary", "text") TO "postgres";
-GRANT ALL ON FUNCTION "public"."unaccent"("regdictionary", "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."unaccent"("regdictionary", "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."unaccent"("regdictionary", "text") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."unaccent_init"("internal") TO "postgres";
-GRANT ALL ON FUNCTION "public"."unaccent_init"("internal") TO "anon";
-GRANT ALL ON FUNCTION "public"."unaccent_init"("internal") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."unaccent_init"("internal") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."unaccent_lexize"("internal", "internal", "internal", "internal") TO "postgres";
-GRANT ALL ON FUNCTION "public"."unaccent_lexize"("internal", "internal", "internal", "internal") TO "anon";
-GRANT ALL ON FUNCTION "public"."unaccent_lexize"("internal", "internal", "internal", "internal") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."unaccent_lexize"("internal", "internal", "internal", "internal") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."update_movement_piece_searchable_text"() TO "anon";
-GRANT ALL ON FUNCTION "public"."update_movement_piece_searchable_text"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."update_movement_piece_searchable_text"() TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."update_piece_searchable_text"() TO "anon";
-GRANT ALL ON FUNCTION "public"."update_piece_searchable_text"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."update_piece_searchable_text"() TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."update_practice_stats"() TO "anon";
-GRANT ALL ON FUNCTION "public"."update_practice_stats"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."update_practice_stats"() TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."word_similarity"("text", "text") TO "postgres";
-GRANT ALL ON FUNCTION "public"."word_similarity"("text", "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."word_similarity"("text", "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."word_similarity"("text", "text") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."word_similarity_commutator_op"("text", "text") TO "postgres";
-GRANT ALL ON FUNCTION "public"."word_similarity_commutator_op"("text", "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."word_similarity_commutator_op"("text", "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."word_similarity_commutator_op"("text", "text") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."word_similarity_dist_commutator_op"("text", "text") TO "postgres";
-GRANT ALL ON FUNCTION "public"."word_similarity_dist_commutator_op"("text", "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."word_similarity_dist_commutator_op"("text", "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."word_similarity_dist_commutator_op"("text", "text") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."word_similarity_dist_op"("text", "text") TO "postgres";
-GRANT ALL ON FUNCTION "public"."word_similarity_dist_op"("text", "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."word_similarity_dist_op"("text", "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."word_similarity_dist_op"("text", "text") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."word_similarity_op"("text", "text") TO "postgres";
-GRANT ALL ON FUNCTION "public"."word_similarity_op"("text", "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."word_similarity_op"("text", "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."word_similarity_op"("text", "text") TO "service_role";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-GRANT ALL ON SEQUENCE "public"."composers_id_seq" TO "anon";
-GRANT ALL ON SEQUENCE "public"."composers_id_seq" TO "authenticated";
-GRANT ALL ON SEQUENCE "public"."composers_id_seq" TO "service_role";
-
-
-
-GRANT ALL ON TABLE "public"."movements" TO "anon";
-GRANT ALL ON TABLE "public"."movements" TO "authenticated";
-GRANT ALL ON TABLE "public"."movements" TO "service_role";
-
-
-
-GRANT ALL ON SEQUENCE "public"."movements_id_seq" TO "anon";
-GRANT ALL ON SEQUENCE "public"."movements_id_seq" TO "authenticated";
-GRANT ALL ON SEQUENCE "public"."movements_id_seq" TO "service_role";
-
-
-
-GRANT ALL ON SEQUENCE "public"."pieces_id_seq" TO "anon";
-GRANT ALL ON SEQUENCE "public"."pieces_id_seq" TO "authenticated";
-GRANT ALL ON SEQUENCE "public"."pieces_id_seq" TO "service_role";
-
-
-
-GRANT ALL ON TABLE "public"."practice_sessions" TO "anon";
-GRANT ALL ON TABLE "public"."practice_sessions" TO "authenticated";
-GRANT ALL ON TABLE "public"."practice_sessions" TO "service_role";
-
-
-
-GRANT ALL ON SEQUENCE "public"."practice_sessions_id_seq" TO "anon";
-GRANT ALL ON SEQUENCE "public"."practice_sessions_id_seq" TO "authenticated";
-GRANT ALL ON SEQUENCE "public"."practice_sessions_id_seq" TO "service_role";
-
-
-
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES  TO "postgres";
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES  TO "anon";
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES  TO "authenticated";
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES  TO "service_role";
-
-
-
-
-
-
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON FUNCTIONS  TO "postgres";
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON FUNCTIONS  TO "anon";
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON FUNCTIONS  TO "authenticated";
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON FUNCTIONS  TO "service_role";
-
-
-
-
-
-
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TABLES  TO "postgres";
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TABLES  TO "anon";
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TABLES  TO "authenticated";
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TABLES  TO "service_role";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-RESET ALL;

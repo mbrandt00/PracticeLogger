@@ -21,20 +21,11 @@ class SearchViewModel: ObservableObject {
         var id: Self { self }
     }
 
-    @Published var searchTerm = ""
-    @Published var userPieces: [PieceDetails] = []
-    @Published var newPieces: [PieceDetails] = []
-    @Published var allUserPieces: [PieceDetails] = []
-    @Published var selectedPiece: PieceDetails?
-    @Published var searchFilter: SearchFilter = .all
-    @Published var collections: [CollectionGroup] = []
-    @Published var composers: [SearchComposersQuery.Data.SearchComposers.Edge.Node] = []
-    private var indexedUserPieces: [IndexedPiece] = []
-
     struct CollectionGroup: Identifiable, Equatable, Hashable {
         let id: String
         let name: String
-        let composer: SearchCollectionsQuery.Data.SearchCollections.Edge.Node.Composer?
+        let composerNameFirst: String?
+        let composerNameLast: String?
         let pieces: [PieceDetails]
 
         static func == (lhs: CollectionGroup, rhs: CollectionGroup) -> Bool {
@@ -45,6 +36,48 @@ class SearchViewModel: ObservableObject {
             hasher.combine(id)
         }
     }
+
+    var availableFilters: [SearchFilter] {
+        if searchTerm.isEmpty {
+            return SearchFilter.allCases.filter { $0 != .discover }
+        } else {
+            return SearchFilter.allCases
+        }
+    }
+
+    struct ComposerType: Identifiable, Equatable, Hashable {
+        let firstName: String
+        let lastName: String
+        let nationality: String?
+        let id: String?
+
+        static func from(_ composer: EditableComposer) -> ComposerType {
+            .init(
+                firstName: composer.firstName,
+                lastName: composer.lastName,
+                nationality: composer.nationality,
+                id: composer.id
+            )
+        }
+
+        static func == (lhs: ComposerType, rhs: ComposerType) -> Bool {
+            lhs.id == rhs.id
+        }
+
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
+    }
+
+    @Published var searchTerm = ""
+    @Published var userPieces: [PieceDetails] = []
+    @Published var newPieces: [PieceDetails] = []
+    @Published var allUserPieces: [PieceDetails] = []
+    @Published var selectedPiece: PieceDetails?
+    @Published var searchFilter: SearchFilter = .all
+    @Published var collections: [CollectionGroup] = []
+    @Published var composers: [ComposerType] = []
+    private var indexedUserPieces: [IndexedPiece] = []
 
     @MainActor
     func searchPieces() async {
@@ -60,7 +93,8 @@ class SearchViewModel: ObservableObject {
                 allUserPieces = fresh
                 indexedUserPieces = fresh.map { IndexedPiece($0) }
                 userPieces = fresh
-                collections = []
+                composers = try await fetchAllComposers()
+                collections = try await fetchAllCollections() ?? []
                 newPieces = []
             }
         } catch {
@@ -82,7 +116,7 @@ class SearchViewModel: ObservableObject {
                             let pieceEdges = edge.node.pieces?.edges ?? []
                             let pieceDetails = pieceEdges.map { $0.node.fragments.pieceDetails }
                             let composer = edge.node.composer
-                            return CollectionGroup(id: collectionName, name: collectionName, composer: composer, pieces: pieceDetails)
+                            return CollectionGroup(id: collectionName, name: collectionName, composerNameFirst: composer?.firstName, composerNameLast: composer?.lastName, pieces: pieceDetails)
                         }
                         continuation.resume(returning: groups)
                     } else {
@@ -97,7 +131,75 @@ class SearchViewModel: ObservableObject {
         }
     }
 
-    func searchComposers() async throws -> [SearchComposersQuery.Data.SearchComposers.Edge.Node]? {
+    func fetchAllComposers() async throws -> [ComposerType] {
+        guard let userId = Database.client.auth.currentUser?.id else {
+            return []
+        }
+        return try await withCheckedThrowingContinuation { continuation in
+            let orderBy: GraphQLNullable<[ComposersOrderBy]> = [ComposersOrderBy(lastName: .some(GraphQLEnum(OrderByDirection.ascNullsFirst)))]
+
+            let filter: GraphQLNullable<ComposersFilter> = .some(
+                ComposersFilter(
+                    or: .some([
+                        ComposersFilter(
+                            userId: .some(UUIDFilter(eq: .some(userId.uuidString)))
+                        ),
+                        ComposersFilter(
+                            userId: .some(UUIDFilter(is: .some(GraphQLEnum(.null))))
+                        ),
+                    ])
+                )
+            )
+            Network.shared.apollo.fetch(
+                query: ComposersQuery(composerFilter: filter, orderBy: orderBy),
+                cachePolicy: .fetchIgnoringCacheData
+            ) { result in
+                switch result {
+                case let .success(graphQLResult):
+                    if let edges = graphQLResult.data?.composersCollection?.edges {
+                        let nodes = edges.compactMap { ComposerType(firstName: $0.node.firstName, lastName: $0.node.lastName, nationality: $0.node.nationality, id: $0.node.id) }
+                        continuation.resume(returning: nodes)
+                    } else {
+                        continuation.resume(returning: [])
+                    }
+
+                case let .failure(error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    func fetchAllCollections() async throws -> [CollectionGroup]? {
+        try await withCheckedThrowingContinuation { continuation in
+            Network.shared.apollo.fetch(
+                query: CollectionsQuery(),
+                cachePolicy: .returnCacheDataElseFetch
+            ) { result in
+                switch result {
+                case let .success(graphQlResult):
+                    if let data = graphQlResult.data?.collectionsCollection {
+                        let groups = data.edges.map { edge in
+                            let collectionName = edge.node.name
+                            let pieceEdges = edge.node.pieces?.edges ?? []
+                            let pieceDetails = pieceEdges.map { $0.node.fragments.pieceDetails }
+                            let composer = edge.node.composer
+                            return CollectionGroup(id: edge.node.id, name: collectionName, composerNameFirst: composer?.firstName, composerNameLast: composer?.lastName, pieces: pieceDetails)
+                        }
+                        continuation.resume(returning: groups)
+                    } else {
+                        continuation.resume(returning: nil)
+                    }
+
+                case let .failure(error):
+                    print("Error fetching recent pieces: \(error)")
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    func searchComposers() async throws -> [ComposerType]? {
         try await withCheckedThrowingContinuation { continuation in
             Network.shared.apollo.fetch(
                 query: SearchComposersQuery(query: searchTerm),
@@ -106,7 +208,7 @@ class SearchViewModel: ObservableObject {
                 switch result {
                 case let .success(graphQLResult):
                     if let edges = graphQLResult.data?.searchComposers?.edges {
-                        let nodes = edges.compactMap { $0.node }
+                        let nodes = edges.compactMap { ComposerType(firstName: $0.node.firstName, lastName: $0.node.lastName, nationality: $0.node.nationality, id: $0.node.id) }
                         continuation.resume(returning: nodes)
                     } else {
                         continuation.resume(returning: nil)
@@ -257,6 +359,6 @@ struct IndexedPiece {
 
     init(_ piece: PieceDetails) {
         self.piece = piece
-        normalizedWords = piece.searchableText?.lowercased().split(separator: " ") ?? []
+        self.normalizedWords = piece.searchableText?.lowercased().split(separator: " ") ?? []
     }
 }

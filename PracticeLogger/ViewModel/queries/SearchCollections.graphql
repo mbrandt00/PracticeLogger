@@ -2,9 +2,7 @@ query SearchCollections(
   $query: String!
   $collectionsFilter: CollectionsFilter = {}
   $collectionsOrderBy: [CollectionsOrderBy!] = []
-  $piecesOrderBy: [PieceOrderBy!] = [
-    { catalogueNumber: AscNullsLast, catalogueNumberSecondary: AscNullsLast }
-  ]
+  $piecesOrderBy: [PieceOrderBy!] = []
 ) {
   searchCollections(
     query: $query

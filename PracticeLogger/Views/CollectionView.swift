@@ -16,5 +16,5 @@ struct CollectionView: View {
 }
 
 #Preview {
-    CollectionView(collection: SearchViewModel.CollectionGroup(id: "1", name: "", composer: SearchCollectionsQuery.Data.SearchCollections.Edge.Node.Composer(lastName: "Bach", firstName: "JS"), pieces: []))
+    CollectionView(collection: SearchViewModel.CollectionGroup(id: "1", name: "", composerNameFirst: "JS", composerNameLast: "Bach", pieces: []))
 }

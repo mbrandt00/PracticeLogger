@@ -13,6 +13,8 @@ struct SearchView: View {
     @EnvironmentObject var practiceSessionViewModel: PracticeSessionViewModel
     @Binding var path: NavigationPath
     @State private var isShowingCustomPieceSheet = false
+    @State private var isShowingComposerCreateSheet = false
+    @State private var isShowingCreateCollection = false
     @State private var isLoading: Bool
     private var preview: Bool = false
 
@@ -92,28 +94,14 @@ struct SearchView: View {
                                 }
                             }
                             if isEmpty {
-                                VStack(spacing: 16) {
-                                    Image(systemName: "magnifyingglass")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 60, height: 60)
-                                        .foregroundColor(.accentColor.opacity(0.6))
-
-                                    Text("No results found")
-                                        .font(.title3)
-                                        .fontWeight(.semibold)
-
-                                    Text("Try searching for a different piece or create a new piece.")
-                                        .font(.body)
-                                        .foregroundColor(.secondary)
-                                        .multilineTextAlignment(.center)
-                                        .padding(.horizontal)
-                                    Button("Create custom piece", systemImage: "plus.square") {
-                                        isShowingCustomPieceSheet = true
-                                    }
+                                emptyStateView(
+                                    title: "No results found",
+                                    subtitle: "Try searching for a different piece or create one below.",
+                                    buttonTitle: "Create collection piece",
+                                    buttonSystemImage: "plus.square"
+                                ) {
+                                    isShowingCustomPieceSheet = true
                                 }
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                .padding()
                             }
 
                         case .userPieces:
@@ -140,17 +128,14 @@ struct SearchView: View {
                                         userPieceRow(piece)
                                     }
                                 }
-                            } else {
-                                EmptyStateView {
-                                    Text("No pieces found. Try the discover tab or add a custom piece below!")
-                                        .font(.body)
-                                        .foregroundColor(.secondary)
-                                        .multilineTextAlignment(.center)
-                                        .padding(.horizontal)
-
-                                    Button("Create custom piece", systemImage: "plus.square") {
-                                        isShowingCustomPieceSheet = true
-                                    }
+                            } else if searchViewModel.userPieces.isEmpty && !searchViewModel.searchTerm.isEmpty {
+                                emptyStateView(
+                                    title: "No results found",
+                                    subtitle: "Try searching for a different piece or create a new piece.",
+                                    buttonTitle: "Create custom piece",
+                                    buttonSystemImage: "plus.square"
+                                ) {
+                                    isShowingCustomPieceSheet = true
                                 }
                             }
 
@@ -161,21 +146,88 @@ struct SearchView: View {
                                         newPieceRow(piece)
                                     }
                                 }
+                            } else {
+                                emptyStateView(
+                                    title: "No results found",
+                                    subtitle: "Try searching for a different piece or create a new piece.",
+                                    buttonTitle: "Create custom piece",
+                                    buttonSystemImage: "plus.square"
+                                ) {
+                                    isShowingCustomPieceSheet = true
+                                }
                             }
 
                         case .composers:
                             if !searchViewModel.composers.isEmpty {
-                                Section(header: Text("Composers")) {
+                                Section(
+                                    header:
+                                    HStack {
+                                        Text("Composers")
+                                            .font(.headline)
+
+                                        Spacer()
+
+                                        Button {
+                                            isShowingComposerCreateSheet = true
+                                        } label: {
+                                            Label("Custom Composer", systemImage: "plus.square")
+                                                .font(.subheadline)
+                                        }
+                                        .accessibilityLabel("Create custom piece")
+                                    }
+                                    .padding(.top, 8)
+                                ) {
                                     ForEach(searchViewModel.composers, id: \.id) { composer in
                                         composerRow(composer)
+                                    }
+                                }
+                            } else {
+                                VStack(spacing: 16) {
+                                    emptyStateView(
+                                        title: "No results found",
+                                        subtitle: "Try searching for a different composer or create one.",
+                                        buttonTitle: "Create custom composer",
+                                        buttonSystemImage: "plus.square"
+                                    ) {
+                                        isShowingComposerCreateSheet = true
                                     }
                                 }
                             }
 
                         case .collections:
-                            Section(header: Text("Collections")) {
-                                ForEach(searchViewModel.collections) { group in
-                                    CollectionRow(group: group)
+                            if !searchViewModel.collections.isEmpty {
+                                Section(
+                                    header:
+                                    HStack {
+                                        Text("Collections")
+                                            .font(.headline)
+
+                                        Spacer()
+
+                                        Button {
+                                            isShowingCreateCollection = true
+                                        } label: {
+                                            Label("Create collection", systemImage: "plus.square")
+                                                .font(.subheadline)
+                                        }
+                                        .accessibilityLabel("Create custom piece")
+                                    }
+                                    .padding(.top, 8)
+                                ) {
+                                    ForEach(searchViewModel.collections, id: \.id) { group in
+                                        CollectionRow(group: group)
+                                    }
+                                }
+                            } else {
+                                VStack(spacing: 16) {
+                                    emptyStateView(
+                                        title: "No results found",
+                                        subtitle: "Try searching for a different collection or create one.",
+                                        buttonTitle: "Create collection",
+                                        buttonSystemImage: "plus.square"
+                                    ) {
+                                        isShowingCreateCollection = true
+                                    }
                                 }
                             }
                         }
@@ -215,6 +267,22 @@ struct SearchView: View {
                     )
                 }
             }
+            .sheet(isPresented: $isShowingCreateCollection) {
+                NavigationStack {
+                    CreateCollection(viewModel: CollectionsViewModel()) { collectionId, collectionName in
+                        print("Calling handleColelctionCreated", collectionId, collectionName)
+                        await handleCollectionCreated(collectionId, collectionName)
+                    }
+                }
+            }
+            .sheet(isPresented: $isShowingComposerCreateSheet) {
+                ComposerEditSheet(mode: .create) { composer in
+                    let composerType = SearchViewModel.ComposerType.from(composer)
+                    path.append(PieceNavigationContext.composer(composerType))
+                    isShowingComposerCreateSheet = false
+                    searchViewModel.composers.insert(composerType, at: 0)
+                }
+            }
         }
     }
 
@@ -227,7 +295,7 @@ struct SearchView: View {
         }
     }
 
-    private func composerRow(_ composer: SearchComposersQuery.Data.SearchComposers.Edge.Node) -> some View {
+    private func composerRow(_ composer: SearchViewModel.ComposerType) -> some View {
         NavigationLink(value: PieceNavigationContext.composer(composer)) {
             ComposerRow(composer: composer)
         }
@@ -271,6 +339,45 @@ struct SearchView: View {
             searchViewModel.searchTerm = ""
         }
     }
+
+    private func handleCollectionCreated(_ collectionId: Int, _ collectionName: String) async {
+        path.append(PieceNavigationContext.collectionDetail(id: collectionId, name: collectionName))
+        await MainActor.run {
+            searchViewModel.searchTerm = ""
+        }
+    }
+
+    @ViewBuilder
+    private func emptyStateView(
+        systemImage: String = "magnifyingglass",
+        title: String,
+        subtitle: String,
+        buttonTitle: String,
+        buttonSystemImage: String,
+        buttonAction: @escaping () -> Void
+    ) -> some View {
+        VStack(spacing: 16) {
+            Image(systemName: systemImage)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 60, height: 60)
+                .foregroundColor(.accentColor.opacity(0.6))
+
+            Text(title)
+                .font(.title3)
+                .fontWeight(.semibold)
+
+            Text(subtitle)
+                .font(.body)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+
+            Button(buttonTitle, systemImage: buttonSystemImage, action: buttonAction)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding()
+    }
 }
 
 struct CollectionRow: View {
@@ -284,8 +391,8 @@ struct CollectionRow: View {
         NavigationLink(value: PieceNavigationContext.collection(group)) {
             VStack(alignment: .leading, spacing: 4) {
                 // Line 1: Composer name
-                if let composer = group.composer {
-                    Text("\(composer.firstName) \(composer.lastName)")
+                if let firstName = group.composerNameFirst, let lastName = group.composerNameLast {
+                    Text("\(firstName) \(lastName)")
                         .font(.footnote)
                         .foregroundColor(.secondary)
                 }
@@ -319,34 +426,8 @@ struct CollectionRow: View {
     }
 }
 
-struct EmptyStateView<Content: View>: View {
-    @ViewBuilder let content: Content
-
-    init(@ViewBuilder content: () -> Content) {
-        self.content = content()
-    }
-
-    var body: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "magnifyingglass")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 60, height: 60)
-                .foregroundColor(.accentColor.opacity(0.6))
-
-            Text("No results found")
-                .font(.title3)
-                .fontWeight(.semibold)
-
-            content
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding()
-    }
-}
-
 struct ComposerRow: View {
-    var composer: SearchComposersQuery.Data.SearchComposers.Edge.Node
+    var composer: SearchViewModel.ComposerType
 
     var fullName: String {
         let first = composer.firstName
@@ -444,7 +525,8 @@ enum PieceNavigationContext: Hashable, Equatable {
     case userPiece(PieceDetails)
     case newPiece(PieceDetails)
     case collection(SearchViewModel.CollectionGroup)
-    case composer(SearchComposersQuery.Data.SearchComposers.Edge.Node)
+    case collectionDetail(id: Int, name: String)
+    case composer(SearchViewModel.ComposerType)
 }
 
 struct RepertoireRow_Previews: PreviewProvider {
