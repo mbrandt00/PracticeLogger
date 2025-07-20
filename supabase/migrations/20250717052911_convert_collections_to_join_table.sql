@@ -165,3 +165,16 @@ COMMENT ON FUNCTION collections(p public.pieces) IS
   "name": "collections",
   "description": "All collections this piece belongs to, based on shared IMSLP URL"
 })';
+
+
+-- update collection view permissions: 
+
+DROP POLICY IF EXISTS auth_read_collections ON collections;
+
+CREATE POLICY "Users can see their own collections or public ones"
+ON collections
+FOR SELECT
+TO authenticated
+USING (
+  user_id = auth.uid() OR user_id IS NULL
+);

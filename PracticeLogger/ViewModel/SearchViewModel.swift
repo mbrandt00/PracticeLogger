@@ -21,6 +21,22 @@ class SearchViewModel: ObservableObject {
         var id: Self { self }
     }
 
+    struct CollectionGroup: Identifiable, Equatable, Hashable {
+        let id: String
+        let name: String
+        let composerNameFirst: String?
+        let composerNameLast: String?
+        let pieces: [PieceDetails]
+
+        static func == (lhs: CollectionGroup, rhs: CollectionGroup) -> Bool {
+            lhs.id == rhs.id
+        }
+
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
+    }
+
     var availableFilters: [SearchFilter] {
         if searchTerm.isEmpty {
             return SearchFilter.allCases.filter { $0 != .discover }
@@ -63,21 +79,6 @@ class SearchViewModel: ObservableObject {
     @Published var composers: [ComposerType] = []
     private var indexedUserPieces: [IndexedPiece] = []
 
-    struct CollectionGroup: Identifiable, Equatable, Hashable {
-        let id: String
-        let name: String
-        let composer: SearchCollectionsQuery.Data.SearchCollections.Edge.Node.Composer?
-        let pieces: [PieceDetails]
-
-        static func == (lhs: CollectionGroup, rhs: CollectionGroup) -> Bool {
-            lhs.id == rhs.id
-        }
-
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(id)
-        }
-    }
-
     @MainActor
     func searchPieces() async {
         do {
@@ -93,7 +94,7 @@ class SearchViewModel: ObservableObject {
                 indexedUserPieces = fresh.map { IndexedPiece($0) }
                 userPieces = fresh
                 composers = try await fetchAllComposers()
-                collections = []
+                collections = try await fetchAllCollections() ?? []
                 newPieces = []
             }
         } catch {
@@ -115,7 +116,7 @@ class SearchViewModel: ObservableObject {
                             let pieceEdges = edge.node.pieces?.edges ?? []
                             let pieceDetails = pieceEdges.map { $0.node.fragments.pieceDetails }
                             let composer = edge.node.composer
-                            return CollectionGroup(id: collectionName, name: collectionName, composer: composer, pieces: pieceDetails)
+                            return CollectionGroup(id: collectionName, name: collectionName, composerNameFirst: composer?.firstName, composerNameLast: composer?.lastName, pieces: pieceDetails)
                         }
                         continuation.resume(returning: groups)
                     } else {
@@ -163,6 +164,35 @@ class SearchViewModel: ObservableObject {
                     }
 
                 case let .failure(error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    func fetchAllCollections() async throws -> [CollectionGroup]? {
+        try await withCheckedThrowingContinuation { continuation in
+            Network.shared.apollo.fetch(
+                query: CollectionsQuery(),
+                cachePolicy: .returnCacheDataElseFetch
+            ) { result in
+                switch result {
+                case let .success(graphQlResult):
+                    if let data = graphQlResult.data?.collectionsCollection {
+                        let groups = data.edges.map { edge in
+                            let collectionName = edge.node.name
+                            let pieceEdges = edge.node.pieces?.edges ?? []
+                            let pieceDetails = pieceEdges.map { $0.node.fragments.pieceDetails }
+                            let composer = edge.node.composer
+                            return CollectionGroup(id: edge.node.id, name: collectionName, composerNameFirst: composer?.firstName, composerNameLast: composer?.lastName, pieces: pieceDetails)
+                        }
+                        continuation.resume(returning: groups)
+                    } else {
+                        continuation.resume(returning: nil)
+                    }
+
+                case let .failure(error):
+                    print("Error fetching recent pieces: \(error)")
                     continuation.resume(throwing: error)
                 }
             }

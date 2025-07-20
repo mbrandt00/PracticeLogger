@@ -391,8 +391,8 @@ struct CollectionRow: View {
         NavigationLink(value: PieceNavigationContext.collection(group)) {
             VStack(alignment: .leading, spacing: 4) {
                 // Line 1: Composer name
-                if let composer = group.composer {
-                    Text("\(composer.firstName) \(composer.lastName)")
+                if let firstName = group.composerNameFirst, let lastName = group.composerNameLast {
+                    Text("\(firstName) \(lastName)")
                         .font(.footnote)
                         .foregroundColor(.secondary)
                 }
