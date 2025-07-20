@@ -2,8 +2,9 @@ CREATE TABLE IF NOT EXISTS collection_pieces (
     id BIGSERIAL PRIMARY KEY,
     piece_id BIGINT NOT NULL,
     collection_id BIGINT NOT NULL,
+    position INTEGER NOT NULL,
     FOREIGN KEY (piece_id) REFERENCES pieces(id),
-    FOREIGN KEY (collection_id) REFERENCES collections(id)
+    FOREIGN KEY (collection_id) REFERENCES collections(id) ON DELETE CASCADE
 );
 
 ALTER TABLE collection_pieces ENABLE ROW LEVEL SECURITY;
@@ -19,7 +20,7 @@ UPDATE TO authenticated WITH CHECK (true);
 
 
 create policy "Users can create collections"
-on profiles for insert
+on collections for insert
 to authenticated
 with check ( (select auth.uid()) = user_id );
 
