@@ -269,7 +269,10 @@ struct SearchView: View {
             }
             .sheet(isPresented: $isShowingCreateCollection) {
                 NavigationStack {
-                    CreateCollection(viewModel: CollectionsViewModel())
+                    CreateCollection(viewModel: CollectionsViewModel()) { collectionId, collectionName in
+                        print("Calling handleColelctionCreated", collectionId, collectionName)
+                        await handleCollectionCreated(collectionId, collectionName)
+                    }
                 }
             }
             .sheet(isPresented: $isShowingComposerCreateSheet) {
@@ -333,6 +336,13 @@ struct SearchView: View {
         path.append(PieceNavigationContext.userPiece(piece))
         await MainActor.run {
             searchViewModel.newPieces.removeAll()
+            searchViewModel.searchTerm = ""
+        }
+    }
+
+    private func handleCollectionCreated(_ collectionId: Int, _ collectionName: String) async {
+        path.append(PieceNavigationContext.collectionDetail(id: collectionId, name: collectionName))
+        await MainActor.run {
             searchViewModel.searchTerm = ""
         }
     }
@@ -515,6 +525,7 @@ enum PieceNavigationContext: Hashable, Equatable {
     case userPiece(PieceDetails)
     case newPiece(PieceDetails)
     case collection(SearchViewModel.CollectionGroup)
+    case collectionDetail(id: Int, name: String)
     case composer(SearchViewModel.ComposerType)
 }
 

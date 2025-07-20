@@ -12,9 +12,9 @@ import SwiftUI
 
 /// List view for one collection that shows all pieces
 struct CollectionListView: View {
-    @State var collectionId: String
+    let collectionId: String
+    let collectionName: String
     @State private var isLoading: Bool
-    @State private var collectionName: String
     @State private var hasAppeared = false
     @State private var selectedPieceForEditing: PieceDetails?
     @State private var selectedPieceForShow: PieceDetails?

@@ -175,6 +175,9 @@ struct RecentPracticeSessions: View {
                 case let .composer(composer):
                     ComposerView(composer: composer)
 
+                case let .collectionDetail(id: id, name: name):
+                    CollectionListView(collectionId: String(id), collectionName: name)
+
                 case let .collection(collection):
                     CollectionView(collection: collection)
 
@@ -211,8 +214,10 @@ struct RecentPracticeSessions: View {
             return AnyView(PieceEdit(piece: piece, isCreatingNewPiece: true))
         case let .userPiece(piece):
             return AnyView(PieceShow(piece: piece, sessionManager: practiceSessionViewModel))
-        case let .composer(composer):
+        case .composer:
             return AnyView(EmptyView())
+        case let .collectionDetail(id: id, name: name):
+            return AnyView(CollectionListView(collectionId: String(id), collectionName: name))
         case .collection:
             return AnyView(EmptyView())
         }

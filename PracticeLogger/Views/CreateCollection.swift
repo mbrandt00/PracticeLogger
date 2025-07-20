@@ -2,13 +2,16 @@ import ApolloGQL
 import SwiftUI
 
 struct CreateCollection: View {
+    @Environment(\.dismiss) private var dismiss
     @StateObject var viewModel: CollectionsViewModel
     @State private var isLoading = false
     @State private var selectedIDs = Set<String>()
+    @State private var collectionName = ""
+    var onCollectionCreated: (@Sendable (Int, String) async -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            TextField("Collection name", text: $viewModel.collectionName)
+            TextField("Collection name", text: $collectionName)
                 .autocorrectionDisabled()
                 .textFieldStyle(.roundedBorder)
 
@@ -28,9 +31,6 @@ struct CreateCollection: View {
                     pieceList
                 }
             }
-            .frame(maxHeight: 300)
-
-            Spacer()
 
             saveButton
         }
@@ -48,9 +48,12 @@ struct CreateCollection: View {
 
         return Group {
             if pieces.isEmpty {
-                Text("No results")
-                    .foregroundStyle(.secondary)
-                    .padding(.top, 8)
+                VStack {
+                    Text("No results")
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .contentShape(Rectangle())
             } else {
                 ScrollView {
                     LazyVStack(spacing: 12) {
@@ -87,10 +90,20 @@ struct CreateCollection: View {
     }
 
     private var saveButton: some View {
-        Button(action: saveSelectedPieces) {
-            Text("Save Selected")
+        Button(action: {
+            Task {
+                do {
+                    let collectionId = try await viewModel.saveNewCollection(collectionName: collectionName)
+                    dismiss()
+                    await onCollectionCreated?(collectionId, collectionName)
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }, label: {
+            Text("Create colletion")
                 .frame(maxWidth: .infinity)
-        }
+        })
         .padding()
         .background(selectedIDs.isEmpty ? Color.gray.opacity(0.3) : Color.accentColor)
         .foregroundColor(.white)

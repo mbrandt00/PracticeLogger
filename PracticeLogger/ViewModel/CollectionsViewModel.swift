@@ -12,7 +12,6 @@ class CollectionsViewModel: ObservableObject {
     @Published var selectedPieces: [PieceDetails]?
     @Published var searchResults: [IndexedPiece]?
     @Published var searchTerm = ""
-    @Published var collectionName = ""
 
     func searchUserPieces() async throws {
         guard let userId = Database.client.auth.currentUser?.id else {
@@ -64,5 +63,44 @@ class CollectionsViewModel: ObservableObject {
                 continuation.resume(returning: matches ?? [])
             }
         }
+    }
+
+    func saveNewCollection(collectionName: String) async throws -> Int {
+        let userId = try await Database.client.auth.user().id.uuidString
+        guard let selected = self.selectedPieces else {
+            throw RuntimeError("No selected pieces")
+        }
+
+        let pieceIds = selected.map { Int($0.id) }
+
+        let response: [String: Int] = try await Database.client
+            .from("collections")
+            .insert(CollectionInsertInput(name: collectionName, user_id: userId))
+            .select("id")
+            .single()
+            .execute()
+            .value
+
+        guard let collectionId = response["id"] else { throw RuntimeError("Collection could not be created") }
+
+        let collectionPiecesInput = pieceIds.map { pieceId in
+            CollectionPiecesInput(collection_id: collectionId, piece_id: pieceId!)
+        }
+
+        try await Database.client
+            .from("collection_pieces")
+            .insert(collectionPiecesInput)
+            .execute()
+        return collectionId
+    }
+
+    struct CollectionInsertInput: Codable {
+        let name: String
+        let user_id: String
+    }
+
+    struct CollectionPiecesInput: Codable {
+        let collection_id: Int
+        let piece_id: Int
     }
 }

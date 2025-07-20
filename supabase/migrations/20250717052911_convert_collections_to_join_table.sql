@@ -17,6 +17,12 @@ INSERT TO authenticated WITH CHECK (true);
 CREATE POLICY auth_update_collection_pieces ON collection_pieces FOR
 UPDATE TO authenticated WITH CHECK (true);
 
+
+create policy "Users can create collections"
+on profiles for insert
+to authenticated
+with check ( (select auth.uid()) = user_id );
+
 ALTER TABLE collections
 ADD COLUMN user_id UUID;
 
