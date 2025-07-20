@@ -18,18 +18,18 @@ INSERT TO authenticated WITH CHECK (true);
 CREATE POLICY auth_update_collection_pieces ON collection_pieces FOR
 UPDATE TO authenticated WITH CHECK (true);
 
-
-create policy "Users can create collections"
-on collections for insert
-to authenticated
-with check ( (select auth.uid()) = user_id );
-
 ALTER TABLE collections
 ADD COLUMN user_id UUID;
 
 ALTER TABLE collections
 ADD CONSTRAINT collections_user_id_fkey
 FOREIGN KEY (user_id) REFERENCES auth.users(id);
+
+create policy "Users can create collections"
+on collections for insert
+to authenticated
+with check ( (select auth.uid()) = user_id );
+
 
 INSERT INTO collection_pieces (piece_id, collection_id)
 SELECT id, collection_id
@@ -53,7 +53,6 @@ ALTER TABLE pieces DROP COLUMN IF EXISTS collection_id;
 
 CREATE UNIQUE INDEX unique_piece_collection ON collection_pieces (piece_id, collection_id);
 
-ALTER TABLE collection_pieces ADD COLUMN position INTEGER NOT NULL;
 
 CREATE UNIQUE INDEX unique_collection_position ON collection_pieces (collection_id, position);
 
