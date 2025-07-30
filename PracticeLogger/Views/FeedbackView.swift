@@ -54,9 +54,14 @@ struct FeedbackView: View {
 
                             if response.success {
                                 toastManager.show(type: .complete(.green), title: "Report submitted successfully!")
+
                                 title = ""
                                 description = ""
-                                focusedField = .title
+
+                                Task { @MainActor in
+                                    try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+                                    focusedField = .title
+                                }
                             } else {
                                 toastManager.show(type: .error(.red), title: "Failed to submit report")
                             }
