@@ -53,6 +53,7 @@
 		D17482E02E138ECD00F062C0 /* SearchFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17482DF2E138ECD00F062C0 /* SearchFilterBar.swift */; };
 		D17705042DE253B00048879C /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17705032DE253B00048879C /* FeedbackView.swift */; };
 		D177FDA92C55855C00830F0D /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = D177FDA82C55855C00830F0D /* View.swift */; };
+		D180F73C2E39C062003FB516 /* GlobalToastManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D180F73B2E39C062003FB516 /* GlobalToastManager.swift */; };
 		D1840DD02C48902F001ED849 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1840DCF2C48902F001ED849 /* Logger.swift */; };
 		D1848D592D9076B800C1FA51 /* CollectionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1848D582D9076B200C1FA51 /* CollectionListView.swift */; };
 		D185AC152BDF3B7E007F398D /* PieceEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D185AC142BDF3B7E007F398D /* PieceEditViewModel.swift */; };
@@ -219,6 +220,7 @@
 		D17482DF2E138ECD00F062C0 /* SearchFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFilterBar.swift; sourceTree = "<group>"; };
 		D17705032DE253B00048879C /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
 		D177FDA82C55855C00830F0D /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
+		D180F73B2E39C062003FB516 /* GlobalToastManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalToastManager.swift; sourceTree = "<group>"; };
 		D1840DCF2C48902F001ED849 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		D1848D582D9076B200C1FA51 /* CollectionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionListView.swift; sourceTree = "<group>"; };
 		D185AC142BDF3B7E007F398D /* PieceEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceEditViewModel.swift; sourceTree = "<group>"; };
@@ -570,6 +572,7 @@
 		D1F5EE8D2BF8664C00E9DA23 /* utils */ = {
 			isa = PBXGroup;
 			children = (
+				D180F73B2E39C062003FB516 /* GlobalToastManager.swift */,
 				D1D3CEFA2DA2D089006502AE /* UIState.swift */,
 				D19940F92D4E01FC003889AF /* PieceDetails.swift */,
 				D1254D522D4E9F2900095600 /* PieceDbUpdater.swift */,
@@ -818,6 +821,7 @@
 				D12FAC422E26BDB8009744B7 /* CreateCollection.swift in Sources */,
 				D12E1BB02C37B64500A4DC28 /* DateFormatter.swift in Sources */,
 				D1ED6C442C4CB0BF00300FE9 /* KeyboardResponder.swift in Sources */,
+				D180F73C2E39C062003FB516 /* GlobalToastManager.swift in Sources */,
 				D1254D532D4E9F2900095600 /* PieceDbUpdater.swift in Sources */,
 				D1DF5B5F2BB882CD00FFED0F /* String.swift in Sources */,
 				D1AD151B2DD44ACF00CB9172 /* LiveActivityAttributes.swift in Sources */,

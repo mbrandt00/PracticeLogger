@@ -11,6 +11,7 @@ import SwiftUI
 struct PracticeLoggerApp: App {
     @State private var isSignedIn = false
     @State private var isLoading = true
+    @StateObject private var toastManager = GlobalToastManager()
 
     init() {
         DispatchQueue.main.async {
@@ -27,6 +28,7 @@ struct PracticeLoggerApp: App {
                         .background(Color(.systemBackground))
                 } else {
                     ContentView(isSignedIn: $isSignedIn)
+                        .environmentObject(toastManager)
                 }
             }
             .task {

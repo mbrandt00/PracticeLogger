@@ -4,6 +4,7 @@
 //  Created by Michael Brandt on 2/23/24.
 //
 
+import AlertToast
 import Apollo
 import ApolloAPI
 import ApolloGQL
@@ -26,6 +27,7 @@ struct ContentView: View {
     @State private var isExpanded = false
     @State private var offsetY: CGFloat = 0
     @Environment(\.scenePhase) private var scenePhase
+    @EnvironmentObject var toastManager: GlobalToastManager
 
     init(isSignedIn: Binding<Bool>, practiceSessionViewModel: PracticeSessionViewModel = PracticeSessionViewModel()) {
         _isSignedIn = isSignedIn
@@ -74,6 +76,22 @@ struct ContentView: View {
                 .animation(.easeInOut(duration: 0.25), value: shouldShowBottomSheet)
                 .edgesIgnoringSafeArea(.bottom)
             }
+            .toast(
+                isPresenting: $toastManager.isShowing,
+                duration: 2,
+                tapToDismiss: true,
+                alert: {
+                    AlertToast(
+                        displayMode: toastManager.displayMode,
+                        type: toastManager.type,
+                        title: toastManager.title,
+                        subTitle: toastManager.subTitle
+                    )
+                },
+                onTap: {
+                    toastManager.clear()
+                }
+            )
             .ignoresSafeArea(.all, edges: isExpanded ? .all : [])
             .onAppear {
                 Task {

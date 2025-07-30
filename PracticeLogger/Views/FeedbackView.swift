@@ -5,11 +5,12 @@
 //  Created by Michael Brandt on 5/24/25.
 //
 
-import AlertToast
 import Supabase
 import SwiftUI
 
 struct FeedbackView: View {
+    @EnvironmentObject var toastManager: GlobalToastManager
+
     private enum Field: Hashable {
         case title
         case description
@@ -19,8 +20,6 @@ struct FeedbackView: View {
     @State private var description = ""
     @State private var issueType = "Bug"
     @State private var isSubmitting = false
-    @State private var showToast = false
-    @State private var toastMessage = ""
     @State private var isSuccess = false
     @FocusState private var focusedField: Field?
 
@@ -54,21 +53,16 @@ struct FeedbackView: View {
                                 )
 
                             if response.success {
-                                toastMessage = "Report submitted successfully!"
-                                isSuccess = true
+                                toastManager.show(type: .complete(.green), title: "Report submitted successfully!")
                                 title = ""
                                 description = ""
                                 focusedField = .title
                             } else {
-                                toastMessage = response.error ?? "Failed to submit report"
-                                isSuccess = false
+                                toastManager.show(type: .error(.red), title: "Failed to submit report")
                             }
 
-                            showToast = true
                         } catch {
-                            toastMessage = "Error: \(error.localizedDescription)"
-                            isSuccess = false
-                            showToast = true
+                            toastManager.show(type: .error(.red), title: error.localizedDescription)
                         }
                     }
                 }
@@ -92,13 +86,6 @@ struct FeedbackView: View {
         .animation(.easeInOut(duration: 0.25), value: isSubmitting)
         .background(Color(UIColor.systemBackground))
         .navigationTitle("Submit feedback")
-        .toast(isPresenting: $showToast) {
-            AlertToast(
-                displayMode: .banner(.pop),
-                type: isSuccess ? .complete(.green) : .error(.red),
-                title: toastMessage
-            )
-        }
     }
 }
 

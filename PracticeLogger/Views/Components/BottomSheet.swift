@@ -13,6 +13,7 @@ struct BottomSheet: View {
     @State private var elapsedTime: String = "00:00"
     @State var animateContent = false
     @Binding var offsetY: CGFloat
+    @EnvironmentObject var toastManager: GlobalToastManager
     @ObservedObject var practiceSessionViewModel: PracticeSessionViewModel
 
     var body: some View {
@@ -128,7 +129,15 @@ struct BottomSheet: View {
 
                                 try? await Task.sleep(nanoseconds: 300000000)
 
-                                await practiceSessionViewModel.stopSession()
+                                do {
+                                    try await practiceSessionViewModel.stopSession()
+                                } catch {
+                                    toastManager.show(
+                                        type: .error(.red),
+                                        title: "Something went wrong",
+                                        subTitle: error.localizedDescription
+                                    )
+                                }
                             }
                         } label: {
                             HStack {
@@ -190,7 +199,17 @@ struct BottomSheet: View {
                             .font(.system(size: 12, design: .serif))
 
                             Button {
-                                Task { await practiceSessionViewModel.stopSession() }
+                                Task {
+                                    do {
+                                        try await practiceSessionViewModel.stopSession()
+                                    } catch {
+                                        toastManager.show(
+                                            type: .error(.red),
+                                            title: "Something went wrong",
+                                            subTitle: error.localizedDescription
+                                        )
+                                    }
+                                }
                             } label: {
                                 Image(systemName: "stop.fill")
                                     .font(.title2)

@@ -17,6 +17,8 @@ struct PieceShow: View {
     @State private var editingComposer = false
     @State private var showingCollectionSheet = false
     @State private var selectedCollection: (id: String, name: String)?
+    @EnvironmentObject var toastManager: GlobalToastManager
+
     var onDelete: (() -> Void)?
     @Environment(\.dismiss) private var dismiss
 
@@ -90,7 +92,15 @@ struct PieceShow: View {
                 Button(action: {
                     Task {
                         if sessionManager.activeSession?.piece.id == piece.id && sessionManager.activeSession?.movement?.id == nil {
-                            await sessionManager.stopSession()
+                            do {
+                                try await sessionManager.stopSession()
+                            } catch {
+                                toastManager.show(
+                                    type: .error(.red),
+                                    title: "Something went wrong",
+                                    subTitle: error.localizedDescription
+                                )
+                            }
                         } else {
                             _ = try? await sessionManager.startSession(pieceId: Int(piece.id) ?? 0, movementId: nil)
                         }
@@ -347,7 +357,15 @@ struct PieceShow: View {
         Button(action: {
             Task {
                 if isActive {
-                    await sessionManager.stopSession()
+                    do {
+                        try await sessionManager.stopSession()
+                    } catch {
+                        toastManager.show(
+                            type: .error(.red),
+                            title: "Something went wrong",
+                            subTitle: error.localizedDescription
+                        )
+                    }
                 } else {
                     _ = try? await sessionManager.startSession(
                         pieceId: Int(piece.id) ?? 0,

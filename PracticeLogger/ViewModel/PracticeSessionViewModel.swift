@@ -117,23 +117,37 @@ class PracticeSessionViewModel: ObservableObject {
         }
     }
 
+    /// Optimistically stops the current session. Rolls back on error
     @MainActor
-    func stopSession() async {
+    func stopSession() async throws {
+        guard let session = activeSession else {
+            throw RuntimeError("No active session to stop.")
+        }
+
+        let previousSession = session
+
+        // Optimistically update UI
+        activeSession = nil
+        stopLiveActivity()
+
         do {
+            throw RuntimeError("BAD!!!")
             _ = try await Database.client
                 .from("practice_sessions")
                 .update(["end_time": Date()])
-                .eq("id", value: activeSession?.id)
+                .eq("id", value: session.id)
                 .execute()
-            activeSession = nil
-            await getRecentUserPracticeSessions()
         } catch {
-            print("Error updating end_time: \(error)")
+            print("❌ Failed to update end_time: \(error)")
+
+            //  Rollback
+            activeSession = previousSession
+            startLiveActivity(practiceSession: previousSession, startTime: previousSession.startTime)
+
+            throw error
         }
-        Task {
-            await self.liveActivity?.end(nil, dismissalPolicy: .immediate)
-            self.liveActivity = nil
-        }
+
+        await getRecentUserPracticeSessions()
     }
 
     @MainActor
