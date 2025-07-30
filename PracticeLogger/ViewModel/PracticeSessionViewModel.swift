@@ -131,7 +131,6 @@ class PracticeSessionViewModel: ObservableObject {
         stopLiveActivity()
 
         do {
-            throw RuntimeError("BAD!!!")
             _ = try await Database.client
                 .from("practice_sessions")
                 .update(["end_time": Date()])

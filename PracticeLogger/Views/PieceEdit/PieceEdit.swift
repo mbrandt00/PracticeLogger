@@ -20,6 +20,7 @@ struct PieceEdit: View {
     @State private var newMovementName = ""
     @State private var isAddingMovement = false
     @State private var isEditingMovements = false
+    @State private var isSaving = false
     @State private var editingMovementId: ApolloGQL.BigInt?
     var onPieceCreated: (@Sendable (PieceDetails) async -> Void)?
 
@@ -290,18 +291,30 @@ struct PieceEdit: View {
     }
 
     private var createButton: some View {
-        Button(isCreatingNewPiece ? "Submit" : "Save") {
+        Button(action: {
             Task {
+                isSaving = true
                 do {
                     let piece = isCreatingNewPiece ? try await viewModel.insertPiece() : try await viewModel.updatePiece()
+                    isSaving = false
                     dismiss()
                     await onPieceCreated?(piece)
-
                 } catch {
+                    isSaving = false
+                    errorMessage = "Failed to save piece: \(error.localizedDescription)"
+                    showToast = true
                     print(error)
                 }
             }
-        }
+        }, label: {
+            if isSaving {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle())
+            } else {
+                Text("Save")
+            }
+        })
+        .disabled(isSaving)
     }
 }
 
