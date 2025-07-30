@@ -103,26 +103,10 @@ class SupabaseDatabase:
             catalogue_number, catalogue_number_secondary, composition_year,
             composition_year_string, key_signature, sub_piece_type,
             sub_piece_count, instrumentation, nickname, piece_style,
-            imslp_url, wikipedia_url, collection_id, format
+            imslp_url, wikipedia_url, format
         ) VALUES (
-            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
         )
-        ON CONFLICT (imslp_url, user_id)
-        DO UPDATE SET
-            work_name = EXCLUDED.work_name,
-            catalogue_type_num_desc = EXCLUDED.catalogue_type_num_desc,
-            catalogue_number_secondary = EXCLUDED.catalogue_number_secondary,
-            composition_year = EXCLUDED.composition_year,
-            composition_year_string = EXCLUDED.composition_year_string,
-            key_signature = EXCLUDED.key_signature,
-            sub_piece_type = EXCLUDED.sub_piece_type,
-            sub_piece_count = EXCLUDED.sub_piece_count,
-            instrumentation = EXCLUDED.instrumentation,
-            nickname = EXCLUDED.nickname,
-            piece_style = EXCLUDED.piece_style,
-            wikipedia_url = EXCLUDED.wikipedia_url,
-            collection_id = EXCLUDED.collection_id,
-            format = EXCLUDED.format
         RETURNING id;
         """
 
@@ -155,27 +139,27 @@ class SupabaseDatabase:
 
                 composer_collections = load_collections_mapping(row["composer_name"])
 
-                collection_id = None
-
-                if composer_collections:
-                    # Try to find a matching collection
-                    for (
-                        collection_name,
-                        collection_data,
-                    ) in composer_collections.items():
-                        logger.info(collection_name, collection_data)
-                        for piece_url in collection_data["pieces"]:
-                            if urls_match(row["imslp_url"], piece_url):
-                                # Insert collection and get its ID
-                                collection_id = self.insert_collection(
-                                    collection_name, collection_data["url"], composer_id
-                                )
-                                logger.info(
-                                    f"Matched piece {row['work_name']} to collection {collection_name}"
-                                )
-                                break
-                        if collection_id:
-                            break
+                # collection_id = None
+                #
+                # if composer_collections:
+                #     # Try to find a matching collection
+                #     for (
+                #         collection_name,
+                #         collection_data,
+                #     ) in composer_collections.items():
+                #         logger.info(collection_name, collection_data)
+                #         for piece_url in collection_data["pieces"]:
+                #             if urls_match(row["imslp_url"], piece_url):
+                #                 # Insert collection and get its ID
+                #                 collection_id = self.insert_collection(
+                #                     collection_name, collection_data["url"], composer_id
+                #                 )
+                #                 logger.info(
+                #                     f"Matched piece {row['work_name']} to collection {collection_name}"
+                #                 )
+                #                 break
+                #         if collection_id:
+                #             break
 
                 self.cur.execute(
                     piece_insert_sql,
@@ -199,7 +183,7 @@ class SupabaseDatabase:
                         row["piece_style"],
                         row["imslp_url"],
                         row["wikipedia_url"],
-                        collection_id,
+                        # collection_id,
                         row["format"] if row.get("format") else None,
                     ),
                 )
