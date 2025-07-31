@@ -25,170 +25,11 @@ struct PieceShow: View {
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 16) {
-                VStack(alignment: .leading, spacing: 8) {
-                    if let nickname = piece.nickname {
-                        Text(nickname)
-                            .font(.headline)
-                            .foregroundColor(.secondary)
-                    }
-                    if let composer = piece.composer {
-                        Text("\(composer.firstName) \(composer.lastName)")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                        if composer.userId != nil {
-                            Button(action: {
-                                self.editingComposer = true
-                            }, label: {
-                                Text("Edit")
-                            })
-                        }
-                    }
-
-                    if let catalogueDesc = piece.catalogueType, let catalogueNumber = piece.catalogueNumber {
-                        HStack(spacing: 4) {
-                            Text("\(catalogueDesc.displayName) \(catalogueNumber)")
-                            if let compositionYear = piece.compositionYear {
-                                Text("(\(String(compositionYear)))")
-                            }
-                        }
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    }
-                    if let collections = piece.collections, !collections.edges.isEmpty {
-                        VStack(alignment: .leading, spacing: 4) {
-                            ForEach(collections.edges, id: \.node.id) { c in
-                                Button {
-                                    selectedCollection = (id: c.node.id, name: c.node.name)
-                                    showingCollectionSheet = true
-                                } label: {
-                                    HStack {
-                                        Text("\(c.node.name) collection")
-                                            .font(.body)
-                                            .foregroundColor(.accentColor)
-
-                                        Image(systemName: "chevron.right")
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
-                                    }
-                                }
-                            }
-                        }
-                        .padding(.vertical, 8)
-                    }
-
-                    if let totalTime = piece.totalPracticeTime {
-                        HStack {
-                            Image(systemName: "clock")
-                            Text("Total practice: \(formatDuration(seconds: totalTime))")
-                        }
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
-
-                // Practice Button
-                Button(action: {
-                    Task {
-                        if sessionManager.activeSession?.piece.id == piece.id && sessionManager.activeSession?.movement?.id == nil {
-                            do {
-                                try await sessionManager.stopSession()
-                            } catch {
-                                toastManager.show(
-                                    type: .error(.red),
-                                    title: "Something went wrong",
-                                    subTitle: error.localizedDescription
-                                )
-                            }
-                        } else {
-                            _ = try? await sessionManager.startSession(pieceId: Int(piece.id) ?? 0, movementId: nil)
-                        }
-                    }
-                }, label: {
-                    HStack {
-                        Image(systemName: sessionManager.activeSession?.movement?.id == nil && sessionManager.activeSession?.piece.id == piece.id ?
-                            "stop.circle.fill" : "play.circle.fill")
-                        Text(sessionManager.activeSession?.movement?.id == nil && sessionManager.activeSession?.piece.id == piece.id ?
-                            "Stop Practice" : "Start Practice")
-                    }
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.accentColor)
-                    .cornerRadius(12)
-                })
-                .padding(.horizontal)
-
-                // Movements Section
-                if let movementsEdges = piece.movements?.edges, !movementsEdges.isEmpty {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(piece.subPieceType?.capitalized ?? "Movements")
-                            .font(.headline)
-                            .padding(.horizontal)
-
-                        ForEach(movementsEdges, id: \.node.id) { movement in
-                            movementRow(for: movement)
-
-                            if movement.node.id != movementsEdges.last?.node.id {
-                                Divider()
-                                    .padding(.horizontal)
-                            }
-                        }
-                    }
-                    .padding(.vertical, 4)
-                }
-
-                // External Links
-                if piece.wikipediaUrl != nil || piece.imslpUrl != nil {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("References")
-                            .font(.headline)
-                            .padding(.horizontal)
-
-                        if let wikipediaUrl = piece.wikipediaUrl {
-                            Link(destination: URL(string: wikipediaUrl)!) {
-                                HStack {
-                                    Image(systemName: "book.fill")
-                                    Text("Wikipedia")
-                                    Spacer()
-                                    Image(systemName: "arrow.up.right")
-                                }
-                            }
-                            .padding(.horizontal)
-                        }
-
-                        if let imslpUrl = piece.imslpUrl {
-                            Link(destination: URL(string: imslpUrl)!) {
-                                HStack {
-                                    Image(systemName: "doc.fill")
-                                    Text("IMSLP")
-                                    Spacer()
-                                    Image(systemName: "arrow.up.right")
-                                }
-                            }
-                            .padding(.horizontal)
-                        }
-                    }
-                    .padding(.vertical)
-                }
-                Button(role: .destructive, action: {
-                    showingDeleteConfirmation = true
-                }, label: {
-                    HStack {
-                        Spacer()
-                        Label("Delete Piece", systemImage: "trash")
-                            .font(.body)
-                            .padding()
-                        Spacer()
-                    }
-                })
-                .padding(.horizontal)
-                .background(Color.red.opacity(0.1))
-                .cornerRadius(12)
-                .padding(.top, 32)
-                .padding(.horizontal)
+                pieceHeaderSection
+                practiceButtonSection
+                movementsSection
+                referencesSection
+                deleteSection
             }
         }
         .navigationTitle(piece.workName)
@@ -207,46 +48,276 @@ struct PieceShow: View {
             Text("This action cannot be undone.")
         })
         .sheet(isPresented: $editingMode) {
-            EditPieceSheetView()
+            editPieceSheet
         }
         .sheet(isPresented: $editingComposer) {
-            ComposerEditSheet(mode: .edit(EditableComposer(from: piece.composer!)), onComplete: { (_: EditableComposer) in
-                Task {
-                    do {
-                        if let updatedPiece = try await refetchPiece() {
-                            piece = updatedPiece
-                            try await sessionManager.fetchCurrentActiveSession()
-                        }
-                    } catch {
-                        print("Error refetching piece: \(error)")
-                    }
-                }
-            })
+            composerEditSheet
         }
         .sheet(isPresented: $showingCollectionSheet) {
-            if let selectedCollection {
-                NavigationStack {
-                    CollectionListView(
-                        collectionId: selectedCollection.id,
-                        collectionName: selectedCollection.name,
-                        onPieceChanged: { newPiece in
-                            piece = newPiece
-                            showingCollectionSheet = false
+            collectionSheet
+        }
+    }
+}
+
+// MARK: - View Components
+
+private extension PieceShow {
+    @ViewBuilder
+    var pieceHeaderSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            if let nickname = piece.nickname {
+                Text(nickname)
+                    .font(.headline)
+                    .foregroundColor(.secondary)
+            }
+
+            if let composer = piece.composer {
+                Text("\(composer.firstName) \(composer.lastName)")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                if composer.userId != nil {
+                    Button(action: {
+                        self.editingComposer = true
+                    }, label: {
+                        Text("Edit")
+                    })
+                }
+            }
+
+            if let catalogueDesc = piece.catalogueType, let catalogueNumber = piece.catalogueNumber {
+                HStack(spacing: 4) {
+                    Text("\(catalogueDesc.displayName) \(catalogueNumber)")
+                    if let compositionYear = piece.compositionYear {
+                        Text("(\(String(compositionYear)))")
+                    }
+                }
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+            }
+
+            collectionsSection
+
+            if let totalTime = piece.totalPracticeTime {
+                HStack {
+                    Image(systemName: "clock")
+                    Text("Total practice: \(Duration.seconds(totalTime).mediumFormatted)")
+                }
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal)
+    }
+
+    @ViewBuilder
+    var collectionsSection: some View {
+        if let collections = piece.collections, !collections.edges.isEmpty {
+            VStack(alignment: .leading, spacing: 4) {
+                ForEach(collections.edges, id: \.node.id) { c in
+                    Button {
+                        selectedCollection = (id: c.node.id, name: c.node.name)
+                        showingCollectionSheet = true
+                    } label: {
+                        HStack {
+                            Text("\(c.node.name) collection")
+                                .font(.body)
+                                .foregroundColor(.accentColor)
+
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                         }
+                    }
+                }
+            }
+            .padding(.vertical, 8)
+        }
+    }
+
+    @ViewBuilder
+    var practiceButtonSection: some View {
+        Button(action: {
+            Task {
+                if sessionManager.activeSession?.piece.id == piece.id && sessionManager.activeSession?.movement?.id == nil {
+                    do {
+                        try await sessionManager.stopSession()
+                    } catch {
+                        toastManager.show(
+                            type: .error(.red),
+                            title: "Something went wrong",
+                            subTitle: error.localizedDescription
+                        )
+                    }
+                } else {
+                    _ = try? await sessionManager.startSession(pieceId: Int(piece.id) ?? 0, movementId: nil)
+                }
+            }
+        }, label: {
+            HStack {
+                Image(systemName: sessionManager.activeSession?.movement?.id == nil && sessionManager.activeSession?.piece.id == piece.id ?
+                    "stop.circle.fill" : "play.circle.fill")
+                Text(sessionManager.activeSession?.movement?.id == nil && sessionManager.activeSession?.piece.id == piece.id ?
+                    "Stop Practice" : "Start Practice")
+            }
+            .font(.headline)
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(Color.accentColor)
+            .cornerRadius(12)
+        })
+        .padding(.horizontal)
+    }
+
+    @ViewBuilder
+    var movementsSection: some View {
+        if let movementsEdges = piece.movements?.edges, !movementsEdges.isEmpty {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(piece.subPieceType?.capitalized ?? "Movements")
+                    .font(.headline)
+                    .padding(.horizontal)
+
+                ForEach(movementsEdges, id: \.node.id) { movement in
+                    MovementRowView(
+                        movement: movement,
+                        piece: piece,
+                        sessionManager: sessionManager,
+                        toastManager: toastManager
                     )
-                    .toolbar {
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button("Done") {
-                                showingCollectionSheet = false
-                            }
+
+                    if movement.node.id != movementsEdges.last?.node.id {
+                        Divider()
+                            .padding(.horizontal)
+                    }
+                }
+            }
+            .padding(.vertical, 4)
+        }
+    }
+
+    @ViewBuilder
+    var referencesSection: some View {
+        if piece.wikipediaUrl != nil || piece.imslpUrl != nil {
+            VStack(alignment: .leading, spacing: 12) {
+                Text("References")
+                    .font(.headline)
+                    .padding(.horizontal)
+
+                if let wikipediaUrl = piece.wikipediaUrl {
+                    Link(destination: URL(string: wikipediaUrl)!) {
+                        HStack {
+                            Image(systemName: "book.fill")
+                            Text("Wikipedia")
+                            Spacer()
+                            Image(systemName: "arrow.up.right")
                         }
+                    }
+                    .padding(.horizontal)
+                }
+
+                if let imslpUrl = piece.imslpUrl {
+                    Link(destination: URL(string: imslpUrl)!) {
+                        HStack {
+                            Image(systemName: "doc.fill")
+                            Text("IMSLP")
+                            Spacer()
+                            Image(systemName: "arrow.up.right")
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+            }
+            .padding(.vertical)
+        }
+    }
+
+    @ViewBuilder
+    var deleteSection: some View {
+        Button(role: .destructive, action: {
+            showingDeleteConfirmation = true
+        }, label: {
+            HStack {
+                Spacer()
+                Label("Delete Piece", systemImage: "trash")
+                    .font(.body)
+                    .padding()
+                Spacer()
+            }
+        })
+        .padding(.horizontal)
+        .background(Color.red.opacity(0.1))
+        .cornerRadius(12)
+        .padding(.top, 32)
+        .padding(.horizontal)
+    }
+}
+
+// MARK: - Sheet Views
+
+private extension PieceShow {
+    @ViewBuilder
+    var editPieceSheet: some View {
+        NavigationStack {
+            PieceEdit(piece: piece, isCreatingNewPiece: false, onPieceCreated: { updatedPiece in
+                piece = updatedPiece
+            })
+            .navigationTitle("Edit \(piece.workName)")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        editingMode = false
                     }
                 }
             }
         }
     }
 
-    private func deletePiece() {
+    @ViewBuilder
+    var composerEditSheet: some View {
+        ComposerEditSheet(mode: .edit(EditableComposer(from: piece.composer!)), onComplete: { (_: EditableComposer) in
+            Task {
+                do {
+                    if let updatedPiece = try await refetchPiece() {
+                        piece = updatedPiece
+                        try await sessionManager.fetchCurrentActiveSession()
+                    }
+                } catch {
+                    print("Error refetching piece: \(error)")
+                }
+            }
+        })
+    }
+
+    @ViewBuilder
+    var collectionSheet: some View {
+        if let selectedCollection {
+            NavigationStack {
+                CollectionListView(
+                    collectionId: selectedCollection.id,
+                    collectionName: selectedCollection.name,
+                    onPieceChanged: { newPiece in
+                        piece = newPiece
+                        showingCollectionSheet = false
+                    }
+                )
+                .toolbar {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Done") {
+                            showingCollectionSheet = false
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Actions
+
+private extension PieceShow {
+    func deletePiece() {
         Task {
             do {
                 let pieceId = piece.id
@@ -279,120 +350,7 @@ struct PieceShow: View {
         }
     }
 
-    private func EditPieceSheetView() -> some View {
-        NavigationStack {
-            PieceEdit(piece: piece, isCreatingNewPiece: false, onPieceCreated: { updatedPiece in
-                piece = updatedPiece
-            })
-            .navigationTitle("Edit \(piece.workName)")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        editingMode = false
-                    }
-                }
-            }
-        }
-    }
-
-    @ViewBuilder
-    private func movementRow(for movement: PieceDetails.Movements.Edge) -> some View {
-        HStack(alignment: .center) {
-            movementNumberView(movement)
-            movementInfoView(movement)
-            Spacer()
-            sessionButton(for: movement)
-        }
-        .padding(.top, 8)
-        .padding(.bottom, 4)
-        .padding(.horizontal, 4)
-    }
-
-    @ViewBuilder
-    private func movementNumberView(_ movement: PieceDetails.Movements.Edge) -> some View {
-        if let number = movement.node.number {
-            Text("\(number)")
-                .font(.headline)
-                .foregroundColor(.primary)
-                .frame(width: 40, height: 40)
-                .background(Color.gray.opacity(0.1))
-                .cornerRadius(8)
-        } else {
-            Color.clear
-                .frame(width: 40, height: 40)
-        }
-    }
-
-    @ViewBuilder
-    private func movementInfoView(_ movement: PieceDetails.Movements.Edge) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            if let movementName = movement.node.name {
-                Text(movementName)
-                    .font(.body)
-            }
-
-            if let keySignature = movement.node.keySignature?.value {
-                Text(keySignature.displayName)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-
-            if let totalTime = movement.node.totalPracticeTime, totalTime > 0 {
-                HStack(spacing: 4) {
-                    Image(systemName: "clock")
-                    Text(formatDuration(seconds: totalTime))
-                }
-                .font(.caption)
-                .foregroundColor(.secondary)
-            }
-        }
-        .frame(maxHeight: .infinity)
-    }
-
-    @ViewBuilder
-    private func sessionButton(for movement: PieceDetails.Movements.Edge) -> some View {
-        let isActive = sessionManager.activeSession?.movement?.id == movement.node.id
-
-        Button(action: {
-            Task {
-                if isActive {
-                    do {
-                        try await sessionManager.stopSession()
-                    } catch {
-                        toastManager.show(
-                            type: .error(.red),
-                            title: "Something went wrong",
-                            subTitle: error.localizedDescription
-                        )
-                    }
-                } else {
-                    _ = try? await sessionManager.startSession(
-                        pieceId: Int(piece.id) ?? 0,
-                        movementId: Int(movement.node.id) ?? 0
-                    )
-                }
-            }
-        }, label: {
-            Image(systemName: isActive ? "stop.circle.fill" : "play.circle.fill")
-                .font(.title2)
-                .foregroundColor(Color.accentColor)
-                .frame(width: 60, height: 40)
-        })
-    }
-
-    private func formatDuration(seconds: Int) -> String {
-        let hours = seconds / 3600
-        let minutes = (seconds % 3600) / 60
-
-        if hours > 0 {
-            return "\(hours)h \(minutes)m"
-        } else {
-            return "\(minutes)m"
-        }
-    }
-
-    private func refetchPiece() async throws -> PieceDetails? {
+    func refetchPiece() async throws -> PieceDetails? {
         return try await withCheckedThrowingContinuation { continuation in
             Network.shared.apollo.fetch(query: PiecesQuery(pieceFilter: PieceFilter(id: .some(BigIntFilter(eq: .some(piece.id)))))) { result in
                 switch result {
@@ -410,6 +368,8 @@ struct PieceShow: View {
         }
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     NavigationView {

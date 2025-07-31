@@ -34,6 +34,8 @@
 		D13BD0412DF808F300538E4B /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D13BD0402DF808F300538E4B /* ApolloGQL */; };
 		D13D0EDA2BCC2FA1006B2683 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13D0ED92BCC2FA1006B2683 /* Int.swift */; };
 		D13D0EDC2BCC4B23006B2683 /* SetString.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13D0EDB2BCC4B23006B2683 /* SetString.swift */; };
+		D13D758A2E3B2F6F008A2AEC /* PiecePracticeSessions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13D75892E3B2F6A008A2AEC /* PiecePracticeSessions.swift */; };
+		D13D758C2E3B3235008A2AEC /* MovementRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13D758B2E3B3235008A2AEC /* MovementRowView.swift */; };
 		D1435F5F2E28C6C000C44CC6 /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D1435F5E2E28C6C000C44CC6 /* ApolloGQL */; };
 		D144A65B2DA7D4E8002A682A /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D144A65A2DA7D4E8002A682A /* ApolloGQL */; };
 		D144A65D2DA7D512002A682A /* ApolloGQL in Frameworks */ = {isa = PBXBuildFile; productRef = D144A65C2DA7D512002A682A /* ApolloGQL */; };
@@ -211,6 +213,8 @@
 		D131F17A2B8B090D002261BC /* MetronomeShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetronomeShape.swift; sourceTree = "<group>"; };
 		D13D0ED92BCC2FA1006B2683 /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		D13D0EDB2BCC4B23006B2683 /* SetString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetString.swift; sourceTree = "<group>"; };
+		D13D75892E3B2F6A008A2AEC /* PiecePracticeSessions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiecePracticeSessions.swift; sourceTree = "<group>"; };
+		D13D758B2E3B3235008A2AEC /* MovementRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementRowView.swift; sourceTree = "<group>"; };
 		D14093042CA86E84008B5CDB /* ApolloConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApolloConfig.swift; sourceTree = "<group>"; };
 		D146F87A2DC7CE6E00C4B7BD /* RecentPracticeSessionListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentPracticeSessionListItem.swift; sourceTree = "<group>"; };
 		D148E76C2DF603D10012579E /* RecentlyDeleted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentlyDeleted.swift; sourceTree = "<group>"; };
@@ -422,10 +426,12 @@
 				D1848D582D9076B200C1FA51 /* CollectionListView.swift */,
 				D11045AD2E23C92200ADDF40 /* ComposerView.swift */,
 				D11045AF2E23CD9900ADDF40 /* CollectionView.swift */,
+				D13D75892E3B2F6A008A2AEC /* PiecePracticeSessions.swift */,
 				D131F1742B8AFCC8002261BC /* Components */,
 				D158536F2D0FB8450053B0F5 /* PieceEdit */,
 				D1277D592DECE77E00420C36 /* SignIn */,
 				D197387D2C153F7100EBF53F /* PieceShow.swift */,
+				D13D758B2E3B3235008A2AEC /* MovementRowView.swift */,
 				D1C2BEC32BDD7A9100E8E39F /* Settings.swift */,
 				D16E3A912C61E1AC00DA96A7 /* SearchView.swift */,
 				D17482DF2E138ECD00F062C0 /* SearchFilterBar.swift */,
@@ -842,6 +848,7 @@
 				D1848D592D9076B800C1FA51 /* CollectionListView.swift in Sources */,
 				D1D46C622DE64FB1007335DE /* PracticeSessionDetails+SampleData.swift in Sources */,
 				D13D0EDC2BCC4B23006B2683 /* SetString.swift in Sources */,
+				D13D758A2E3B2F6F008A2AEC /* PiecePracticeSessions.swift in Sources */,
 				D19738802C1540B600EBF53F /* PracticeSessionViewModel.swift in Sources */,
 				D11D792C2C6C5B9D0073BA21 /* Array.swift in Sources */,
 				D19E733F2B898F9300BB3EC7 /* PracticeLoggerApp.swift in Sources */,
@@ -855,6 +862,7 @@
 				D15C88312BF063B900AAC950 /* Error.swift in Sources */,
 				D1D3CEFB2DA2D089006502AE /* UIState.swift in Sources */,
 				D197387E2C153F7100EBF53F /* PieceShow.swift in Sources */,
+				D13D758C2E3B3235008A2AEC /* MovementRowView.swift in Sources */,
 				D1C2BEC22BDD76A300E8E39F /* Database.swift in Sources */,
 				D1A056112CB1A9E30024DC2A /* PracticeSessionView.swift in Sources */,
 				D1E98BD32C59EF750065D27D /* KeySignatureType.swift in Sources */,
